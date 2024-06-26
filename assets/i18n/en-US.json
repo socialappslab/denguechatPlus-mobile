@@ -1,0 +1,31 @@
+{
+  "translation": {
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "error": "Error",
+    "success": "Success",
+    "logout": "Logout",
+    "tabs": {
+      "chat": "Chat",
+      "homes": "Homes",
+      "profile": "Profile"
+    },
+    "login": {
+      "email": "Email",
+      "email_placeholder": "Enter your email",
+      "password": "Password",
+      "password_placeholder": "Enter your password",
+      "register": "Register",
+      "registerMessage": "Don't have an account?",
+      "forgotPassword": "Forgot my password",
+      "action": "Login",
+      "error": {
+        "email": "Please enter a valid email address",
+        "password": "Please enter a password",
+        "login": "Login failed. Please try again.",
+        "empty": "Please enter your email and password"
+      }
+    }
+  }
+}

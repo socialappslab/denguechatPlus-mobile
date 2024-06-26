@@ -2,9 +2,9 @@ const IS_DEV = process.env.APP_VARIANT === "development";
 
 export default {
   expo: {
-    name: IS_DEV ? "Dengue Chat+ (Dev)" : "Dengue Chat+",
+    name: IS_DEV ? "DengueChat+ (Dev)" : "DengueChat+",
     slug: "dengue-chat-plus",
-    scheme: "dengue-chat-plus-scheme",
+    scheme: "org.denguechat.plus",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
@@ -12,7 +12,7 @@ export default {
     splash: {
       image: "./assets/images/splash.png",
       resizeMode: "contain",
-      backgroundColor: "#ffffff",
+      backgroundColor: "#067507",
     },
     ios: {
       supportsTablet: true,
@@ -24,15 +24,10 @@ export default {
       versionCode: 1,
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
-        backgroundColor: "#ffffff",
+        backgroundColor: "#067507",
       },
     },
-    web: {
-      bundler: "metro",
-      output: "static",
-      favicon: "./assets/images/favicon.png",
-    },
-    plugins: ["expo-router"],
+    plugins: ["expo-router", "expo-font", "expo-localization"],
     experiments: {
       typedRoutes: true,
     },
