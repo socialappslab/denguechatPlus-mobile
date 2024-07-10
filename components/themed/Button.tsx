@@ -11,7 +11,8 @@ export type ButtonProps = ThemeProps &
   TouchableOpacity["props"];
 
 function Button(props: ButtonProps) {
-  const { style, title, lightColor, darkColor, ...otherProps } = props;
+  const { style, title, disabled, lightColor, darkColor, ...otherProps } =
+    props;
 
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
@@ -22,7 +23,8 @@ function Button(props: ButtonProps) {
     <TouchableOpacity
       style={[{ backgroundColor }, style]}
       {...otherProps}
-      className="w-full p-3 bg-primary rounded-lg"
+      disabled={disabled}
+      className={`${disabled ? "opacity-50" : ""} w-full p-3 bg-primary rounded-lg`}
     >
       <Text className="text-white text-center font-bold">{title}</Text>
     </TouchableOpacity>

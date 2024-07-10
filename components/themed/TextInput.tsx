@@ -5,7 +5,7 @@ import { FontFamily } from "@/constants/Styles";
 export type TextInputProps = ThemeProps & DefaultTextInput["props"];
 
 export function TextInput(props: TextInputProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
+  const { style, lightColor, darkColor, hasError, ...otherProps } = props;
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "background",
@@ -18,7 +18,7 @@ export function TextInput(props: TextInputProps) {
         { backgroundColor, color, fontFamily: FontFamily.regular },
         style,
       ]}
-      className="border border-gray-500 rounded-lg p-3 h-11"
+      className={`${hasError ? "border-red-500" : "border-gray-500"} borde rounded-lg p-3 h-11`}
       {...otherProps}
     />
   );

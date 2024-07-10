@@ -6,12 +6,17 @@
     "error": "Error",
     "success": "'Éxito'",
     "logout": "Cerrar Sesión",
+    "textChatsTab": "Navega al tab 2 o el 3 para hacer logout.",
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",
       "profile": "Perfil"
     },
     "login": {
+      "username": "Nombre de usuario",
+      "username_placeholder": "Ingrese su nombre de usuario",
+      "phone": "Teléfono",
+      "phone_placeholder": "Ingrese su número de teléfono",
       "email": "Correo electrónico",
       "email_placeholder": "Ingrese su correo electrónico",
       "password": "Contraseña",
@@ -24,8 +29,33 @@
         "email": "Por favor ingrese un correo electrónico válido",
         "password": "Por favor ingrese una contraseña válida",
         "login": "Algo falló. Por favor intente de nuevo.",
-        "empty": "Por favor llene todos los campos"
-      }
+        "empty": "Por favor llene todos los campos",
+        "invalidCredentials": "Credenciales inválidas"
+      },
+      "searchCountry_placeholder": "Buscar país...",
+      "username-tab": "Nombre de usuario",
+      "phone-tab": "Teléfono"
+    },
+    "validation": {
+      "required": "Este campo es requerido",
+      "requiredField": {
+        "email": "El correo electrónico es requerido",
+        "username": "El nombre de usuario es requerido",
+        "password": "El password es requerido",
+        "confirmPassword": "Por favor confirme su password",
+        "name": "El nombre es requerido",
+        "phone": "El teléfono es requerido"
+      },
+      "notMatch": "Las contraseñas no coinciden",
+      "invalidEmail": "Correo electrónico inválido",
+      "passwordLength": "La contraseña debe tener al menos {{length}} caracteres",
+      "usernameLength": "El nombre de usuario debe tener al menos {{length}} caracteres",
+      "phoneLength": "El teléfono es muy corto"
+    },
+    "errorCodes": {
+      "generic": "Algo falló. Por favor intente de nuevo.",
+      "46": "Credenciales inválidas",
+      "51": "La cuenta no está activa"
     }
   }
 }

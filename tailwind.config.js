@@ -15,6 +15,7 @@ module.exports = {
       },
       colors: {
         primary: "#067507",
+        fieldBorder: "#D0D5DD",
       },
     },
   },

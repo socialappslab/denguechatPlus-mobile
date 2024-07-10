@@ -1,3 +1,11 @@
 {
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "i18n-ally.localesPaths": ["assets/i18n"],
+  "i18n-ally.enabledParsers": ["json"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.namespace": false,
+  "i18n-ally.pathMatcher": "{locale}.json",
+  "i18n-ally.defaultNamespace": "translation",
+  "i18n-ally.displayLanguage": "en",
+  "i18n-ally.sourceLanguage": "en"
 }
