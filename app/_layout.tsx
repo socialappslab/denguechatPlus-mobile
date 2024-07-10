@@ -7,6 +7,7 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
@@ -14,21 +15,19 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/components/themed/useColorScheme";
 import AuthProvider from "@/context/AuthProvider";
 
-import i18n from "i18next";
 import * as Localization from "expo-localization";
-import en from "@/assets/i18n/en-US.json";
-import es from "@/assets/i18n/es-ES.json";
-import { initReactI18next } from "react-i18next";
-
-const resources = {
-  en,
-  es,
-};
+import { initI18n } from "../config/i18n";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "../config/toast";
+import { LogBox } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from "expo-router";
+
+// Ignore all log notifications:
+LogBox.ignoreAllLogs();
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -55,12 +54,7 @@ export default function RootLayout() {
   useEffect(() => {
     // We either don't have a language, or we've already initialized
     if (!language || languageLoaded) return;
-    i18n.use(initReactI18next).init({
-      compatibilityJSON: "v3",
-      resources,
-      lng: language,
-      fallbackLng: "en",
-    });
+    initI18n(language);
     setLanguageLoaded(true);
   }, [language, languageLoaded]);
 
@@ -107,6 +101,7 @@ function RootLayoutNav() {
             options={{ headerShown: false }}
           />
         </Stack>
+        <Toast position="bottom" bottomOffset={40} config={toastConfig} />
       </ThemeProvider>
     </AuthProvider>
   );

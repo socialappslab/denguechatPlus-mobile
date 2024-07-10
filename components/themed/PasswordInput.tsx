@@ -5,10 +5,11 @@ import { FontFamily } from "@/constants/Styles";
 
 import { useThemeColor } from "@/components/themed/useThemeColor";
 import { TextInputProps } from "@/components/themed/TextInput";
+
 import Eye from "@/assets/images/icons/eye.svg";
 
 export function PasswordInput(props: TextInputProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
+  const { style, lightColor, darkColor, hasError, ...otherProps } = props;
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "background",
@@ -22,7 +23,9 @@ export function PasswordInput(props: TextInputProps) {
   };
 
   return (
-    <View className="border border-gray-500 rounded-lg p-3 flex flex-row items-center h-11">
+    <View
+      className={`${hasError ? "border-red-500" : "border-gray-500"} border  rounded-lg p-3 flex flex-row items-center h-11`}
+    >
       <DefaultTextInput
         secureTextEntry={passwordVisible}
         style={[

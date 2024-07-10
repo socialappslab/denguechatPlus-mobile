@@ -3,9 +3,11 @@ import { StyleSheet } from "react-native";
 import { useAuth } from "@/context/AuthProvider";
 import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
+import { useTranslation } from "react-i18next";
 
 export default function TabTwoScreen() {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     console.log("profile", user);
@@ -13,7 +15,7 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab 3</Text>
+      <Text style={styles.title}>Tab 3 - {t("tabs.profile")}</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
@@ -21,7 +23,7 @@ export default function TabTwoScreen() {
       />
       <Text>Account</Text>
       <Text className="font-semibold text-md color-primary">
-        {user?.username || "No username"}
+        {`${user?.firstName} ${user?.lastName} ` || "No username"}
       </Text>
       <Button className="w-1/2 mt-6" title="Log out" onPress={logout} />
     </View>

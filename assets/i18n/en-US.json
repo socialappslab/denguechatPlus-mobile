@@ -6,14 +6,17 @@
     "error": "Error",
     "success": "Success",
     "logout": "Logout",
+    "textChatsTab": "Navigate to the tab 2 or 3 tab to logout.",
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
       "profile": "Profile"
     },
     "login": {
-      "email": "Email",
-      "email_placeholder": "Enter your email",
+      "username": "Username",
+      "username_placeholder": "Enter your username",
+      "phone": "Phone",
+      "phone_placeholder": "Enter your phone number",
       "password": "Password",
       "password_placeholder": "Enter your password",
       "register": "Register",
@@ -24,8 +27,33 @@
         "email": "Please enter a valid email address",
         "password": "Please enter a password",
         "login": "Login failed. Please try again.",
-        "empty": "Please enter your email and password"
-      }
+        "empty": "Please enter your email and password",
+        "invalidCredentials": "Invalid email or password"
+      },
+      "searchCountry_placeholder": "Search country...",
+      "username-tab": "Username",
+      "phone-tab": "Phone"
+    },
+    "validation": {
+      "required": "Field is required",
+      "requiredField": {
+        "email": "Email is required",
+        "username": "Username is required",
+        "password": "Password is required",
+        "confirmPassword": "Please confirm your password",
+        "name": "Name is required",
+        "phone": "Phone is required"
+      },
+      "notMatch": "Password does not match",
+      "invalidEmail": "Invalid email",
+      "passwordLength": "Password must be at least {{length}} characters",
+      "usernameLength": "Username must be at least {{length}} characters",
+      "phoneLength": "Phone is too short"
+    },
+    "errorCodes": {
+      "generic": "Something went wrong. Please try again.",
+      "46": "Invalid credentials",
+      "51": "Account is not active"
     }
   }
 }

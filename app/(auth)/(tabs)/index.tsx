@@ -1,17 +1,20 @@
 import { StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/themed";
+import { useTranslation } from "react-i18next";
 
 export default function Chats() {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab 1</Text>
+      <Text style={styles.title}>Tab 1 - {t("tabs.chat")}</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Text className="text-md">Navigate to the tab 2 or 3 tab to logout.</Text>
+      <Text className="text-md">{t("textChatsTab")}</Text>
     </View>
   );
 }

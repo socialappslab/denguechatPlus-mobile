@@ -1,19 +1,18 @@
 import { ReactNode, createContext, useEffect } from "react";
 import { useContext, useState } from "react";
 import { router, useSegments } from "expo-router";
-
-type User = {
-  id: string;
-  username: string;
-};
+import { IUser } from "../schema/auth";
+import { useStorageState } from "../hooks/useStorageState";
 
 type AuthProviderType = {
-  user: User | null;
-  login: (username: string, password: string) => boolean;
+  user: IUser | null;
+  token: string | null;
+  setUser: (user: IUser | null) => void;
+  login: (token: string, user: IUser) => boolean;
   logout: () => void;
 };
 
-function useProtectedRoute(user: User | null) {
+function useProtectedRoute(user: IUser | null) {
   const segments = useSegments();
 
   useEffect(() => {
@@ -29,7 +28,9 @@ function useProtectedRoute(user: User | null) {
 
 export const AuthContext = createContext<AuthProviderType>({
   user: null,
+  token: null,
   login: () => false,
+  setUser: (user: IUser | null) => {},
   logout: () => {},
 });
 
@@ -42,14 +43,12 @@ export function useAuth() {
 }
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [[isLoading, token], setToken] = useStorageState("token");
 
-  const login = (username: string, password: string) => {
-    console.log("login", username, password);
-    setUser({
-      id: "1",
-      username: username,
-    });
+  const login = (token: string, user: IUser) => {
+    console.log("login>>", token);
+    setUser(user);
 
     return true;
   };
@@ -61,7 +60,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   useProtectedRoute(user);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, token, setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
