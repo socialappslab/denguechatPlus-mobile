@@ -55,7 +55,8 @@
     "errorCodes": {
       "generic": "Algo falló. Por favor intente de nuevo.",
       "46": "Credenciales inválidas",
-      "51": "La cuenta no está activa"
+      "51": "La cuenta no está activa",
+      "55": "La cuenta fue bloqueada temporalmente. Se produjeron varios intentos fallidos de inicio de sesión. Vuelve a intentarlo más tarde."
     }
   }
 }
