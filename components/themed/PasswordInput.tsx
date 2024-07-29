@@ -7,6 +7,7 @@ import { useThemeColor } from "@/components/themed/useThemeColor";
 import { TextInputProps } from "@/components/themed/TextInput";
 
 import Eye from "@/assets/images/icons/eye.svg";
+import EyeOff from "@/assets/images/icons/eye-off.svg";
 
 export function PasswordInput(props: TextInputProps) {
   const { style, lightColor, darkColor, hasError, ...otherProps } = props;
@@ -24,7 +25,7 @@ export function PasswordInput(props: TextInputProps) {
 
   return (
     <View
-      className={`${hasError ? "border-red-500" : "border-gray-500"} border  rounded-lg p-3 flex flex-row items-center h-11`}
+      className={`${hasError ? "border-red-500" : "border-gray-500"} border rounded-lg flex flex-row items-center h-11 p-2`}
     >
       <DefaultTextInput
         secureTextEntry={passwordVisible}
@@ -36,7 +37,7 @@ export function PasswordInput(props: TextInputProps) {
         {...otherProps}
       />
       <Pressable onPress={onChangeVisibility} className="-mr-px">
-        <Eye />
+        {passwordVisible ? <Eye /> : <EyeOff />}
       </Pressable>
     </View>
   );

@@ -18,7 +18,7 @@ export function TextInput(props: TextInputProps) {
         { backgroundColor, color, fontFamily: FontFamily.regular },
         style,
       ]}
-      className={`${hasError ? "border-red-500" : "border-gray-500"} borde rounded-lg p-3 h-11`}
+      className={`${hasError ? "border-red-500" : "border-gray-500"} border rounded-lg h-11`}
       {...otherProps}
     />
   );
