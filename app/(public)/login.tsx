@@ -1,8 +1,8 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Text, View, TextInput } from "@/components/themed";
-import { Alert, SafeAreaView, TouchableOpacity } from "react-native";
+import { SafeAreaView, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/context/AuthProvider";
+
 import Logo from "@/assets/images/logo.svg";
 import { PasswordInput } from "@/components/themed/PasswordInput";
 import KeyboardAvoidingView from "@/components/control/KeyboardAvoidingView";
@@ -171,6 +171,7 @@ export default function Login() {
                     onBlur={onBlur}
                     value={value}
                     autoCapitalize="none"
+                    autoCorrect={false}
                   />
                 )}
                 name="username"
@@ -257,6 +258,7 @@ export default function Login() {
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
+                    autoCorrect={false}
                   />
                 )}
                 name="password"
@@ -269,14 +271,15 @@ export default function Login() {
               )}
             </View>
 
-            <ExternalLink
-              className="mt-4 mb-6"
-              href={`${process.env.EXPO_PUBLIC_FORGOT_PASSWORD_URL}`}
-            >
+            <View className="mt-4 mb-6">
               <Text className="font-bold text-md color-primary">
-                {t("login.forgotPassword")}
+                <ExternalLink
+                  href={`${process.env.EXPO_PUBLIC_FORGOT_PASSWORD_URL}`}
+                >
+                  {t("login.forgotPassword")}
+                </ExternalLink>
               </Text>
-            </ExternalLink>
+            </View>
 
             <Button
               disabled={loading || !isValid}
