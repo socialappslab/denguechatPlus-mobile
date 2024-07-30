@@ -1,38 +1,25 @@
-import { useHeaderHeight } from "@react-navigation/elements";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-  KeyboardAvoidingView as RNKeyboardAvoidingView,
   KeyboardAvoidingViewProps as RNKeyboardAvoidingViewProps,
-  Platform,
   StyleSheet,
-  Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
-
-const BEHAVIOR = Platform.OS === "ios" ? "padding" : undefined;
 
 const KeyboardAvoidingView = ({
   style,
   ...props
 }: RNKeyboardAvoidingViewProps) => {
-  const headerHeight = useHeaderHeight();
-
   return (
-    <RNKeyboardAvoidingView
-      style={[styles.container, style]}
-      behavior={BEHAVIOR}
-      keyboardVerticalOffset={headerHeight}
-      {...props}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        {props.children}
-      </TouchableWithoutFeedback>
-    </RNKeyboardAvoidingView>
+    <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+      {props.children}
+    </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexGrow: 1,
+    justifyContent: "space-between",
   },
 });
 

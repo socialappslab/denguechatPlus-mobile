@@ -1,6 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Text, View, TextInput } from "@/components/themed";
-import { SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  TouchableOpacity,
+  TextInput as RNTextInput,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 
 import Logo from "@/assets/images/logo.svg";
@@ -49,6 +53,8 @@ export default function Login() {
   const methods = useForm<LoginInputType>({
     resolver: zodResolver(createLoginSchema()),
   });
+
+  const refPassword = useRef<RNTextInput>(null);
 
   const {
     control,
@@ -165,13 +171,16 @@ export default function Login() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     hasError={!!errors.username}
-                    className="border p-2 rounded-md"
                     placeholder={t("login.username_placeholder")}
                     onChangeText={onChange}
                     onBlur={onBlur}
                     value={value}
                     autoCapitalize="none"
+                    textContentType="username"
                     autoCorrect={false}
+                    returnKeyType="next"
+                    onSubmitEditing={() => refPassword.current?.focus()}
+                    blurOnSubmit={false}
                   />
                 )}
                 name="username"
@@ -253,12 +262,14 @@ export default function Login() {
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <PasswordInput
+                    inputRef={refPassword}
                     hasError={!!errors.password}
                     placeholder={t("login.password_placeholder")}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
                     autoCorrect={false}
+                    onSubmitEditing={() => refPassword.current?.blur()}
                   />
                 )}
                 name="password"

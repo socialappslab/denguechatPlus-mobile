@@ -10,14 +10,15 @@ import Eye from "@/assets/images/icons/eye.svg";
 import EyeOff from "@/assets/images/icons/eye-off.svg";
 
 export function PasswordInput(props: TextInputProps) {
-  const { style, lightColor, darkColor, hasError, ...otherProps } = props;
+  const { style, lightColor, darkColor, hasError, inputRef, ...otherProps } =
+    props;
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "background",
   );
   const color = useThemeColor({ dark: lightColor, light: darkColor }, "text");
 
-  const [passwordVisible, setPasswordVisible] = useState(true);
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(true);
 
   const onChangeVisibility = () => {
     setPasswordVisible((lastState) => !lastState);
@@ -28,6 +29,7 @@ export function PasswordInput(props: TextInputProps) {
       className={`${hasError ? "border-red-500" : "border-gray-500"} border rounded-lg flex flex-row items-center h-11 p-2`}
     >
       <DefaultTextInput
+        ref={inputRef}
         secureTextEntry={passwordVisible}
         style={[
           { backgroundColor, color, fontFamily: FontFamily.regular },
