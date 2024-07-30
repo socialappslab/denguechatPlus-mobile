@@ -3,6 +3,7 @@
     "yes": "Yes",
     "no": "No",
     "back": "Back",
+    "next": "Next",
     "error": "Error",
     "success": "Success",
     "logout": "Logout",
@@ -53,7 +54,8 @@
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",
       "46": "Invalid credentials",
-      "51": "Account is not active"
+      "51": "Account is not active",
+      "55": "The account was temporarily locked. Multiple failed login attempts occurred. Try again later."
     }
   }
 }
