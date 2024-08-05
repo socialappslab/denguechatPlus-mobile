@@ -1,5 +1,6 @@
 import { TypeOf, object, string, z } from "zod";
 import i18nInstance from "../config/i18n";
+import { BaseObject } from ".";
 
 const t = (key: string, args?: { [key: string]: string | number }) =>
   i18nInstance.t(key, args);
@@ -46,6 +47,67 @@ export type LoginRequestType = {
   phone?: string;
   password: string;
 };
+export interface UserProfile {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  username?: string;
+
+  gender?: number | string;
+  phone?: string;
+  points?: number;
+  country?: string;
+  city?: string | BaseObject;
+  neighborhood?: string | BaseObject;
+  organization?: string | BaseObject;
+  team?: string | BaseObject;
+  roles?: BaseObject[];
+
+  countryId?: number;
+  cityId?: number;
+  neighborhoodId?: number;
+  organizationId?: number;
+  teamId?: number;
+
+  timezone?: string;
+  language?: string;
+  createdAt?: string;
+}
+
+export const UserStatusValues = [
+  "active",
+  "pending",
+  "inactive",
+  "locked",
+] as const;
+export type UserStatusType = (typeof UserStatusValues)[number];
+
+export interface IUser extends UserProfile {
+  id?: string;
+  status?: UserStatusType;
+  permissions?: string[];
+
+  cityName?: string;
+  neighborhoodName?: string;
+  organizationName?: string;
+}
+
+export interface UserAccount {
+  phone?: string;
+  password: string;
+  username?: string;
+  email?: string;
+  userProfile: UserProfile;
+}
+
+export interface UserUpdate {
+  status?: UserStatusType;
+  password?: string;
+  username?: string;
+  phone?: string;
+  userProfileAttributes?: UserProfile;
+  roleIds?: number[];
+}
 
 export interface ILoginResponse {
   meta: {
@@ -61,27 +123,6 @@ export interface ILoginResponse {
   };
 }
 
-export interface UserProfile {
-  firstName: string;
-  lastName: string;
-  email?: string;
-  gender?: number | string;
-  phone?: string;
-  points?: number;
-  country?: string;
-  city?: string;
-  neighborhood?: string;
-  organization?: string;
-
-  countryId?: number;
-  cityId?: number;
-  neighborhoodId?: number;
-  organizationId?: number;
-
-  timezone?: string;
-  language?: string;
-}
-
-export interface IUser extends UserProfile {
-  id: string;
-}
+export type ChangeStatus = {
+  status: UserStatusType;
+};
