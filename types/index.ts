@@ -9,6 +9,7 @@ export interface Question {
   question: string;
   typeField: TypeField;
   options?: Option[];
+  description?: string;
 }
 
 export interface Option {

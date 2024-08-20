@@ -40,6 +40,8 @@ const questionnaire: Question[] = [
     id: 2,
     question: "Visitemos la casa",
     typeField: "splash",
+    description:
+      "Lleguemos a la casa con mucho respeto.\n\nEs importante que las personas nos sientan como alguien que les llega a apoyar para prevenir el dengue.\n\nPidamos permiso para pasar.\n\nNo lleguemos como inspectores o para juzgar al hogar.",
   },
   {
     id: 3,

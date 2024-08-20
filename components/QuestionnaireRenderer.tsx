@@ -19,17 +19,21 @@ const QuestionnaireRenderer = ({ question }: QuestionnaireRendererProps) => {
 
   return question.typeField !== "splash" ? (
     <View>
-      <Text type="title" className="mb-5">
+      <Text type="title" className="mb-8">
         {question.question}
       </Text>
-      {hasOptions && (
-        <CheckboxList className="mb-2" options={optionsToCheckboxOption()} />
-      )}
+      {hasOptions && <CheckboxList options={optionsToCheckboxOption()} />}
     </View>
   ) : (
-    <>
-      <Text>Splash</Text>
-    </>
+    <View className="flex flex-col">
+      <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300" />
+      <Text type="title" className="text-center">
+        {question.question}
+      </Text>
+      <Text type="text" className="text-center p-8 pt-4">
+        {question.description}
+      </Text>
+    </View>
   );
 };
 
