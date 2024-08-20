@@ -1,6 +1,5 @@
-import { CheckboxList, Text, View } from "@/components/themed";
+import { SelectableList, Text, View } from "@/components/themed";
 import { Question } from "@/types";
-import { Animated } from "react-native";
 
 interface QuestionnaireRendererProps {
   question: Question;
@@ -23,7 +22,12 @@ const QuestionnaireRenderer = ({ question }: QuestionnaireRendererProps) => {
       <Text type="title" className="mb-8">
         {question.question}
       </Text>
-      {hasOptions && <CheckboxList options={optionsToCheckboxOption()} />}
+      {question.typeField === "multiple" && hasOptions && (
+        <SelectableList options={optionsToCheckboxOption()} type="checkbox" />
+      )}
+      {question.typeField === "select" && (
+        <SelectableList options={optionsToCheckboxOption()} type="radio" />
+      )}
     </View>
   ) : (
     <View className="flex flex-col justify-center items-center">

@@ -46,7 +46,7 @@ const questionnaire: Question[] = [
   {
     id: 3,
     question: "¿ Quién te acompaña hoy en esta visita?",
-    typeField: "select",
+    typeField: "multiple",
     options: [
       {
         id: "1",
