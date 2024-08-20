@@ -1,5 +1,6 @@
 import { CheckboxList, Text, View } from "@/components/themed";
 import { Question } from "@/types";
+import { Animated } from "react-native";
 
 interface QuestionnaireRendererProps {
   question: Question;
@@ -25,8 +26,10 @@ const QuestionnaireRenderer = ({ question }: QuestionnaireRendererProps) => {
       {hasOptions && <CheckboxList options={optionsToCheckboxOption()} />}
     </View>
   ) : (
-    <View className="flex flex-col">
-      <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300" />
+    <View className="flex flex-col justify-center items-center">
+      <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
+        <Text className="text-center text">Ilustración o ícono</Text>
+      </View>
       <Text type="title" className="text-center">
         {question.question}
       </Text>
