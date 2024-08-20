@@ -5,3 +5,8 @@ export type ErrorResponse = {
     field: string | null;
   }[];
 };
+
+export type BaseObject = {
+  id: number;
+  name: string;
+};

@@ -4,14 +4,23 @@ import { useAuth } from "@/context/AuthProvider";
 import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useTranslation } from "react-i18next";
+import useAxios from "axios-hooks";
 
 export default function TabTwoScreen() {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
 
+  const [{ data, error }] = useAxios({
+    url: `/users/${user?.id}`,
+  });
+
   useEffect(() => {
-    console.log("profile", user);
-  }, [user]);
+    console.log("data", data);
+  }, [data]);
+
+  useEffect(() => {
+    console.log("error", error);
+  }, [error]);
 
   return (
     <View style={styles.container}>

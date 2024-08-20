@@ -25,12 +25,20 @@ export default function useSignIn(): IUseSignIn {
   const signInMutation = async (data: LoginRequestType) => {
     const loginRes = await loginPost({ data });
 
-    const deserializedData = deserialize(loginRes.data);
+    const deserializedData = deserialize<IUser>(loginRes.data);
 
-    // eslint-disable-next-line no-console
-    console.log("deserializedData login", deserializedData);
-    login(loginRes.data.meta.jwt.res.access, deserializedData);
-    setAccessTokenToHeaders(loginRes.data.meta.jwt.res.access);
+    if (deserializedData && !Array.isArray(deserializedData)) {
+      // eslint-disable-next-line no-console
+      console.log("deserializedData login", deserializedData);
+      login(
+        loginRes.data.meta.jwt.res.access,
+        loginRes.data.meta.jwt.res.refresh,
+        deserializedData,
+      );
+      setAccessTokenToHeaders(loginRes.data.meta.jwt.res.access);
+    } else {
+      throw new Error("Couldn't deserialize user data");
+    }
   };
 
   return { signInMutation, loading };

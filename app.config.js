@@ -40,10 +40,10 @@ export default {
       },
     },
     updates: {
-        url: "https://u.expo.dev/213aa26c-f57b-4b2e-84f6-fa87fd86adbc"
+      url: "https://u.expo.dev/213aa26c-f57b-4b2e-84f6-fa87fd86adbc",
     },
     runtimeVersion: {
-        policy : "appVersion"
+      policy: "appVersion",
     },
     owner: "dengue-chat-plus",
   },
