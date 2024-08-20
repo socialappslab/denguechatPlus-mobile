@@ -11,7 +11,8 @@
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",
-      "profile": "Perfil"
+      "profile": "Perfil",
+      "visit": "Registro de visita"
     },
     "login": {
       "username": "Nombre de usuario",
