@@ -16,6 +16,15 @@ module.exports = {
       colors: {
         primary: "#067507",
         fieldBorder: "#D0D5DD",
+        green: {
+          [400]: "#D6FFD6"
+        },
+        sky: {
+          [400]: "#344054"
+        },
+        gray: {
+          [400]: "#F9F9F9"
+        }
       },
     },
   },
