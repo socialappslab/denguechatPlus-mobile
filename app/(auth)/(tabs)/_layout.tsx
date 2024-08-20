@@ -1,6 +1,6 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
+import { Link, Tabs, useNavigation } from "expo-router";
 import { Pressable } from "react-native";
 
 import Colors from "@/constants/Colors";
@@ -10,6 +10,9 @@ import Bubble from "@/assets/images/icons/bubble.svg";
 import House from "@/assets/images/icons/house.svg";
 import User from "@/assets/images/icons/user.svg";
 import { useTranslation } from "react-i18next";
+import Button from "@/components/themed/Button";
+import { Ionicons } from "@expo/vector-icons";
+import { Text } from "@/components/themed";
 
 type TabsNames = "chat" | "homes" | "profile";
 
@@ -28,6 +31,7 @@ function TabBarIcon(props: { name: TabsNames; color: string }) {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
+  const { goBack } = useNavigation();
 
   return (
     <Tabs
@@ -69,10 +73,21 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="homes"
+        name="visit"
         options={{
-          title: t("tabs.homes"),
+          title: t("tabs.visit"),
+          headerTitle: () => <Text type="header">{t("tabs.visit")}</Text>,
           tabBarIcon: ({ color }) => <TabBarIcon name="homes" color={color} />,
+          tabBarStyle: { display: "none" },
+          headerLeft: () => (
+            <Ionicons
+              onPress={goBack}
+              name="arrow-back"
+              size={24}
+              marginLeft={20}
+              color="black"
+            />
+          ),
         }}
       />
       <Tabs.Screen
