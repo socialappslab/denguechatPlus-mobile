@@ -29,7 +29,7 @@ export const CheckboxList = ({
       );
     return (
       <TouchableOpacity
-        className={`flex flex-row gap-2 pb-2 pt-2 px-2 mb-4 rounded-md ${isChecked ? "bg-green-400" : "bg-gray-400"}`}
+        className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${isChecked ? "bg-green-400" : "bg-gray-400"}`}
         onPress={onChange}
         activeOpacity={1}
       >

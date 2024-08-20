@@ -17,7 +17,8 @@ module.exports = {
         primary: "#067507",
         fieldBorder: "#D0D5DD",
         green: {
-          [400]: "#D6FFD6"
+          [300]: "#EEFFED",
+          [400]: "#D6FFD6",
         },
         sky: {
           [400]: "#344054"

@@ -28,6 +28,7 @@ function Button(props: ButtonProps) {
       {...otherProps}
       disabled={disabled}
       className={`${disabled ? "opacity-50" : ""} w-full ${primary ? "bg-primary" : "bg-white shadow-sm border-gray"} p-3 rounded-lg`}
+      activeOpacity={0.8}
     >
       <Text
         className={`text-center font-bold ${primary ? "text-white" : "text-black"}`}
