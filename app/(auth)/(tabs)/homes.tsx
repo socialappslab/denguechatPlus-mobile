@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useAuth } from "@/context/AuthProvider";
 import { Text, View } from "@/components/themed";
@@ -8,10 +7,6 @@ import { useTranslation } from "react-i18next";
 export default function Homes() {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    console.log("homes", user);
-  }, [user]);
 
   return (
     <View style={styles.container}>

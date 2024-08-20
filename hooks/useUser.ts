@@ -1,15 +1,41 @@
+import { useEffect, useState } from "react";
 import { USER_LOCAL_STORAGE_KEY } from "../constants/Keys";
 import { useStorageState } from "./useStorageState";
+import { IUser } from "../schema/auth";
+import * as SecureStore from "expo-secure-store";
 
-export default function useUser() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [[loading, user], setUser] = useStorageState(USER_LOCAL_STORAGE_KEY);
-  if (!loading && user && user[0] && user[1]) {
-    try {
-      return JSON.parse(user[1]);
-    } catch (e) {
-      return null;
+type UseUserHook = [
+  [boolean, IUser | null],
+  (value: IUser | null, updateLocalStorage: boolean) => void,
+];
+
+export default function useUser(): UseUserHook {
+  const [[loading, user], setUserLocalStorage] = useStorageState(
+    USER_LOCAL_STORAGE_KEY,
+  );
+  const [loadedUser, setLoadedUser] = useState<IUser | null>(null);
+
+  useEffect(() => {
+    if (!loading && user) {
+      try {
+        setLoadedUser(JSON.parse(user));
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        setLoadedUser(null);
+      }
     }
-  }
-  return [user, setUser];
+  }, [loading, user]);
+
+  const setUser = (user: IUser | null, updateLocalStorage: boolean) => {
+    setLoadedUser(user);
+    if (updateLocalStorage) {
+      if (user) {
+        setUserLocalStorage(JSON.stringify(user));
+      } else {
+        SecureStore.deleteItemAsync(USER_LOCAL_STORAGE_KEY);
+      }
+    }
+  };
+
+  return [[loading, loadedUser], setUser];
 }
