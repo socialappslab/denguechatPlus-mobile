@@ -1,9 +1,9 @@
 import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
-import { View } from "@/components/themed";
+import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { Questionnaire } from "@/types";
 import { useNavigation } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const questionnaire: Questionnaire = {
@@ -164,9 +164,10 @@ export default function Visit() {
   const [currentQuestion, setCurrentQuestion] = useState(
     questionnaire.initialQuestion,
   );
-  const [prevQuestion, setPrevQuestion] = useState<string>(
+  const [history, setHistory] = useState<string[]>([
     questionnaire.initialQuestion,
-  );
+  ]);
+  const [canContinue, setCanContinue] = useState(false);
   const navigation = useNavigation();
   const questions = questionnaire.questions;
 
@@ -175,21 +176,35 @@ export default function Visit() {
   const {
     handleSubmit,
     watch,
-    formState: { errors, isValid },
+    getValues,
+    formState,
+    // formState: { errors, isValid },
   } = methods;
 
-  const onSubmitHandler = (values: Record<string, string>) => {
+  const onSubmitHandler = () => {
+    const values = getValues();
     console.log(values);
   };
 
+  useEffect(() => {
+    const subscription = watch(`question_${currentQuestion}`);
+    console.log("hiiiii");
+    const someIsSelected = Object.keys(subscription || {}).some(
+      (k) => subscription[k] === true,
+    );
+    setCanContinue(someIsSelected);
+    // return () => subscription?.unsubscribe();
+  }, [watch]);
+
   let current = questions.find((q) => q.id === currentQuestion);
+
   const findNext = () => {
     let next = current?.next;
     if (next) return next;
 
     // look inside options
     if (!next) {
-      const curr = watch(`question_${currentQuestion}`);
+      const curr = getValues(`question_${currentQuestion}`);
       const selectedOption = Object.keys(curr).find(
         (key) => curr[key] === true,
       );
@@ -204,23 +219,47 @@ export default function Visit() {
     return "-1";
   };
 
-  console.log(currentQuestion);
-
   const onNext = () => {
+    onSubmitHandler();
     const next = findNext();
     setCurrentQuestion(next!);
-    setPrevQuestion(currentQuestion);
-    handleSubmit(onSubmitHandler);
+    setHistory((prev) => [...prev, currentQuestion]);
   };
 
   const onBack = () => {
-    setCurrentQuestion(prevQuestion);
+    setHistory((prev) => {
+      const lastQuestion = prev.pop();
+      setCurrentQuestion(lastQuestion!);
+      return prev;
+    });
+  };
+
+  const exitQuestionnaire = () => {
+    navigation.goBack();
+    setCurrentQuestion(questionnaire.initialQuestion);
+    methods.reset();
   };
 
   if (currentQuestion === "-1") {
-    navigation.goBack();
-    setCurrentQuestion(questionnaire.initialQuestion);
+    exitQuestionnaire();
   }
+
+  if (currentQuestion === "inspection") {
+    return (
+      <View className="h-full flex items-center p-4">
+        <Text className="mb-2">Inspection</Text>
+        <Button
+          disabled={currentQuestion === questionnaire.initialQuestion}
+          title="Terminar"
+          onPress={() => {
+            exitQuestionnaire();
+          }}
+        />
+      </View>
+    );
+  }
+
+  const isFinalQuestion = current && current.id === questionnaire.finalQuestion;
 
   return (
     <View className="h-full flex flex-col justify-between pt-5 pb-12 px-5">
@@ -228,23 +267,37 @@ export default function Visit() {
         <QuestionnaireRenderer methods={methods} question={current} />
       )}
 
-      <View className="flex flex-row gap-2">
-        <View className="flex-1">
-          <Button
-            disabled={currentQuestion === questionnaire.initialQuestion}
-            title="Atras"
-            onPress={onBack}
-          />
-        </View>
-        <View className="flex-1">
-          <Button
-            primary
-            disabled={current && current.id === questionnaire.finalQuestion}
-            title="Siguiente"
-            onPress={onNext}
-          />
-        </View>
-      </View>
+      <>
+        {!isFinalQuestion && (
+          <View className="flex flex-row gap-2">
+            <View className="flex-1">
+              <Button
+                disabled={currentQuestion === questionnaire.initialQuestion}
+                title="Atras"
+                onPress={onBack}
+              />
+            </View>
+            <View className="flex-1">
+              <Button primary title="Siguiente" onPress={onNext} />
+            </View>
+          </View>
+        )}
+        {isFinalQuestion && (
+          <View className="flex flex-row gap-2">
+            <View className="flex-1">
+              <Button
+                onPress={() =>
+                  setCurrentQuestion(questionnaire.initialQuestion)
+                }
+                title="Volver al inicio"
+              />
+            </View>
+            <View className="flex-1">
+              <Button primary title="Finalizar" onPress={exitQuestionnaire} />
+            </View>
+          </View>
+        )}
+      </>
     </View>
   );
 }

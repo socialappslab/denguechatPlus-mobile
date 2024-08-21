@@ -19,6 +19,7 @@ const QuestionnaireRenderer = ({
     return options.map((option) => ({
       value: option.id,
       label: option.name,
+      required: option.required,
     }));
   };
 

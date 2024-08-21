@@ -5,6 +5,7 @@ import { Controller, FieldValues, UseFormReturn } from "react-hook-form";
 interface CheckboxOption {
   value: string;
   label: string;
+  required?: boolean;
 }
 
 interface CustomCheckboxProps extends CheckboxProps {
@@ -30,7 +31,7 @@ export const SelectableList = ({
           <Controller
             name={inputName}
             control={methods.control}
-            render={({ field: { onChange, onBlur, value } }) => {
+            render={({ field: { onChange, value } }) => {
               return (
                 <View
                   className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
@@ -43,6 +44,7 @@ export const SelectableList = ({
                   />
                   <Text className="text-sky-400 font-medium text-sm/[17px]">
                     {option.label}
+                    {option.required && "*"}
                   </Text>
                 </View>
               );
@@ -74,6 +76,7 @@ export const SelectableList = ({
                   />
                   <Text className="text-sky-400 font-medium text-sm/[17px]">
                     {option.label}
+                    {option.required && "*"}
                   </Text>
                 </View>
               );
