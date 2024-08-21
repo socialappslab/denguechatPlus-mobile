@@ -1,7 +1,6 @@
-import { Checkbox, Text, RadioButton } from "@/components/themed";
+import { Checkbox, RadioButton, Text, View } from "@/components/themed";
 import { CheckboxProps } from "@/types/CheckboxProps";
-import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Controller, FieldValues, UseFormReturn } from "react-hook-form";
 
 interface CheckboxOption {
   value: string;
@@ -9,55 +8,79 @@ interface CheckboxOption {
 }
 
 interface CustomCheckboxProps extends CheckboxProps {
+  name: string;
   options: CheckboxOption[];
   type: "radio" | "checkbox";
+  methods: UseFormReturn<FieldValues, any, undefined>;
 }
 
 export const SelectableList = ({
+  name,
   options,
   value,
+  methods,
   type = "checkbox",
   ...rest
 }: CustomCheckboxProps) => {
-  const [values, setValues] = useState<string[]>([]);
-
   return options.map((option) => {
-    const isChecked = values.includes(option.value);
-    const onChangeMultiple = () =>
-      setValues((prev) =>
-        prev.includes(option.value)
-          ? prev.filter((value) => value !== option.value)
-          : [...prev, option.value],
-      );
-    const onChangeSingle = () => setValues([option.value]);
-    const onChange = type === "checkbox" ? onChangeMultiple : onChangeSingle;
-
+    const inputName = `question_${name}[option_${option.value}]`;
     return (
-      <TouchableOpacity
-        className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${isChecked ? "bg-green-400" : "bg-gray-400"}`}
-        onPress={onChange}
-        activeOpacity={0.5}
-      >
+      <>
         {type === "checkbox" && (
-          <Checkbox
-            {...rest}
-            value={isChecked}
-            className="bg-white"
-            onValueChange={onChange}
+          <Controller
+            name={inputName}
+            control={methods.control}
+            render={({ field: { onChange, onBlur, value } }) => {
+              return (
+                <View
+                  className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
+                >
+                  <Checkbox
+                    {...rest}
+                    value={value}
+                    className="bg-white"
+                    onValueChange={onChange}
+                  />
+                  <Text className="text-sky-400 font-medium text-sm/[17px]">
+                    {option.label}
+                  </Text>
+                </View>
+              );
+            }}
           />
         )}
+        {/* uses setValue and watch to manage radio buttons */}
         {type === "radio" && (
-          <RadioButton
-            {...rest}
-            value={isChecked}
-            className="bg-white"
-            onValueChange={onChange}
+          <Controller
+            name={inputName}
+            control={methods.control}
+            render={() => {
+              const isSelected = !!methods.watch(inputName);
+              const onChange = () => {
+                let prev = methods.getValues(`question_${name}`);
+                Object.keys(prev).map((key) => (prev[key] = false));
+                methods.setValue(`question_${name}`, prev);
+                methods.setValue(inputName, true);
+              };
+              return (
+                <View
+                  className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${isSelected ? "bg-green-400" : "bg-gray-400"}`}
+                >
+                  <RadioButton
+                    {...rest}
+                    value={isSelected}
+                    className="bg-white"
+                    onValueChange={onChange}
+                  />
+                  <Text className="text-sky-400 font-medium text-sm/[17px]">
+                    {option.label}
+                  </Text>
+                </View>
+              );
+            }}
           />
         )}
-        <Text className="text-sky-400 font-medium text-sm/[17px]">
-          {option.label}
-        </Text>
-      </TouchableOpacity>
+      </>
     );
   });
 };
