@@ -82,6 +82,7 @@ export default function Homes() {
         <View className="flex-1">
           <Button
             primary
+            disabled={currentQuestion === questionnaire.length - 1}
             title="Siguiente"
             onPress={() => setCurrentQuestion((prev) => prev + 1)}
           />
