@@ -38,7 +38,7 @@ const QuestionnaireRenderer = ({
               type="checkbox"
             />
           )}
-          {question.typeField === "select" && (
+          {question.typeField === "list" && (
             <SelectableList
               name={question.id}
               methods={methods}

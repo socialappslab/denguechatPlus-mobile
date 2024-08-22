@@ -3,13 +3,13 @@ import { CheckboxProps } from "@/types/CheckboxProps";
 import { Controller, FieldValues, UseFormReturn } from "react-hook-form";
 
 interface CheckboxOption {
-  value: string;
+  value: number;
   label: string;
   required?: boolean;
 }
 
 interface CustomCheckboxProps extends CheckboxProps {
-  name: string;
+  name: number;
   options: CheckboxOption[];
   type: "radio" | "checkbox";
   methods: UseFormReturn<FieldValues, any, undefined>;

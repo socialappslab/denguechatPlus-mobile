@@ -1,33 +1,36 @@
+// <Questionnaire types>
+export type TypeField = "text" | "multiple" | "list" | "splash";
+
 export interface Questionnaire {
-  name: string;
+  name: number;
   createdAt: Date;
-  initialQuestion: string;
-  finalQuestion: string;
+  initialQuestion: number;
+  finalQuestion: number;
   questions: Question[];
 }
 
 export interface Question {
-  id: string;
+  id: number;
   question: string;
   typeField: TypeField;
   options?: Option[];
   description?: string;
-  next?: string;
+  next?: number;
   image?: Image;
 }
 
 export interface Option {
-  id: string;
+  id: number;
   name: string;
   required?: boolean;
   textArea?: boolean;
-  next?: string;
+  next?: number;
   image?: Image;
 }
 
 export interface Image {
-  id: string;
+  id: number;
   url: string;
 }
 
-export type TypeField = "text" | "multiple" | "select" | "splash";
+// </Questionnaire types>
