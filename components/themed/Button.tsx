@@ -11,7 +11,7 @@ export type ButtonProps = ThemeProps &
   BaseButtonProps &
   TouchableOpacity["props"];
 
-function Button(props: ButtonProps) {
+export function Button(props: ButtonProps) {
   const {
     style,
     title,

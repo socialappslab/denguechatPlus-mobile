@@ -1,42 +1,25 @@
+import { useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { useVisit } from "@/hooks/useVisit";
 import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
-import { ErrorResponse } from "@/schema";
-import { Questionnaire } from "@/types";
-import useAxios from "axios-hooks";
-import { useNavigation } from "expo-router";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 
 const INSPECTION = 0;
 const TERMINATE = -1;
 
 export default function Visit() {
-  const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
+  const { questionnaire, isLoadingQuestionnaire } = useVisit();
   const [currentQuestion, setCurrentQuestion] = useState<null | number>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setHistory] = useState<number[]>([]);
   const navigation = useNavigation();
 
-  const [{ data: questionnaireData, loading }] = useAxios<
-    ExistingDocumentObject,
-    unknown,
-    ErrorResponse
-  >({
-    url: `questionnaires/current`,
-  });
-
   useEffect(() => {
-    if (!questionnaireData) return;
-    const deserializedQuestionnaire = deserialize<Questionnaire>(
-      questionnaireData,
-    ) as Questionnaire;
-
-    setQuestionnaire(deserializedQuestionnaire);
-    console.log(deserializedQuestionnaire);
-    setCurrentQuestion(deserializedQuestionnaire.initialQuestion);
-  }, [questionnaireData]);
+    setCurrentQuestion(questionnaire?.initialQuestion);
+  }, [questionnaire]);
 
   const methods = useForm();
 
@@ -120,8 +103,8 @@ export default function Visit() {
 
   return (
     <View className="h-full flex flex-col justify-between pt-5 pb-12 px-5">
-      {loading && <Text>Loading...</Text>}
-      {!loading && current && (
+      {isLoadingQuestionnaire && <Text>Loading...</Text>}
+      {!isLoadingQuestionnaire && current && (
         <QuestionnaireRenderer methods={methods} question={current} />
       )}
 

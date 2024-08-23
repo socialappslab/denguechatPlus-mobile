@@ -6,3 +6,6 @@ export * from "./PasswordInput";
 export * from "./Checkbox";
 export * from "./SelectableList";
 export * from "./RadioButton";
+export * from "./ScrollView";
+export * from "./SafeAreaView";
+export * from "./Loading";

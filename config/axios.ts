@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { configure, makeUseAxios } from "axios-hooks";
 import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
 
 import {
   ACCESS_TOKEN_LOCAL_STORAGE_KEY,
@@ -118,9 +119,7 @@ const refreshAuthLogic = async (failedRequest: any) => {
     })
     .catch((error) => {
       console.log("error refreshAuthLogic", JSON.stringify(error));
-      resetAuthApi();
-      window.location.href = "/login";
-      // TODO logout user
+      router.replace("/logout");
 
       return Promise.reject();
     });

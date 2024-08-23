@@ -10,9 +10,7 @@ import Bubble from "@/assets/images/icons/bubble.svg";
 import House from "@/assets/images/icons/house.svg";
 import User from "@/assets/images/icons/user.svg";
 import { useTranslation } from "react-i18next";
-import Button from "@/components/themed/Button";
-import { Ionicons } from "@expo/vector-icons";
-import { Text } from "@/components/themed";
+import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 
 type TabsNames = "chat" | "homes" | "profile";
 
@@ -28,14 +26,25 @@ function TabBarIcon(props: { name: TabsNames; color: string }) {
   }
 }
 
-export default function TabLayout() {
+export default function TabLayout(props: ThemeProps) {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
-  const { goBack } = useNavigation();
+  const { lightColor, darkColor } = props;
+
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "background",
+  );
+
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
   return (
     <Tabs
       screenOptions={{
+        headerStyle: {
+          backgroundColor,
+        },
+        headerTintColor: color,
         tabBarStyle: {
           position: "absolute",
           height: 85,
@@ -73,21 +82,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="visit"
+        name="visits"
         options={{
           title: t("tabs.visit"),
-          headerTitle: () => <Text type="header">{t("tabs.visit")}</Text>,
           tabBarIcon: ({ color }) => <TabBarIcon name="homes" color={color} />,
-          tabBarStyle: { display: "none" },
-          headerLeft: () => (
-            <Ionicons
-              onPress={goBack}
-              name="arrow-back"
-              size={24}
-              marginLeft={20}
-              color="black"
-            />
-          ),
         }}
       />
       <Tabs.Screen

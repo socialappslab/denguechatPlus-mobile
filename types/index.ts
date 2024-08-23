@@ -33,4 +33,100 @@ export interface Image {
   url: string;
 }
 
-// </Questionnaire types>
+// <Visit types>
+export interface Answer {
+  questionId: number;
+  answer: {
+    optionId: number;
+    value: boolean;
+    text?: string;
+  }[];
+}
+
+export interface Inspection {
+  code_reference: string;
+  container_test_result: string;
+  has_lid: boolean;
+  has_water: boolean;
+  in_use: boolean;
+  tracking_type_required: string;
+  was_chemically_treated: boolean;
+  treated_by_id: number;
+  breeding_site_type_id: number;
+  elimination_method_type_id: number;
+  water_source_type_id: number;
+}
+
+export interface Country {
+  id: number;
+  name: string;
+}
+
+export interface State {
+  id: number;
+  name: string;
+}
+
+export interface City {
+  id: number;
+  name: string;
+}
+
+export interface Neighborhood {
+  id: number;
+  name: string;
+}
+
+export interface Wedge {
+  id: number;
+  name: string;
+}
+
+export interface HouseBlock {
+  id: number;
+  name: string;
+}
+
+export interface CreatedBy {
+  id: number;
+  name: string;
+  last_name: string;
+}
+
+export interface House {
+  id: number;
+  discardedAt?: string | null;
+  referenceCode: string;
+  houseType: string | null;
+  address: string | null;
+  latitude: number;
+  longitude: number;
+  notes?: string | null;
+  status?: string | null;
+  containerCount?: number | null;
+  createdAt: string;
+  lastVisit?: string | null;
+  updatedAt: string;
+  country?: Country;
+  state?: State;
+  city?: City;
+  neighborhood?: Neighborhood;
+  wedge?: Wedge;
+  houseBlock?: HouseBlock;
+  specialPlace?: string | null;
+  createdBy?: CreatedBy;
+  house_block_id?: number;
+}
+
+export interface VisitData {
+  answers: Answer[];
+  host: string;
+  visit_permission: boolean;
+  house_id: number;
+  questionnaire_id: number;
+  team_id: number;
+  user_account_id: number;
+  notes: string;
+  inspections: Inspection[];
+  house?: House;
+}

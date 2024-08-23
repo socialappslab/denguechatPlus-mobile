@@ -110,13 +110,13 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
     <AuthProvider>
       <ThemeProvider value={DefaultTheme}>
         <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)/(tabs)" options={{ headerShown: false }} />
+
           <Stack.Screen
             name="(public)/login"
             options={{ headerShown: false }}
