@@ -1,18 +1,7 @@
 import React, { useRef, useState } from "react";
-import { Text, View, TextInput } from "@/components/themed";
-import {
-  SafeAreaView,
-  TouchableOpacity,
-  TextInput as RNTextInput,
-} from "react-native";
+import { TouchableOpacity, TextInput as RNTextInput } from "react-native";
 import { useTranslation } from "react-i18next";
-
-import Logo from "@/assets/images/logo.svg";
-import { PasswordInput } from "@/components/themed/PasswordInput";
-import KeyboardAvoidingView from "@/components/control/KeyboardAvoidingView";
-import { ExternalLink } from "@/components/ExternalLink";
-import Button from "@/components/themed/Button";
-import { useColorScheme } from "@/components/themed/useColorScheme";
+import Toast from "react-native-toast-message";
 import CountryPicker, {
   CountryCode,
   DARK_THEME,
@@ -26,15 +15,22 @@ import {
   FormProvider,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Text, View, TextInput } from "@/components/themed";
+import Logo from "@/assets/images/logo.svg";
+import { PasswordInput, SafeAreaView, Button } from "@/components/themed";
+import KeyboardAvoidingView from "@/components/control/KeyboardAvoidingView";
+import { ExternalLink } from "@/components/ExternalLink";
+import { useColorScheme } from "@/components/themed/useColorScheme";
 import {
   createLoginSchema,
   LoginInputType,
   LoginRequestType,
   TYPE_LOGIN_REQUEST,
-} from "../../schema/auth";
-import Toast from "react-native-toast-message";
-import useSignIn from "../../hooks/useSignIn";
-import { extractAxiosErrorData } from "../../util";
+} from "@/schema/auth";
+
+import useSignIn from "@/hooks/useSignIn";
+import { extractAxiosErrorData } from "@/util";
 
 export default function Login() {
   const { t } = useTranslation();

@@ -1,13 +1,13 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import * as SecureStore from "expo-secure-store";
+import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
+import useAxios from "axios-hooks";
 
 import {
   CURRENT_VISIT_LOCAL_STORAGE_KEY,
   CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
 } from "@/constants/Keys";
 import { Questionnaire, VisitData } from "@/types";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import useAxios from "axios-hooks";
 import { ErrorResponse } from "@/schema";
 import { useAuth } from "@/context/AuthProvider";
 
@@ -47,7 +47,9 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
     featchQuestionnaire();
   }, [user, featchQuestionnaire]);
 

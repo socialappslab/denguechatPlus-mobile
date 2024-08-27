@@ -1,14 +1,15 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { useContext } from "react";
 import { router, useSegments } from "expo-router";
-import { IUser } from "../schema/auth";
-import { useStorageState } from "../hooks/useStorageState";
+
+import { IUser } from "@/schema/auth";
+import { useStorageState } from "@/hooks/useStorageState";
 import {
   ACCESS_TOKEN_LOCAL_STORAGE_KEY,
   REFRESH_TOKEN_LOCAL_STORAGE_KEY,
-} from "../constants/Keys";
-import { resetAuthApi, setAccessTokenToHeaders } from "../config/axios";
-import useUser from "../hooks/useUser";
+} from "@/constants/Keys";
+import { resetAuthApi, setAccessTokenToHeaders } from "@/config/axios";
+import useUser from "@/hooks/useUser";
 
 type AuthProviderType = {
   user: IUser | null;

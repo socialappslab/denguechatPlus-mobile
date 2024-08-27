@@ -116,9 +116,12 @@ function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)/(tabs)" options={{ headerShown: false }} />
-
           <Stack.Screen
             name="(public)/login"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(public)/logout"
             options={{ headerShown: false }}
           />
         </Stack>

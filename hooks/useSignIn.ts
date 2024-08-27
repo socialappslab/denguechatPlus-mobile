@@ -31,12 +31,13 @@ export default function useSignIn(): IUseSignIn {
       console.log(deserializedData.id);
       // eslint-disable-next-line no-console
       console.log("deserializedData login", deserializedData);
+      setAccessTokenToHeaders(loginRes.data.meta.jwt.res.access);
+
       login(
         loginRes.data.meta.jwt.res.access,
         loginRes.data.meta.jwt.res.refresh,
         deserializedData,
       );
-      setAccessTokenToHeaders(loginRes.data.meta.jwt.res.access);
     } else {
       throw new Error("Couldn't deserialize user data");
     }

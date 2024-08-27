@@ -66,7 +66,7 @@ export default function TabLayout(props: ThemeProps) {
           title: t("tabs.chat"),
           tabBarIcon: ({ color }) => <TabBarIcon name="chat" color={color} />,
           headerRight: () => (
-            <Link href="/homes" asChild>
+            <Link href="/profile" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome

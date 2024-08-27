@@ -4,7 +4,7 @@ import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
 import { parseId } from "@/util";
 import { useRouter } from "expo-router";
-import { t } from "i18next";
+
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -83,6 +83,8 @@ export default function Visit() {
     }
   };
 
+  console.log("formState.isValid", formState.isValid);
+
   const isValid =
     (!!findTrue(getValues(`question_${currentQuestion}`)) &&
       formState.isValid) ||
@@ -95,6 +97,8 @@ export default function Visit() {
       return prev;
     });
   };
+
+  console.log("currentQuestion", current);
 
   return (
     <View className="h-full flex flex-col justify-between pt-5 pb-10 px-5">
