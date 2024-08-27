@@ -44,6 +44,14 @@ export default function VisitLayout(props: ThemeProps) {
         name="visit"
         options={{ headerShown: true, headerShadowVisible: false }}
       />
+      <Stack.Screen
+        name="summary"
+        options={{ headerShown: true, headerShadowVisible: false }}
+      />
+      <Stack.Screen
+        name="final"
+        options={{ headerShown: true, headerShadowVisible: false }}
+      />
     </Stack>
   );
 }

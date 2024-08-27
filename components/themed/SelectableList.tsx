@@ -31,6 +31,9 @@ export const SelectableList = ({
           <Controller
             name={inputName}
             control={methods.control}
+            rules={{
+              required: option.required ? "This field is required" : false,
+            }}
             render={({ field: { onChange, value } }) => {
               return (
                 <View
@@ -56,6 +59,9 @@ export const SelectableList = ({
           <Controller
             name={inputName}
             control={methods.control}
+            rules={{
+              required: option.required ? "This field is required" : false,
+            }}
             render={() => {
               const isSelected = !!methods.watch(inputName);
               const onChange = () => {

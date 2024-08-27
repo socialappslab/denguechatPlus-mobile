@@ -16,6 +16,7 @@ interface VisitContextType {
   isLoadingQuestionnaire: boolean;
   visitData: VisitData;
   setVisitData: (data: Partial<VisitData>) => Promise<void>;
+  cleanStore: () => Promise<void>;
 }
 
 const VisitContext = createContext<VisitContextType | undefined>(undefined);
@@ -23,13 +24,13 @@ const VisitContext = createContext<VisitContextType | undefined>(undefined);
 const VisitProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const [visitData, setVisitDataState] = useState<VisitData>({
-    answers: [],
+    answers: {},
     host: "",
-    visit_permission: false,
-    house_id: 0,
-    questionnaire_id: 0,
-    team_id: 0,
-    user_account_id: 0,
+    visitPermission: false,
+    houseId: 0,
+    questionnaireId: "0",
+    teamId: 0,
+    userAccountId: "0",
     notes: "",
     inspections: [],
   });
@@ -95,9 +96,22 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const cleanStore = async () => {
+    SecureStore.setItemAsync(
+      CURRENT_VISIT_LOCAL_STORAGE_KEY,
+      JSON.stringify({}),
+    );
+  };
+
   return (
     <VisitContext.Provider
-      value={{ visitData, questionnaire, isLoadingQuestionnaire, setVisitData }}
+      value={{
+        visitData,
+        questionnaire,
+        isLoadingQuestionnaire,
+        setVisitData,
+        cleanStore,
+      }}
     >
       {children}
     </VisitContext.Provider>

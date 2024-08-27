@@ -55,8 +55,11 @@ const QuestionnaireRenderer = ({
           <Text type="title" className="text-center">
             {question.question}
           </Text>
-          <Text type="text" className="text-center p-8 pt-4">
-            {question.description}
+          <Text
+            type="text"
+            className="text-center p-8 pt-4 whitespace-pre-wrap"
+          >
+            {question.description?.replace(/\\n/g, "\n")}
           </Text>
         </View>
       )}

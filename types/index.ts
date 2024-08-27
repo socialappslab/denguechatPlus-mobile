@@ -2,6 +2,7 @@
 export type TypeField = "text" | "multiple" | "list" | "splash";
 
 export interface Questionnaire {
+  id: string;
   name: number;
   createdAt: Date;
   initialQuestion: number;
@@ -38,7 +39,7 @@ export interface Answer {
   questionId: number;
   answer: {
     optionId: number;
-    value: boolean;
+    value: boolean | string;
     text?: string;
   }[];
 }
@@ -118,15 +119,24 @@ export interface House {
   house_block_id?: number;
 }
 
-export interface VisitData {
-  answers: Answer[];
+export type FormAnswer = Record<string, Record<string, boolean | string>>;
+export type FormPayload = Answer[];
+
+interface VisitAttributes {
   host: string;
-  visit_permission: boolean;
-  house_id: number;
-  questionnaire_id: number;
-  team_id: number;
-  user_account_id: number;
-  notes: string;
+  visitPermission: boolean;
+  houseId: number;
+  questionnaireId: string;
+  teamId: number;
+  userAccountId: string;
+  notes?: string;
   inspections: Inspection[];
   house?: House;
+}
+export interface VisitPayload extends VisitAttributes {
+  answers: FormPayload;
+}
+
+export interface VisitData extends VisitAttributes {
+  answers: FormAnswer;
 }

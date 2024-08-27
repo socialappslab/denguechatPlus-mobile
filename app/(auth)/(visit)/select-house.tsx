@@ -24,8 +24,8 @@ const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const day = date.getDate();
   const month = date.getMonth() + 1;
-  const year = date.getFullYear().toString().slice(-2);
-  return `${day}-${month}-${year}`;
+  const year = date.getFullYear().toString();
+  return `(${year}-${day}-${month})`;
 };
 
 export default function SelectHouseScreen() {
@@ -39,7 +39,7 @@ export default function SelectHouseScreen() {
   const { setVisitData } = useVisit();
 
   const updateHouse = async () => {
-    await setVisitData({ house_id: houseSelectedId });
+    await setVisitData({ houseId: houseSelectedId });
     router.push("visit");
   };
 
@@ -61,7 +61,7 @@ export default function SelectHouseScreen() {
     // const houseBlock = house.houseBlock ? `, ${house.houseBlock.name}` : "";
     // const houseWedge = house.wedge ? `, ${house.wedge.name}` : "";
     const lastVisit = house.lastVisit ? formatDate(house.lastVisit) : "";
-    return `#${house.referenceCode}${lastVisit}`;
+    return `#${house.referenceCode} ${lastVisit}`;
   };
 
   return (

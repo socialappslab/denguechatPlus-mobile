@@ -28,6 +28,7 @@ export default function useSignIn(): IUseSignIn {
     const deserializedData = deserialize<IUser>(loginRes.data);
 
     if (deserializedData && !Array.isArray(deserializedData)) {
+      console.log(deserializedData.id);
       // eslint-disable-next-line no-console
       console.log("deserializedData login", deserializedData);
       login(

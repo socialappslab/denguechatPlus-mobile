@@ -19,3 +19,5 @@ export function extractAxiosErrorData(error: unknown): ErrorResponse | null {
   }
   return null;
 }
+
+export const parseId = (v: string) => parseInt(v.match(/\d+/)![0], 10);
