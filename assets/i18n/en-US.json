@@ -7,11 +7,12 @@
     "error": "Error",
     "success": "Success",
     "logout": "Logout",
-    "textChatsTab": "Navigate to the tab 2 or 3 tab to logout.",
+    "textChatsTab": "Navigate to profile tab to logout.",
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
-      "profile": "Profile"
+      "profile": "Profile",
+      "visit": "Register a visit"
     },
     "login": {
       "username": "Username",
@@ -50,6 +51,17 @@
       "passwordLength": "Password must be at least {{length}} characters",
       "usernameLength": "Username must be at least {{length}} characters",
       "phoneLength": "Phone is too short"
+    },
+    "visit": {
+      "start": "Start a visit",
+      "title": "Visit Registration",
+      "houses": {
+        "title": "Houses",
+        "search": "Search for a house",
+        "optionsTitle": "Choose a house",
+        "noHouses": "Can't find the house?",
+        "noHousesMessage": "Register a new house here."
+      }
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",

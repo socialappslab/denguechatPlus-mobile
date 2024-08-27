@@ -1,26 +1,29 @@
 import { StyleSheet } from "react-native";
-import { useAuth } from "@/context/AuthProvider";
+
 import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useTranslation } from "react-i18next";
 
-export default function Homes() {
-  const { user, logout } = useAuth();
+import { useRouter } from "expo-router";
+
+export default function TabTwoScreen() {
   const { t } = useTranslation();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab 2 - {t("tabs.homes")}</Text>
+      <Text style={styles.title}>{t("tabs.visit")}</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Text>Account</Text>
-      <Text className="font-semibold text-md color-primary">
-        {`${user?.firstName} ${user?.lastName} ` || "No username"}
-      </Text>
-      <Button className="w-1/2 mt-6" title="Log out" onPress={logout} />
+      <Button
+        primary
+        className="w-1/2 mt-6"
+        title={t("visit.start")}
+        onPress={() => router.push("select-house")}
+      />
     </View>
   );
 }

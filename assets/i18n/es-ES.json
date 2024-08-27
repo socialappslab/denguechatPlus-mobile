@@ -7,11 +7,12 @@
     "error": "Error",
     "success": "'Éxito'",
     "logout": "Cerrar Sesión",
-    "textChatsTab": "Navega al tab 2 o el 3 para hacer logout.",
+    "textChatsTab": "Navega al tab de perfil para hacer logout.",
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",
-      "profile": "Perfil"
+      "profile": "Perfil",
+      "visit": "Registro de visita"
     },
     "login": {
       "username": "Nombre de usuario",
@@ -52,6 +53,17 @@
       "passwordLength": "La contraseña debe tener al menos {{length}} caracteres",
       "usernameLength": "El nombre de usuario debe tener al menos {{length}} caracteres",
       "phoneLength": "El teléfono es muy corto"
+    },
+    "visit": {
+      "start": "Iniciar una visita",
+      "title": "Registro de visita",
+      "houses": {
+        "title": "Casas",
+        "search": "Buscar una casa",
+        "optionsTitle": "Elige una casa",
+        "noHouses": "¿No encuentras la casa?",
+        "noHousesMessage": "Registra una nueva casa aquí."
+      }
     },
     "errorCodes": {
       "generic": "Algo falló. Por favor intente de nuevo.",

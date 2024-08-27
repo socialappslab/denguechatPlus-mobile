@@ -83,7 +83,7 @@ export const UserStatusValues = [
 export type UserStatusType = (typeof UserStatusValues)[number];
 
 export interface IUser extends UserProfile {
-  id?: string;
+  id: string;
   status?: UserStatusType;
   permissions?: string[];
 

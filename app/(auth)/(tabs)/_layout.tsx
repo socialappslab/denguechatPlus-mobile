@@ -1,6 +1,6 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
+import { Link, Tabs, useNavigation } from "expo-router";
 import { Pressable } from "react-native";
 
 import Colors from "@/constants/Colors";
@@ -10,6 +10,7 @@ import Bubble from "@/assets/images/icons/bubble.svg";
 import House from "@/assets/images/icons/house.svg";
 import User from "@/assets/images/icons/user.svg";
 import { useTranslation } from "react-i18next";
+import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 
 type TabsNames = "chat" | "homes" | "profile";
 
@@ -25,13 +26,25 @@ function TabBarIcon(props: { name: TabsNames; color: string }) {
   }
 }
 
-export default function TabLayout() {
+export default function TabLayout(props: ThemeProps) {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
+  const { lightColor, darkColor } = props;
+
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "background",
+  );
+
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
   return (
     <Tabs
       screenOptions={{
+        headerStyle: {
+          backgroundColor,
+        },
+        headerTintColor: color,
         tabBarStyle: {
           position: "absolute",
           height: 85,
@@ -69,9 +82,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="homes"
+        name="visits"
         options={{
-          title: t("tabs.homes"),
+          title: t("tabs.visit"),
           tabBarIcon: ({ color }) => <TabBarIcon name="homes" color={color} />,
         }}
       />

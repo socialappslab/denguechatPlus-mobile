@@ -293,6 +293,7 @@ export default function Login() {
             </View>
 
             <Button
+              primary
               disabled={loading || !isValid}
               className="mb-4"
               title={t("login.action")}

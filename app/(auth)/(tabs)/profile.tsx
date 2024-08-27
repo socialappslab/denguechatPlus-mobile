@@ -5,10 +5,12 @@ import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useTranslation } from "react-i18next";
 import useAxios from "axios-hooks";
+import { useRouter } from "expo-router";
 
 export default function TabTwoScreen() {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
+  const router = useRouter();
 
   const [{ data, error }] = useAxios({
     url: `/users/${user?.id}`,
@@ -34,7 +36,7 @@ export default function TabTwoScreen() {
       <Text className="font-semibold text-md color-primary">
         {`${user?.firstName} ${user?.lastName} ` || "No username"}
       </Text>
-      <Button className="w-1/2 mt-6" title="Log out" onPress={logout} />
+      <Button primary className="w-1/2 mt-6" title="Log out" onPress={logout} />
     </View>
   );
 }
