@@ -12,7 +12,7 @@
       "chat": "Chat",
       "homes": "Casas",
       "profile": "Perfil",
-      "visit": "Registro de visita"
+      "visit": "Visitas"
     },
     "login": {
       "username": "Nombre de usuario",
@@ -58,11 +58,15 @@
       "start": "Iniciar una visita",
       "title": "Registro de visita",
       "houses": {
-        "title": "Casas",
-        "search": "Buscar una casa",
-        "optionsTitle": "Elige una casa",
-        "noHouses": "¿No encuentras la casa?",
-        "noHousesMessage": "Registra una nueva casa aquí."
+        "title": "Sitios",
+        "searchPlaceholder": "Buscar por número de casa",
+        "house": "Casa",
+        "registerNewHouse": "Registrar un nuevo sitio",
+        "notVisited": "Sin visita",
+        "search": "Buscar un sitio",
+        "optionsTitle": "Elige un sitio",
+        "noHouses": "¿No encuentras el sitio?",
+        "noHousesMessage": "Registra un nuevo sitio aquí."
       }
     },
     "errorCodes": {
