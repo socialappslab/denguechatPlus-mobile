@@ -119,7 +119,7 @@ const StaticQuestions: Question[] = [
     ],
   },
   {
-    id: 20,
+    id: 0,
     question: "¿Que tipo de contenedor encontraste?",
     typeField: "list",
     next: 21,
@@ -208,6 +208,222 @@ const StaticQuestions: Question[] = [
       },
     ],
   },
+  {
+    id: 22,
+    question: "¿El contenedor tiene una tapa?",
+    typeField: "list",
+    next: 23,
+    options: [
+      {
+        id: 51,
+        name: "No, no tiene una tapa",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 52,
+        name: "Sí, tiene una tapa hermética",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 53,
+        name: "Sí, tiene una tapa no hermética",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
+  {
+    id: 23,
+    question: "¿De donde proviene el agua?",
+    typeField: "list",
+    next: 24,
+    options: [
+      {
+        id: 51,
+        name: "Agua del grifo o potable",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 52,
+        name: "Lluvia",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 53,
+        name: "Otro",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
+  {
+    id: 24,
+    question:
+      "En los últimos 30 días: ¿fue el contenedor tratado por el Ministerio de Salud con piriproxifeno o abate?",
+    typeField: "list",
+    next: 25,
+    options: [
+      {
+        id: 61,
+        name: "Sí, fue tratado",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 62,
+        name: "No, no fue tratado",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 63,
+        name: "No lo sé",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
+  {
+    id: 25,
+    question: "En este contenedor hay",
+    typeField: "list",
+    next: 26,
+    options: [
+      {
+        id: 71,
+        name: "Larvas",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 72,
+        name: "Pupas",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 73,
+        name: "Huevos",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 74,
+        name: "Nada",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
+  {
+    id: 26,
+    question: "Registremos acciones tomadas sobre el contenedor",
+    typeField: "splash",
+    next: 27,
+    options: [],
+  },
+  {
+    id: 27,
+    question: "¿Qué acción se realizó con el contenedor?",
+    typeField: "list",
+    next: 28,
+    options: [
+      {
+        id: 81,
+        name: "Contenedor protegido",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 82,
+        name: "Contenedor descartado",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 83,
+        name: "Agua del contenedor tirada",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 84,
+        name: "Contenedor trasladado a un lugar seguro",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 85,
+        name: "Contenedor limpiado",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
+  {
+    id: 28,
+    question: "¿Puedes tomar una foto del contenedor?",
+    typeField: "list",
+    next: 29,
+    options: [
+      {
+        id: 91,
+        name: "Sí, puedo",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 92,
+        name: "No, no puedo",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
+  {
+    id: 29,
+    question: "¿Registrar otro contenedor?",
+    typeField: "list",
+    next: 30,
+    options: [
+      {
+        id: 101,
+        name: "Sí, registrar otro contenedor",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 102,
+        name: "No, no es necesario",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
+  {
+    id: 30,
+    question: "¿Quieres hacer seguimiento de un contenedor?",
+    typeField: "list",
+    next: 31,
+    options: [
+      {
+        id: 101,
+        name: "Sí, hacer seguimiento",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 102,
+        name: "No, no es necesario",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
 ];
 
 interface VisitContextType {
@@ -234,6 +450,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     inspections: [],
   });
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
+  const [currentQuestion, setCurrentQuestion] = useState<null | number>(9);
 
   const [
     { data: questionnaireData, loading: isLoadingQuestionnaire },

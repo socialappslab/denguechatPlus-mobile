@@ -1,4 +1,4 @@
-import { Button, Text, View } from "@/components/themed";
+import { Button, Loading, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
@@ -29,7 +29,7 @@ export default function Summary() {
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  const { createMutation: createVisit } = useCreateMutation<
+  const { createMutation: createVisit, loading } = useCreateMutation<
     VisitPayload,
     VisitData
   >("visits");
@@ -110,6 +110,7 @@ export default function Summary() {
       </View>
       <View className="flex flex-row gap-2">
         <View className="flex-1">
+          {loading && <Loading />}
           <Button
             title="Volver al inicio"
             onPress={() => router.push("visit")}

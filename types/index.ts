@@ -45,7 +45,7 @@ export interface Answer {
 }
 
 export interface Inspection {
-  code_reference: string;
+  code_reference?: string;
   container_test_result: string;
   has_lid: boolean;
   has_water: boolean;

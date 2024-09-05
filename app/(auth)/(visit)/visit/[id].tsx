@@ -3,12 +3,11 @@ import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
 import { parseId } from "@/util";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-const INSPECTION = 0;
 const TERMINATE = -1;
 
 const findTrue = (obj: Record<string, string | boolean>) => {
@@ -23,10 +22,12 @@ export default function Visit() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setHistory] = useState<number[]>([]);
   const router = useRouter();
+  const { id } = useLocalSearchParams();
 
   useEffect(() => {
-    setCurrentQuestion(questionnaire?.initialQuestion);
-  }, [questionnaire, isLoadingQuestionnaire]);
+    const parsedId = parseInt(id as string, 10);
+    setCurrentQuestion(parsedId);
+  }, [id, setCurrentQuestion]);
 
   const methods = useForm({
     defaultValues: visitData.answers,
@@ -74,10 +75,10 @@ export default function Visit() {
   const onNext = () => {
     normalizeAndSaveValues();
     const next = findNext();
-    setCurrentQuestion(next!);
+    router.push(`visit/${next!}`);
     setHistory((prev) => [...prev, currentQuestion as number]);
 
-    if (next === TERMINATE || next === INSPECTION) {
+    if (next === TERMINATE) {
       router.push("summary");
       return;
     }
@@ -85,20 +86,11 @@ export default function Visit() {
 
   console.log("formState.isValid", formState.isValid);
 
-  const isValid =
-    (!!findTrue(getValues(`question_${currentQuestion}`)) &&
-      formState.isValid) ||
-    current?.typeField === "splash";
+  const isValid = formState.isValid || current?.typeField === "splash";
 
   const onBack = () => {
-    setHistory((prev) => {
-      const lastQuestion = prev.pop();
-      setCurrentQuestion(lastQuestion!);
-      return prev;
-    });
+    router.back();
   };
-
-  console.log("currentQuestion", current);
 
   return (
     <View className="h-full flex flex-col justify-between pt-5 pb-10 px-5">

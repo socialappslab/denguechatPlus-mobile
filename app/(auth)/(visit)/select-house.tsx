@@ -21,6 +21,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { SimpleChip } from "../../../components/themed/SimpleChip";
 
+const INIT = 9;
+
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
 
@@ -33,7 +35,7 @@ export default function SelectHouseScreen() {
 
   const updateHouse = async () => {
     await setVisitData({ houseId: houseSelectedId });
-    router.push("visit");
+    router.push(`visit/${INIT}`);
   };
 
   const formatDate = (dateString: string) => {

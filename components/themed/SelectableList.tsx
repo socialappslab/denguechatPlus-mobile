@@ -1,6 +1,7 @@
 import { Checkbox, RadioButton, Text, View } from "@/components/themed";
 import { CheckboxProps } from "@/types/CheckboxProps";
 import { Controller, FieldValues, UseFormReturn } from "react-hook-form";
+import { TouchableOpacity } from "react-native";
 
 interface CheckboxOption {
   value: number;
@@ -36,8 +37,9 @@ export const SelectableList = ({
             }}
             render={({ field: { onChange, value } }) => {
               return (
-                <View
+                <TouchableOpacity
                   className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
+                  onPress={onChange}
                 >
                   <Checkbox
                     {...rest}
@@ -49,7 +51,7 @@ export const SelectableList = ({
                     {option.label}
                     {option.required && "*"}
                   </Text>
-                </View>
+                </TouchableOpacity>
               );
             }}
           />
@@ -71,7 +73,8 @@ export const SelectableList = ({
                 methods.setValue(inputName, true);
               };
               return (
-                <View
+                <TouchableOpacity
+                  onPress={onChange}
                   className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${isSelected ? "bg-green-400" : "bg-gray-400"}`}
                 >
                   <RadioButton
@@ -84,7 +87,7 @@ export const SelectableList = ({
                     {option.label}
                     {option.required && "*"}
                   </Text>
-                </View>
+                </TouchableOpacity>
               );
             }}
           />
