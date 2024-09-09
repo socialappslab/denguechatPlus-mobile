@@ -1,5 +1,5 @@
 import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
-import { Text, View } from "@/components/themed";
+import { SafeAreaView, ScrollView, Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
 import { FormAnswer } from "@/types";
@@ -132,29 +132,31 @@ export default function Visit() {
   };
 
   return (
-    <View className="h-full flex flex-col justify-between pt-5 pb-10 px-5">
-      {isLoadingQuestionnaire && <Text>Loading...</Text>}
-      {!isLoadingQuestionnaire && current && (
-        <QuestionnaireRenderer methods={methods} question={current} />
-      )}
-
-      <View className="flex flex-row gap-2">
-        <View className="flex-1">
-          <Button
-            disabled={currentQuestion === questionnaire?.initialQuestion}
-            title="Atras"
-            onPress={onBack}
-          />
-        </View>
-        <View className="flex-1">
-          <Button
-            primary
-            title="Siguiente"
-            onPress={onNext}
-            disabled={!isValid}
-          />
+    <SafeAreaView>
+      <View className="flex flex-1 py-5 px-5 h-full">
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
+          {isLoadingQuestionnaire && <Text>Loading...</Text>}
+          {!isLoadingQuestionnaire && current && (
+            <QuestionnaireRenderer methods={methods} question={current} />
+          )}
+        </ScrollView>
+        <View className="flex flex-row gap-2">
+          <View className="flex-1">
+            <Button title="Atras" onPress={onBack} />
+          </View>
+          <View className="flex-1">
+            <Button
+              primary
+              title="Siguiente"
+              onPress={onNext}
+              disabled={!isValid}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

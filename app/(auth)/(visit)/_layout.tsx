@@ -1,14 +1,14 @@
 import React from "react";
 
-import { Stack, useNavigation } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 
-import { useTranslation } from "react-i18next";
-import { Ionicons } from "@expo/vector-icons";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
+import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 export default function VisitLayout(props: ThemeProps) {
   const { t } = useTranslation();
-  const { goBack } = useNavigation();
+  const router = useRouter();
   const { lightColor, darkColor } = props;
 
   const backgroundColor = useThemeColor(
@@ -28,7 +28,7 @@ export default function VisitLayout(props: ThemeProps) {
         title: t("tabs.visit"),
         headerLeft: () => (
           <Ionicons
-            onPress={goBack}
+            onPress={() => router.back()}
             name="arrow-back"
             size={24}
             color={color}
