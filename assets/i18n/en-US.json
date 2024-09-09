@@ -11,8 +11,8 @@
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
-      "profile": "Profile",
-      "visit": "Register a visit"
+      "profile": "My Brigade",
+      "visit": "Visits"
     },
     "login": {
       "username": "Username",
@@ -56,11 +56,16 @@
       "start": "Start a visit",
       "title": "Visit Registration",
       "houses": {
-        "title": "Houses",
-        "search": "Search for a house",
-        "optionsTitle": "Choose a house",
-        "noHouses": "Can't find the house?",
-        "noHousesMessage": "Register a new house here."
+        "title": "Sites",
+        "searchPlaceholder": "Search by house number",
+        "house": "House",
+        "registerNewHouse": "Register a new site",
+        "notVisited": "Not visited",
+        "specialPlace": "Special Place",
+        "search": "Search for a site",
+        "optionsTitle": "Choose a site",
+        "noHouses": "Can't find the site?",
+        "noHousesMessage": "Register a new site here."
       }
     },
     "errorCodes": {

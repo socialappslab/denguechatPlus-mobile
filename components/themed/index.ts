@@ -9,3 +9,5 @@ export * from "./RadioButton";
 export * from "./ScrollView";
 export * from "./SafeAreaView";
 export * from "./Loading";
+export * from "./SimpleChip";
+export * from "./ProgressBar";

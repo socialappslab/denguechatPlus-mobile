@@ -19,14 +19,7 @@ import {
   Loading,
 } from "@/components/themed";
 import { useTranslation } from "react-i18next";
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear().toString();
-  return `(${year}-${day}-${month})`;
-};
+import { SimpleChip } from "../../../components/themed/SimpleChip";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
@@ -41,6 +34,24 @@ export default function SelectHouseScreen() {
   const updateHouse = async () => {
     await setVisitData({ houseId: houseSelectedId });
     router.push("visit");
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+
+    try {
+      const formattedDate = new Intl.DateTimeFormat(locale, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }).format(date);
+
+      return `(${formattedDate})`;
+    } catch {
+      return `(${t("visit.houses.notVisited")})`;
+    }
   };
 
   const [{ data, loading, error }] = useAxios({
@@ -58,44 +69,62 @@ export default function SelectHouseScreen() {
   }, [data]);
 
   const renderHouse = (house: House) => {
-    // const houseBlock = house.houseBlock ? `, ${house.houseBlock.name}` : "";
-    // const houseWedge = house.wedge ? `, ${house.wedge.name}` : "";
     const lastVisit = house.lastVisit ? formatDate(house.lastVisit) : "";
-    return `#${house.referenceCode} ${lastVisit}`;
+    return `${house.specialPlace ? house.specialPlace.name : t("visit.houses.house")} ${house.referenceCode} ${lastVisit}`;
+  };
+
+  const renderTitle = (houses: House[]) => {
+    if (houses.length === 0) {
+      return "";
+    }
+
+    const house = houses[0];
+
+    const houseBlock = house.houseBlock ? ` - ${house.houseBlock.name}` : "";
+    const houseWedge = house.wedge ? ` - ${house.wedge.name}` : "";
+    return `${house.neighborhood?.name}${houseWedge}${houseBlock}`;
   };
 
   return (
     <SafeAreaView>
-      <ScrollView fullHeight className="pt-5 pb-12 px-5">
-        <View>
-          <Text className="text-xl font-bold mb-4">
-            {t("visit.houses.search")}
-          </Text>
-          <View className="mb-6">
-            <TextInput
-              search
-              placeholder="Buscar por número de casa"
-              className="flex-1 ml-2"
-              value={searchText}
-              onChangeText={(value) => setSearchText(value)}
-              style={{ borderWidth: 0 }}
-            />
+      <View className="flex flex-1 py-5 px-5">
+        <Text className="text-xl font-bold mb-4">
+          {t("visit.houses.search")}
+        </Text>
+        <View className="mb-6">
+          <TextInput
+            search
+            placeholder={t("visit.houses.searchPlaceholder")}
+            className="flex-1 ml-2"
+            value={searchText}
+            onChangeText={(value) => setSearchText(value)}
+            style={{ borderWidth: 0 }}
+          />
+        </View>
+
+        {loading && (
+          <View className="my-4">
+            <Loading />
           </View>
-          {loading && (
-            <View className="my-4">
-              <Loading />
-            </View>
-          )}
+        )}
+
+        {!loading && houseOptions.length > 0 && (
+          <View className="mb-2">
+            <Text className="text-xl font-bold mb-2">
+              {t("visit.houses.optionsTitle")}
+            </Text>
+            <Text className="text-md font-normal mb-4">
+              {renderTitle(houseOptions)}
+            </Text>
+          </View>
+        )}
+        <ScrollView className="pb-4" showsVerticalScrollIndicator={false}>
           {!loading && houseOptions.length > 0 && (
             <View className="space-y-2 mb-4">
-              <Text className="text-md font-semibold mb-4">
-                {t("visit.houses.optionsTitle")}
-              </Text>
-
               {houseOptions.map((house) => (
                 <TouchableOpacity
                   key={house.id}
-                  className={`flex flex-row p-4 rounded-md ${house.id === houseSelectedId ? "bg-green-400" : "bg-gray-400"}`}
+                  className={`flex flex-row items-center p-4 rounded-md ${house.id === houseSelectedId ? "bg-green-400" : "bg-gray-400"}`}
                   onPress={() => {
                     setHouseSelectedId(house.id);
                   }}
@@ -104,34 +133,45 @@ export default function SelectHouseScreen() {
                     value={house.id === houseSelectedId}
                     className="bg-white mr-2"
                   />
-                  <Text className="text-sky-400 font-medium text-sm/[17px]">
+                  <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow ">
                     {renderHouse(house)}
                   </Text>
+                  {house.specialPlace !== null && (
+                    <SimpleChip
+                      backgroundColor="green-300"
+                      padding="small"
+                      borderColor="green-400"
+                      border="1"
+                      label={t("visit.houses.specialPlace")}
+                    />
+                  )}
                 </TouchableOpacity>
               ))}
             </View>
           )}
 
-          {!loading && (houseOptions.length === 0 || error) && (
-            <View className="my-6 p-8 rounded-2xl shadow-sm border border-gray-300">
-              <Text className="text-lg font-semibold text-center mb-2">
-                {t("visit.houses.noHouses")}
-              </Text>
-              <Text className="text-center mb-4">
-                {t("visit.houses.noHousesMessage")}
-              </Text>
-              <Button title="Registrar nueva casa" className="bg-green-100" />
-            </View>
-          )}
+          <View className="my-6 p-8 rounded-2xl border border-gray-300">
+            <Text className="text-xl font-bold text-center mb-2">
+              {t("visit.houses.noHouses")}
+            </Text>
+            <Text className="text-center mb-6">
+              {t("visit.houses.noHousesMessage")}
+            </Text>
+            <Button
+              title={t("visit.houses.registerNewHouse")}
+              className="bg-green-100"
+            />
+          </View>
+        </ScrollView>
+        <View className="pt-5">
+          <Button
+            primary
+            disabled={!houseSelectedId}
+            onPress={updateHouse}
+            title={t("next")}
+          />
         </View>
-
-        <Button
-          primary
-          disabled={!houseSelectedId}
-          onPress={updateHouse}
-          title={t("next")}
-        />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

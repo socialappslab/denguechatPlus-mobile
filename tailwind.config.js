@@ -2,6 +2,19 @@
 
 module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
+  safelist: [
+    "bg-yellow",
+    "border-yellow",
+    "bg-red-500",
+    "bg-green-300",
+    "bg-green-400",
+    "border-green-300",
+    "border-green-400",
+    "border-red-500",
+    "bg-blue-100",
+    "border-blue-400",
+    "text-blue-500",
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -16,16 +29,18 @@ module.exports = {
       colors: {
         primary: "#067507",
         fieldBorder: "#D0D5DD",
+        yellow: "#FCC914",
         green: {
-          [300]: "#EEFFED",
-          [400]: "#D6FFD6",
+          300: "#EEFFED",
+          400: "#D6FFD6",
+          500: "#067507",
         },
         sky: {
-          [400]: "#344054"
+          400: "#344054",
         },
         gray: {
-          [400]: "#F9F9F9"
-        }
+          400: "#F9F9F9",
+        },
       },
     },
   },

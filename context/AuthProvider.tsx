@@ -1,6 +1,8 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { useContext } from "react";
 import { router, useSegments } from "expo-router";
+import useAxios from "axios-hooks";
+import { ExistingDocumentObject, deserialize } from "jsonapi-fractal";
 
 import { IUser } from "@/schema/auth";
 import { useStorageState } from "@/hooks/useStorageState";
@@ -10,9 +12,11 @@ import {
 } from "@/constants/Keys";
 import { resetAuthApi, setAccessTokenToHeaders } from "@/config/axios";
 import useUser from "@/hooks/useUser";
+import { ErrorResponse } from "@/schema";
 
 type AuthProviderType = {
   user: IUser | null;
+  meData: IUser | null;
   loadingToken: boolean;
   token: string | null;
   loadingRefreshToken: boolean;
@@ -38,6 +42,7 @@ function useProtectedRoute(user: IUser | null) {
 
 export const AuthContext = createContext<AuthProviderType>({
   user: null,
+  meData: null,
   loadingToken: false,
   token: null,
   loadingRefreshToken: false,
@@ -58,6 +63,7 @@ export function useAuth() {
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [[, userFromLocalStorage], setUserLocalStorage] = useUser();
   const [user, setLoadedUser] = useState<IUser | null>(null);
+  const [meData, setMeData] = useState<IUser | null>(null);
 
   const [[loadingToken, token], setToken] = useStorageState(
     ACCESS_TOKEN_LOCAL_STORAGE_KEY,
@@ -68,6 +74,30 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setLoadedUser(userFromLocalStorage);
   }, [userFromLocalStorage]);
+
+  const [{ data: dataMe }, featchMe] = useAxios<
+    ExistingDocumentObject,
+    unknown,
+    ErrorResponse
+  >(
+    {
+      url: `users/me`,
+    },
+    { manual: true },
+  );
+
+  useEffect(() => {
+    if (!user) return;
+    featchMe();
+  }, [user, featchMe]);
+
+  useEffect(() => {
+    if (!dataMe) return;
+    const deserializedData = deserialize<IUser>(dataMe) as IUser;
+
+    setMeData(deserializedData);
+    console.log("deserialized USER ME>>", deserializedData);
+  }, [dataMe]);
 
   const login = (token: string, refreshToken: string, user: IUser) => {
     setUserLocalStorage(user, true);
@@ -95,6 +125,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        meData,
         loadingToken,
         token,
         loadingRefreshToken,

@@ -22,7 +22,7 @@ interface VisitContextType {
 const VisitContext = createContext<VisitContextType | undefined>(undefined);
 
 const VisitProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
+  const { meData } = useAuth();
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
     host: "",
@@ -47,20 +47,24 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    if (!user) {
+    if (!meData) {
       return;
     }
     featchQuestionnaire();
-  }, [user, featchQuestionnaire]);
+  }, [meData, featchQuestionnaire]);
 
   useEffect(() => {
-    if (!questionnaireData) return;
+    if (!questionnaireData) {
+      console.log("no questionary data>>>>>>");
+
+      return;
+    }
     const deserializedQuestionnaire = deserialize<Questionnaire>(
       questionnaireData,
     ) as Questionnaire;
 
     setQuestionnaire(deserializedQuestionnaire);
-    console.log("deserializedQuestionnaire>>", deserializedQuestionnaire);
+    console.log("deserializedQuestionnaire>>>>>>", deserializedQuestionnaire);
   }, [questionnaireData]);
 
   useEffect(() => {

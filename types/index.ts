@@ -93,6 +93,10 @@ export interface CreatedBy {
   name: string;
   last_name: string;
 }
+export interface SpecialPlace {
+  id: number;
+  name: string;
+}
 
 export interface House {
   id: number;
@@ -114,7 +118,7 @@ export interface House {
   neighborhood?: Neighborhood;
   wedge?: Wedge;
   houseBlock?: HouseBlock;
-  specialPlace?: string | null;
+  specialPlace?: SpecialPlace | null;
   createdBy?: CreatedBy;
   house_block_id?: number;
 }

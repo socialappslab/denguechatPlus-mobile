@@ -1,20 +1,28 @@
+import { useEffect } from "react";
 import { StyleSheet } from "react-native";
-
+import { useAuth } from "@/context/AuthProvider";
 import { Text, View } from "@/components/themed";
+import Button from "@/components/themed/Button";
 import { useTranslation } from "react-i18next";
+import useAxios from "axios-hooks";
 
-export default function Chats() {
+export default function TabTwoScreen() {
+  const { user, logout } = useAuth();
   const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab 1 - {t("tabs.chat")}</Text>
+      <Text style={styles.title}>Tab 3 - {t("tabs.profile")}</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Text className="text-md">{t("textChatsTab")}</Text>
+      <Text>Account</Text>
+      <Text className="font-semibold text-md color-primary">
+        {`${user?.firstName} ${user?.lastName} ` || "No username"}
+      </Text>
+      <Button primary className="w-1/2 mt-6" title="Log out" onPress={logout} />
     </View>
   );
 }

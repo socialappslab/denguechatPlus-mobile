@@ -8,7 +8,7 @@ import { useColorScheme } from "@/components/themed/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import Bubble from "@/assets/images/icons/bubble.svg";
 import House from "@/assets/images/icons/house.svg";
-import User from "@/assets/images/icons/user.svg";
+import Brigade from "@/assets/images/icons/brigade.svg";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 
@@ -22,7 +22,7 @@ function TabBarIcon(props: { name: TabsNames; color: string }) {
     case "homes":
       return <House color={props.color} />;
     case "profile":
-      return <User color={props.color} />;
+      return <Brigade color={props.color} />;
   }
 }
 
@@ -65,20 +65,6 @@ export default function TabLayout(props: ThemeProps) {
         options={{
           title: t("tabs.chat"),
           tabBarIcon: ({ color }) => <TabBarIcon name="chat" color={color} />,
-          headerRight: () => (
-            <Link href="/profile" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="user-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
         }}
       />
       <Tabs.Screen
@@ -94,6 +80,20 @@ export default function TabLayout(props: ThemeProps) {
           title: t("tabs.profile"),
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="profile" color={color} />
+          ),
+          headerRight: () => (
+            <Link href="/chat" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="user-circle"
+                    size={25}
+                    color={Colors[colorScheme ?? "light"].text}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
           ),
         }}
       />
