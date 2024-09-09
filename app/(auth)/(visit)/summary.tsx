@@ -29,7 +29,7 @@ export default function Summary() {
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  const { createMutation: createVisit } = useCreateMutation<
+  const { createMutation: createVisit, loading } = useCreateMutation<
     VisitPayload,
     VisitData
   >("visits");
@@ -48,7 +48,6 @@ export default function Summary() {
     const normalizedData: VisitPayload = {
       ...visitData,
       answers,
-      inspections: [],
       userAccountId: user.id,
       questionnaireId: questionnaire.id,
       visitPermission: true,

@@ -1,4 +1,4 @@
-import { Checkbox, RadioButton, Text, View } from "@/components/themed";
+import { Checkbox, RadioButton } from "@/components/themed";
 import { CheckboxProps } from "@/types/CheckboxProps";
 import { Controller, FieldValues, UseFormReturn } from "react-hook-form";
 
@@ -9,7 +9,7 @@ interface CheckboxOption {
 }
 
 interface CustomCheckboxProps extends CheckboxProps {
-  name: number;
+  name: string | number;
   options: CheckboxOption[];
   type: "radio" | "checkbox";
   methods: UseFormReturn<FieldValues, any, undefined>;
@@ -36,20 +36,14 @@ export const SelectableList = ({
             }}
             render={({ field: { onChange, value } }) => {
               return (
-                <View
-                  className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
-                >
-                  <Checkbox
-                    {...rest}
-                    value={value}
-                    className="bg-white"
-                    onValueChange={onChange}
-                  />
-                  <Text className="text-sky-400 font-medium text-sm/[17px]">
-                    {option.label}
-                    {option.required && "*"}
-                  </Text>
-                </View>
+                <Checkbox
+                  {...rest}
+                  value={value}
+                  className="bg-white"
+                  onValueChange={onChange}
+                  label={option.label}
+                  required={!!option.required}
+                />
               );
             }}
           />
@@ -71,20 +65,14 @@ export const SelectableList = ({
                 methods.setValue(inputName, true);
               };
               return (
-                <View
-                  className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${isSelected ? "bg-green-400" : "bg-gray-400"}`}
-                >
-                  <RadioButton
-                    {...rest}
-                    value={isSelected}
-                    className="bg-white"
-                    onValueChange={onChange}
-                  />
-                  <Text className="text-sky-400 font-medium text-sm/[17px]">
-                    {option.label}
-                    {option.required && "*"}
-                  </Text>
-                </View>
+                <RadioButton
+                  {...rest}
+                  value={isSelected}
+                  className="bg-white"
+                  onValueChange={onChange}
+                  label={option.label}
+                  required={!!option.required}
+                />
               );
             }}
           />

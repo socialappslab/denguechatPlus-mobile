@@ -2,19 +2,14 @@ import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
+import { FormAnswer } from "@/types";
 import { parseId } from "@/util";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-const INSPECTION = 0;
 const TERMINATE = -1;
-
-const findTrue = (obj: Record<string, string | boolean>) => {
-  if (!obj) return;
-  return Object.keys(obj).find((key) => obj[key] === true);
-};
 
 export default function Visit() {
   const { questionnaire, isLoadingQuestionnaire, setVisitData, visitData } =
@@ -23,10 +18,12 @@ export default function Visit() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setHistory] = useState<number[]>([]);
   const router = useRouter();
+  const { id } = useLocalSearchParams();
 
   useEffect(() => {
-    setCurrentQuestion(questionnaire?.initialQuestion);
-  }, [questionnaire, isLoadingQuestionnaire]);
+    const parsedId = parseInt(id as string, 10);
+    setCurrentQuestion(parsedId);
+  }, [id, setCurrentQuestion]);
 
   const methods = useForm({
     defaultValues: visitData.answers,
@@ -34,15 +31,58 @@ export default function Visit() {
 
   const { getValues, formState } = methods;
 
-  const normalizeAndSaveValues = useCallback(() => {
-    const values = getValues();
-    const questionKey = `question_${currentQuestion}`;
-    if (!values[questionKey]) return;
-    const normalizedValues = Object.keys(values[questionKey]).reduce(
-      (acc, key) => ({ ...acc, [key]: values[questionKey][key] || false }),
+  const normalizeValues = (values: FormAnswer, qK: string) => {
+    return Object.keys(values[qK]).reduce(
+      (acc, key) => ({ ...acc, [key]: values[qK][key] || false }),
       {},
     );
+  };
+
+  const normalizeValuesForInspection = (values: FormAnswer, qK: string) => {
+    if (values[qK]["option_true"] && values[qK]["option_false"]) {
+      return values[qK]["option_true"];
+    } else {
+      const res = Object.keys(values[qK])
+        .filter((k) => values[qK][k] === true)[0]
+        .split("option_")[1];
+      return res;
+    }
+  };
+
+  const normalizeAndSaveValues = useCallback(() => {
+    const values = getValues();
     const currentAnswers = visitData.answers;
+    const currentInspection = visitData.inspections?.[0];
+    console.log("----------", currentInspection, "--------");
+    let questionKey = `question_${currentQuestion}`;
+
+    if (values["question_inspection"]) {
+      const inspectionQuestion = Object.keys(values["question_inspection"])[0];
+      if (inspectionQuestion) {
+        const inspectionValues = values[
+          "question_inspection"
+        ] as unknown as FormAnswer;
+        const normalizedValues = normalizeValuesForInspection(
+          inspectionValues,
+          inspectionQuestion!,
+        );
+        setVisitData({
+          inspections: [
+            {
+              ...currentInspection,
+              [inspectionQuestion]: normalizedValues,
+            },
+          ],
+        });
+      }
+      return;
+    }
+
+    if (!values[questionKey]) {
+      return;
+    }
+
+    const normalizedValues = normalizeValues(values, questionKey);
     setVisitData({
       answers: { ...currentAnswers, [questionKey]: normalizedValues },
     });
@@ -74,10 +114,10 @@ export default function Visit() {
   const onNext = () => {
     normalizeAndSaveValues();
     const next = findNext();
-    setCurrentQuestion(next!);
+    router.push(`visit/${next!}`);
     setHistory((prev) => [...prev, currentQuestion as number]);
 
-    if (next === TERMINATE || next === INSPECTION) {
+    if (next === TERMINATE) {
       router.push("summary");
       return;
     }
@@ -85,20 +125,11 @@ export default function Visit() {
 
   console.log("formState.isValid", formState.isValid);
 
-  const isValid =
-    (!!findTrue(getValues(`question_${currentQuestion}`)) &&
-      formState.isValid) ||
-    current?.typeField === "splash";
+  const isValid = formState.isValid || current?.typeField === "splash";
 
   const onBack = () => {
-    setHistory((prev) => {
-      const lastQuestion = prev.pop();
-      setCurrentQuestion(lastQuestion!);
-      return prev;
-    });
+    router.back();
   };
-
-  console.log("currentQuestion", current);
 
   return (
     <View className="h-full flex flex-col justify-between pt-5 pb-10 px-5">

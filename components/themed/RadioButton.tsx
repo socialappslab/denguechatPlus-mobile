@@ -3,8 +3,15 @@
 
 import { CheckboxProps as RadioButtonProps } from "@/types/CheckboxProps";
 import React from "react";
-import { StyleSheet, Pressable, Platform } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import { View } from "@/components/themed/View";
+import { Text } from "@/components/themed/Text";
+import { SimpleChip } from "./SimpleChip";
 
 export function RadioButton({
   color,
@@ -13,6 +20,9 @@ export function RadioButton({
   onValueChange,
   style,
   value,
+  label,
+  chip,
+  required = false,
   ...other
 }: RadioButtonProps) {
   const handleChange = () => {
@@ -20,27 +30,45 @@ export function RadioButton({
   };
 
   return (
-    <Pressable
-      {...other}
-      disabled={disabled}
-      // Announces "checked" status and "checkbox" as the focused element
-      accessibilityRole="radio"
-      accessibilityState={{ disabled, checked: value }}
-      style={[
-        styles.root,
-        style,
-        value && styles.checked,
-        !!color && {
-          backgroundColor: value ? color : undefined,
-          borderColor: color,
-        },
-        disabled && styles.disabled,
-        value && disabled && styles.checkedAndDisabled,
-      ]}
+    <TouchableOpacity
       onPress={handleChange}
+      className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
     >
-      {value && <View className="bg-primary w-2 h-2 rounded-full" />}
-    </Pressable>
+      <Pressable
+        {...other}
+        disabled={disabled}
+        // Announces "checked" status and "checkbox" as the focused element
+        accessibilityRole="radio"
+        accessibilityState={{ disabled, checked: value }}
+        style={[
+          styles.root,
+          style,
+          value && styles.checked,
+          !!color && {
+            backgroundColor: value ? color : undefined,
+            borderColor: color,
+          },
+          disabled && styles.disabled,
+          value && disabled && styles.checkedAndDisabled,
+        ]}
+        onPress={handleChange}
+      >
+        {value && <View className="bg-primary w-2 h-2 rounded-full" />}
+      </Pressable>
+      <Text className="text-sky-400 font-medium text-sm/[17px]">
+        {label}
+        {required && "*"}
+      </Text>
+      {chip && (
+        <SimpleChip
+          backgroundColor="green-300"
+          padding="small"
+          borderColor="green-400"
+          border="1"
+          label={chip}
+        />
+      )}
+    </TouchableOpacity>
   );
 }
 

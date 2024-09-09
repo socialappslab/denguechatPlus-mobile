@@ -21,6 +21,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { SimpleChip } from "../../../components/themed/SimpleChip";
 
+const INIT = 9;
+
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
 
@@ -33,7 +35,7 @@ export default function SelectHouseScreen() {
 
   const updateHouse = async () => {
     await setVisitData({ houseId: houseSelectedId });
-    router.push("visit");
+    router.push(`visit/${INIT}`);
   };
 
   const formatDate = (dateString: string) => {
@@ -122,30 +124,15 @@ export default function SelectHouseScreen() {
           {!loading && houseOptions.length > 0 && (
             <View className="space-y-2 mb-4">
               {houseOptions.map((house) => (
-                <TouchableOpacity
-                  key={house.id}
-                  className={`flex flex-row items-center p-4 rounded-md ${house.id === houseSelectedId ? "bg-green-400" : "bg-gray-400"}`}
-                  onPress={() => {
+                <RadioButton
+                  value={house.id === houseSelectedId}
+                  className="bg-white mr-2"
+                  onValueChange={() => {
                     setHouseSelectedId(house.id);
                   }}
-                >
-                  <RadioButton
-                    value={house.id === houseSelectedId}
-                    className="bg-white mr-2"
-                  />
-                  <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow ">
-                    {renderHouse(house)}
-                  </Text>
-                  {house.specialPlace !== null && (
-                    <SimpleChip
-                      backgroundColor="green-300"
-                      padding="small"
-                      borderColor="green-400"
-                      border="1"
-                      label={t("visit.houses.specialPlace")}
-                    />
-                  )}
-                </TouchableOpacity>
+                  label={renderHouse(house)}
+                  chip={house.specialPlace && t("visit.houses.specialPlace")}
+                />
               ))}
             </View>
           )}

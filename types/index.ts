@@ -20,6 +20,10 @@ export interface Question {
   image?: Image;
 }
 
+export interface InspectionQuestion extends Question {
+  resourceName?: string;
+}
+
 export interface Option {
   id: number;
   name: string;
@@ -27,6 +31,7 @@ export interface Option {
   textArea?: boolean;
   next?: number;
   image?: Image;
+  value?: string;
 }
 
 export interface Image {
@@ -45,7 +50,7 @@ export interface Answer {
 }
 
 export interface Inspection {
-  code_reference: string;
+  code_reference?: string;
   container_test_result: string;
   has_lid: boolean;
   has_water: boolean;
@@ -134,8 +139,8 @@ interface VisitAttributes {
   teamId: number;
   userAccountId: string;
   notes?: string;
-  inspections: Inspection[];
   house?: House;
+  inspections: Inspection[];
 }
 export interface VisitPayload extends VisitAttributes {
   answers: FormPayload;
