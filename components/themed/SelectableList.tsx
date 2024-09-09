@@ -1,7 +1,6 @@
-import { Checkbox, RadioButton, Text, View } from "@/components/themed";
+import { Checkbox, RadioButton } from "@/components/themed";
 import { CheckboxProps } from "@/types/CheckboxProps";
 import { Controller, FieldValues, UseFormReturn } from "react-hook-form";
-import { TouchableOpacity } from "react-native";
 
 interface CheckboxOption {
   value: number;
@@ -10,7 +9,7 @@ interface CheckboxOption {
 }
 
 interface CustomCheckboxProps extends CheckboxProps {
-  name: number;
+  name: string | number;
   options: CheckboxOption[];
   type: "radio" | "checkbox";
   methods: UseFormReturn<FieldValues, any, undefined>;
@@ -37,21 +36,14 @@ export const SelectableList = ({
             }}
             render={({ field: { onChange, value } }) => {
               return (
-                <TouchableOpacity
-                  className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
-                  onPress={onChange}
-                >
-                  <Checkbox
-                    {...rest}
-                    value={value}
-                    className="bg-white"
-                    onValueChange={onChange}
-                  />
-                  <Text className="text-sky-400 font-medium text-sm/[17px]">
-                    {option.label}
-                    {option.required && "*"}
-                  </Text>
-                </TouchableOpacity>
+                <Checkbox
+                  {...rest}
+                  value={value}
+                  className="bg-white"
+                  onValueChange={onChange}
+                  label={option.label}
+                  required={!!option.required}
+                />
               );
             }}
           />
@@ -73,21 +65,14 @@ export const SelectableList = ({
                 methods.setValue(inputName, true);
               };
               return (
-                <TouchableOpacity
-                  onPress={onChange}
-                  className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${isSelected ? "bg-green-400" : "bg-gray-400"}`}
-                >
-                  <RadioButton
-                    {...rest}
-                    value={isSelected}
-                    className="bg-white"
-                    onValueChange={onChange}
-                  />
-                  <Text className="text-sky-400 font-medium text-sm/[17px]">
-                    {option.label}
-                    {option.required && "*"}
-                  </Text>
-                </TouchableOpacity>
+                <RadioButton
+                  {...rest}
+                  value={isSelected}
+                  className="bg-white"
+                  onValueChange={onChange}
+                  label={option.label}
+                  required={!!option.required}
+                />
               );
             }}
           />

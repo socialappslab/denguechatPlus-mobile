@@ -2,6 +2,7 @@ import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
+import { FormAnswer } from "@/types";
 import { parseId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
@@ -9,11 +10,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const TERMINATE = -1;
-
-const findTrue = (obj: Record<string, string | boolean>) => {
-  if (!obj) return;
-  return Object.keys(obj).find((key) => obj[key] === true);
-};
 
 export default function Visit() {
   const { questionnaire, isLoadingQuestionnaire, setVisitData, visitData } =
@@ -35,15 +31,64 @@ export default function Visit() {
 
   const { getValues, formState } = methods;
 
-  const normalizeAndSaveValues = useCallback(() => {
-    const values = getValues();
-    const questionKey = `question_${currentQuestion}`;
-    if (!values[questionKey]) return;
-    const normalizedValues = Object.keys(values[questionKey]).reduce(
-      (acc, key) => ({ ...acc, [key]: values[questionKey][key] || false }),
+  const normalizeValues = (values: FormAnswer, qK: string) => {
+    return Object.keys(values[qK]).reduce(
+      (acc, key) => ({ ...acc, [key]: values[qK][key] || false }),
       {},
     );
+  };
+
+  const normalizeValuesForInspection = (values: FormAnswer, qK: string) => {
+    if (values[qK]["option_true"] && values[qK]["option_false"]) {
+      return values[qK]["option_true"];
+    } else {
+      const res = Object.keys(values[qK])
+        .filter((k) => values[qK][k] === true)[0]
+        .split("option_")[1];
+      return res;
+    }
+  };
+
+  const normalizeAndSaveValues = useCallback(() => {
+    const values = getValues();
     const currentAnswers = visitData.answers;
+    const currentInspection = visitData.inspections[0];
+    console.log("----------", currentInspection, "-----");
+    let questionKey = `question_${currentQuestion}`;
+
+    if (values["question_inspection"]) {
+      const inspectionQuestion = Object.keys(values["question_inspection"])[0];
+      console.log("inspectionQuestion", inspectionQuestion);
+      if (inspectionQuestion) {
+        const inspectionValues = values[
+          "question_inspection"
+        ] as unknown as FormAnswer;
+        const normalizedValues = normalizeValuesForInspection(
+          inspectionValues,
+          inspectionQuestion!,
+        );
+        console.log(
+          normalizedValues,
+          "noamsfjaksfa+_---------",
+          inspectionQuestion,
+        );
+        setVisitData({
+          inspections: [
+            {
+              ...currentInspection,
+              [inspectionQuestion]: normalizedValues,
+            },
+          ],
+        });
+      }
+      return;
+    }
+
+    if (!values[questionKey]) {
+      return;
+    }
+
+    const normalizedValues = normalizeValues(values, questionKey);
     setVisitData({
       answers: { ...currentAnswers, [questionKey]: normalizedValues },
     });

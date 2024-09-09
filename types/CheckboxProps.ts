@@ -42,4 +42,12 @@ export type CheckboxProps = ViewProps & {
    * @param value A boolean indicating the new checked state of the checkbox.
    */
   onValueChange?: (value: boolean) => void;
+  /**
+   * The label of the checkbox.
+   */
+  label?: string;
+  /**
+   * If `true`, the checkbox is required.
+   */
+  required?: boolean;
 };
