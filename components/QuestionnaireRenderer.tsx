@@ -52,7 +52,7 @@ const QuestionnaireRenderer = ({
           )}
         </View>
       ) : (
-        <View className="flex flex-col justify-center items-center">
+        <View className="flex flex-col justify-center items-center h-full">
           <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
             <Text className="text-center text">Ilustración o ícono</Text>
           </View>
