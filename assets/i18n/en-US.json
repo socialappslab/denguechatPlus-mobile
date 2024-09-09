@@ -68,6 +68,16 @@
         "noHousesMessage": "Register a new site here."
       }
     },
+    "brigade": {
+      "joinBrigade": {
+        "messages": {
+          "chat": "To see chat messages, you need to join a brigade. Talk to a facilitator to join one.",
+          "visit": "To start recording visits, you need to join a brigade. Talk to a facilitator to join one.",
+          "profile": "To see more information, you need to join a brigade. Talk to a facilitator to join one."
+        },
+        "action": "Join a brigade"
+      }
+    },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",
       "46": "Invalid credentials",

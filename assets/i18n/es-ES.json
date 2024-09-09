@@ -70,6 +70,16 @@
         "noHousesMessage": "Registra un nuevo sitio aquí."
       }
     },
+    "brigade": {
+      "joinBrigade": {
+        "messages": {
+          "chat": "Para ver mensajes del chat, necesitas unirte a una brigada. Habla con un facilitador para unirte a una.",
+          "visit": "Para comenzar a registrar visitas, necesitas unirte a una brigada. Habla con un facilitador para unirte a una.",
+          "profile": "Para ver más información, necesitas unirte a una brigada. Habla con un facilitador para unirte a una."
+        },
+        "action": "Únete a una brigada"
+      }
+    },
     "errorCodes": {
       "generic": "Algo falló. Por favor intente de nuevo.",
       "46": "Credenciales inválidas",

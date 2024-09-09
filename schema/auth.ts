@@ -61,6 +61,7 @@ export interface UserProfile {
   neighborhood?: string | BaseObject;
   organization?: string | BaseObject;
   team?: string | BaseObject;
+  houseBlock?: string | BaseObject;
   roles?: BaseObject[];
 
   countryId?: number;
@@ -90,6 +91,7 @@ export interface IUser extends UserProfile {
   cityName?: string;
   neighborhoodName?: string;
   organizationName?: string;
+  userProfile?: UserProfile;
 }
 
 export interface UserAccount {
