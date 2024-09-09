@@ -324,7 +324,7 @@ export const StaticQuestions: InspectionQuestion[] = [
     id: 28,
     question: "¿Qué acción se realizó con el contenedor?",
     typeField: "list",
-    resourceName: "elimination_method_type_id",
+    resourceName: "treated_by_id",
     next: 29,
     options: [
       {
@@ -383,16 +383,17 @@ export const StaticQuestions: InspectionQuestion[] = [
     id: 30,
     question: "¿Quieres hacer seguimiento de un contenedor?",
     typeField: "list",
+    resourceName: "tracking_type_required",
     next: -1,
     options: [
       {
-        id: 101,
+        id: 1,
         name: "Sí, hacer seguimiento",
         required: false,
         textArea: false,
       },
       {
-        id: 102,
+        id: 2,
         name: "No, no es necesario",
         required: false,
         textArea: false,

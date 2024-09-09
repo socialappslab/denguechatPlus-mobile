@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { View } from "@/components/themed/View";
 import { Text } from "@/components/themed/Text";
+import { SimpleChip } from "./SimpleChip";
 
 export function RadioButton({
   color,
@@ -20,6 +21,7 @@ export function RadioButton({
   style,
   value,
   label,
+  chip,
   required = false,
   ...other
 }: RadioButtonProps) {
@@ -57,6 +59,15 @@ export function RadioButton({
         {label}
         {required && "*"}
       </Text>
+      {chip && (
+        <SimpleChip
+          backgroundColor="green-300"
+          padding="small"
+          borderColor="green-400"
+          border="1"
+          label={chip}
+        />
+      )}
     </TouchableOpacity>
   );
 }

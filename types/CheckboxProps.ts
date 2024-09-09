@@ -50,4 +50,8 @@ export type CheckboxProps = ViewProps & {
    * If `true`, the checkbox is required.
    */
   required?: boolean;
+  /**
+   * The name of the chip.
+   */
+  chip?: string | null;
 };

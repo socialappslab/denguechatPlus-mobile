@@ -52,13 +52,12 @@ export default function Visit() {
   const normalizeAndSaveValues = useCallback(() => {
     const values = getValues();
     const currentAnswers = visitData.answers;
-    const currentInspection = visitData.inspections[0];
-    console.log("----------", currentInspection, "-----");
+    const currentInspection = visitData.inspections?.[0];
+    console.log("----------", currentInspection, "--------");
     let questionKey = `question_${currentQuestion}`;
 
     if (values["question_inspection"]) {
       const inspectionQuestion = Object.keys(values["question_inspection"])[0];
-      console.log("inspectionQuestion", inspectionQuestion);
       if (inspectionQuestion) {
         const inspectionValues = values[
           "question_inspection"
@@ -66,11 +65,6 @@ export default function Visit() {
         const normalizedValues = normalizeValuesForInspection(
           inspectionValues,
           inspectionQuestion!,
-        );
-        console.log(
-          normalizedValues,
-          "noamsfjaksfa+_---------",
-          inspectionQuestion,
         );
         setVisitData({
           inspections: [
