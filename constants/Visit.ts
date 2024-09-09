@@ -324,7 +324,7 @@ export const StaticQuestions: InspectionQuestion[] = [
     id: 28,
     question: "¿Qué acción se realizó con el contenedor?",
     typeField: "list",
-    resourceName: "treated_by_id",
+    resourceName: "elimination_method_type_id",
     next: 29,
     options: [
       {
