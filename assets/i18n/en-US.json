@@ -11,7 +11,7 @@
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
-      "profile": "Profile",
+      "profile": "My Brigade",
       "visit": "Visits"
     },
     "login": {
@@ -61,6 +61,7 @@
         "house": "House",
         "registerNewHouse": "Register a new site",
         "notVisited": "Not visited",
+        "specialPlace": "Special Place",
         "search": "Search for a site",
         "optionsTitle": "Choose a site",
         "noHouses": "Can't find the site?",

@@ -19,6 +19,7 @@ import {
   Loading,
 } from "@/components/themed";
 import { useTranslation } from "react-i18next";
+import { SimpleChip } from "../../../components/themed/SimpleChip";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
@@ -68,12 +69,20 @@ export default function SelectHouseScreen() {
   }, [data]);
 
   const renderHouse = (house: House) => {
-    // const houseBlock = house.houseBlock ? `, ${house.houseBlock.name}` : "";
-    // const houseWedge = house.wedge ? `, ${house.wedge.name}` : "";
-    const lastVisit = house.lastVisit
-      ? formatDate(house.lastVisit)
-      : `(${t("visit.houses.notVisited")})`;
-    return `${t("visit.houses.house")} #${house.referenceCode} ${lastVisit}`;
+    const lastVisit = house.lastVisit ? formatDate(house.lastVisit) : "";
+    return `${house.specialPlace ? house.specialPlace.name : t("visit.houses.house")} ${house.referenceCode} ${lastVisit}`;
+  };
+
+  const renderTitle = (houses: House[]) => {
+    if (houses.length === 0) {
+      return "";
+    }
+
+    const house = houses[0];
+
+    const houseBlock = house.houseBlock ? ` - ${house.houseBlock.name}` : "";
+    const houseWedge = house.wedge ? ` - ${house.wedge.name}` : "";
+    return `${house.neighborhood?.name}${houseWedge}${houseBlock}`;
   };
 
   return (
@@ -101,8 +110,11 @@ export default function SelectHouseScreen() {
 
         {!loading && houseOptions.length > 0 && (
           <View className="mb-2">
-            <Text className="text-md font-semibold mb-4">
+            <Text className="text-xl font-bold mb-2">
               {t("visit.houses.optionsTitle")}
+            </Text>
+            <Text className="text-md font-normal mb-4">
+              {renderTitle(houseOptions)}
             </Text>
           </View>
         )}
@@ -112,7 +124,7 @@ export default function SelectHouseScreen() {
               {houseOptions.map((house) => (
                 <TouchableOpacity
                   key={house.id}
-                  className={`flex flex-row p-4 rounded-md ${house.id === houseSelectedId ? "bg-green-400" : "bg-gray-400"}`}
+                  className={`flex flex-row items-center p-4 rounded-md ${house.id === houseSelectedId ? "bg-green-400" : "bg-gray-400"}`}
                   onPress={() => {
                     setHouseSelectedId(house.id);
                   }}
@@ -121,19 +133,28 @@ export default function SelectHouseScreen() {
                     value={house.id === houseSelectedId}
                     className="bg-white mr-2"
                   />
-                  <Text className="text-sky-400 font-medium text-sm/[17px]">
+                  <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow ">
                     {renderHouse(house)}
                   </Text>
+                  {house.specialPlace !== null && (
+                    <SimpleChip
+                      backgroundColor="green-300"
+                      padding="small"
+                      borderColor="green-400"
+                      border="1"
+                      label={t("visit.houses.specialPlace")}
+                    />
+                  )}
                 </TouchableOpacity>
               ))}
             </View>
           )}
 
-          <View className="my-6 p-8 rounded-2xl shadow-sm border border-gray-300">
-            <Text className="text-lg font-semibold text-center mb-2">
+          <View className="my-6 p-8 rounded-2xl border border-gray-300">
+            <Text className="text-xl font-bold text-center mb-2">
               {t("visit.houses.noHouses")}
             </Text>
-            <Text className="text-center mb-4">
+            <Text className="text-center mb-6">
               {t("visit.houses.noHousesMessage")}
             </Text>
             <Button

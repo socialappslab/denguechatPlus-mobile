@@ -16,6 +16,7 @@ import { ErrorResponse } from "@/schema";
 
 type AuthProviderType = {
   user: IUser | null;
+  meData: IUser | null;
   loadingToken: boolean;
   token: string | null;
   loadingRefreshToken: boolean;
@@ -41,6 +42,7 @@ function useProtectedRoute(user: IUser | null) {
 
 export const AuthContext = createContext<AuthProviderType>({
   user: null,
+  meData: null,
   loadingToken: false,
   token: null,
   loadingRefreshToken: false,
@@ -123,6 +125,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        meData,
         loadingToken,
         token,
         loadingRefreshToken,
