@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
-
+import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
-
-import { RadioButton } from "@/components/themed";
-import { House } from "@/types";
 import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
+
+import { RadioButton, SimpleChip } from "@/components/themed";
+import { House } from "@/types";
 import { useVisit } from "@/hooks/useVisit";
 
 import {
@@ -18,8 +18,6 @@ import {
   SafeAreaView,
   Loading,
 } from "@/components/themed";
-import { useTranslation } from "react-i18next";
-import { SimpleChip } from "../../../components/themed/SimpleChip";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();

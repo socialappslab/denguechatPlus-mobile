@@ -6,10 +6,11 @@ import { Text, View, ScrollView, SafeAreaView } from "@/components/themed";
 import { useTranslation } from "react-i18next";
 import useAxios from "axios-hooks";
 
-import { SimpleChip, ProgressBar } from "@/components/themed";
+import { SimpleChip, ProgressBar, Loading } from "@/components/themed";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
 import { CheckTeam } from "@/components/segments/CheckTeam";
+import Colors from "@/constants/Colors";
 
 // example JSON Data
 const visitsData = {
@@ -37,7 +38,7 @@ export default function TabTwoScreen() {
   const { user } = useAuth();
   const [team, setTeam] = useState<Team | null>(null);
 
-  const [{ data: teamData }] = useAxios<
+  const [{ data: teamData, loading: loadingTeam }] = useAxios<
     ExistingDocumentObject,
     unknown,
     ErrorResponse
@@ -58,88 +59,113 @@ export default function TabTwoScreen() {
     <SafeAreaView>
       <CheckTeam view="profile">
         <View className="flex flex-1">
-          <ScrollView className="py-5 px-5">
-            <View className="p-4 mb-4 border border-gray-200 rounded-lg">
-              <Text className="text-md text-gray-600 mb-2">
-                Número de visitas
-              </Text>
-              <View className="flex-row items-center justify-between">
-                <Text className="text-3xl font-semibold">
-                  {visitsData.visits}
-                </Text>
-                <SimpleChip
-                  ionIcon="arrow-up"
-                  label={`${visitsData.weeklyChange} esta semana`}
-                />
-              </View>
+          {loadingTeam && (
+            <View className="my-4">
+              <Loading />
             </View>
-
-            <View className="p-4 mb-4 border border-gray-200 rounded-lg">
-              <Text className="text-md text-gray-600 mb-2">
-                Número de sitios
-              </Text>
-              <View className="flex-row items-center justify-between">
-                <Text className="text-3xl font-semibold">
-                  {sitesData.totalSites}
+          )}
+          {!loadingTeam && (
+            <ScrollView className="py-5 px-5">
+              <View className="mb-2">
+                <Text className="text-xl font-bold mb-2">{team?.name}</Text>
+                <Text className="text-md font-normal mb-4">
+                  {team?.sector?.name} - {team?.wedge?.name}
                 </Text>
-
-                <SimpleChip
-                  ionIcon="arrow-up"
-                  label={`${sitesData.weeklyChange} esta semana`}
-                />
               </View>
-              <View className="flex flex-col mt-6">
-                <ProgressBar
-                  label="Sitios Verdes"
-                  progress={sitesData.greenSites}
-                  color="primary"
-                />
-                <ProgressBar
-                  label="Sitios Amarillos"
-                  progress={sitesData.yellowSites}
-                  color="yellow"
-                />
-                <ProgressBar
-                  label="Sitios Rojos"
-                  progress={sitesData.redSites}
-                  color="red-500"
-                />
-              </View>
-            </View>
-
-            <View className="rounded-lg border border-gray-200 mb-8">
-              <View className="bg-gray-100 border-b border-gray-200 rounded-t-lg px-4 py-4">
-                <Text className="text-gray-600 font-medium">Participantes</Text>
-              </View>
-
-              {team?.members?.map((member, index) => (
-                <View
-                  key={member.id}
-                  className={`flex-row items-center p-4 border-gray-200 ${index === team?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
-                >
-                  <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mr-3">
-                    <Text className="font-bold text-sm text-green-700">
-                      {getInitials(member.fullName)}
-                    </Text>
-                  </View>
-                  <View className="flex-1">
-                    <Text>{member.fullName}</Text>
-                  </View>
-                  {member.rol === TEAM_LEADER_ROLE && (
-                    <SimpleChip
-                      padding="small"
-                      textColor="blue-500"
-                      border="1"
-                      borderColor="blue-400"
-                      backgroundColor="blue-100"
-                      label={`${"Facilitador"}`}
-                    />
-                  )}
+              <View className="p-4 mb-4 border border-gray-200 rounded-lg">
+                <Text className="text-md text-gray-600 mb-2">
+                  {t("brigade.cards.numberVisits")}
+                </Text>
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-3xl font-semibold">
+                    {team?.visits ?? 0}
+                  </Text>
+                  <SimpleChip
+                    border="1"
+                    padding="small"
+                    textColor="neutral"
+                    borderColor="neutral"
+                    ionIcon="arrow-up"
+                    iconColor={Colors.light.neutral}
+                    label={`${visitsData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
+                  />
                 </View>
-              ))}
-            </View>
-            <View className="h-6"></View>
-          </ScrollView>
+              </View>
+
+              <View className="p-4 mb-4 border border-gray-200 rounded-lg">
+                <Text className="text-md text-gray-600 mb-2">
+                  {t("brigade.cards.numberSites")}
+                </Text>
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-3xl font-semibold">
+                    {sitesData.totalSites}
+                  </Text>
+
+                  <SimpleChip
+                    border="1"
+                    padding="small"
+                    textColor="neutral"
+                    borderColor="neutral"
+                    ionIcon="arrow-up"
+                    iconColor={Colors.light.neutral}
+                    label={`${sitesData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
+                  />
+                </View>
+                <View className="flex flex-col mt-6">
+                  <ProgressBar
+                    label={t("brigade.sites.green")}
+                    progress={team?.sitesStatuses?.green ?? 0}
+                    color="primary"
+                  />
+                  <ProgressBar
+                    label={t("brigade.sites.yellow")}
+                    progress={team?.sitesStatuses?.yellow ?? 0}
+                    color="yellow"
+                  />
+                  <ProgressBar
+                    label={t("brigade.sites.red")}
+                    progress={team?.sitesStatuses?.red ?? 0}
+                    color="red-500"
+                  />
+                </View>
+              </View>
+
+              <View className="rounded-lg border border-gray-200 mb-8">
+                <View className="bg-gray-100 border-b border-gray-200 rounded-t-lg px-4 py-4">
+                  <Text className="text-gray-600 font-medium">
+                    {t("brigade.cards.participants")}
+                  </Text>
+                </View>
+
+                {team?.members?.map((member, index) => (
+                  <View
+                    key={member.id}
+                    className={`flex-row items-center p-4 border-gray-200 ${index === team?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
+                  >
+                    <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mr-3">
+                      <Text className="font-bold text-sm text-green-700">
+                        {getInitials(member.fullName)}
+                      </Text>
+                    </View>
+                    <View className="flex-1">
+                      <Text>{member.fullName}</Text>
+                    </View>
+                    {member.rol === TEAM_LEADER_ROLE && (
+                      <SimpleChip
+                        padding="small"
+                        textColor="blue-500"
+                        border="1"
+                        borderColor="blue-400"
+                        backgroundColor="blue-100"
+                        label={`${t("brigade.teamLeader")}`}
+                      />
+                    )}
+                  </View>
+                ))}
+              </View>
+              <View className="h-6"></View>
+            </ScrollView>
+          )}
         </View>
       </CheckTeam>
     </SafeAreaView>

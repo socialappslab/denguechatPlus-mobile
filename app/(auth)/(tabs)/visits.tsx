@@ -1,15 +1,19 @@
 import { StyleSheet } from "react-native";
 
-import { Text, View, SafeAreaView } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useTranslation } from "react-i18next";
-
 import { useRouter } from "expo-router";
+
+import { Text, View, SafeAreaView } from "@/components/themed";
 import { CheckTeam } from "@/components/segments/CheckTeam";
+import { useVisit } from "@/hooks/useVisit";
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const { resources } = useVisit();
+
+  console.log("resources>>>", resources);
 
   return (
     <SafeAreaView>

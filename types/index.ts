@@ -144,3 +144,18 @@ export interface VisitPayload extends VisitAttributes {
 export interface VisitData extends VisitAttributes {
   answers: FormAnswer;
 }
+
+export interface ResourceData {
+  id: number;
+  name: string;
+  updated_at: string;
+  breeding_site_type_id?: number;
+  photo_url?: string;
+}
+
+export interface Resource {
+  id: number;
+  version: number;
+  resourceName: string;
+  resourceData: ResourceData[];
+}

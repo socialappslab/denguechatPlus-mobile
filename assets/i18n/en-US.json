@@ -14,6 +14,9 @@
       "profile": "My Brigade",
       "visit": "Visits"
     },
+    "profile": {
+      "account": "Account"
+    },
     "login": {
       "username": "Username",
       "username_placeholder": "Enter your username",
@@ -69,6 +72,18 @@
       }
     },
     "brigade": {
+      "sites": {
+        "green": "Green Sites",
+        "yellow": "Yellow Sites",
+        "red": "Red Sites"
+      },
+      "teamLeader": "Facilitator",
+      "cards": {
+        "numberVisits": "Number of visits",
+        "numberSites": "Number of sites",
+        "numberThisWeek": "this week",
+        "participants": "Brigade participants"
+      },
       "joinBrigade": {
         "messages": {
           "chat": "To see chat messages, you need to join a brigade. Talk to a facilitator to join one.",
