@@ -1,9 +1,9 @@
 import { SelectableList, Text, View } from "@/components/themed";
-import { Question } from "@/types";
+import { InspectionQuestion } from "@/types";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 
 interface QuestionnaireRendererProps {
-  question: Question;
+  question: InspectionQuestion;
   methods: UseFormReturn<FieldValues, any, undefined>;
 }
 
@@ -17,11 +17,15 @@ const QuestionnaireRenderer = ({
   const optionsToCheckboxOption = () => {
     if (!options) return [];
     return options.map((option) => ({
-      value: option.id,
+      value: option.value || option.id,
       label: option.name,
       required: option.required,
     }));
   };
+
+  const name = question.resourceName
+    ? `inspection.${question.resourceName}`
+    : question.id;
 
   return (
     <FormProvider {...methods}>
@@ -32,7 +36,7 @@ const QuestionnaireRenderer = ({
           </Text>
           {question.typeField === "multiple" && hasOptions && (
             <SelectableList
-              name={question.id}
+              name={name}
               methods={methods}
               options={optionsToCheckboxOption()}
               type="checkbox"
@@ -40,7 +44,7 @@ const QuestionnaireRenderer = ({
           )}
           {question.typeField === "list" && (
             <SelectableList
-              name={question.id}
+              name={name}
               methods={methods}
               options={optionsToCheckboxOption()}
               type="radio"
@@ -48,7 +52,7 @@ const QuestionnaireRenderer = ({
           )}
         </View>
       ) : (
-        <View className="flex flex-col justify-center items-center">
+        <View className="flex flex-col justify-center items-center h-full">
           <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
             <Text className="text-center text">Ilustración o ícono</Text>
           </View>

@@ -1,16 +1,17 @@
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import useAxios from "axios-hooks";
 import * as SecureStore from "expo-secure-store";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import useAxios from "axios-hooks";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 
 import {
-  CURRENT_VISIT_LOCAL_STORAGE_KEY,
   CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
   CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
+  CURRENT_VISIT_LOCAL_STORAGE_KEY,
 } from "@/constants/Keys";
 import { Questionnaire, Resource, VisitData } from "@/types";
 import { ErrorResponse } from "@/schema";
 import { useAuth } from "@/context/AuthProvider";
+import { INITIAL_QUESTION, StaticQuestions } from "@/constants/Visit";
 
 interface VisitContextType {
   questionnaire?: Questionnaire;
@@ -22,6 +23,10 @@ interface VisitContextType {
 }
 
 const VisitContext = createContext<VisitContextType | undefined>(undefined);
+
+/**
+ * HashMap of questionnaires where @string is the questionnaireId
+ */
 
 const VisitProvider = ({ children }: { children: ReactNode }) => {
   const { meData } = useAuth();
@@ -36,6 +41,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     notes: "",
     inspections: [],
   });
+
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
   const [resources, setResources] = useState<Resource[]>([]);
 
@@ -75,8 +81,13 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       questionnaireData,
     ) as Questionnaire;
 
-    setQuestionnaire(deserializedQuestionnaire);
-    console.log("deserializedQuestionnaire>>>>>>", deserializedQuestionnaire);
+    setQuestionnaire({
+      ...deserializedQuestionnaire,
+      initialQuestion: INITIAL_QUESTION,
+      questions: [...StaticQuestions, ...deserializedQuestionnaire.questions],
+    });
+
+    console.log("deserializedQuestionnaire>>", deserializedQuestionnaire);
   }, [questionnaireData]);
 
   useEffect(() => {
@@ -157,4 +168,4 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export { VisitProvider, VisitContext };
+export { VisitContext, VisitProvider };
