@@ -22,6 +22,7 @@ export function RadioButton({
   value,
   label,
   chip,
+  image,
   required = false,
   ...other
 }: RadioButtonProps) {
@@ -34,6 +35,11 @@ export function RadioButton({
       onPress={handleChange}
       className={`flex flex-row items-center p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
     >
+      {image && (
+        <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
+          <Text className="text-center text">Imagen</Text>
+        </View>
+      )}
       <Pressable
         className="bg-white mr-2"
         {...other}

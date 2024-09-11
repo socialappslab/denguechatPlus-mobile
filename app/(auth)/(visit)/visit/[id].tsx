@@ -2,12 +2,13 @@ import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { SafeAreaView, ScrollView, Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { FormAnswer } from "@/types";
+import { FormAnswer, Option } from "@/types";
 import { parseId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const TERMINATE = -1;
 
@@ -19,6 +20,7 @@ export default function Visit() {
   const [_, setHistory] = useState<number[]>([]);
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const parsedId = parseInt(id as string, 10);
@@ -145,12 +147,12 @@ export default function Visit() {
         </ScrollView>
         <View className="flex flex-row gap-2">
           <View className="flex-1">
-            <Button title="Atras" onPress={onBack} />
+            <Button title={t("back")} onPress={onBack} />
           </View>
           <View className="flex-1">
             <Button
               primary
-              title="Siguiente"
+              title={t("next")}
               onPress={onNext}
               disabled={!isValid}
             />

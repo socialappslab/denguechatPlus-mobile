@@ -59,6 +59,7 @@
       "stackTitle": "Visit Registration",
       "start": "Start a visit",
       "title": "Visit Registration",
+      "required": "* Required fields.",
       "houses": {
         "title": "Sites",
         "searchPlaceholder": "Search by site number",
@@ -70,6 +71,13 @@
         "optionsTitle": "Choose a site",
         "noHouses": "Can't find the site?",
         "noHousesMessage": "Register a new site here."
+      },
+      "summary": {
+        "title": "Summary of the visit",
+        "status": "Status of the house",
+        "containers": "Containers",
+        "houseNumber": "House Number",
+        "date": "Date"
       }
     },
     "brigade": {

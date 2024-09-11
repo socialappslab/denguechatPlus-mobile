@@ -30,7 +30,7 @@ export interface Option {
   required?: boolean;
   textArea?: boolean;
   next?: number;
-  image?: Image;
+  image?: boolean;
   value?: string;
 }
 
