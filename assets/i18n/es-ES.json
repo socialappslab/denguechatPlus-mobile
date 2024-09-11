@@ -57,6 +57,7 @@
     "visit": {
       "start": "Iniciar una visita",
       "title": "Registro de visita",
+      "required": "* Campos requeridos.",
       "houses": {
         "title": "Sitios",
         "searchPlaceholder": "Buscar por número de casa",

@@ -2,7 +2,7 @@ import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { SafeAreaView, ScrollView, Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { FormAnswer } from "@/types";
+import { FormAnswer, Option } from "@/types";
 import { parseId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 

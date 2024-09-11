@@ -1,6 +1,7 @@
 import { SelectableList, Text, View } from "@/components/themed";
 import { InspectionQuestion } from "@/types";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 interface QuestionnaireRendererProps {
   question: InspectionQuestion;
@@ -11,8 +12,10 @@ const QuestionnaireRenderer = ({
   question,
   methods,
 }: QuestionnaireRendererProps) => {
+  const { t } = useTranslation();
   const options = question.options;
   const hasOptions = Array.isArray(options) && options.length > 0;
+  const hasRequiredOptions = question?.options?.some((o) => o.required);
 
   const optionsToCheckboxOption = () => {
     if (!options) return [];
@@ -50,6 +53,7 @@ const QuestionnaireRenderer = ({
               type="radio"
             />
           )}
+          <Text type="small">{hasRequiredOptions && t("visit.required")}</Text>
         </View>
       ) : (
         <View className="flex flex-col justify-center items-center h-full">

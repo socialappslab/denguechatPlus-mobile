@@ -55,6 +55,7 @@
     "visit": {
       "start": "Start a visit",
       "title": "Visit Registration",
+      "required": "* Required fields.",
       "houses": {
         "title": "Sites",
         "searchPlaceholder": "Search by house number",
