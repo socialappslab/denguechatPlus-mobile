@@ -68,6 +68,13 @@
         "optionsTitle": "Elige un sitio",
         "noHouses": "¿No encuentras el sitio?",
         "noHousesMessage": "Registra un nuevo sitio aquí."
+      },
+      "summary": {
+        "title": "Resumen de la visita",
+        "status": "Estatus de la casa",
+        "containers": "Contenedores",
+        "houseNumber": "Número de casa",
+        "date": "Fecha"
       }
     },
     "brigade": {
