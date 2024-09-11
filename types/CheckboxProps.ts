@@ -54,4 +54,5 @@ export type CheckboxProps = ViewProps & {
    * The name of the chip.
    */
   chip?: string | null;
+  image?: string;
 };

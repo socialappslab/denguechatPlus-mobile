@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { Answer, VisitData, VisitPayload } from "@/types";
-import { extractAxiosErrorData, parseId } from "@/util";
+import { extractAxiosErrorData, formatDate, parseId } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
@@ -47,6 +47,7 @@ export default function Summary() {
 
     const normalizedData: VisitPayload = {
       ...visitData,
+      inspections: [],
       answers,
       userAccountId: user.id,
       questionnaireId: questionnaire.id,
@@ -87,24 +88,24 @@ export default function Summary() {
         </View>
       </View>
       <Text type="title" className="mb-4">
-        Resumen de la visita
+        {t("visit.summary.title")}
       </Text>
       <View className="mb-4">
         <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">Estatus de la casa</Text>
+          <Text type="header">{t("visit.summary.status")}</Text>
           <Text type="text">-</Text>
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">Contenedores</Text>
+          <Text type="header">{t("visit.summary.containers")}</Text>
           <Text type="text">-</Text>
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">Número de casa</Text>
+          <Text type="header">{t("visit.summary.houseNumber")}</Text>
           <Text type="text">-</Text>
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">Fecha</Text>
-          <Text type="text">{new Date().toLocaleDateString("en-US")}</Text>
+          <Text type="header">{t("visit.summary.date")}</Text>
+          <Text type="text">{formatDate(new Date().toISOString())}</Text>
         </View>
       </View>
       <View className="flex flex-row gap-2">

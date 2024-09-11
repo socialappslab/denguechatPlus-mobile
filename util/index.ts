@@ -21,3 +21,21 @@ export function extractAxiosErrorData(error: unknown): ErrorResponse | null {
 }
 
 export const parseId = (v: string) => parseInt(v.match(/\d+/)![0], 10);
+
+export const formatDate = (dateString: string, fallback?: string) => {
+  const date = new Date(dateString);
+
+  const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+
+  try {
+    const formattedDate = new Intl.DateTimeFormat(locale, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(date);
+
+    return `${formattedDate}`;
+  } catch {
+    return fallback;
+  }
+};
