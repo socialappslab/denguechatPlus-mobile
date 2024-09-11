@@ -8,6 +8,8 @@
     "success": "Success",
     "logout": "Logout",
     "textChatsTab": "Navigate to profile tab to logout.",
+    "backToHome": "Back to home",
+    "finalize": "Finalize",
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
@@ -78,6 +80,10 @@
         "containers": "Containers",
         "houseNumber": "House Number",
         "date": "Date"
+      },
+      "final": {
+        "title": "Thank you very much!",
+        "greetings": "We thank the residents of the house and indicate that we will make another visit soon."
       }
     },
     "brigade": {

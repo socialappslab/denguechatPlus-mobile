@@ -8,6 +8,8 @@
     "success": "'Éxito'",
     "logout": "Cerrar Sesión",
     "textChatsTab": "Navega al tab de perfil para hacer logout.",
+    "backToHome": "Volver al inicio",
+    "finalize": "Finalizar",
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",
@@ -80,6 +82,10 @@
         "containers": "Contenedores",
         "houseNumber": "Número de casa",
         "date": "Fecha"
+      },
+      "final": {
+        "title": "¡Muchas gracias!",
+        "greetings": "Agradecemos a los residentes de casa, e indicamos que haremos otra visita próximamente."
       }
     },
     "brigade": {

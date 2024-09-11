@@ -111,12 +111,12 @@ export default function Summary() {
       <View className="flex flex-row gap-2">
         <View className="flex-1">
           <Button
-            title="Volver al inicio"
+            title={t("backToHome")}
             onPress={() => router.push("visit")}
           />
         </View>
         <View className="flex-1">
-          <Button primary title="Finalizar" onPress={onFinalize} />
+          <Button primary title={t("finalize")} onPress={onFinalize} />
         </View>
       </View>
     </View>
