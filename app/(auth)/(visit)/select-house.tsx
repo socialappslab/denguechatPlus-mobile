@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
 import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
 
-import { RadioButton, SimpleChip } from "@/components/themed";
+import { RadioButton } from "@/components/themed";
 import { House } from "@/types";
 import { useVisit } from "@/hooks/useVisit";
 
@@ -18,6 +17,7 @@ import {
   SafeAreaView,
   Loading,
 } from "@/components/themed";
+import { formatDate } from "@/util";
 
 const INIT = 9;
 
@@ -36,24 +36,6 @@ export default function SelectHouseScreen() {
     router.push(`visit/${INIT}`);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-
-    const locale = Intl.DateTimeFormat().resolvedOptions().locale;
-
-    try {
-      const formattedDate = new Intl.DateTimeFormat(locale, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }).format(date);
-
-      return `(${formattedDate})`;
-    } catch {
-      return `(${t("visit.houses.notVisited")})`;
-    }
-  };
-
   const [{ data, loading, error }] = useAxios({
     url: `/houses/list_to_visit?filter[reference_code]=${searchText}`,
   });
@@ -69,7 +51,9 @@ export default function SelectHouseScreen() {
   }, [data]);
 
   const renderHouse = (house: House) => {
-    const lastVisit = house.lastVisit ? formatDate(house.lastVisit) : "";
+    const lastVisit = house.lastVisit
+      ? `(${formatDate(house.lastVisit, t("visit.houses.notVisited"))})`
+      : "";
     return `${house.specialPlace ? house.specialPlace.name : t("visit.houses.house")} ${house.referenceCode} ${lastVisit}`;
   };
 

@@ -60,6 +60,7 @@
     "visit": {
       "start": "Iniciar una visita",
       "title": "Registro de visita",
+      "required": "* Campos requeridos.",
       "houses": {
         "title": "Sitios",
         "searchPlaceholder": "Buscar por número de casa",
@@ -71,6 +72,13 @@
         "optionsTitle": "Elige un sitio",
         "noHouses": "¿No encuentras el sitio?",
         "noHousesMessage": "Registra un nuevo sitio aquí."
+      },
+      "summary": {
+        "title": "Resumen de la visita",
+        "status": "Estatus de la casa",
+        "containers": "Contenedores",
+        "houseNumber": "Número de casa",
+        "date": "Fecha"
       }
     },
     "brigade": {

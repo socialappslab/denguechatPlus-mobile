@@ -6,6 +6,7 @@ interface CheckboxOption {
   value: number;
   label: string;
   required?: boolean;
+  image: string;
 }
 
 interface CustomCheckboxProps extends CheckboxProps {
@@ -43,6 +44,7 @@ export const SelectableList = ({
                   onValueChange={onChange}
                   label={option.label}
                   required={!!option.required}
+                  image={option.image}
                 />
               );
             }}
@@ -72,6 +74,7 @@ export const SelectableList = ({
                   onValueChange={onChange}
                   label={option.label}
                   required={!!option.required}
+                  image={option.image}
                 />
               );
             }}

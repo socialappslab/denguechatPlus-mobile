@@ -1,6 +1,8 @@
 import { InspectionQuestion } from "@/types";
 
 export const INITIAL_QUESTION = 9;
+export const INSPECTION_QUESTION = 0;
+export const INITIAL_DB_QUESTION = 8;
 
 export const StaticQuestions: InspectionQuestion[] = [
   {
@@ -69,7 +71,7 @@ export const StaticQuestions: InspectionQuestion[] = [
     id: 11,
     question: "¿Quíen te acompaña hoy en esta visita?",
     typeField: "multiple",
-    next: 8,
+    next: INITIAL_DB_QUESTION, // venir del back
     options: [
       {
         id: 21,
@@ -110,7 +112,7 @@ export const StaticQuestions: InspectionQuestion[] = [
     ],
   },
   {
-    id: 0,
+    id: INSPECTION_QUESTION, // Init Inspection
     question: "¿Que tipo de contenedor encontraste?",
     typeField: "list",
     resourceName: "breeding_site_type_id",
@@ -121,70 +123,54 @@ export const StaticQuestions: InspectionQuestion[] = [
         name: "Tanques (cemento, polietileno, metal, otro material) safas",
         required: false,
         textArea: false,
+        image: true,
       },
       {
         id: 2,
         name: "Bidones o cilindros (metal, plástico)",
         required: false,
         textArea: false,
+        image: true,
       },
       {
         id: 3,
         name: "Pozos",
         required: false,
         textArea: false,
+        image: true,
       },
       {
         id: 4,
         name: "Estructura o partes de la casa",
         required: false,
         textArea: false,
+        image: true,
       },
       {
         id: 5,
         name: "Llanta",
         required: false,
         textArea: false,
+        image: true,
       },
       {
         id: 6,
         name: "Elementos naturales",
         required: false,
         textArea: false,
+        image: true,
       },
       {
         id: 7,
         name: "Otros",
         required: false,
         textArea: false,
+        image: true,
       },
     ],
   },
   {
     id: 21,
-    question: "¿El contenedor está en uso?",
-    resourceName: "in_use",
-    typeField: "list",
-    next: 22,
-    options: [
-      {
-        id: 41,
-        name: "Sí, está en uso",
-        required: false,
-        textArea: false,
-        value: "true",
-      },
-      {
-        id: 42,
-        name: "No, no está en uso",
-        required: false,
-        textArea: false,
-        value: "false",
-      },
-    ],
-  },
-  {
-    id: 22,
     question: "¿El contenedor contiene agua?",
     resourceName: "has_water",
     typeField: "list",
