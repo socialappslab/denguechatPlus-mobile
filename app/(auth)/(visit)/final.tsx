@@ -1,7 +1,9 @@
 import { Button, Text, View } from "@/components/themed";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function Summary() {
+  const { t } = useTranslation();
   const router = useRouter();
 
   return (
@@ -12,11 +14,10 @@ export default function Summary() {
         </View>
         <View>
           <Text type="title" className="text-center mb-4">
-            ¡Muchas gracias!
+            {t("visit.final.title")}
           </Text>
           <Text type="text" className="text-center px-10">
-            Agradecemos a los residentes de casa, e indicamos que haremos otra
-            visita próximamente.
+            {t("visit.final.greetings")}
           </Text>
         </View>
       </View>
@@ -24,7 +25,7 @@ export default function Summary() {
         <View className="flex-1">
           <Button
             primary
-            title="Ir al inicio"
+            title={t("backToHome")}
             onPress={() => router.push("(visit)")}
           />
         </View>
