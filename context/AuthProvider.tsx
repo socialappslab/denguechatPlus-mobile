@@ -71,11 +71,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [[loadingRefreshToken, refreshToken], setRefreshToken] =
     useStorageState(REFRESH_TOKEN_LOCAL_STORAGE_KEY);
 
-  useEffect(() => {
-    setLoadedUser(userFromLocalStorage);
-  }, [userFromLocalStorage]);
-
-  const [{ data: dataMe }, featchMe] = useAxios<
+  const [{ data: dataMe, error }, featchMe] = useAxios<
     ExistingDocumentObject,
     unknown,
     ErrorResponse
@@ -87,17 +83,22 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    if (!user) return;
+    console.log("userFromLocalStorage>>>", userFromLocalStorage);
+    if (!userFromLocalStorage) return;
+    setLoadedUser(userFromLocalStorage);
+    console.log("featchMe   >>>");
     featchMe();
-  }, [user, featchMe]);
+  }, [userFromLocalStorage, featchMe]);
 
   useEffect(() => {
+    console.log("error>>>", error);
+    console.log("dataMe>>>", dataMe);
     if (!dataMe) return;
     const deserializedData = deserialize<IUser>(dataMe) as IUser;
 
     setMeData(deserializedData);
     console.log("deserialized USER ME>>", deserializedData);
-  }, [dataMe]);
+  }, [dataMe, error]);
 
   const login = (token: string, refreshToken: string, user: IUser) => {
     setUserLocalStorage(user, true);

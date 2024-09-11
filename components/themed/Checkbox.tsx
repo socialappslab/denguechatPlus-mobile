@@ -29,10 +29,11 @@ export function Checkbox({
 
   return (
     <TouchableOpacity
-      className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
+      className={`flex flex-row items-center p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
       onPress={handleChange}
     >
       <Pressable
+        className="bg-white mr-2"
         {...other}
         disabled={disabled}
         // Announces "checked" status and "checkbox" as the focused element

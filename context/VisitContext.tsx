@@ -5,17 +5,19 @@ import React, { createContext, ReactNode, useEffect, useState } from "react";
 
 import {
   CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
+  CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
   CURRENT_VISIT_LOCAL_STORAGE_KEY,
 } from "@/constants/Keys";
-import { useAuth } from "@/context/AuthProvider";
+import { Questionnaire, Resource, VisitData } from "@/types";
 import { ErrorResponse } from "@/schema";
-import { Questionnaire, VisitData } from "@/types";
+import { useAuth } from "@/context/AuthProvider";
 import { INITIAL_QUESTION, StaticQuestions } from "@/constants/Visit";
 
 interface VisitContextType {
   questionnaire?: Questionnaire;
   isLoadingQuestionnaire: boolean;
   visitData: VisitData;
+  resources: Resource[];
   setVisitData: (data: Partial<VisitData>) => Promise<void>;
   cleanStore: () => Promise<void>;
 }
@@ -41,6 +43,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
+  const [resources, setResources] = useState<Resource[]>([]);
 
   const [
     { data: questionnaireData, loading: isLoadingQuestionnaire },
@@ -52,12 +55,22 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     { manual: true },
   );
 
+  const [{ data: paramsData, loading: isLoadingParams }, featchParams] =
+    useAxios<Resource[], unknown, ErrorResponse>(
+      {
+        url: `get_last_params`,
+      },
+      { manual: true },
+    );
+
   useEffect(() => {
+    console.log("meData>>>>>>", meData);
     if (!meData) {
       return;
     }
     featchQuestionnaire();
-  }, [meData, featchQuestionnaire]);
+    featchParams();
+  }, [meData, featchQuestionnaire, featchParams]);
 
   useEffect(() => {
     if (!questionnaireData) {
@@ -74,8 +87,17 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       initialQuestion: INITIAL_QUESTION,
       questions: [...StaticQuestions, ...deserializedQuestionnaire.questions],
     });
+
     console.log("deserializedQuestionnaire>>", deserializedQuestionnaire);
   }, [questionnaireData]);
+
+  useEffect(() => {
+    if (!paramsData) {
+      console.log("no paramsData>>>>>>");
+      return;
+    }
+    setResources(paramsData);
+  }, [paramsData]);
 
   useEffect(() => {
     const loadVisitData = async () => {
@@ -87,6 +109,18 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     loadVisitData();
+  }, []);
+
+  useEffect(() => {
+    const loadResourcesData = async () => {
+      const storedData = await SecureStore.getItemAsync(
+        CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
+      );
+      if (storedData) {
+        setResources(JSON.parse(storedData));
+      }
+    };
+    loadResourcesData();
   }, []);
 
   useEffect(() => {
@@ -124,7 +158,8 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       value={{
         visitData,
         questionnaire,
-        isLoadingQuestionnaire,
+        resources,
+        isLoadingQuestionnaire: isLoadingQuestionnaire || isLoadingParams,
         setVisitData,
         cleanStore,
       }}

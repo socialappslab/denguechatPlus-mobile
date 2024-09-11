@@ -33,49 +33,48 @@ export function RadioButton({
   return (
     <TouchableOpacity
       onPress={handleChange}
-      className={`p-2 py-3 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
+      className={`flex flex-row items-center p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
     >
       {image && (
         <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
           <Text className="text-center text">Imagen</Text>
         </View>
       )}
-      <View className="flex flex-row gap-2 bg-transparent items-center">
-        <Pressable
-          {...other}
-          disabled={disabled}
-          // Announces "checked" status and "checkbox" as the focused element
-          accessibilityRole="radio"
-          accessibilityState={{ disabled, checked: value }}
-          style={[
-            styles.root,
-            style,
-            value && styles.checked,
-            !!color && {
-              backgroundColor: value ? color : undefined,
-              borderColor: color,
-            },
-            disabled && styles.disabled,
-            value && disabled && styles.checkedAndDisabled,
-          ]}
-          onPress={handleChange}
-        >
-          {value && <View className="bg-primary w-2 h-2 rounded-full" />}
-        </Pressable>
-        <Text className="text-sky-400 font-medium text-sm/[17px]">
-          {label}
-          {required && "*"}
-        </Text>
-        {chip && (
-          <SimpleChip
-            backgroundColor="green-300"
-            padding="small"
-            borderColor="green-400"
-            border="1"
-            label={chip}
-          />
-        )}
-      </View>
+      <Pressable
+        className="bg-white mr-2"
+        {...other}
+        disabled={disabled}
+        // Announces "checked" status and "checkbox" as the focused element
+        accessibilityRole="radio"
+        accessibilityState={{ disabled, checked: value }}
+        style={[
+          styles.root,
+          style,
+          value && styles.checked,
+          !!color && {
+            backgroundColor: value ? color : undefined,
+            borderColor: color,
+          },
+          disabled && styles.disabled,
+          value && disabled && styles.checkedAndDisabled,
+        ]}
+        onPress={handleChange}
+      >
+        {value && <View className="bg-primary w-2 h-2 rounded-full" />}
+      </Pressable>
+      <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow">
+        {label}
+        {required && "*"}
+      </Text>
+      {chip && (
+        <SimpleChip
+          backgroundColor="green-300"
+          padding="small"
+          borderColor="green-400"
+          border="1"
+          label={chip}
+        />
+      )}
     </TouchableOpacity>
   );
 }

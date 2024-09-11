@@ -25,7 +25,7 @@ export default function VisitLayout(props: ThemeProps) {
           backgroundColor,
         },
         headerTintColor: color,
-        title: t("tabs.visit"),
+        title: t("visit.stackTitle"),
         headerLeft: () => (
           <Ionicons
             onPress={() => router.back()}
@@ -42,6 +42,10 @@ export default function VisitLayout(props: ThemeProps) {
       />
       <Stack.Screen
         name="visit"
+        options={{ headerShown: true, headerShadowVisible: false }}
+      />
+      <Stack.Screen
+        name="visit/[id]"
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen

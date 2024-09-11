@@ -14,6 +14,9 @@
       "profile": "Mi Brigada",
       "visit": "Visitas"
     },
+    "profile": {
+      "account": "Cuenta"
+    },
     "login": {
       "username": "Nombre de usuario",
       "username_placeholder": "Ingrese su nombre de usuario",
@@ -55,12 +58,13 @@
       "phoneLength": "El teléfono es muy corto"
     },
     "visit": {
+      "stackTitle": "Registro de visita",
       "start": "Iniciar una visita",
       "title": "Registro de visita",
       "required": "* Campos requeridos.",
       "houses": {
         "title": "Sitios",
-        "searchPlaceholder": "Buscar por número de casa",
+        "searchPlaceholder": "Buscar por número de sitio",
         "house": "Casa",
         "registerNewHouse": "Registrar un nuevo sitio",
         "notVisited": "Sin visita",
@@ -79,6 +83,18 @@
       }
     },
     "brigade": {
+      "sites": {
+        "green": "Sitios Verdes",
+        "yellow": "Sitios Amarillos",
+        "red": "Sitios Rojos"
+      },
+      "teamLeader": "Facilitador",
+      "cards": {
+        "numberVisits": "Número de visitas",
+        "numberSites": "Número de sitios",
+        "numberThisWeek": "esta semana",
+        "participants": "Participantes de brigada"
+      },
       "joinBrigade": {
         "messages": {
           "chat": "Para ver mensajes del chat, necesitas unirte a una brigada. Habla con un facilitador para unirte a una.",

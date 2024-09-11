@@ -32,9 +32,14 @@ export const TEAM_LEADER_ROLE = "team_leader";
 
 export interface Team extends BaseObject {
   organization: Organization;
-  sector: string;
-  wedge: string;
-  leader: string;
+  sector?: BaseObject;
+  wedge?: BaseObject;
   members: Member[];
   memberCount: number;
+  visits: number;
+  sitesStatuses: {
+    green?: number;
+    yellow?: number;
+    red?: number;
+  };
 }
