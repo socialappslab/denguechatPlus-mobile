@@ -56,11 +56,12 @@
       "phoneLength": "Phone is too short"
     },
     "visit": {
+      "stackTitle": "Visit Registration",
       "start": "Start a visit",
       "title": "Visit Registration",
       "houses": {
         "title": "Sites",
-        "searchPlaceholder": "Search by house number",
+        "searchPlaceholder": "Search by site number",
         "house": "House",
         "registerNewHouse": "Register a new site",
         "notVisited": "Not visited",

@@ -27,7 +27,7 @@ export function Button(props: ButtonProps) {
       style={style}
       {...otherProps}
       disabled={disabled}
-      className={`${disabled ? "opacity-50" : ""} w-full ${primary ? "bg-primary shadow-sm" : "bg-white shadow-sm border border-gray-200 border-solid border-2"} p-3 rounded-lg`}
+      className={`${disabled ? "opacity-50" : ""} w-full border-solid border ${primary ? "bg-primary border-primary" : "bg-white border-gray-200"} p-3 rounded-lg`}
       activeOpacity={0.8}
     >
       <Text

@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { TouchableOpacity } from "react-native";
-import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
 
-import { RadioButton, SimpleChip } from "@/components/themed";
+import { RadioButton } from "@/components/themed";
 import { House } from "@/types";
 import { useVisit } from "@/hooks/useVisit";
-
 import {
   Text,
   View,
@@ -120,11 +118,10 @@ export default function SelectHouseScreen() {
         )}
         <ScrollView className="pb-4" showsVerticalScrollIndicator={false}>
           {!loading && houseOptions.length > 0 && (
-            <View className="space-y-2 mb-4">
+            <View className="my-1">
               {houseOptions.map((house) => (
                 <RadioButton
                   value={house.id === houseSelectedId}
-                  className="bg-white mr-2"
                   onValueChange={() => {
                     setHouseSelectedId(house.id);
                   }}
@@ -144,7 +141,7 @@ export default function SelectHouseScreen() {
             </Text>
             <Button
               title={t("visit.houses.registerNewHouse")}
-              className="bg-green-100"
+              className="bg-green-100 border-green-100"
             />
           </View>
         </ScrollView>

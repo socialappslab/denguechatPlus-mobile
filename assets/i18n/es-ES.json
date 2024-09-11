@@ -58,11 +58,12 @@
       "phoneLength": "El teléfono es muy corto"
     },
     "visit": {
+      "stackTitle": "Registro de visita",
       "start": "Iniciar una visita",
       "title": "Registro de visita",
       "houses": {
         "title": "Sitios",
-        "searchPlaceholder": "Buscar por número de casa",
+        "searchPlaceholder": "Buscar por número de sitio",
         "house": "Casa",
         "registerNewHouse": "Registrar un nuevo sitio",
         "notVisited": "Sin visita",

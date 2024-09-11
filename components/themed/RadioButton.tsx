@@ -32,9 +32,10 @@ export function RadioButton({
   return (
     <TouchableOpacity
       onPress={handleChange}
-      className={`flex flex-row gap-2 p-2 pb-4 mb-5 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
+      className={`flex flex-row items-center p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
     >
       <Pressable
+        className="bg-white mr-2"
         {...other}
         disabled={disabled}
         // Announces "checked" status and "checkbox" as the focused element
@@ -55,7 +56,7 @@ export function RadioButton({
       >
         {value && <View className="bg-primary w-2 h-2 rounded-full" />}
       </Pressable>
-      <Text className="text-sky-400 font-medium text-sm/[17px]">
+      <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow">
         {label}
         {required && "*"}
       </Text>

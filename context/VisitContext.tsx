@@ -64,6 +64,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     );
 
   useEffect(() => {
+    console.log("meData>>>>>>", meData);
     if (!meData) {
       return;
     }
