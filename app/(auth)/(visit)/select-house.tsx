@@ -55,9 +55,9 @@ export default function SelectHouseScreen() {
 
   const renderHouse = (house: House) => {
     const lastVisit = house.lastVisit
-      ? formatDate(house.lastVisit, t("visit.houses.notVisited"))
+      ? `(${formatDate(house.lastVisit, t("visit.houses.notVisited"))})`
       : "";
-    return `${house.specialPlace ? house.specialPlace.name : t("visit.houses.house")} ${house.referenceCode} (${lastVisit})`;
+    return `${house.specialPlace ? house.specialPlace.name : t("visit.houses.house")} ${house.referenceCode} ${lastVisit}`;
   };
 
   const renderTitle = (houses: House[]) => {
