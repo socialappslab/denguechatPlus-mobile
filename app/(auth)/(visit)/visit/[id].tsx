@@ -2,7 +2,7 @@ import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { SafeAreaView, ScrollView, Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { FormAnswer, Option } from "@/types";
+import { FormAnswer } from "@/types";
 import { parseId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
@@ -31,7 +31,12 @@ export default function Visit() {
     defaultValues: visitData.answers,
   });
 
-  const { getValues, formState } = methods;
+  const { getValues, formState, watch } = methods;
+
+  const currentQuestionValue = watch(`question_${currentQuestion}`);
+  const hasSelectedOption =
+    currentQuestionValue &&
+    Object.values(currentQuestionValue).some((o) => o === true);
 
   const normalizeValues = (values: FormAnswer, qK: string) => {
     return Object.keys(values[qK]).reduce(
@@ -125,9 +130,8 @@ export default function Visit() {
     }
   };
 
-  console.log("formState.isValid", formState.isValid);
-
-  const isValid = formState.isValid || current?.typeField === "splash";
+  const isValid = formState.isValid;
+  const isSplash = current?.typeField === "splash";
 
   const onBack = () => {
     router.back();
@@ -154,7 +158,7 @@ export default function Visit() {
               primary
               title={t("next")}
               onPress={onNext}
-              disabled={!isValid}
+              disabled={!isSplash && (!hasSelectedOption || !isValid)}
             />
           </View>
         </View>
