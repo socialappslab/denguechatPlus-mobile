@@ -1,5 +1,10 @@
-import { SelectableList, Text, View } from "@/components/themed";
-import { InspectionQuestion } from "@/types";
+import {
+  CheckboxOption,
+  SelectableList,
+  Text,
+  View,
+} from "@/components/themed";
+import { InspectionQuestion, Option } from "@/types";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -7,6 +12,16 @@ interface QuestionnaireRendererProps {
   question: InspectionQuestion;
   methods: UseFormReturn<FieldValues, any, undefined>;
 }
+
+const optionsToCheckboxOption = (options?: Option[]) => {
+  if (!options) return [];
+  return options.map((option) => ({
+    value: option.value || option.id,
+    label: option.name,
+    required: option.required,
+    textArea: option.textArea,
+  }));
+};
 
 const QuestionnaireRenderer = ({
   question,
@@ -16,15 +31,7 @@ const QuestionnaireRenderer = ({
   const options = question.options;
   const hasOptions = Array.isArray(options) && options.length > 0;
   const hasRequiredOptions = question?.options?.some((o) => o.required);
-
-  const optionsToCheckboxOption = () => {
-    if (!options) return [];
-    return options.map((option) => ({
-      value: option.value || option.id,
-      label: option.name,
-      required: option.required,
-    }));
-  };
+  const normalizedOptions: CheckboxOption[] = optionsToCheckboxOption(options);
 
   const name = question.resourceName
     ? `inspection.${question.resourceName}`
@@ -32,7 +39,7 @@ const QuestionnaireRenderer = ({
 
   return (
     <FormProvider {...methods}>
-      {question.typeField !== "splash" ? (
+      {question.typeField !== "splash" && (
         <View>
           <Text type="title" className="mb-8">
             {question.question}
@@ -41,7 +48,7 @@ const QuestionnaireRenderer = ({
             <SelectableList
               name={name}
               methods={methods}
-              options={optionsToCheckboxOption()}
+              options={normalizedOptions}
               type="checkbox"
             />
           )}
@@ -49,13 +56,15 @@ const QuestionnaireRenderer = ({
             <SelectableList
               name={name}
               methods={methods}
-              options={optionsToCheckboxOption()}
+              options={normalizedOptions}
               type="radio"
             />
           )}
           <Text type="small">{hasRequiredOptions && t("visit.required")}</Text>
         </View>
-      ) : (
+      )}
+
+      {question.typeField === "splash" && (
         <View className="flex flex-col justify-center items-center h-full">
           <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
             <Text className="text-center text">Ilustración o ícono</Text>

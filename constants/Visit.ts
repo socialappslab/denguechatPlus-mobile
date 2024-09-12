@@ -49,7 +49,7 @@ export const StaticQuestions: InspectionQuestion[] = [
         id: 6,
         name: "Otra explicación",
         required: false,
-        textArea: false,
+        textArea: true,
         next: -1,
       },
     ],
@@ -269,9 +269,9 @@ export const StaticQuestions: InspectionQuestion[] = [
   {
     id: 26,
     question: "En este contenedor hay",
-    typeField: "list",
-    resourceName: "container_test_result",
-    next: 27,
+    typeField: "multiple",
+    // resourceName: "content_type",
+    next: 16,
     options: [
       {
         id: 1,

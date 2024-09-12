@@ -111,8 +111,8 @@ export default function Summary() {
       <View className="flex flex-row gap-2">
         <View className="flex-1">
           <Button
-            title={t("backToHome")}
-            onPress={() => router.push("visit")}
+            title={t("editFromStart")}
+            onPress={() => router.push("visit/1")}
           />
         </View>
         <View className="flex-1">
