@@ -62,7 +62,7 @@ export const SelectableList = ({
             }}
             render={() => {
               const isSelected = !!methods.watch(inputName);
-              const onChange = () => {
+              const onChange = (t?: any) => {
                 let prev = methods.getValues(`question_${name}`);
                 Object.keys(prev).map((key) => (prev[key] = false));
                 methods.setValue(`question_${name}`, prev);

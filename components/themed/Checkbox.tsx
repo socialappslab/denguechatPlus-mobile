@@ -4,7 +4,8 @@
 import CheckboxIcon from "@/assets/images/checkbox.svg";
 import { Text } from "@/components/themed/Text";
 import { CheckboxProps } from "@/types/CheckboxProps";
-import React, { useState, useTransition } from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Platform,
   Pressable,
@@ -13,7 +14,6 @@ import {
 } from "react-native";
 import { TextInput } from "./TextInput";
 import { View } from "./View";
-import { useTranslation } from "react-i18next";
 
 export function Checkbox({
   color,
@@ -27,11 +27,15 @@ export function Checkbox({
   textArea,
   ...other
 }: CheckboxProps) {
-  const handleChange = () => {
-    onValueChange?.(!value);
-  };
   const [text, setText] = useState("");
   const { t } = useTranslation();
+
+  const handleChange = () => {
+    if (textArea && value && text) {
+      return onValueChange?.(!text);
+    }
+    onValueChange?.(!value);
+  };
 
   return (
     <TouchableOpacity

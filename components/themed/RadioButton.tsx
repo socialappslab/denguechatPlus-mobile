@@ -29,11 +29,15 @@ export function RadioButton({
   required = false,
   ...other
 }: RadioButtonProps) {
-  const handleChange = () => {
-    onValueChange?.(!value);
-  };
   const [text, setText] = useState("");
   const { t } = useTranslation();
+
+  const handleChange = (t?: any) => {
+    if (textArea && value) {
+      return onValueChange?.(!t);
+    }
+    onValueChange?.(!value);
+  };
 
   return (
     <TouchableOpacity
@@ -78,7 +82,10 @@ export function RadioButton({
           className="w-full h-32 mt-3 rounded border border-slate-300 text-md p-3"
           multiline
           numberOfLines={4}
-          onChangeText={setText}
+          onChangeText={(text: string) => {
+            setText(text);
+            handleChange(text);
+          }}
           value={text}
           placeholder={t("placeholder")}
           keyboardType="numeric"

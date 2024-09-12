@@ -85,7 +85,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     setQuestionnaire({
       ...deserializedQuestionnaire,
       initialQuestion: INITIAL_QUESTION,
-      questions: [...StaticQuestions, ...deserializedQuestionnaire.questions],
+      questions: StaticQuestions,
     });
 
     console.log("deserializedQuestionnaire>>", deserializedQuestionnaire);
