@@ -112,7 +112,7 @@ export default function Summary() {
         <View className="flex-1">
           <Button
             title={t("backToHome")}
-            onPress={() => router.push("visit")}
+            onPress={() => router.push("visit/1")}
           />
         </View>
         <View className="flex-1">

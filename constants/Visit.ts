@@ -1,8 +1,7 @@
 import { InspectionQuestion } from "@/types";
 
-export const INITIAL_QUESTION = 9;
-export const INSPECTION_QUESTION = 0;
-export const INITIAL_DB_QUESTION = 8;
+export const INITIAL_QUESTION = 1;
+export const INITIAL_DB_QUESTION = 4;
 
 export const StaticQuestions: InspectionQuestion[] = [
   {
@@ -15,7 +14,7 @@ export const StaticQuestions: InspectionQuestion[] = [
         name: "Sí, tengo permiso para esta visita",
         required: false,
         textArea: false,
-        next: 10,
+        next: 2,
       },
       {
         id: 2,
@@ -55,12 +54,12 @@ export const StaticQuestions: InspectionQuestion[] = [
     ],
   },
   {
-    id: 10,
+    id: 2,
     question: "Visitemos la casa",
     typeField: "splash",
     description:
       "Lleguemos a la casa con mucho respeto.\n\nEs importante que las personas nos sientan como alguien que les llega a apoyar para prevenir el dengue.\n\nPidamos permiso para pasar.\n\nNo lleguemos como inspectores, o para juzgar al hogar.",
-    next: 11,
+    next: 3,
     image: {
       id: 8,
       url: "http://localhost:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OCwicHVyIjoiYmxvYl9pZCJ9fQ==--425559d1a1b5904f74550649547eb1af0d76a44d/En%20la%20huerta",
@@ -68,43 +67,43 @@ export const StaticQuestions: InspectionQuestion[] = [
     options: [],
   },
   {
-    id: 11,
+    id: 3,
     question: "¿Quíen te acompaña hoy en esta visita?",
     typeField: "multiple",
     next: INITIAL_DB_QUESTION, // venir del back
     options: [
       {
-        id: 21,
+        id: 1,
         name: "Adulto mayor",
         required: false,
         textArea: false,
       },
       {
-        id: 22,
+        id: 2,
         name: "Adulto hombre",
         required: false,
         textArea: false,
       },
       {
-        id: 23,
+        id: 3,
         name: "Adulto mujer",
         required: false,
         textArea: false,
       },
       {
-        id: 24,
+        id: 4,
         name: "Joven hombre",
         required: false,
         textArea: false,
       },
       {
-        id: 25,
+        id: 5,
         name: "Joven mujer",
         required: false,
         textArea: false,
       },
       {
-        id: 26,
+        id: 6,
         name: "Niños\\as",
         required: false,
         textArea: false,
@@ -112,11 +111,118 @@ export const StaticQuestions: InspectionQuestion[] = [
     ],
   },
   {
-    id: INSPECTION_QUESTION, // Init Inspection
+    id: 4,
+    question: "Por favor informemos a la familia sobre",
+    typeField: "multiple",
+    next: 5,
+    options: [
+      {
+        id: 1,
+        name: "Explicación de larvas y pupas",
+        required: true,
+        textArea: false,
+      },
+      {
+        id: 2,
+        name: "Explicación sobre cómo se reproduce el zancudo",
+        required: true,
+        textArea: false,
+      },
+      {
+        id: 3,
+        name: "Otro tópico importante",
+        required: false,
+        textArea: true,
+      },
+    ],
+  },
+  {
+    id: 5,
+    question: "¿Dónde comienza la visita?",
+    typeField: "list",
+    options: [
+      {
+        id: 1,
+        name: "En la huerta",
+        required: false,
+        textArea: false,
+        next: 6,
+      },
+      {
+        id: 2,
+        name: "En la casa",
+        required: false,
+        textArea: false,
+        next: 8,
+      },
+    ],
+  },
+  {
+    id: 6,
+    question: "Comencemos en la huerta",
+    typeField: "splash",
+    description:
+      "Vamos a buscar todos los recipientes que contienen agua y potencialmente son criaderos de zancudos.\n\nIniciamos la revisión de la vivienda por la derecha y finalizamos por la izquierda.",
+    next: 7,
+    options: [],
+  },
+  {
+    id: 7,
+    question: "¿Encontraste un contenedor?",
+    typeField: "list",
+    options: [
+      {
+        id: 1,
+        name: "Sí, encontré",
+        required: false,
+        textArea: false,
+        next: 10,
+      },
+      {
+        id: 2,
+        name: "No, no encontré",
+        required: false,
+        textArea: false,
+        next: 8,
+      },
+    ],
+  },
+  {
+    id: 8,
+    question: "Revisemos dentro de la casa",
+    typeField: "splash",
+    description:
+      "Lleguemos a la casa con mucho respeto.\n\nEs importante que las personas nos sientan como alguien que les llega a apoyar para prevenir el dengue.\n\nPidamos permiso para pasar.\n\nNo lleguemos como inspectores, o para juzgar al hogar.",
+    next: 9,
+    options: [],
+  },
+  {
+    id: 9,
+    question: "¿Encontraste un contenedor?",
+    typeField: "list",
+    options: [
+      {
+        id: 1,
+        name: "Sí, encontré",
+        required: false,
+        textArea: false,
+        next: 10,
+      },
+      {
+        id: 2,
+        name: "No, no encontré",
+        required: false,
+        textArea: false,
+        next: -1,
+      },
+    ],
+  },
+  {
+    id: 10,
     question: "¿Que tipo de contenedor encontraste?",
     typeField: "list",
-    resourceName: "breeding_site_type_id",
-    next: 21,
+    // resourceName: "breeding_site_type_id",
+    next: 11,
     options: [
       {
         id: 1,
@@ -170,57 +276,35 @@ export const StaticQuestions: InspectionQuestion[] = [
     ],
   },
   {
-    id: 21,
+    id: 11,
     question: "¿El contenedor contiene agua?",
-    resourceName: "has_water",
+    // resourceName: "has_water",
     typeField: "list",
-    next: 23,
     options: [
       {
-        id: 41,
+        id: 1,
         name: "Sí, contiene agua",
         required: false,
         textArea: false,
-        value: "true",
+        // value: "true",
+        next: 12,
       },
       {
-        id: 42,
+        id: 2,
         name: "No, no contiene agua",
         required: false,
         textArea: false,
-        value: "false",
+        // value: "false",
+        next: 20,
       },
     ],
   },
   {
-    id: 23,
-    question: "¿El contenedor tiene una tapa?",
-    resourceName: "has_lid",
-    typeField: "list",
-    next: 24,
-    options: [
-      {
-        id: 51,
-        name: "No, no tiene una tapa",
-        required: false,
-        textArea: false,
-        value: "false",
-      },
-      {
-        id: 52,
-        name: "Sí, tiene una tapa",
-        required: false,
-        textArea: false,
-        value: "true",
-      },
-    ],
-  },
-  {
-    id: 24,
+    id: 12,
     question: "¿De donde proviene el agua?",
-    resourceName: "water_source_type_id",
+    // resourceName: "water_source_type_id",
     typeField: "list",
-    next: 25,
+    next: 13,
     options: [
       {
         id: 1,
@@ -230,48 +314,97 @@ export const StaticQuestions: InspectionQuestion[] = [
       },
       {
         id: 2,
-        name: "Lluvia",
+        name: "Agua activamente recogida. Ejemplo: canaleta, gotera, techo.",
         required: false,
         textArea: false,
       },
       {
         id: 3,
+        name: "Agua pasivamente recogida. Ejemplo: la lluvia la llenó.",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 4,
         name: "Otro",
+        required: false,
+        textArea: true,
+      },
+    ],
+  },
+  {
+    id: 13,
+    question: "¿El contenedor está protegido?",
+    // resourceName: "has_lid",
+    typeField: "list",
+    next: 14,
+    options: [
+      {
+        id: 1,
+        name: "Sí, tiene una tapa hermética",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 2,
+        name: "Sí, tiene una tapa no hermética",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 3,
+        name: "Sí, está bajo techo",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 4,
+        name: "Otro tipo de protección",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 5,
+        name: "No tiene protección",
         required: false,
         textArea: false,
       },
     ],
   },
   {
-    id: 25,
+    id: 14,
     question:
-      "En los últimos 30 días: ¿fue el contenedor tratado por el Ministerio de Salud con piriproxifeno o abate?",
+      "Pregunte si en los últimos 30 días: ¿fue el contenedor tratado por el Ministerio de Salud con piriproxifeno o abate?",
     typeField: "list",
-    next: 26,
-    resourceName: "was_chemically_treated",
+    next: 15,
+    // resourceName: "was_chemically_treated",
     options: [
       {
-        id: 61,
-        name: "Sí, fue tratado",
+        id: 1,
+        name: "Sí, fue tratado (revise el registro detrás de la puerta)",
         required: false,
         textArea: false,
-        value: "true",
       },
       {
-        id: 62,
+        id: 2,
         name: "No, no fue tratado",
         required: false,
         textArea: false,
-        value: "false",
+      },
+      {
+        id: 3,
+        name: "No lo sé",
+        required: false,
+        textArea: false,
       },
     ],
   },
   {
-    id: 26,
+    id: 15,
     question: "En este contenedor hay",
     typeField: "list",
-    resourceName: "container_test_result",
-    next: 27,
+    // resourceName: "content_type",
+    next: 16,
     options: [
       {
         id: 1,
@@ -300,65 +433,41 @@ export const StaticQuestions: InspectionQuestion[] = [
     ],
   },
   {
-    id: 27,
-    question: "Registremos acciones tomadas sobre el contenedor",
-    typeField: "splash",
-    next: 28,
-    options: [],
-  },
-  {
-    id: 28,
-    question: "¿Qué acción se realizó con el contenedor?",
+    id: 16,
+    question: "¿Hay otros contenedores como este?",
     typeField: "list",
-    resourceName: "treated_by_id",
-    next: 29,
+    next: 17,
+    // resourceName: "was_chemically_treated",
     options: [
       {
         id: 1,
-        name: "Contenedor protegido",
+        name: "Sí",
         required: false,
-        textArea: false,
+        textArea: true,
+        placeholder: "¿Cuántos contenedores son?",
       },
       {
         id: 2,
-        name: "Contenedor descartado",
-        required: false,
-        textArea: false,
-      },
-      {
-        id: 3,
-        name: "Agua del contenedor tirada",
-        required: false,
-        textArea: false,
-      },
-      {
-        id: 4,
-        name: "Contenedor trasladado a un lugar seguro",
-        required: false,
-        textArea: false,
-      },
-      {
-        id: 5,
-        name: "Contenedor limpiado",
+        name: "No",
         required: false,
         textArea: false,
       },
     ],
   },
   {
-    id: 29,
-    question: "¿Puedes tomar una foto del contenedor?",
+    id: 17,
+    question: "¿Puedes subir una foto del tipo de contenedor?",
     typeField: "list",
-    next: 30,
+    next: 18,
     options: [
       {
-        id: 91,
+        id: 1,
         name: "Sí, puedo",
         required: false,
         textArea: false,
       },
       {
-        id: 92,
+        id: 2,
         name: "No, no puedo",
         required: false,
         textArea: false,
@@ -366,23 +475,75 @@ export const StaticQuestions: InspectionQuestion[] = [
     ],
   },
   {
-    id: 30,
-    question: "¿Quieres hacer seguimiento de un contenedor?",
+    id: 18,
+    question: "Registremos acciones tomadas sobre el contenedor",
+    typeField: "splash",
+    next: 19,
+    options: [],
+  },
+  {
+    id: 19,
+    question: "¿Qué acción se realizó con el contenedor?",
     typeField: "list",
-    resourceName: "tracking_type_required",
-    next: -1,
+    // resourceName: "elimination_method_type_id",
+    next: 20,
     options: [
       {
         id: 1,
-        name: "Sí, hacer seguimiento",
+        name: "El contenedor fue protegido",
         required: false,
         textArea: false,
+      },
+      {
+        id: 2,
+        name: "El contenedor fue descartado",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 3,
+        name: "El agua del contenedor fue tirada",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 4,
+        name: "El contenedor fue trasladado a un lugar seguro",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 5,
+        name: "El contenedor fue limpiado",
+        required: false,
+        textArea: false,
+      },
+      {
+        id: 6,
+        name: "Ninguna acción",
+        required: false,
+        textArea: false,
+      },
+    ],
+  },
+  {
+    id: 20,
+    question: "¿Registrar otro contenedor?",
+    typeField: "list",
+    options: [
+      {
+        id: 1,
+        name: "Sí, registrar",
+        required: false,
+        textArea: false,
+        next: 10,
       },
       {
         id: 2,
         name: "No, no es necesario",
         required: false,
         textArea: false,
+        next: -1,
       },
     ],
   },

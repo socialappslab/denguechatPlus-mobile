@@ -18,7 +18,7 @@ import {
 } from "@/components/themed";
 import { formatDate } from "@/util";
 
-const INIT = 9;
+const INIT = 1;
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
