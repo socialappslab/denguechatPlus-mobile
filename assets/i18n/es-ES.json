@@ -8,8 +8,10 @@
     "success": "'Éxito'",
     "logout": "Cerrar Sesión",
     "textChatsTab": "Navega al tab de perfil para hacer logout.",
-    "backToHome": "Volver al inicio",
+    "backToHome": "Ir al inicio",
+    "editFromStart": "Editar desde inicio",
     "finalize": "Finalizar",
+    "placeholder": "Escribe aquí...",
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",

@@ -2,7 +2,7 @@ import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { SafeAreaView, ScrollView, Text, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { FormAnswer, Option } from "@/types";
+import { FormAnswer } from "@/types";
 import { parseId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
@@ -55,7 +55,6 @@ export default function Visit() {
     const values = getValues();
     const currentAnswers = visitData.answers;
     const currentInspection = visitData.inspections?.[0];
-    console.log("----------", currentInspection, "--------");
     let questionKey = `question_${currentQuestion}`;
 
     if (values["question_inspection"]) {
@@ -88,7 +87,13 @@ export default function Visit() {
     setVisitData({
       answers: { ...currentAnswers, [questionKey]: normalizedValues },
     });
-  }, [currentQuestion, getValues, setVisitData, visitData.answers]);
+  }, [
+    currentQuestion,
+    getValues,
+    setVisitData,
+    visitData.answers,
+    visitData.inspections,
+  ]);
 
   let current = questionnaire?.questions.find((q) => q.id === currentQuestion);
 

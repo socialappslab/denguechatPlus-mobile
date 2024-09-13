@@ -56,28 +56,30 @@ export default function Summary() {
       notes: "Notas",
     };
 
-    try {
-      await createVisit(normalizedData);
-      await cleanStore();
-      router.push("final");
-    } catch (error) {
-      const errorData = extractAxiosErrorData(error);
-      // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
-      errorData?.errors?.forEach((error: any) => {
-        Toast.show({
-          type: "error",
-          text1: t(`errorCodes.${error.error_code || "generic"}`),
-        });
-      });
-      console.log(errorData?.errors);
+    console.log(visitData);
 
-      if (!errorData?.errors || errorData?.errors.length === 0) {
-        Toast.show({
-          type: "error",
-          text1: t("login.error.invalidCredentials"),
-        });
-      }
-    }
+    // try {
+    //   await createVisit(normalizedData);
+    //   await cleanStore();
+    //   router.push("final");
+    // } catch (error) {
+    //   const errorData = extractAxiosErrorData(error);
+    //   // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
+    //   errorData?.errors?.forEach((error: any) => {
+    //     Toast.show({
+    //       type: "error",
+    //       text1: t(`errorCodes.${error.error_code || "generic"}`),
+    //     });
+    //   });
+    //   console.log(errorData?.errors);
+
+    //   if (!errorData?.errors || errorData?.errors.length === 0) {
+    //     Toast.show({
+    //       type: "error",
+    //       text1: t("login.error.invalidCredentials"),
+    //     });
+    //   }
+    // }
   };
 
   return (
@@ -111,8 +113,8 @@ export default function Summary() {
       <View className="flex flex-row gap-2">
         <View className="flex-1">
           <Button
-            title={t("backToHome")}
-            onPress={() => router.push("visit")}
+            title={t("editFromStart")}
+            onPress={() => router.push("visit/1")}
           />
         </View>
         <View className="flex-1">

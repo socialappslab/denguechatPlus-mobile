@@ -55,4 +55,5 @@ export type CheckboxProps = ViewProps & {
    */
   chip?: string | null;
   image?: string;
+  textArea?: string;
 };

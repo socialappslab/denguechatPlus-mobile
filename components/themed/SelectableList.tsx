@@ -2,11 +2,12 @@ import { Checkbox, RadioButton } from "@/components/themed";
 import { CheckboxProps } from "@/types/CheckboxProps";
 import { Controller, FieldValues, UseFormReturn } from "react-hook-form";
 
-interface CheckboxOption {
-  value: number;
+export interface CheckboxOption {
+  value: number | string;
   label: string;
   required?: boolean;
-  image: string;
+  image?: string;
+  textArea?: string;
 }
 
 interface CustomCheckboxProps extends CheckboxProps {
@@ -45,6 +46,7 @@ export const SelectableList = ({
                   label={option.label}
                   required={!!option.required}
                   image={option.image}
+                  textArea={option.textArea}
                 />
               );
             }}
@@ -60,7 +62,7 @@ export const SelectableList = ({
             }}
             render={() => {
               const isSelected = !!methods.watch(inputName);
-              const onChange = () => {
+              const onChange = (t?: any) => {
                 let prev = methods.getValues(`question_${name}`);
                 Object.keys(prev).map((key) => (prev[key] = false));
                 methods.setValue(`question_${name}`, prev);
@@ -75,6 +77,7 @@ export const SelectableList = ({
                   label={option.label}
                   required={!!option.required}
                   image={option.image}
+                  textArea={option.textArea}
                 />
               );
             }}

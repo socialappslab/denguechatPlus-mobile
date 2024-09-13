@@ -4,13 +4,16 @@
 import CheckboxIcon from "@/assets/images/checkbox.svg";
 import { Text } from "@/components/themed/Text";
 import { CheckboxProps } from "@/types/CheckboxProps";
-import React from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Platform,
   Pressable,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { TextInput } from "./TextInput";
+import { View } from "./View";
 
 export function Checkbox({
   color,
@@ -21,43 +24,63 @@ export function Checkbox({
   value,
   label,
   required,
+  textArea,
   ...other
 }: CheckboxProps) {
+  const [text, setText] = useState("");
+  const { t } = useTranslation();
+
   const handleChange = () => {
+    if (textArea && value && text) {
+      return onValueChange?.(!text);
+    }
     onValueChange?.(!value);
   };
 
   return (
     <TouchableOpacity
-      className={`flex flex-row items-center p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
+      className={`flex p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
       onPress={handleChange}
     >
-      <Pressable
-        className="bg-white mr-2"
-        {...other}
-        disabled={disabled}
-        // Announces "checked" status and "checkbox" as the focused element
-        accessibilityRole="checkbox"
-        accessibilityState={{ disabled, checked: value }}
-        style={[
-          styles.root,
-          style,
-          value && styles.checked,
-          !!color && {
-            backgroundColor: value ? color : undefined,
-            borderColor: color,
-          },
-          disabled && styles.disabled,
-          value && disabled && styles.checkedAndDisabled,
-        ]}
-        onPress={handleChange}
-      >
-        {value && <CheckboxIcon />}
-      </Pressable>
-      <Text className="text-sky-400 font-medium text-sm/[17px]">
-        {label}
-        {required && "*"}
-      </Text>
+      <View className="flex flex-row bg-transparent">
+        <Pressable
+          className="bg-white mr-2"
+          {...other}
+          disabled={disabled}
+          // Announces "checked" status and "checkbox" as the focused element
+          accessibilityRole="checkbox"
+          accessibilityState={{ disabled, checked: value }}
+          style={[
+            styles.root,
+            style,
+            value && styles.checked,
+            !!color && {
+              backgroundColor: value ? color : undefined,
+              borderColor: color,
+            },
+            disabled && styles.disabled,
+            value && disabled && styles.checkedAndDisabled,
+          ]}
+          onPress={handleChange}
+        >
+          {value && <CheckboxIcon />}
+        </Pressable>
+        <Text className="text-sky-400 font-medium text-sm/[17px]">
+          {label}
+          {required && "*"}
+        </Text>
+      </View>
+      {value && textArea && (
+        <TextInput
+          className="w-full h-32 mt-3 rounded border border-slate-300 text-md p-3"
+          multiline
+          numberOfLines={4}
+          onChangeText={setText}
+          value={text}
+          placeholder={t("placeholder")}
+          keyboardType="numeric"
+        />
+      )}
     </TouchableOpacity>
   );
 }

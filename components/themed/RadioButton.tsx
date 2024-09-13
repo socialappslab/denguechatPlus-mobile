@@ -2,7 +2,7 @@
 // from expo-checkbox
 
 import { CheckboxProps as RadioButtonProps } from "@/types/CheckboxProps";
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Pressable,
@@ -12,6 +12,8 @@ import {
 import { View } from "@/components/themed/View";
 import { Text } from "@/components/themed/Text";
 import { SimpleChip } from "./SimpleChip";
+import { TextInput } from "./TextInput";
+import { useTranslation } from "react-i18next";
 
 export function RadioButton({
   color,
@@ -23,49 +25,72 @@ export function RadioButton({
   label,
   chip,
   image,
+  textArea,
   required = false,
   ...other
 }: RadioButtonProps) {
-  const handleChange = () => {
+  const [text, setText] = useState("");
+  const { t } = useTranslation();
+
+  const handleChange = (t?: any) => {
+    if (textArea && value) {
+      return onValueChange?.(!t);
+    }
     onValueChange?.(!value);
   };
 
   return (
     <TouchableOpacity
       onPress={handleChange}
-      className={`flex flex-row items-center p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
+      className={`flex p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
     >
-      {image && (
-        <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
-          <Text className="text-center text">Imagen</Text>
-        </View>
+      <View className="flex flex-row bg-transparent">
+        {image && (
+          <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
+            <Text className="text-center text">Imagen</Text>
+          </View>
+        )}
+        <Pressable
+          className="bg-white mr-2"
+          {...other}
+          disabled={disabled}
+          // Announces "checked" status and "checkbox" as the focused element
+          accessibilityRole="radio"
+          accessibilityState={{ disabled, checked: value }}
+          style={[
+            styles.root,
+            style,
+            value && styles.checked,
+            !!color && {
+              backgroundColor: value ? color : undefined,
+              borderColor: color,
+            },
+            disabled && styles.disabled,
+            value && disabled && styles.checkedAndDisabled,
+          ]}
+          onPress={handleChange}
+        >
+          {value && <View className="bg-primary w-2 h-2 rounded-full" />}
+        </Pressable>
+        <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow">
+          {label}
+          {required && "*"}
+        </Text>
+      </View>
+      {value && textArea && (
+        <TextInput
+          className="w-full h-32 mt-3 rounded border border-slate-300 text-md p-3"
+          multiline
+          numberOfLines={4}
+          onChangeText={(text: string) => {
+            setText(text);
+            handleChange(text);
+          }}
+          value={text}
+          placeholder={t("placeholder")}
+          keyboardType="numeric"
+        />
       )}
-      <Pressable
-        className="bg-white mr-2"
-        {...other}
-        disabled={disabled}
-        // Announces "checked" status and "checkbox" as the focused element
-        accessibilityRole="radio"
-        accessibilityState={{ disabled, checked: value }}
-        style={[
-          styles.root,
-          style,
-          value && styles.checked,
-          !!color && {
-            backgroundColor: value ? color : undefined,
-            borderColor: color,
-          },
-          disabled && styles.disabled,
-          value && disabled && styles.checkedAndDisabled,
-        ]}
-        onPress={handleChange}
-      >
-        {value && <View className="bg-primary w-2 h-2 rounded-full" />}
-      </Pressable>
-      <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow">
-        {label}
-        {required && "*"}
-      </Text>
       {chip && (
         <SimpleChip
           backgroundColor="green-300"
