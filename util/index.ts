@@ -39,3 +39,14 @@ export const formatDate = (dateString: string, fallback?: string) => {
     return fallback;
   }
 };
+
+export const getInitialsBase = (firstName: string, lastName: string) => {
+  const firstInitial = firstName.charAt(0).toUpperCase();
+  const lastInitial = lastName.charAt(0).toUpperCase();
+  return `${firstInitial}${lastInitial}`;
+};
+
+export const getInitials = (fullName: string) => {
+  const [firstName = "", lastName = ""] = fullName.split(" ");
+  return getInitialsBase(firstName, lastName);
+};

@@ -1,7 +1,8 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs, useNavigation } from "expo-router";
+import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/themed/useColorScheme";
@@ -44,6 +45,7 @@ export default function TabLayout(props: ThemeProps) {
         headerStyle: {
           backgroundColor,
         },
+        headerShadowVisible: false,
         headerTintColor: color,
         tabBarStyle: {
           position: "absolute",
@@ -58,6 +60,7 @@ export default function TabLayout(props: ThemeProps) {
         tabBarLabelStyle: {
           fontFamily: "Inter-Bold",
         },
+        headerLeft: () => <DrawerToggleButton tintColor={color} />,
       }}
     >
       <Tabs.Screen

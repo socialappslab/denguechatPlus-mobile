@@ -13,9 +13,9 @@ export interface CheckTeamProps {
 
 export const CheckTeam: React.FC<CheckTeamProps> = ({ view, children }) => {
   const { t } = useTranslation();
-  const { user, meData } = useAuth();
+  const { meData } = useAuth();
 
-  if (user?.team && meData?.userProfile?.houseBlock) {
+  if (meData?.userProfile?.team && meData?.userProfile?.houseBlock) {
     return children;
   }
 

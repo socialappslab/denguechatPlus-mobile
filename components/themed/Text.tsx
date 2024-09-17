@@ -24,9 +24,12 @@ export function Text(props: TextProps) {
     type = "default",
     ...otherProps
   } = props;
+
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+
   return (
     <DefaultText
-      style={[style]}
+      style={[{ color }, style]}
       {...otherProps}
       className={classNameMap[type]}
     />

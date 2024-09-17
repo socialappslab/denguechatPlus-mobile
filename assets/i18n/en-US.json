@@ -16,6 +16,12 @@
       "profile": "My Brigade",
       "visit": "Visits"
     },
+    "drawer": {
+      "myCity": "My City",
+      "myCommunity": "My Community",
+      "brigades": "Brigades",
+      "assignBrigade": "Assign Brigade"
+    },
     "profile": {
       "account": "Account"
     },

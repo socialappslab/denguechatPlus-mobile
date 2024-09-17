@@ -11,6 +11,7 @@ import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import Colors from "@/constants/Colors";
+import { getInitials } from "@/util";
 
 // example JSON Data
 const visitsData = {
@@ -26,16 +27,9 @@ const sitesData = {
   redSites: 35,
 };
 
-const getInitials = (fullName: string) => {
-  const [firstName = "", lastName = ""] = fullName.split(" ");
-  const firstInitial = firstName.charAt(0).toUpperCase();
-  const lastInitial = lastName.charAt(0).toUpperCase();
-  return `${firstInitial}${lastInitial}`;
-};
-
 export default function TabTwoScreen() {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { meData } = useAuth();
   const [team, setTeam] = useState<Team | null>(null);
 
   const [{ data: teamData, loading: loadingTeam }] = useAxios<
@@ -43,7 +37,7 @@ export default function TabTwoScreen() {
     unknown,
     ErrorResponse
   >({
-    url: `teams/${(user?.team as BaseObject)?.id}`,
+    url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
   });
 
   useEffect(() => {
@@ -65,7 +59,10 @@ export default function TabTwoScreen() {
             </View>
           )}
           {!loadingTeam && (
-            <ScrollView className="py-5 px-5">
+            <ScrollView
+              className="py-5 px-5"
+              showsVerticalScrollIndicator={false}
+            >
               <View className="mb-2">
                 <Text className="text-xl font-bold mb-2">{team?.name}</Text>
                 <Text className="text-md font-normal mb-4">
