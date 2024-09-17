@@ -13,7 +13,7 @@ export default function TabTwoScreen() {
   const router = useRouter();
   const { resources } = useVisit();
 
-  console.log("resources>>>", resources);
+  // console.log("resources>>>", resources);
 
   return (
     <SafeAreaView>
