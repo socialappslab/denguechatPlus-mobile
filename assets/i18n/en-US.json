@@ -8,8 +8,10 @@
     "success": "Success",
     "logout": "Logout",
     "textChatsTab": "Navigate to profile tab to logout.",
-    "backToHome": "Back to home",
+    "backToHome": "Go home",
+    "editFromStart": "Edit from start",
     "finalize": "Finalize",
+    "placeholder": "Write here...",
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
