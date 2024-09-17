@@ -7,11 +7,12 @@ import {
   CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
   CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
   CURRENT_VISIT_LOCAL_STORAGE_KEY,
+  LANGUAGE_LOCAL_STORAGE_KEY,
 } from "@/constants/Keys";
-import { Questionnaire, Resource, VisitData } from "@/types";
-import { ErrorResponse } from "@/schema";
 import { useAuth } from "@/context/AuthProvider";
-import { INITIAL_QUESTION, StaticQuestions } from "@/constants/Visit";
+import { useStorageState } from "@/hooks/useStorageState";
+import { ErrorResponse } from "@/schema";
+import { Questionnaire, Resource, VisitData } from "@/types";
 
 interface VisitContextType {
   questionnaire?: Questionnaire;
@@ -29,6 +30,7 @@ const VisitContext = createContext<VisitContextType | undefined>(undefined);
  */
 
 const VisitProvider = ({ children }: { children: ReactNode }) => {
+  const [[_, language]] = useStorageState(LANGUAGE_LOCAL_STORAGE_KEY);
   const { meData } = useAuth();
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
@@ -50,7 +52,9 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     featchQuestionnaire,
   ] = useAxios<ExistingDocumentObject, unknown, ErrorResponse>(
     {
-      url: `questionnaires/current`,
+      // We need to support en-US es-ES etc in the backend
+      // for now whe're manually grabbing the first part
+      url: `questionnaires/current?language=${language?.split("-")[0]}`,
     },
     { manual: true },
   );
@@ -84,8 +88,8 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
 
     setQuestionnaire({
       ...deserializedQuestionnaire,
-      initialQuestion: INITIAL_QUESTION,
-      questions: StaticQuestions,
+      initialQuestion: deserializedQuestionnaire.initialQuestion,
+      questions: [...deserializedQuestionnaire.questions],
     });
 
     console.log("deserializedQuestionnaire>>", deserializedQuestionnaire);

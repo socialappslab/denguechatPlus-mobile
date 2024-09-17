@@ -1,8 +1,8 @@
 import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
-import { SafeAreaView, ScrollView, Text, View } from "@/components/themed";
+import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { FormAnswer } from "@/types";
+import { TypeField } from "@/types";
 import { parseId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
@@ -13,11 +13,9 @@ import { useTranslation } from "react-i18next";
 const TERMINATE = -1;
 
 export default function Visit() {
-  const { questionnaire, isLoadingQuestionnaire, setVisitData, visitData } =
-    useVisit();
+  const { questionnaire, isLoadingQuestionnaire, visitData } = useVisit();
   const [currentQuestion, setCurrentQuestion] = useState<null | number>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setHistory] = useState<number[]>([]);
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { t } = useTranslation();
@@ -31,69 +29,7 @@ export default function Visit() {
     defaultValues: visitData.answers,
   });
 
-  const { getValues, formState } = methods;
-
-  const normalizeValues = (values: FormAnswer, qK: string) => {
-    return Object.keys(values[qK]).reduce(
-      (acc, key) => ({ ...acc, [key]: values[qK][key] || false }),
-      {},
-    );
-  };
-
-  const normalizeValuesForInspection = (values: FormAnswer, qK: string) => {
-    if (values[qK]["option_true"] && values[qK]["option_false"]) {
-      return values[qK]["option_true"];
-    } else {
-      const res = Object.keys(values[qK])
-        .filter((k) => values[qK][k] === true)[0]
-        .split("option_")[1];
-      return res;
-    }
-  };
-
-  const normalizeAndSaveValues = useCallback(() => {
-    const values = getValues();
-    const currentAnswers = visitData.answers;
-    const currentInspection = visitData.inspections?.[0];
-    let questionKey = `question_${currentQuestion}`;
-
-    if (values["question_inspection"]) {
-      const inspectionQuestion = Object.keys(values["question_inspection"])[0];
-      if (inspectionQuestion) {
-        const inspectionValues = values[
-          "question_inspection"
-        ] as unknown as FormAnswer;
-        const normalizedValues = normalizeValuesForInspection(
-          inspectionValues,
-          inspectionQuestion!,
-        );
-        setVisitData({
-          inspections: [
-            {
-              ...currentInspection,
-              [inspectionQuestion]: normalizedValues,
-            },
-          ],
-        });
-      }
-      return;
-    }
-
-    if (!values[questionKey]) {
-      return;
-    }
-
-    const normalizedValues = normalizeValues(values, questionKey);
-    setVisitData({
-      answers: { ...currentAnswers, [questionKey]: normalizedValues },
-    });
-  }, [
-    currentQuestion,
-    getValues,
-    setVisitData,
-    visitData.answers,
-    visitData.inspections,
-  ]);
+  const { getValues, watch } = methods;
 
   let current = questionnaire?.questions.find((q) => q.id === currentQuestion);
 
@@ -103,7 +39,7 @@ export default function Visit() {
 
     // look inside options
     if (!next) {
-      const curr = getValues(`question_${currentQuestion}`);
+      const curr = getValues(String(currentQuestion));
       const selectedOption = Object.keys(curr).find(
         (key) => curr[key] === true,
       );
@@ -119,10 +55,11 @@ export default function Visit() {
   };
 
   const onNext = () => {
-    normalizeAndSaveValues();
+    const values = methods.watch(String(currentQuestion));
+    console.log("values>>>>>>", values);
     const next = findNext();
-    router.push(`visit/${next!}`);
-    setHistory((prev) => [...prev, currentQuestion as number]);
+    console.log(">>>>next", next);
+    router.push(`visit/${next}`);
 
     if (next === TERMINATE) {
       router.push("summary");
@@ -130,13 +67,40 @@ export default function Visit() {
     }
   };
 
-  console.log("formState.isValid", formState.isValid);
-
-  const isValid = formState.isValid || current?.typeField === "splash";
+  const isSplash = current?.typeField === "splash";
 
   const onBack = () => {
     router.back();
   };
+
+  const currentValue = watch(String(currentQuestion)) as
+    | Record<any, any>
+    | any[];
+  const isSelected = useCallback(
+    (fieldType?: TypeField) => {
+      if (!fieldType) return false;
+      switch (fieldType) {
+        case "list":
+          return currentValue;
+        case "multiple":
+          if (Array.isArray(currentValue)) {
+            return currentValue.length > 0;
+          }
+          return false;
+        default:
+          return false;
+      }
+    },
+    [currentValue],
+  );
+
+  if (isLoadingQuestionnaire) {
+    return (
+      <SafeAreaView className="flex h-full align-center justify-center">
+        <Loading />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView>
@@ -145,7 +109,6 @@ export default function Visit() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          {isLoadingQuestionnaire && <Text>Loading...</Text>}
           {!isLoadingQuestionnaire && current && (
             <QuestionnaireRenderer methods={methods} question={current} />
           )}
@@ -155,12 +118,15 @@ export default function Visit() {
             <Button title={t("back")} onPress={onBack} />
           </View>
           <View className="flex-1">
-            <Button
-              primary
-              title={t("next")}
-              onPress={onNext}
-              disabled={!isValid}
-            />
+            {isSplash && <Button primary title={t("next")} onPress={onNext} />}
+            {!isSplash && (
+              <Button
+                primary
+                title={t("next")}
+                onPress={onNext}
+                disabled={!isSelected(current?.typeField)}
+              />
+            )}
           </View>
         </View>
       </View>

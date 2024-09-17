@@ -1,26 +1,23 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useState } from "react";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { useState } from "react";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/components/themed/useColorScheme";
 import AuthProvider, { useAuth } from "@/context/AuthProvider";
 
+import { LANGUAGE_LOCAL_STORAGE_KEY } from "@/constants/Keys";
+import { useStorageState } from "@/hooks/useStorageState";
 import * as Localization from "expo-localization";
-import { initI18n } from "../config/i18n";
-import Toast from "react-native-toast-message";
-import { toastConfig } from "../config/toast";
 import { LogBox } from "react-native";
+import Toast from "react-native-toast-message";
 import { setHeaderFromLocalStorage } from "../config/axios";
+import { initI18n } from "../config/i18n";
+import { toastConfig } from "../config/toast";
 import useUser from "../hooks/useUser";
 
 export {
@@ -40,13 +37,16 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  // Our language (locale) to use
+  const [[_, language], setLanguageLocalStorage] = useStorageState(
+    LANGUAGE_LOCAL_STORAGE_KEY,
+  );
   const { setUser } = useAuth();
+
   // State to track if we've initialized i18n
   const [loadedLanguage, setLoadedLanguage] = useState(false);
   const [loadedToken, setLoadedToken] = useState(false);
   const [loadedUser, setLoadedUser] = useState(false);
-  // Our language (locale) to use
-  const [language, setLanguage] = useState<string | null>();
   const [[loadingUser, user]] = useUser();
 
   const [loadedFonts, error] = useFonts({
@@ -69,7 +69,7 @@ export default function RootLayout() {
       // Get the device's current system locale from expo-localization
       const phoneLocale =
         Localization.getLocales()?.[0]?.languageTag ?? "en-US";
-      setLanguage(phoneLocale);
+      setLanguageLocalStorage(phoneLocale);
     };
 
     getSystemLanguageAndSet();

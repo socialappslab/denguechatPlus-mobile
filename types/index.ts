@@ -32,6 +32,7 @@ export interface Option {
   next?: number;
   image?: boolean;
   value?: string;
+  resourceId: string;
 }
 
 export interface Image {
