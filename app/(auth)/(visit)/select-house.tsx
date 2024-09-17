@@ -18,8 +18,6 @@ import {
 } from "@/components/themed";
 import { formatDate } from "@/util";
 
-const INIT = 1;
-
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
 
@@ -28,11 +26,11 @@ export default function SelectHouseScreen() {
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
-  const { setVisitData } = useVisit();
+  const { setVisitData, questionnaire } = useVisit();
 
   const updateHouse = async () => {
     await setVisitData({ houseId: houseSelectedId });
-    router.push(`visit/${INIT}`);
+    router.push(`visit/${questionnaire?.initialQuestion}`);
   };
 
   const [{ data, loading, error }] = useAxios({
