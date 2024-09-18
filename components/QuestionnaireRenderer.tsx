@@ -1,5 +1,5 @@
-import { Checkbox, RadioButton, Text, View } from "@/components/themed";
-import { InspectionQuestion, OptionType, TypeOption } from "@/types";
+import { SelectableItem, Text, View } from "@/components/themed";
+import { InspectionQuestion, OptionType } from "@/types";
 import { useState } from "react";
 import {
   Control,
@@ -16,7 +16,7 @@ export interface CheckboxOption {
   value: string | number;
   label: string;
   required?: boolean;
-  image: string;
+  image?: string;
   resourceName?: string;
   resourceId?: string;
   next?: number;
@@ -32,18 +32,21 @@ export interface FormStateOption {
   resourceName: string;
   resourceId: string;
   next?: number;
+  text?: string;
 }
 
 const prepareOption = ({
+  option: { value, resourceName, resourceId, next },
+  text,
+}: {
+  option: CheckboxOption;
+  text?: string;
+}) => ({
   value,
   resourceName,
   resourceId,
   next,
-}: CheckboxOption) => ({
-  value,
-  resourceName,
-  resourceId,
-  next,
+  text,
 });
 
 const QuestionnaireRenderer = ({
@@ -60,7 +63,7 @@ const QuestionnaireRenderer = ({
       value: option.id,
       label: option.name,
       required: option.required,
-      image: "",
+      image: option.image,
       resourceName: question.resourceName,
       resourceId: option.resourceId,
       next: option.next,
@@ -92,32 +95,37 @@ const QuestionnaireRenderer = ({
           <Text type="title" className="mb-8">
             {question.question}
           </Text>
-          {formattedOptions.map((option) => {
-            return (
-              option && (
-                <>
-                  {question.typeField === "multiple" && (
-                    <ControlledCheckbox
-                      setValue={setValue}
-                      getValues={getValues}
-                      name={name}
-                      control={control}
-                      option={option}
-                    />
-                  )}
-                  {question.typeField === "list" && (
-                    <ControlledList
-                      getValues={getValues}
-                      setValue={setValue}
-                      name={name}
-                      control={control}
-                      option={option}
-                    />
-                  )}
-                </>
-              )
-            );
-          })}
+          {formattedOptions
+            .sort(
+              (a, b) =>
+                parseInt(a.value as string) - parseInt(b.value as string),
+            )
+            .map((option) => {
+              return (
+                option && (
+                  <>
+                    {question.typeField === "multiple" && (
+                      <ControlledCheckbox
+                        setValue={setValue}
+                        getValues={getValues}
+                        name={name}
+                        control={control}
+                        option={option}
+                      />
+                    )}
+                    {question.typeField === "list" && (
+                      <ControlledList
+                        getValues={getValues}
+                        setValue={setValue}
+                        name={name}
+                        control={control}
+                        option={option}
+                      />
+                    )}
+                  </>
+                )
+              );
+            })}
           <Text type="small">{hasRequiredOptions && t("visit.required")}</Text>
         </View>
       )}
@@ -143,7 +151,7 @@ const ControlledCheckbox = ({
     (item: CheckboxOption) => item.value === option.value,
   );
 
-  const onChange = () => {
+  const onChange = (text: string) => {
     let values = getValues(name);
     if (!values) {
       values = [];
@@ -160,7 +168,8 @@ const ControlledCheckbox = ({
       setValue(name, valuesToSave);
       setItemsChecked(valuesToSave);
     } else {
-      const valuesToSave = [...values, prepareOption(option)];
+      const valuesToSave = [...values, prepareOption({ option, text })];
+
       setValue(name, valuesToSave);
       setItemsChecked(valuesToSave);
     }
@@ -175,14 +184,16 @@ const ControlledCheckbox = ({
       }}
       render={() => {
         return (
-          <Checkbox
-            value={isSelected}
+          <SelectableItem
+            value={`${option.value}`}
+            checked={isSelected}
             className="bg-white"
             onValueChange={onChange}
             label={option.label}
             required={!!option.required}
-            textArea={option.optionType === "textArea"}
-            // image={option.image}
+            optionType={option.optionType}
+            type="checkbox"
+            image={option.image}
           />
         );
       }}
@@ -212,18 +223,19 @@ const ControlledList = ({
       }}
       render={() => {
         const isSelected = getValues(name)?.value === option.value;
-        const onChange = () => {
-          setValue(name, prepareOption(option));
+        const onChange = (text: string) => {
+          setValue(name, prepareOption({ option, text }));
         };
         return (
-          <RadioButton
-            value={isSelected}
+          <SelectableItem
+            value={`${option.value}`}
+            checked={isSelected}
             className="bg-white"
             onValueChange={onChange}
             label={option.label}
             required={!!option.required}
-            textArea={option.optionType === "textArea"}
-            // image={option.image}
+            optionType={option.optionType}
+            image={option.image}
           />
         );
       }}

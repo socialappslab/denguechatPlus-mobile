@@ -12,6 +12,7 @@ const prepareFormData = (formData: FormState) => {
   const questions = Object.keys(formData);
   let answers = {};
   let inspection: Record<string, string> = {};
+  console.log(formData);
 };
 
 export default function Summary() {
@@ -27,7 +28,8 @@ export default function Summary() {
 
   const onFinalize = async () => {
     prepareFormData(currentFormData);
-    // await cleanStore();
+    await cleanStore();
+    router.push("final");
     // const answers = normalizeAnswer(visitData.answers);
 
     // This should never happen, but we're being cautious
