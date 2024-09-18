@@ -33,8 +33,14 @@ export function SelectableItem({
   defaultText,
   ...other
 }: SelectableItemProps) {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(defaultText);
   const { t } = useTranslation();
+
+  const onChangeText = (text: string) => {
+    if (!onValueChange) return;
+    setText(text);
+    onValueChange(text);
+  };
 
   const handleChange = () => {
     if (!onValueChange) return;
@@ -96,17 +102,17 @@ export function SelectableItem({
           className="w-full h-32 mt-3 rounded border border-slate-300 text-md p-3"
           multiline
           numberOfLines={4}
-          onChangeText={setText}
+          onChangeText={onChangeText}
           value={text}
-          placeholder={defaultText || t("placeholder")}
+          placeholder={t("placeholder")}
         />
       )}
       {checked && optionType === "inputNumber" && (
         <TextInput
           className="w-full mt-3 rounded border border-slate-300 text-md p-3"
-          onChangeText={setText}
+          onChangeText={onChangeText}
           value={text}
-          placeholder={defaultText || t("placeholder")}
+          placeholder={t("quantity")}
           keyboardType="numeric"
         />
       )}

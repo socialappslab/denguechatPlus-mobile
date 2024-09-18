@@ -179,9 +179,6 @@ const ControlledCheckbox = ({
     <Controller
       name={name}
       control={control}
-      rules={{
-        required: option.required ? "This field is required" : false,
-      }}
       render={() => {
         return (
           <SelectableItem
@@ -194,6 +191,7 @@ const ControlledCheckbox = ({
             optionType={option.optionType}
             type="checkbox"
             image={option.image}
+            defaultText={isSelected.text}
           />
         );
       }}
@@ -214,6 +212,7 @@ const ControlledList = ({
   setValue: UseFormSetValue<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }) => {
+  console.log(getValues(name));
   return (
     <Controller
       name={name}
@@ -236,6 +235,7 @@ const ControlledList = ({
             required={!!option.required}
             optionType={option.optionType}
             image={option.image}
+            defaultText={getValues(name)?.text}
           />
         );
       }}
