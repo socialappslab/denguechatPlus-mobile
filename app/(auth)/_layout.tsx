@@ -26,7 +26,7 @@ const CustomDrawerContent = () => {
   const { meData, logout } = useAuth();
   const { t } = useTranslation();
 
-  console.log("meData>>>", meData);
+  // console.log("meData>>>", meData);
 
   return (
     <SafeAreaView>

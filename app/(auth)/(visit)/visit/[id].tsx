@@ -1,9 +1,9 @@
 import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
+import { useAuth } from "@/context/AuthProvider";
 import { useVisit } from "@/hooks/useVisit";
-import { TypeField } from "@/types";
-import { parseId } from "@/util";
+import { HouseKey, TypeField } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useCallback, useEffect, useState } from "react";
@@ -13,52 +13,51 @@ import { useTranslation } from "react-i18next";
 const TERMINATE = -1;
 
 export default function Visit() {
-  const { questionnaire, isLoadingQuestionnaire, visitData } = useVisit();
-  const [currentQuestion, setCurrentQuestion] = useState<null | number>();
+  const {
+    questionnaire,
+    isLoadingQuestionnaire,
+    visitData,
+    setQuestionForCurrentHouse,
+    visitMap,
+  } = useVisit();
+  const [currentQuestion, setCurrentQuestion] = useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { t } = useTranslation();
+  const houseKey: HouseKey = `${parseInt(visitData.userAccountId)}-${visitData.houseId}`;
 
   useEffect(() => {
-    const parsedId = parseInt(id as string, 10);
-    setCurrentQuestion(parsedId);
-  }, [id, setCurrentQuestion]);
+    setCurrentQuestion(String(id));
+  }, [id, setCurrentQuestion, visitMap]);
 
   const methods = useForm({
-    defaultValues: visitData.answers,
+    defaultValues: visitMap[houseKey],
   });
 
   const { getValues, watch } = methods;
 
-  let current = questionnaire?.questions.find((q) => q.id === currentQuestion);
+  let current = questionnaire?.questions.find(
+    (q) => String(q.id) === currentQuestion,
+  );
 
   const findNext = () => {
     let next = current?.next;
     if (next) return next;
 
-    // look inside options
+    // look inside current option selected
+    // which extends an option object
     if (!next) {
-      const curr = getValues(String(currentQuestion));
-      const selectedOption = Object.keys(curr).find(
-        (key) => curr[key] === true,
-      );
-      if (!selectedOption) return TERMINATE;
-      const selectedOptionNumber = parseId(selectedOption);
-      const nextFromOption = current?.options?.find(
-        (o) => o.id === selectedOptionNumber,
-      );
-
-      return nextFromOption?.next;
+      const curr = getValues(currentQuestion);
+      return curr.next;
     }
     return TERMINATE;
   };
 
   const onNext = () => {
-    const values = methods.watch(String(currentQuestion));
-    console.log("values>>>>>>", values);
+    const values = methods.watch(currentQuestion);
+    setQuestionForCurrentHouse(currentQuestion, values);
     const next = findNext();
-    console.log(">>>>next", next);
     router.push(`visit/${next}`);
 
     if (next === TERMINATE) {
@@ -73,9 +72,7 @@ export default function Visit() {
     router.back();
   };
 
-  const currentValue = watch(String(currentQuestion)) as
-    | Record<any, any>
-    | any[];
+  const currentValue = watch(currentQuestion) as Record<any, any> | any[];
   const isSelected = useCallback(
     (fieldType?: TypeField) => {
       if (!fieldType) return false;

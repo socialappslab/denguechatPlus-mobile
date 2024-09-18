@@ -25,7 +25,7 @@ const normalizeAnswer = (
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, cleanStore } = useVisit();
+  const { questionnaire, visitMap, cleanStore } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
 
@@ -35,7 +35,9 @@ export default function Summary() {
   >("visits");
 
   const onFinalize = async () => {
-    const answers = normalizeAnswer(visitData.answers);
+    console.log(visitMap);
+    await cleanStore();
+    // const answers = normalizeAnswer(visitData.answers);
 
     // This should never happen, but we're being cautious
     if (!user || !questionnaire) {
@@ -45,22 +47,21 @@ export default function Summary() {
       });
     }
 
-    const normalizedData: VisitPayload = {
-      ...visitData,
-      inspections: [],
-      answers,
-      userAccountId: user.id,
-      questionnaireId: questionnaire.id,
-      visitPermission: true,
-      host: "Host",
-      notes: "Notas",
-    };
+    // const normalizedData: VisitPayload = {
+    //   ...visitData,
+    //   inspections: [],
+    //   answers,
+    //   userAccountId: user.id,
+    //   questionnaireId: questionnaire.id,
+    //   visitPermission: true,
+    //   host: "Host",
+    //   notes: "Notas",
+    // };
 
-    console.log(visitData);
+    // console.log(visitData);
 
     // try {
     //   await createVisit(normalizedData);
-    //   await cleanStore();
     //   router.push("final");
     // } catch (error) {
     //   const errorData = extractAxiosErrorData(error);

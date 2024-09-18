@@ -12,28 +12,38 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-interface CheckboxOption {
+export interface CheckboxOption {
   value: string | number;
   label: string;
   required?: boolean;
   image: string;
   resourceName?: string;
   resourceId?: string;
+  next?: number;
 }
 interface QuestionnaireRendererProps {
   question: InspectionQuestion;
   methods: UseFormReturn<FieldValues, any, undefined>;
 }
 
-const optionsToCheckboxOption = (options?: Option[]) => {
-  if (!options) return [];
-  return options.map((option) => ({
-    value: option.value || option.id,
-    label: option.name,
-    required: option.required,
-    textArea: option.textArea,
-  }));
-};
+export interface FormStateOption {
+  value: string;
+  resourceName: string;
+  resourceId: string;
+  next?: number;
+}
+
+const prepareOption = ({
+  value,
+  resourceName,
+  resourceId,
+  next,
+}: CheckboxOption) => ({
+  value,
+  resourceName,
+  resourceId,
+  next,
+});
 
 const QuestionnaireRenderer = ({
   question,
@@ -46,12 +56,13 @@ const QuestionnaireRenderer = ({
 
   const formattedOptions: CheckboxOption[] =
     options?.map((option) => ({
-      value: option.resourceId || option.id,
+      value: option.id,
       label: option.name,
       required: option.required,
       image: "",
       resourceName: question.resourceName,
       resourceId: option.resourceId,
+      next: option.next,
     })) || [];
 
   const name = String(question.id);
@@ -147,7 +158,7 @@ const ControlledCheckbox = ({
       setValue(name, valuesToSave);
       setItemsChecked(valuesToSave);
     } else {
-      const valuesToSave = [...values, option];
+      const valuesToSave = [...values, prepareOption(option)];
       setValue(name, valuesToSave);
       setItemsChecked(valuesToSave);
     }
@@ -199,7 +210,7 @@ const ControlledList = ({
       render={() => {
         const isSelected = getValues(name)?.value === option.value;
         const onChange = () => {
-          setValue(name, option);
+          setValue(name, prepareOption(option));
         };
         return (
           <RadioButton

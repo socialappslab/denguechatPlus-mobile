@@ -1,3 +1,5 @@
+import { CheckboxOption } from "@/components/QuestionnaireRenderer";
+
 // <Questionnaire types>
 export type TypeField = "text" | "multiple" | "list" | "splash";
 
@@ -129,7 +131,8 @@ export interface House {
   house_block_id?: number;
 }
 
-export type FormAnswer = Record<string, Record<string, boolean | string>>;
+type QuestionId = string;
+export type FormState = Record<QuestionId, CheckboxOption>;
 export type FormPayload = Answer[];
 
 interface VisitAttributes {
@@ -148,8 +151,16 @@ export interface VisitPayload extends VisitAttributes {
 }
 
 export interface VisitData extends VisitAttributes {
-  answers: FormAnswer;
+  answers: FormState;
 }
+
+/*
+  A HashMap to access a given house's Visit Data
+  the HouseKey format is:
+  {userId}-{houseId}
+*/
+export type HouseKey = `${number}-${number}`;
+export type VisitMap = Record<HouseKey, FormState>;
 
 export interface ResourceData {
   id: number;
