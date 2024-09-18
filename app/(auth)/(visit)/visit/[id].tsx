@@ -1,9 +1,8 @@
 import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
 import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
-import { useAuth } from "@/context/AuthProvider";
 import { useVisit } from "@/hooks/useVisit";
-import { HouseKey, TypeField } from "@/types";
+import { TypeField } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useCallback, useEffect, useState } from "react";
@@ -16,23 +15,22 @@ export default function Visit() {
   const {
     questionnaire,
     isLoadingQuestionnaire,
-    visitData,
-    setQuestionForCurrentHouse,
+    setFormData,
     visitMap,
+    currentFormData,
   } = useVisit();
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { t } = useTranslation();
-  const houseKey: HouseKey = `${parseInt(visitData.userAccountId)}-${visitData.houseId}`;
 
   useEffect(() => {
     setCurrentQuestion(String(id));
   }, [id, setCurrentQuestion, visitMap]);
 
   const methods = useForm({
-    defaultValues: visitMap[houseKey],
+    defaultValues: currentFormData,
   });
 
   const { getValues, watch } = methods;
@@ -56,7 +54,8 @@ export default function Visit() {
 
   const onNext = () => {
     const values = methods.watch(currentQuestion);
-    setQuestionForCurrentHouse(currentQuestion, values);
+    if (values) setFormData(currentQuestion, values);
+
     const next = findNext();
     router.push(`visit/${next}`);
 

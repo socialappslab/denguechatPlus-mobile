@@ -26,6 +26,8 @@ export interface InspectionQuestion extends Question {
   resourceName?: string;
 }
 
+export type OptionType = "inputNumber" | "textArea";
+
 export interface Option {
   id: number;
   name: string;
@@ -35,6 +37,7 @@ export interface Option {
   image?: boolean;
   value?: string;
   resourceId: string;
+  optionType: OptionType;
 }
 
 export interface Image {

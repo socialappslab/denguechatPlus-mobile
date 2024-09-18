@@ -1,5 +1,5 @@
 import { Checkbox, RadioButton, Text, View } from "@/components/themed";
-import { InspectionQuestion } from "@/types";
+import { InspectionQuestion, OptionType, TypeOption } from "@/types";
 import { useState } from "react";
 import {
   Control,
@@ -20,6 +20,7 @@ export interface CheckboxOption {
   resourceName?: string;
   resourceId?: string;
   next?: number;
+  optionType: OptionType;
 }
 interface QuestionnaireRendererProps {
   question: InspectionQuestion;
@@ -63,6 +64,7 @@ const QuestionnaireRenderer = ({
       resourceName: question.resourceName,
       resourceId: option.resourceId,
       next: option.next,
+      optionType: option.optionType,
     })) || [];
 
   const name = String(question.id);
@@ -179,6 +181,7 @@ const ControlledCheckbox = ({
             onValueChange={onChange}
             label={option.label}
             required={!!option.required}
+            textArea={option.optionType === "textArea"}
             // image={option.image}
           />
         );
@@ -219,6 +222,7 @@ const ControlledList = ({
             onValueChange={onChange}
             label={option.label}
             required={!!option.required}
+            textArea={option.optionType === "textArea"}
             // image={option.image}
           />
         );

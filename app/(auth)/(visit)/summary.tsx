@@ -2,30 +2,21 @@ import { Button, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
-import { Answer, VisitData, VisitPayload } from "@/types";
-import { extractAxiosErrorData, formatDate, parseId } from "@/util";
+import { FormState, Inspection, VisitData, VisitPayload } from "@/types";
+import { formatDate } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 
-// Converts the data from the visitData object into a format that can be sent to the API
-const normalizeAnswer = (
-  data: Record<string, Record<string, boolean | string>>,
-): Answer[] => {
-  const keys = Object.keys(data);
-  const normalized = keys.map((key) => ({
-    questionId: parseId(key),
-    answer: Object.keys(data[key]).map((k) => ({
-      optionId: parseId(key),
-      value: data[key][k],
-    })),
-  }));
-  return normalized;
+const prepareFormData = (formData: FormState) => {
+  const questions = Object.keys(formData);
+  let answers = {};
+  let inspection: Record<string, string> = {};
 };
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitMap, cleanStore } = useVisit();
+  const { questionnaire, currentFormData, visitData, cleanStore } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
 
@@ -35,8 +26,8 @@ export default function Summary() {
   >("visits");
 
   const onFinalize = async () => {
-    console.log(visitMap);
-    await cleanStore();
+    prepareFormData(currentFormData);
+    // await cleanStore();
     // const answers = normalizeAnswer(visitData.answers);
 
     // This should never happen, but we're being cautious

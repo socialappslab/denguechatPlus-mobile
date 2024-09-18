@@ -1,14 +1,4 @@
-import useAxios from "axios-hooks";
-import * as SecureStore from "expo-secure-store";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import React, {
-  createContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CheckboxOption } from "@/components/QuestionnaireRenderer";
 import {
   CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
   CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
@@ -27,7 +17,17 @@ import {
   VisitData,
   VisitMap,
 } from "@/types";
-import { CheckboxOption } from "@/components/QuestionnaireRenderer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useAxios from "axios-hooks";
+import * as SecureStore from "expo-secure-store";
+import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 interface VisitContextType {
   questionnaire?: Questionnaire;
@@ -35,10 +35,11 @@ interface VisitContextType {
   visitData: VisitData;
   resources: Resource[];
   setVisitData: (data: Partial<VisitData>) => Promise<void>;
-  setQuestionForCurrentHouse: (
+  setFormData: (
     questionId: string,
     data: CheckboxOption | CheckboxOption[],
   ) => Promise<void>;
+  currentFormData: FormState;
   visitMap: VisitMap;
   cleanStore: () => Promise<void>;
 }
@@ -67,6 +68,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
 
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
   const [resources, setResources] = useState<Resource[]>([]);
+  const houseKey: HouseKey = `${parseInt(visitData.userAccountId)}-${visitData.houseId}`;
 
   const [
     { data: questionnaireData, loading: isLoadingQuestionnaire },
@@ -185,21 +187,19 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   };
 
   /**
+   *  State Map
    *  {
-   *    "user_1-house_2": {
-   *      "question_1": {...}
-   *      "question_2": {...}
+   *    "[userId]-[houseId]": {
+   *      [questionId]: {...}
+   *      [questionId]: {...}
    *    }
    *  }
    *
    */
-  const setQuestionForCurrentHouse = useCallback(
+  const setFormData = useCallback(
     async (questionId: string, data: CheckboxOption | CheckboxOption[]) => {
       setVisitMapState((prev) => {
         if (!meData) return prev;
-        const houseId = visitData.houseId;
-        const userId = visitData.userAccountId;
-        const houseKey: HouseKey = `${parseInt(userId)}-${houseId}`;
         const updatedData = {
           ...prev,
           [houseKey]: {
@@ -224,6 +224,8 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+  const currentFormData = visitMap[houseKey];
+
   return (
     <VisitContext.Provider
       value={{
@@ -232,9 +234,10 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
         resources,
         isLoadingQuestionnaire: isLoadingQuestionnaire || isLoadingParams,
         setVisitData,
-        setQuestionForCurrentHouse,
+        setFormData,
         visitMap,
         cleanStore,
+        currentFormData,
       }}
     >
       {children}
