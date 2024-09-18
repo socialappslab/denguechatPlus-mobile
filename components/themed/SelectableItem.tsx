@@ -1,48 +1,68 @@
 // Copyright © 2024 650 Industries.
 // from expo-checkbox
 
-import { CheckboxProps as RadioButtonProps } from "@/types/CheckboxProps";
+import CheckboxIcon from "@/assets/images/checkbox.svg";
+import { Text } from "@/components/themed/Text";
+import { View } from "@/components/themed/View";
+import { SelectableItemProps } from "@/types/SelectableItemProps";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-  StyleSheet,
-  Pressable,
   Platform,
+  Pressable,
+  StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { View } from "@/components/themed/View";
-import { Text } from "@/components/themed/Text";
 import { SimpleChip } from "./SimpleChip";
 import { TextInput } from "./TextInput";
-import { useTranslation } from "react-i18next";
 
-export function RadioButton({
+export function SelectableItem({
   color,
   disabled,
   onChange,
   onValueChange,
   style,
+  checked,
   value,
   label,
   chip,
   image,
-  textArea,
+  optionType,
   required = false,
+  type = "radio",
+  defaultText,
   ...other
-}: RadioButtonProps) {
-  const [text, setText] = useState("");
+}: SelectableItemProps) {
+  const [text, setText] = useState(defaultText);
   const { t } = useTranslation();
 
-  const handleChange = (t?: any) => {
-    if (textArea && value) {
-      return onValueChange?.(!t);
-    }
-    onValueChange?.(!value);
+  const onChangeText = (text: string) => {
+    if (!onValueChange) return;
+    setText(text);
+    onValueChange(text);
   };
+
+  const handleChange = () => {
+    if (!onValueChange) return;
+    // Only pass a value when there's a text
+    if (text && optionType) {
+      return onValueChange(text);
+    }
+    onValueChange(null);
+  };
+
+  const styles = type === "radio" ? radioStyles : boxStyles;
+  const checkedView =
+    type === "radio" ? (
+      <View className="bg-primary w-2 h-2 rounded-full" />
+    ) : (
+      <CheckboxIcon />
+    );
 
   return (
     <TouchableOpacity
       onPress={handleChange}
-      className={`flex p-4 mb-2 rounded-md ${value ? "bg-green-400" : "bg-gray-400"}`}
+      className={`flex p-4 mb-2 rounded-md ${checked ? "bg-green-400" : "bg-gray-400"}`}
     >
       <View className="flex flex-row bg-transparent">
         {image && (
@@ -55,39 +75,44 @@ export function RadioButton({
           {...other}
           disabled={disabled}
           // Announces "checked" status and "checkbox" as the focused element
-          accessibilityRole="radio"
-          accessibilityState={{ disabled, checked: value }}
+          accessibilityRole={type}
+          accessibilityState={{ disabled, checked }}
           style={[
             styles.root,
             style,
-            value && styles.checked,
+            checked && styles.checked,
             !!color && {
-              backgroundColor: value ? color : undefined,
+              backgroundColor: checked ? color : undefined,
               borderColor: color,
             },
             disabled && styles.disabled,
-            value && disabled && styles.checkedAndDisabled,
+            checked && disabled && styles.checkedAndDisabled,
           ]}
           onPress={handleChange}
         >
-          {value && <View className="bg-primary w-2 h-2 rounded-full" />}
+          {checked && checkedView}
         </Pressable>
         <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow">
           {label}
           {required && "*"}
         </Text>
       </View>
-      {value && textArea && (
+      {checked && optionType === "textArea" && (
         <TextInput
           className="w-full h-32 mt-3 rounded border border-slate-300 text-md p-3"
           multiline
           numberOfLines={4}
-          onChangeText={(text: string) => {
-            setText(text);
-            handleChange(text);
-          }}
+          onChangeText={onChangeText}
           value={text}
           placeholder={t("placeholder")}
+        />
+      )}
+      {checked && optionType === "inputNumber" && (
+        <TextInput
+          className="w-full mt-3 rounded border border-slate-300 text-md p-3"
+          onChangeText={onChangeText}
+          value={text}
+          placeholder={t("quantity")}
           keyboardType="numeric"
         />
       )}
@@ -112,11 +137,36 @@ const defaultGrayColor = "#657786";
 const disabledGrayColor = "#CCD6DD";
 const disabledCheckedGrayColor = "#AAB8C2";
 
-const styles = StyleSheet.create({
+const radioStyles = StyleSheet.create({
   root: {
     height: 20,
     width: 20,
     borderRadius: 9999,
+    borderWidth: 1,
+    borderColor: defaultGrayColor,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checked: {
+    backgroundColor: "#EEFFED",
+    borderColor: defaultEnabledColor,
+  },
+  disabled: {
+    borderColor: disabledGrayColor,
+    backgroundColor: "transparent",
+  },
+  checkedAndDisabled: {
+    backgroundColor: disabledCheckedGrayColor,
+    borderColor: disabledCheckedGrayColor,
+  },
+});
+
+const boxStyles = StyleSheet.create({
+  root: {
+    height: 20,
+    width: 20,
+    borderRadius: 4,
     borderWidth: 1,
     borderColor: defaultGrayColor,
     display: "flex",

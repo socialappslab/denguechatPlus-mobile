@@ -222,6 +222,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       CURRENT_VISIT_LOCAL_STORAGE_KEY,
       JSON.stringify({}),
     );
+    AsyncStorage.setItem(VISIT_MAP_LOCAL_STORAGE_KEY, JSON.stringify({}));
   };
 
   const currentFormData = visitMap[houseKey];
