@@ -2,7 +2,7 @@ import { Button, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
-import { FormState, Inspection, VisitData, VisitPayload } from "@/types";
+import { FormState, VisitData, VisitPayload } from "@/types";
 import { formatDate } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -10,9 +10,19 @@ import Toast from "react-native-toast-message";
 
 const prepareFormData = (formData: FormState) => {
   const questions = Object.keys(formData);
-  let answers = {};
-  let inspection: Record<string, string> = {};
-  console.log(formData);
+  let inspection: Record<string, string | undefined> = {};
+  let answers: Record<string, string | number | undefined> = {};
+  questions.forEach((question) => {
+    const answer = formData[question];
+    if (answer.resourceName) {
+      const resourceName = answer.resourceName;
+      inspection[resourceName] = formData[question]?.resourceId;
+      return;
+    }
+    const questionId = `question_${question}`;
+    answers[questionId] = answer.value;
+  });
+  return { inspection, answers };
 };
 
 export default function Summary() {
@@ -27,7 +37,9 @@ export default function Summary() {
   >("visits");
 
   const onFinalize = async () => {
-    prepareFormData(currentFormData);
+    const { inspection, answers } = prepareFormData(currentFormData);
+    console.log(">>>>>inspection", inspection, Object.keys(inspection).length);
+    console.log(">>>>>answers", answers, Object.keys(answers).length);
     await cleanStore();
     router.push("final");
     // const answers = normalizeAnswer(visitData.answers);

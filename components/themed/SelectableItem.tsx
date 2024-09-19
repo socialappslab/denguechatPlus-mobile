@@ -105,6 +105,7 @@ export function SelectableItem({
           onChangeText={onChangeText}
           value={text}
           placeholder={t("placeholder")}
+          keyboardType="default"
         />
       )}
       {checked && optionType === "inputNumber" && (

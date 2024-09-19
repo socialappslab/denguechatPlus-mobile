@@ -12,7 +12,13 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-export interface CheckboxOption {
+/** Interfaces */
+interface QuestionnaireRendererProps {
+  question: InspectionQuestion;
+  methods: UseFormReturn<FieldValues, any, undefined>;
+}
+
+export interface ISelectableItem {
   value: string | number;
   label: string;
   required?: boolean;
@@ -20,11 +26,8 @@ export interface CheckboxOption {
   resourceName?: string;
   resourceId?: string;
   next?: number;
-  optionType: OptionType;
-}
-interface QuestionnaireRendererProps {
-  question: InspectionQuestion;
-  methods: UseFormReturn<FieldValues, any, undefined>;
+  optionType?: OptionType;
+  group?: string;
 }
 
 export interface FormStateOption {
@@ -35,11 +38,33 @@ export interface FormStateOption {
   text?: string;
 }
 
+/** Utils */
+// Prepare for ISeletableItems and order
+const formatOptionsForSelectableItems = ({
+  resourceName,
+  options,
+}: InspectionQuestion): ISelectableItem[] =>
+  options
+    ?.map(
+      ({ id, name, optionType, next, resourceId, image, required, group }) => ({
+        value: id,
+        label: name,
+        optionType,
+        next,
+        resourceName,
+        resourceId,
+        image,
+        required,
+        group,
+      }),
+    )
+    .sort((a, b) => a.value - b.value) || [];
+
 const prepareOption = ({
   option: { value, resourceName, resourceId, next },
   text,
 }: {
-  option: CheckboxOption;
+  option: ISelectableItem;
   text?: string;
 }) => ({
   value,
@@ -49,28 +74,55 @@ const prepareOption = ({
   text,
 });
 
+const groupOptions = (
+  options: ISelectableItem[],
+): Record<string, ISelectableItem[]> =>
+  options.reduce((acc: Record<string, ISelectableItem[]>, curr) => {
+    const groupKey = curr.group as string;
+    if (!groupKey) return acc;
+    if (groupKey in acc) {
+      return { ...acc, [groupKey]: [...acc[groupKey], curr] };
+    }
+    return { ...acc, [groupKey]: [curr] };
+  }, {});
+
 const QuestionnaireRenderer = ({
   question,
   methods,
 }: QuestionnaireRendererProps) => {
   const { t } = useTranslation();
-  const options = question.options;
   const hasRequiredOptions = question?.options?.some((o) => o.required);
   const { control, getValues, setValue } = methods;
+  const name = question.id.toString();
+  const formattedOptions: ISelectableItem[] =
+    formatOptionsForSelectableItems(question);
+  const hasGroup = formattedOptions.every((option) => option.group);
+  const groupedOptions = groupOptions(formattedOptions);
 
-  const formattedOptions: CheckboxOption[] =
-    options?.map((option) => ({
-      value: option.id,
-      label: option.name,
-      required: option.required,
-      image: option.image,
-      resourceName: question.resourceName,
-      resourceId: option.resourceId,
-      next: option.next,
-      optionType: option.optionType,
-    })) || [];
-
-  const name = String(question.id);
+  const renderOptions = (option: ISelectableItem) => {
+    return (
+      <>
+        {question.typeField === "multiple" && (
+          <ControlledCheckbox
+            setValue={setValue}
+            getValues={getValues}
+            name={name}
+            control={control}
+            option={option}
+          />
+        )}
+        {question.typeField === "list" && (
+          <ControlledList
+            getValues={getValues}
+            setValue={setValue}
+            name={name}
+            control={control}
+            option={option}
+          />
+        )}
+      </>
+    );
+  };
 
   return (
     <FormProvider {...methods}>
@@ -95,37 +147,17 @@ const QuestionnaireRenderer = ({
           <Text type="title" className="mb-8">
             {question.question}
           </Text>
-          {formattedOptions
-            .sort(
-              (a, b) =>
-                parseInt(a.value as string) - parseInt(b.value as string),
-            )
-            .map((option) => {
-              return (
-                option && (
-                  <>
-                    {question.typeField === "multiple" && (
-                      <ControlledCheckbox
-                        setValue={setValue}
-                        getValues={getValues}
-                        name={name}
-                        control={control}
-                        option={option}
-                      />
-                    )}
-                    {question.typeField === "list" && (
-                      <ControlledList
-                        getValues={getValues}
-                        setValue={setValue}
-                        name={name}
-                        control={control}
-                        option={option}
-                      />
-                    )}
-                  </>
-                )
-              );
-            })}
+          {/* Conditionally render groupped */}
+          {!hasGroup && formattedOptions.map(renderOptions)}
+          {hasGroup &&
+            Object.keys(groupedOptions).map((title) => (
+              <View className="mb-2">
+                <Text type="subtitle" className="mb-3">
+                  {title}
+                </Text>
+                {groupedOptions[title].map(renderOptions)}
+              </View>
+            ))}
           <Text type="small">{hasRequiredOptions && t("visit.required")}</Text>
         </View>
       )}
@@ -142,13 +174,13 @@ const ControlledCheckbox = ({
 }: {
   name: string;
   control: Control<FieldValues>;
-  option: CheckboxOption;
+  option: ISelectableItem;
   setValue: UseFormSetValue<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }) => {
   const [itemsChecked, setItemsChecked] = useState(getValues(name) || []);
   const isSelected = itemsChecked.some(
-    (item: CheckboxOption) => item.value === option.value,
+    (item: ISelectableItem) => item.value === option.value,
   );
 
   const onChange = (text: string) => {
@@ -158,12 +190,12 @@ const ControlledCheckbox = ({
     }
 
     const indexFound = values.findIndex(
-      (item: CheckboxOption) => item.value === option.value,
+      (item: ISelectableItem) => item.value === option.value,
     );
 
     if (indexFound > -1) {
       const valuesToSave = values.filter(
-        (item: CheckboxOption) => item.value !== option.value,
+        (item: ISelectableItem) => item.value !== option.value,
       );
       setValue(name, valuesToSave);
       setItemsChecked(valuesToSave);
@@ -207,12 +239,11 @@ const ControlledList = ({
   getValues,
 }: {
   name: string;
-  option: CheckboxOption;
+  option: ISelectableItem;
   control: Control<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }) => {
-  console.log(getValues(name));
   return (
     <Controller
       name={name}
