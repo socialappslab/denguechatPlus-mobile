@@ -38,6 +38,7 @@ export interface Option {
   value?: string;
   resourceId: string;
   optionType: OptionType;
+  group: string;
 }
 
 export interface Image {
