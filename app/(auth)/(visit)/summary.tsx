@@ -8,12 +8,44 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 
+// Inspection type
+const QuantityFound = "quantity_founded";
+
+// StatusColor utils
+enum StatusColor {
+  INFECTED = "RED",
+  POTENTIONALLY_INFECTED = "YELLOW",
+  NO_INFECTED = "GREEN",
+}
+
+const RenderStatus = ({ statusColor }: { statusColor: StatusColor }) => {
+  const { t } = useTranslation();
+
+  return (
+    <View className="flex flex-row justify-center items-center">
+      <Text>{t(`visit.summary.statusColor.${statusColor.toLowerCase()}`)}</Text>
+      <View
+        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLowerCase()}-100`}
+      />
+    </View>
+  );
+};
+
+/**
+ *
+ * @param formData
+ * @returns takes all SelectableItems from a given formState and returns
+ * formatted inspection, answers and colorStatus
+ */
 const prepareFormData = (formData: FormState) => {
   const questions = Object.keys(formData);
   let inspection: Record<string, string | undefined | string[]> = {};
   let answers: Record<string, string | number | undefined> = {};
+  let statusColors: StatusColor[] = [];
+
   questions.forEach((question) => {
     const answer = formData[question];
+
     if (Array.isArray(answer)) {
       const [first] = answer;
       const resourceName = first.resourceName as string;
@@ -21,19 +53,41 @@ const prepareFormData = (formData: FormState) => {
       inspection[resourceName] = answer.map(
         (item) => item.text || (item.resourceId as string),
       );
+
+      const colors: StatusColor[] = answer
+        .filter((item) => typeof item.statusColor === "string")
+        .map((item) => item.statusColor as StatusColor);
+
+      statusColors.push(...colors);
       return;
     }
+
     if (answer.resourceName) {
       const resourceName = answer.resourceName;
       if (answer.resourceType === "relation")
         inspection[resourceName] = answer.text || answer.resourceId;
-      if (answer.resourceType === "atribute")
-        inspection[resourceName] = answer.label;
+      if (answer.resourceType === "attribute")
+        inspection[resourceName] = answer.text || answer.label;
+      if (answer.statusColor) {
+        statusColors.push(answer.statusColor as StatusColor);
+      }
     }
+
+    // console.log(inspection);
     const questionId = `question_${question}`;
     answers[questionId] = answer.value;
   });
-  return { inspection, answers };
+
+  // We order with RED beign first, then YELLOW, then GREEN
+  const orderedStatus = statusColors.sort((a, b) => {
+    if (a < b) return 1;
+    if (a > b) return -1;
+    return 0;
+  });
+  // And get the first
+  const [statusColor] = orderedStatus;
+
+  return { inspection, answers, statusColor: statusColor as StatusColor };
 };
 
 export default function Summary() {
@@ -41,6 +95,8 @@ export default function Summary() {
   const { questionnaire, currentFormData, visitData, cleanStore } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { inspection, answers, statusColor } = prepareFormData(currentFormData);
+  const quantity = parseInt(inspection[QuantityFound] as string) + 1;
 
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
@@ -48,10 +104,7 @@ export default function Summary() {
   >("visits", { "Content-Type": "multipart/form-data" });
 
   const onFinalize = async () => {
-    console.log(">>>>>>>>>>>>");
-    const { inspection, answers } = prepareFormData(currentFormData);
-    // console.log(inspection);
-    // console.log(">>>>>inspection", inspection, Object.keys(inspection).length);
+    console.log(">>>>>inspection", inspection, Object.keys(inspection).length);
     // console.log(">>>>>answers", answers, Object.keys(answers).length);
     // const answers = normalizeAnswer(visitData.answers);
 
@@ -98,7 +151,7 @@ export default function Summary() {
     };
 
     try {
-      // await createVisit({ json_params: JSON.stringify(normalizedData) });
+      await createVisit({ json_params: JSON.stringify(normalizedData) });
       await cleanStore();
       Toast.show({
         type: "success",
@@ -136,19 +189,21 @@ export default function Summary() {
       <View className="mb-4">
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.status")}</Text>
-          <Text type="text">-</Text>
+          <RenderStatus statusColor={statusColor} />
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.containers")}</Text>
-          <Text type="text">-</Text>
+          <Text type="text">
+            {quantity + visitData.inspections.length || 1}
+          </Text>
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.houseNumber")}</Text>
-          <Text type="text">-</Text>
+          <Text type="text">{visitData.houseId}</Text>
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.date")}</Text>
-          <Text type="text">{formatDate(new Date().toISOString())}</Text>
+          <Text type="text">{formatDate(new Date().toString())}</Text>
         </View>
       </View>
       <View className="flex flex-row gap-2">

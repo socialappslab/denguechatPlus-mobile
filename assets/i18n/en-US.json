@@ -88,7 +88,12 @@
         "status": "Status of the house",
         "containers": "Containers",
         "houseNumber": "House Number",
-        "date": "Date"
+        "date": "Date",
+        "statusColor": {
+          "green": "Green",
+          "yellow": "Yellow",
+          "red": "Red"
+        }
       },
       "final": {
         "title": "Thank you very much!",

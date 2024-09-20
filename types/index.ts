@@ -22,9 +22,10 @@ export interface Question {
   image?: Image;
 }
 
+export type ResourceType = "attribute" | "relation";
 export interface InspectionQuestion extends Question {
   resourceName?: string;
-  resourceType?: "attribute" | "relation";
+  resourceType?: ResourceType;
 }
 
 export type OptionType = "inputNumber" | "textArea";
@@ -40,6 +41,7 @@ export interface Option {
   resourceId: string;
   optionType: OptionType;
   group: string;
+  statusColor?: string;
 }
 
 export interface Image {
