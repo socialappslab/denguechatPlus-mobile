@@ -1,0 +1,127 @@
+{
+  "translation": {
+    "yes": "Sim",
+    "no": "Não",
+    "back": "Voltar",
+    "next": "Próximo",
+    "error": "Erro",
+    "success": "Sucesso",
+    "logout": "Sair",
+    "textChatsTab": "Navegue até a aba de perfil para sair.",
+    "backToHome": "Ir para a página inicial",
+    "editFromStart": "Editar do início",
+    "finalize": "Finalizar",
+    "placeholder": "Escreva aqui...",
+    "quantity": "Quantidade",
+    "tabs": {
+      "chat": "Chat",
+      "homes": "Residências",
+      "profile": "Minha Brigada",
+      "visit": "Visitas"
+    },
+    "drawer": {
+      "myCity": "Minha Cidade",
+      "myCommunity": "Minha Comunidade",
+      "brigades": "Brigadas",
+      "assignBrigade": "Atribuir Brigada"
+    },
+    "profile": {
+      "account": "Conta"
+    },
+    "login": {
+      "username": "Nome de Usuário",
+      "username_placeholder": "Digite seu nome de usuário",
+      "phone": "Telefone",
+      "phone_placeholder": "Digite seu número de telefone",
+      "password": "Senha",
+      "password_placeholder": "Digite sua senha",
+      "register": "Registrar",
+      "registerMessage": "Não tem uma conta?",
+      "forgotPassword": "Esqueci minha senha",
+      "action": "Entrar",
+      "error": {
+        "email": "Por favor, insira um endereço de e-mail válido",
+        "password": "Por favor, insira uma senha",
+        "login": "Falha no login. Por favor, tente novamente.",
+        "empty": "Por favor, insira seu e-mail e senha",
+        "invalidCredentials": "E-mail ou senha inválidos"
+      },
+      "searchCountry_placeholder": "Pesquisar país...",
+      "username-tab": "Nome de Usuário",
+      "phone-tab": "Telefone"
+    },
+    "validation": {
+      "required": "Campo obrigatório",
+      "requiredField": {
+        "email": "E-mail é obrigatório",
+        "username": "Nome de usuário é obrigatório",
+        "password": "Senha é obrigatória",
+        "confirmPassword": "Por favor, confirme sua senha",
+        "name": "Nome é obrigatório",
+        "phone": "Telefone é obrigatório"
+      },
+      "notMatch": "As senhas não coincidem",
+      "invalidEmail": "E-mail inválido",
+      "passwordLength": "A senha deve ter pelo menos {{length}} caracteres",
+      "usernameLength": "O nome de usuário deve ter pelo menos {{length}} caracteres",
+      "phoneLength": "O número de telefone é muito curto"
+    },
+    "visit": {
+      "stackTitle": "Registro de Visita",
+      "start": "Iniciar uma visita",
+      "title": "Registro de Visita",
+      "required": "* Campos obrigatórios.",
+      "houses": {
+        "title": "Locais",
+        "searchPlaceholder": "Pesquisar por número do local",
+        "house": "Casa",
+        "registerNewHouse": "Registrar um novo local",
+        "notVisited": "Não visitado",
+        "specialPlace": "Lugar Especial",
+        "search": "Pesquisar um local",
+        "optionsTitle": "Escolha um local",
+        "noHouses": "Não encontra o local?",
+        "noHousesMessage": "Registre um novo local aqui."
+      },
+      "summary": {
+        "title": "Resumo da visita",
+        "status": "Status da casa",
+        "containers": "Recipientes",
+        "houseNumber": "Número da Casa",
+        "date": "Data"
+      },
+      "final": {
+        "title": "Muito obrigado!",
+        "greetings": "Agradecemos aos moradores da casa e informamos que faremos outra visita em breve."
+      }
+    },
+    "brigade": {
+      "sites": {
+        "green": "Locais Verdes",
+        "yellow": "Locais Amarelos",
+        "red": "Locais Vermelhos"
+      },
+      "teamLeader": "Facilitador",
+      "cards": {
+        "numberVisits": "Número de visitas",
+        "numberSites": "Número de locais",
+        "numberThisWeek": "esta semana",
+        "participants": "Participantes da Brigada"
+      },
+      "joinBrigade": {
+        "messages": {
+          "chat": "Para ver as mensagens do chat, você precisa ingressar em uma brigada. Fale com um facilitador para ingressar em uma.",
+          "visit": "Para começar a registrar visitas, você precisa ingressar em uma brigada. Fale com um facilitador para ingressar em uma.",
+          "profile": "Para ver mais informações, você precisa ingressar em uma brigada. Fale com um facilitador para ingressar em uma."
+        },
+        "action": "Ingressar em uma brigada"
+      }
+    },
+    "errorCodes": {
+      "generic": "Algo deu errado. Por favor, tente novamente.",
+      "46": "Credenciais inválidas",
+      "51": "Conta não está ativa",
+      "55": "A conta foi temporariamente bloqueada. Várias tentativas de login falharam. Tente novamente mais tarde."
+    }
+  }
+}
