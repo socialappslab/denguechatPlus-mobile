@@ -4,7 +4,7 @@ import QuestionnaireRenderer, {
 import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { Question } from "@/types";
+import { InspectionQuestion, Question } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useEffect, useState } from "react";
@@ -71,10 +71,14 @@ export default function Visit() {
 
   let current = questionnaire?.questions.find(
     (q) => String(q.id) === currentQuestion,
-  );
+  ) as InspectionQuestion;
 
   const findNext = () => {
-    let next = current?.next;
+    if (!current) return;
+    let next = current.next;
+    const resourceName = current.resourceName;
+
+    if (resourceName === "photo_id") return "container-picture";
     if (next) return next;
 
     const curr = getValues(currentQuestion);

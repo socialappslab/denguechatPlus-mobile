@@ -1,4 +1,4 @@
-import { Button, Text, View } from "@/components/themed";
+import { Button, SafeAreaView, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
@@ -178,7 +178,7 @@ export default function Summary() {
   };
 
   return (
-    <View className="h-full p-6 pb-10 flex flex-col justify-between">
+    <SafeAreaView className="h-full p-6 pb-10 flex flex-col justify-between">
       <View className="flex flex-col justify-center items-center">
         <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
           <Text className="text-center text">Ilustración o ícono</Text>
@@ -218,6 +218,6 @@ export default function Summary() {
           <Button primary title={t("finalize")} onPress={onFinalize} />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

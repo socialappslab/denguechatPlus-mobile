@@ -57,6 +57,10 @@ export default function VisitLayout(props: ThemeProps) {
         name="final"
         options={{ headerShown: true, headerShadowVisible: false }}
       />
+      <Stack.Screen
+        name="visit/container-picture"
+        options={{ headerShown: true, headerShadowVisible: false }}
+      />
     </Stack>
   );
 }
