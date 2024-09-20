@@ -1,15 +1,49 @@
-import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
+import QuestionnaireRenderer, {
+  FormStateOption,
+} from "@/components/QuestionnaireRenderer";
 import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { TypeField } from "@/types";
+import { Question } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+// When next is -1 we end the flow
 const TERMINATE = -1;
+
+// Custom validation function
+const isValid = (
+  currentValue: FormStateOption | FormStateOption[],
+  question?: Question,
+): boolean => {
+  if (!question || !currentValue) return false;
+
+  const required = question.options?.filter((item) => item.required) || [];
+
+  if (!Array.isArray(currentValue)) {
+    if (currentValue.optionType === "inputNumber") {
+      return !!currentValue.text;
+    }
+    return !!currentValue;
+  }
+
+  if (Array.isArray(currentValue)) {
+    // Check if all requierd fields are present
+    if (required.length > 0) {
+      const currentIds = currentValue?.map((item: any) => item.value) || [];
+      const requiredIds = required.map((item) => item.id);
+      return requiredIds.every((req) => currentIds?.includes(req));
+    }
+
+    // Check if at least one is marked
+    return currentValue.length > 0;
+  }
+
+  return false;
+};
 
 export default function Visit() {
   const {
@@ -43,11 +77,14 @@ export default function Visit() {
     let next = current?.next;
     if (next) return next;
 
+    const curr = getValues(currentQuestion);
     // look inside current option selected
     // which extends an option object
-    if (!next) {
-      const curr = getValues(currentQuestion);
+    if (!next && !Array.isArray(curr)) {
       return curr.next;
+    } else if (Array.isArray(curr)) {
+      const [first] = curr;
+      return first.next;
     }
     return TERMINATE;
   };
@@ -71,24 +108,9 @@ export default function Visit() {
     router.back();
   };
 
-  const currentValue = watch(currentQuestion) as Record<any, any> | any[];
-  const isSelected = useCallback(
-    (fieldType?: TypeField) => {
-      if (!fieldType) return false;
-      switch (fieldType) {
-        case "list":
-          return currentValue;
-        case "multiple":
-          if (Array.isArray(currentValue)) {
-            return currentValue.length > 0;
-          }
-          return false;
-        default:
-          return false;
-      }
-    },
-    [currentValue],
-  );
+  const currentValue = watch(currentQuestion) as
+    | FormStateOption
+    | FormStateOption[];
 
   if (isLoadingQuestionnaire) {
     return (
@@ -120,7 +142,7 @@ export default function Visit() {
                 primary
                 title={t("next")}
                 onPress={onNext}
-                disabled={!isSelected(current?.typeField)}
+                disabled={!isValid(currentValue, current)}
               />
             )}
           </View>

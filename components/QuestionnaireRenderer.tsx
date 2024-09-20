@@ -28,20 +28,15 @@ export interface ISelectableItem {
   next?: number;
   optionType?: OptionType;
   group?: string;
-}
-
-export interface FormStateOption {
-  value: string;
-  resourceName: string;
-  resourceId: string;
-  next?: number;
   text?: string;
+  resourceType?: string;
 }
 
 /** Utils */
 // Prepare for ISeletableItems and order
 const formatOptionsForSelectableItems = ({
   resourceName,
+  resourceType,
   options,
 }: InspectionQuestion): ISelectableItem[] =>
   options
@@ -56,22 +51,35 @@ const formatOptionsForSelectableItems = ({
         image,
         required,
         group,
+        resourceType,
       }),
     )
     .sort((a, b) => a.value - b.value) || [];
 
+export interface FormStateOption {
+  value?: string | number;
+  resourceName?: string;
+  resourceId?: string;
+  next?: number;
+  text?: string;
+  resourceType?: string;
+  optionType?: string;
+}
+
 const prepareOption = ({
-  option: { value, resourceName, resourceId, next },
+  option: { value, resourceName, resourceId, next, resourceType, optionType },
   text,
 }: {
   option: ISelectableItem;
   text?: string;
-}) => ({
+}): FormStateOption => ({
   value,
   resourceName,
   resourceId,
+  resourceType,
   next,
   text,
+  optionType,
 });
 
 const groupOptions = (

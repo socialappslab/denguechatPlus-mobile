@@ -64,38 +64,40 @@ export function SelectableItem({
       onPress={handleChange}
       className={`flex p-4 mb-2 rounded-md ${checked ? "bg-green-400" : "bg-gray-400"}`}
     >
-      <View className="flex flex-row bg-transparent">
+      <View className="flex bg-transparent">
         {image && (
           <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
             <Text className="text-center text">Imagen</Text>
           </View>
         )}
-        <Pressable
-          className="bg-white mr-2"
-          {...other}
-          disabled={disabled}
-          // Announces "checked" status and "checkbox" as the focused element
-          accessibilityRole={type}
-          accessibilityState={{ disabled, checked }}
-          style={[
-            styles.root,
-            style,
-            checked && styles.checked,
-            !!color && {
-              backgroundColor: checked ? color : undefined,
-              borderColor: color,
-            },
-            disabled && styles.disabled,
-            checked && disabled && styles.checkedAndDisabled,
-          ]}
-          onPress={handleChange}
-        >
-          {checked && checkedView}
-        </Pressable>
-        <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow">
-          {label}
-          {required && "*"}
-        </Text>
+        <View className="flex flex-row bg-transparent">
+          <Pressable
+            className="bg-white mr-2"
+            {...other}
+            disabled={disabled}
+            // Announces "checked" status and "checkbox" as the focused element
+            accessibilityRole={type}
+            accessibilityState={{ disabled, checked }}
+            style={[
+              styles.root,
+              style,
+              checked && styles.checked,
+              !!color && {
+                backgroundColor: checked ? color : undefined,
+                borderColor: color,
+              },
+              disabled && styles.disabled,
+              checked && disabled && styles.checkedAndDisabled,
+            ]}
+            onPress={handleChange}
+          >
+            {checked && checkedView}
+          </Pressable>
+          <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow">
+            {label}
+            {required && "*"}
+          </Text>
+        </View>
       </View>
       {checked && optionType === "textArea" && (
         <TextInput
