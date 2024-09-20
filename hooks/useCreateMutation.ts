@@ -14,6 +14,7 @@ type IUseCreate<P> = {
 
 export default function useCreateMutation<P, S>(
   endpoint: string,
+  headers?: Record<string, string>,
 ): IUseCreate<P> {
   const [{ loading }, create] = useAxios<
     ExistingDocumentObject,
@@ -23,6 +24,7 @@ export default function useCreateMutation<P, S>(
     {
       url: endpoint,
       method: "POST",
+      headers,
     },
     { manual: true },
   );

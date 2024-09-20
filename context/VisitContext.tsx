@@ -1,4 +1,4 @@
-import { CheckboxOption } from "@/components/QuestionnaireRenderer";
+import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import {
   CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
   CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
@@ -37,7 +37,7 @@ interface VisitContextType {
   setVisitData: (data: Partial<VisitData>) => Promise<void>;
   setFormData: (
     questionId: string,
-    data: CheckboxOption | CheckboxOption[],
+    data: ISelectableItem | ISelectableItem[],
   ) => Promise<void>;
   currentFormData: FormState;
   visitMap: VisitMap;
@@ -61,6 +61,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     houseId: 0,
     questionnaireId: "0",
     teamId: 0,
+    visitedAt: "",
     userAccountId: "0",
     notes: "",
     inspections: [],
@@ -197,7 +198,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
    *
    */
   const setFormData = useCallback(
-    async (questionId: string, data: CheckboxOption | CheckboxOption[]) => {
+    async (questionId: string, data: ISelectableItem | ISelectableItem[]) => {
       setVisitMapState((prev) => {
         if (!meData) return prev;
         const updatedData = {
