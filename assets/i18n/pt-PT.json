@@ -88,7 +88,12 @@
         "status": "Status da casa",
         "containers": "Recipientes",
         "houseNumber": "Número da Casa",
-        "date": "Data"
+        "date": "Data",
+        "statuscolor": {
+          "green": "Verde",
+          "yellow": "Amarelo",
+          "red": "Vermelho"
+        }
       },
       "final": {
         "title": "Muito obrigado!",

@@ -1,5 +1,5 @@
 import { SelectableItem, Text, View } from "@/components/themed";
-import { InspectionQuestion, OptionType } from "@/types";
+import { InspectionQuestion, OptionType, ResourceType } from "@/types";
 import { useState } from "react";
 import {
   Control,
@@ -29,7 +29,8 @@ export interface ISelectableItem {
   optionType?: OptionType;
   group?: string;
   text?: string;
-  resourceType?: string;
+  resourceType?: ResourceType;
+  statusColor?: string;
 }
 
 /** Utils */
@@ -41,7 +42,17 @@ const formatOptionsForSelectableItems = ({
 }: InspectionQuestion): ISelectableItem[] =>
   options
     ?.map(
-      ({ id, name, optionType, next, resourceId, image, required, group }) => ({
+      ({
+        id,
+        name,
+        optionType,
+        next,
+        resourceId,
+        image,
+        required,
+        group,
+        statusColor,
+      }) => ({
         value: id,
         label: name,
         optionType,
@@ -52,6 +63,7 @@ const formatOptionsForSelectableItems = ({
         required,
         group,
         resourceType,
+        statusColor,
       }),
     )
     .sort((a, b) => a.value - b.value) || [];
@@ -64,10 +76,19 @@ export interface FormStateOption {
   text?: string;
   resourceType?: string;
   optionType?: string;
+  statusColor?: string;
 }
 
 const prepareOption = ({
-  option: { value, resourceName, resourceId, next, resourceType, optionType },
+  option: {
+    value,
+    resourceName,
+    resourceId,
+    next,
+    resourceType,
+    optionType,
+    statusColor,
+  },
   text,
 }: {
   option: ISelectableItem;
@@ -80,6 +101,7 @@ const prepareOption = ({
   next,
   text,
   optionType,
+  statusColor,
 });
 
 const groupOptions = (

@@ -8,6 +8,7 @@ module.exports = {
     "bg-neutral",
     "border-neutral",
     "text-neutral",
+    "bg-red-100",
     "bg-red-500",
     "bg-green-300",
     "bg-green-400",
@@ -19,6 +20,7 @@ module.exports = {
     "bg-blue-100",
     "border-blue-400",
     "text-blue-500",
+    "bg-yellow-100",
   ],
   theme: {
     extend: {
@@ -34,9 +36,9 @@ module.exports = {
       colors: {
         primary: "#067507",
         fieldBorder: "#D0D5DD",
-        yellow: "#FCC914",
         neutral: "#79716B",
         green: {
+          100: "#2FFB2D", // status color
           300: "#EEFFED",
           400: "#D6FFD6",
           500: "#067507",
@@ -47,6 +49,13 @@ module.exports = {
         gray: {
           300: "#475467",
           400: "#F9F9F9",
+        },
+        red: {
+          100: "#DC143C", // status color
+        },
+        yellow: {
+          50: "#FCC914",
+          100: "#FFDE21",
         },
       },
     },
