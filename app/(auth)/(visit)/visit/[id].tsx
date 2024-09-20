@@ -94,12 +94,8 @@ export default function Visit() {
     if (values) setFormData(currentQuestion, values);
 
     const next = findNext();
-    router.push(`visit/${next}`);
-
-    if (next === TERMINATE) {
-      router.push("summary");
-      return;
-    }
+    if (next !== TERMINATE) return router.push(`visit/${next}`);
+    if (next === TERMINATE) return router.push("add-comment");
   };
 
   const isSplash = current?.typeField === "splash";
