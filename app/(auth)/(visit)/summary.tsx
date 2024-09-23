@@ -3,13 +3,10 @@ import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { FormState, VisitData, VisitPayload } from "@/types";
-import { extractAxiosErrorData, formatDate } from "@/util";
+import { extractAxiosErrorData, formatDate, QuantityFound } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
-
-// Inspection type
-const QuantityFound = "quantity_founded";
 
 // StatusColor utils
 enum StatusColor {
@@ -136,18 +133,18 @@ export default function Summary() {
         //   was_chemically_treated: "si, si, si",
         //   photo_id: "CRCODE",
         // },
-        // {
-        //   breeding_site_type_id: 1,
-        //   elimination_method_type_id: 1,
-        //   water_source_type_id: 1,
-        //   // code_reference: "CRCODE",
-        //   has_water: true,
-        //   was_chemically_treated: "si, si, si",
-        //   // water_source_other: "Fuente de agua",
-        //   container_protection_id: 1,
-        //   type_content_id: [1, 2],
-        //   quantity_founded: 3,
-        // },
+        {
+          breeding_site_type_id: 1,
+          elimination_method_type_id: 1,
+          water_source_type_id: 1,
+          // code_reference: "CRCODE",
+          has_water: true,
+          was_chemically_treated: "si, si, si",
+          // water_source_other: "Fuente de agua",
+          container_protection_id: 1,
+          type_content_id: [1, 2],
+          quantity_founded: 3,
+        },
       ],
     };
 
@@ -190,7 +187,7 @@ export default function Summary() {
       <View className="mb-4">
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.status")}</Text>
-          <RenderStatus statusColor={statusColor} />
+          <RenderStatus statusColor={statusColor || StatusColor.NO_INFECTED} />
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.containers")}</Text>

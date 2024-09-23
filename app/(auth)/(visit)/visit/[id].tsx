@@ -5,6 +5,7 @@ import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
 import { InspectionQuestion, Question } from "@/types";
+import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useEffect, useState } from "react";
@@ -76,9 +77,7 @@ export default function Visit() {
   const findNext = () => {
     if (!current) return;
     let next = current.next;
-    const resourceName = current.resourceName;
 
-    if (resourceName === "photo_id") return "container-picture";
     if (next) return next;
 
     const curr = getValues(currentQuestion);
@@ -96,6 +95,9 @@ export default function Visit() {
   const onNext = () => {
     const values = methods.watch(currentQuestion);
     if (values) setFormData(currentQuestion, values);
+
+    const resourceName = current.resourceName;
+    if (resourceName === PhotoId) return router.push("container-picture");
 
     const next = findNext();
     if (next !== TERMINATE) return router.push(`visit/${next}`);
