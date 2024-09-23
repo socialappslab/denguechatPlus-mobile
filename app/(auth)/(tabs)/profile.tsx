@@ -1,46 +1,170 @@
-import { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+
 import { useAuth } from "@/context/AuthProvider";
-import { Text, View } from "@/components/themed";
-import Button from "@/components/themed/Button";
+import { Text, View, ScrollView, SafeAreaView } from "@/components/themed";
+
+import { useTranslation } from "react-i18next";
+import useAxios from "axios-hooks";
+
+import { SimpleChip, ProgressBar, Loading } from "@/components/themed";
+import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
+import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
+import { CheckTeam } from "@/components/segments/CheckTeam";
+import Colors from "@/constants/Colors";
+import { getInitials } from "@/util";
+
+// example JSON Data
+const visitsData = {
+  visits: 1210,
+  weeklyChange: "+15%",
+};
+
+const sitesData = {
+  totalSites: 170,
+  weeklyChange: "+15%",
+  greenSites: 75,
+  yellowSites: 60,
+  redSites: 35,
+};
 
 export default function TabTwoScreen() {
-  const { user, logout } = useAuth();
+  const { t } = useTranslation();
+  const { meData } = useAuth();
+  const [team, setTeam] = useState<Team | null>(null);
+
+  const [{ data: teamData, loading: loadingTeam }] = useAxios<
+    ExistingDocumentObject,
+    unknown,
+    ErrorResponse
+  >({
+    url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
+  });
 
   useEffect(() => {
-    console.log("profile", user);
-  }, [user]);
+    if (!teamData) return;
+    const deserializedData = deserialize<Team>(teamData);
+    console.log("deserializedData TEAM>>>>>>>>>>", deserializedData);
+    if (deserializedData && !Array.isArray(deserializedData)) {
+      setTeam(deserializedData);
+    }
+  }, [teamData]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab 3</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <Text>Account</Text>
-      <Text className="font-semibold text-md color-primary">
-        {user?.username || "No username"}
-      </Text>
-      <Button className="w-1/2 mt-6" title="Log out" onPress={logout} />
-    </View>
+    <SafeAreaView>
+      <CheckTeam view="profile">
+        <View className="flex flex-1">
+          {loadingTeam && (
+            <View className="my-4">
+              <Loading />
+            </View>
+          )}
+          {!loadingTeam && (
+            <ScrollView
+              className="py-5 px-5"
+              showsVerticalScrollIndicator={false}
+            >
+              <View className="mb-2">
+                <Text className="text-xl font-bold mb-2">{team?.name}</Text>
+                <Text className="text-md font-normal mb-4">
+                  {team?.sector?.name} - {team?.wedge?.name}
+                </Text>
+              </View>
+              <View className="p-4 mb-4 border border-gray-200 rounded-lg">
+                <Text className="text-md text-gray-600 mb-2">
+                  {t("brigade.cards.numberVisits")}
+                </Text>
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-3xl font-semibold">
+                    {team?.visits ?? 0}
+                  </Text>
+                  <SimpleChip
+                    border="1"
+                    padding="small"
+                    textColor="neutral"
+                    borderColor="neutral"
+                    ionIcon="arrow-up"
+                    iconColor={Colors.light.neutral}
+                    label={`${visitsData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
+                  />
+                </View>
+              </View>
+
+              <View className="p-4 mb-4 border border-gray-200 rounded-lg">
+                <Text className="text-md text-gray-600 mb-2">
+                  {t("brigade.cards.numberSites")}
+                </Text>
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-3xl font-semibold">
+                    {sitesData.totalSites}
+                  </Text>
+
+                  <SimpleChip
+                    border="1"
+                    padding="small"
+                    textColor="neutral"
+                    borderColor="neutral"
+                    ionIcon="arrow-up"
+                    iconColor={Colors.light.neutral}
+                    label={`${sitesData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
+                  />
+                </View>
+                <View className="flex flex-col mt-6">
+                  <ProgressBar
+                    label={t("brigade.sites.green")}
+                    progress={team?.sitesStatuses?.green ?? 0}
+                    color="primary"
+                  />
+                  <ProgressBar
+                    label={t("brigade.sites.yellow")}
+                    progress={team?.sitesStatuses?.yellow ?? 0}
+                    color="yellow"
+                  />
+                  <ProgressBar
+                    label={t("brigade.sites.red")}
+                    progress={team?.sitesStatuses?.red ?? 0}
+                    color="red-500"
+                  />
+                </View>
+              </View>
+
+              <View className="rounded-lg border border-gray-200 mb-8">
+                <View className="bg-gray-100 border-b border-gray-200 rounded-t-lg px-4 py-4">
+                  <Text className="text-gray-600 font-medium">
+                    {t("brigade.cards.participants")}
+                  </Text>
+                </View>
+
+                {team?.members?.map((member, index) => (
+                  <View
+                    key={member.id}
+                    className={`flex-row items-center p-4 border-gray-200 ${index === team?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
+                  >
+                    <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mr-3">
+                      <Text className="font-bold text-sm text-green-700">
+                        {getInitials(member.fullName)}
+                      </Text>
+                    </View>
+                    <View className="flex-1">
+                      <Text>{member.fullName}</Text>
+                    </View>
+                    {member.rol === TEAM_LEADER_ROLE && (
+                      <SimpleChip
+                        padding="small"
+                        textColor="blue-500"
+                        border="1"
+                        borderColor="blue-400"
+                        backgroundColor="blue-100"
+                        label={`${t("brigade.teamLeader")}`}
+                      />
+                    )}
+                  </View>
+                ))}
+              </View>
+              <View className="h-6"></View>
+            </ScrollView>
+          )}
+        </View>
+      </CheckTeam>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

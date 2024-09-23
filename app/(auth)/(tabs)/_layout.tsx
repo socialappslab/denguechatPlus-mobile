@@ -2,14 +2,16 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/themed/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import Bubble from "@/assets/images/icons/bubble.svg";
 import House from "@/assets/images/icons/house.svg";
-import User from "@/assets/images/icons/user.svg";
+import Brigade from "@/assets/images/icons/brigade.svg";
 import { useTranslation } from "react-i18next";
+import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 
 type TabsNames = "chat" | "homes" | "profile";
 
@@ -21,17 +23,30 @@ function TabBarIcon(props: { name: TabsNames; color: string }) {
     case "homes":
       return <House color={props.color} />;
     case "profile":
-      return <User color={props.color} />;
+      return <Brigade color={props.color} />;
   }
 }
 
-export default function TabLayout() {
+export default function TabLayout(props: ThemeProps) {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
+  const { lightColor, darkColor } = props;
+
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "background",
+  );
+
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
   return (
     <Tabs
       screenOptions={{
+        headerStyle: {
+          backgroundColor,
+        },
+        headerShadowVisible: false,
+        headerTintColor: color,
         tabBarStyle: {
           position: "absolute",
           height: 85,
@@ -45,6 +60,7 @@ export default function TabLayout() {
         tabBarLabelStyle: {
           fontFamily: "Inter-Bold",
         },
+        headerLeft: () => <DrawerToggleButton tintColor={color} />,
       }}
     >
       <Tabs.Screen
@@ -52,8 +68,24 @@ export default function TabLayout() {
         options={{
           title: t("tabs.chat"),
           tabBarIcon: ({ color }) => <TabBarIcon name="chat" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="visits"
+        options={{
+          title: t("tabs.visit"),
+          tabBarIcon: ({ color }) => <TabBarIcon name="homes" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: t("tabs.profile"),
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="profile" color={color} />
+          ),
           headerRight: () => (
-            <Link href="/homes" asChild>
+            <Link href="/chat" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
@@ -65,22 +97,6 @@ export default function TabLayout() {
                 )}
               </Pressable>
             </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="homes"
-        options={{
-          title: t("tabs.homes"),
-          tabBarIcon: ({ color }) => <TabBarIcon name="homes" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: t("tabs.profile"),
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="profile" color={color} />
           ),
         }}
       />

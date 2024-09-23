@@ -3,17 +3,36 @@
     "yes": "Yes",
     "no": "No",
     "back": "Back",
+    "next": "Next",
     "error": "Error",
     "success": "Success",
     "logout": "Logout",
+    "textChatsTab": "Navigate to profile tab to logout.",
+    "backToHome": "Go home",
+    "editFromStart": "Edit from start",
+    "finalize": "Finalize",
+    "placeholder": "Write here...",
+    "quantity": "Quantity",
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
-      "profile": "Profile"
+      "profile": "My Brigade",
+      "visit": "Visits"
+    },
+    "drawer": {
+      "myCity": "My City",
+      "myCommunity": "My Community",
+      "brigades": "Brigades",
+      "assignBrigade": "Assign Brigade"
+    },
+    "profile": {
+      "account": "Account"
     },
     "login": {
-      "email": "Email",
-      "email_placeholder": "Enter your email",
+      "username": "Username",
+      "username_placeholder": "Enter your username",
+      "phone": "Phone",
+      "phone_placeholder": "Enter your phone number",
       "password": "Password",
       "password_placeholder": "Enter your password",
       "register": "Register",
@@ -24,8 +43,90 @@
         "email": "Please enter a valid email address",
         "password": "Please enter a password",
         "login": "Login failed. Please try again.",
-        "empty": "Please enter your email and password"
+        "empty": "Please enter your email and password",
+        "invalidCredentials": "Invalid email or password"
+      },
+      "searchCountry_placeholder": "Search country...",
+      "username-tab": "Username",
+      "phone-tab": "Phone"
+    },
+    "validation": {
+      "required": "Field is required",
+      "requiredField": {
+        "email": "Email is required",
+        "username": "Username is required",
+        "password": "Password is required",
+        "confirmPassword": "Please confirm your password",
+        "name": "Name is required",
+        "phone": "Phone is required"
+      },
+      "notMatch": "Password does not match",
+      "invalidEmail": "Invalid email",
+      "passwordLength": "Password must be at least {{length}} characters",
+      "usernameLength": "Username must be at least {{length}} characters",
+      "phoneLength": "Phone is too short"
+    },
+    "visit": {
+      "stackTitle": "Visit Registration",
+      "start": "Start a visit",
+      "title": "Visit Registration",
+      "required": "* Required fields.",
+      "houses": {
+        "title": "Sites",
+        "searchPlaceholder": "Search by site number",
+        "house": "House",
+        "registerNewHouse": "Register a new site",
+        "notVisited": "Not visited",
+        "specialPlace": "Special Place",
+        "search": "Search for a site",
+        "optionsTitle": "Choose a site",
+        "noHouses": "Can't find the site?",
+        "noHousesMessage": "Register a new site here."
+      },
+      "summary": {
+        "title": "Summary of the visit",
+        "status": "Status of the house",
+        "containers": "Containers",
+        "houseNumber": "House Number",
+        "date": "Date",
+        "statusColor": {
+          "green": "Green",
+          "yellow": "Yellow",
+          "red": "Red"
+        }
+      },
+      "final": {
+        "title": "Thank you very much!",
+        "greetings": "We thank the residents of the house and indicate that we will make another visit soon."
       }
+    },
+    "brigade": {
+      "sites": {
+        "green": "Green Sites",
+        "yellow": "Yellow Sites",
+        "red": "Red Sites"
+      },
+      "teamLeader": "Facilitator",
+      "cards": {
+        "numberVisits": "Number of visits",
+        "numberSites": "Number of sites",
+        "numberThisWeek": "this week",
+        "participants": "Brigade participants"
+      },
+      "joinBrigade": {
+        "messages": {
+          "chat": "To see chat messages, you need to join a brigade. Talk to a facilitator to join one.",
+          "visit": "To start recording visits, you need to join a brigade. Talk to a facilitator to join one.",
+          "profile": "To see more information, you need to join a brigade. Talk to a facilitator to join one."
+        },
+        "action": "Join a brigade"
+      }
+    },
+    "errorCodes": {
+      "generic": "Something went wrong. Please try again.",
+      "46": "Invalid credentials",
+      "51": "Account is not active",
+      "55": "The account was temporarily locked. Multiple failed login attempts occurred. Try again later."
     }
   }
 }

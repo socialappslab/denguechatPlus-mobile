@@ -3,15 +3,36 @@
     "yes": "Yes",
     "no": "No",
     "back": "Atrás",
+    "next": "Siguiente",
     "error": "Error",
-    "success": "'Éxito'",
+    "success": "Éxito",
     "logout": "Cerrar Sesión",
+    "textChatsTab": "Navega al tab de perfil para hacer logout.",
+    "backToHome": "Ir al inicio",
+    "editFromStart": "Editar desde inicio",
+    "finalize": "Finalizar",
+    "placeholder": "Escribe aquí...",
+    "quantity": "Cantidad",
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",
-      "profile": "Perfil"
+      "profile": "Mi Brigada",
+      "visit": "Visitas"
+    },
+    "drawer": {
+      "myCity": "Mi Ciudad",
+      "myCommunity": "Mi Comunidad",
+      "brigades": "Brigadas",
+      "assignBrigade": "Asignar Brigada"
+    },
+    "profile": {
+      "account": "Cuenta"
     },
     "login": {
+      "username": "Nombre de usuario",
+      "username_placeholder": "Ingrese su nombre de usuario",
+      "phone": "Teléfono",
+      "phone_placeholder": "Ingrese su número de teléfono",
       "email": "Correo electrónico",
       "email_placeholder": "Ingrese su correo electrónico",
       "password": "Contraseña",
@@ -24,8 +45,90 @@
         "email": "Por favor ingrese un correo electrónico válido",
         "password": "Por favor ingrese una contraseña válida",
         "login": "Algo falló. Por favor intente de nuevo.",
-        "empty": "Por favor llene todos los campos"
+        "empty": "Por favor llene todos los campos",
+        "invalidCredentials": "Credenciales inválidas"
+      },
+      "searchCountry_placeholder": "Buscar país...",
+      "username-tab": "Nombre de usuario",
+      "phone-tab": "Teléfono"
+    },
+    "validation": {
+      "required": "Este campo es requerido",
+      "requiredField": {
+        "email": "El correo electrónico es requerido",
+        "username": "El nombre de usuario es requerido",
+        "password": "El password es requerido",
+        "confirmPassword": "Por favor confirme su password",
+        "name": "El nombre es requerido",
+        "phone": "El teléfono es requerido"
+      },
+      "notMatch": "Las contraseñas no coinciden",
+      "invalidEmail": "Correo electrónico inválido",
+      "passwordLength": "La contraseña debe tener al menos {{length}} caracteres",
+      "usernameLength": "El nombre de usuario debe tener al menos {{length}} caracteres",
+      "phoneLength": "El teléfono es muy corto"
+    },
+    "visit": {
+      "stackTitle": "Registro de visita",
+      "start": "Iniciar una visita",
+      "title": "Registro de visita",
+      "required": "* Campos requeridos.",
+      "houses": {
+        "title": "Sitios",
+        "searchPlaceholder": "Buscar por número de sitio",
+        "house": "Casa",
+        "registerNewHouse": "Registrar un nuevo sitio",
+        "notVisited": "Sin visita",
+        "specialPlace": "Lugar especial",
+        "search": "Buscar un sitio",
+        "optionsTitle": "Elige un sitio",
+        "noHouses": "¿No encuentras el sitio?",
+        "noHousesMessage": "Registra un nuevo sitio aquí."
+      },
+      "summary": {
+        "title": "Resumen de la visita",
+        "status": "Estatus de la casa",
+        "containers": "Contenedores",
+        "houseNumber": "Número de casa",
+        "date": "Fecha",
+        "statuscolor": {
+          "green": "Verde",
+          "yellow": "Amarillo",
+          "red": "Rojo"
+        }
+      },
+      "final": {
+        "title": "¡Muchas gracias!",
+        "greetings": "Agradecemos a los residentes de casa, e indicamos que haremos otra visita próximamente."
       }
+    },
+    "brigade": {
+      "sites": {
+        "green": "Sitios Verdes",
+        "yellow": "Sitios Amarillos",
+        "red": "Sitios Rojos"
+      },
+      "teamLeader": "Facilitador",
+      "cards": {
+        "numberVisits": "Número de visitas",
+        "numberSites": "Número de sitios",
+        "numberThisWeek": "esta semana",
+        "participants": "Participantes de brigada"
+      },
+      "joinBrigade": {
+        "messages": {
+          "chat": "Para ver mensajes del chat, necesitas unirte a una brigada. Habla con un facilitador para unirte a una.",
+          "visit": "Para comenzar a registrar visitas, necesitas unirte a una brigada. Habla con un facilitador para unirte a una.",
+          "profile": "Para ver más información, necesitas unirte a una brigada. Habla con un facilitador para unirte a una."
+        },
+        "action": "Únete a una brigada"
+      }
+    },
+    "errorCodes": {
+      "generic": "Algo falló. Por favor intente de nuevo.",
+      "46": "Credenciales inválidas",
+      "51": "La cuenta no está activa",
+      "55": "La cuenta fue bloqueada temporalmente. Se produjeron varios intentos fallidos de inicio de sesión. Vuelve a intentarlo más tarde."
     }
   }
 }

@@ -9,6 +9,7 @@ import { useColorScheme } from "./useColorScheme";
 export type ThemeProps = {
   lightColor?: string;
   darkColor?: string;
+  hasError?: boolean | undefined;
 };
 
 export function useThemeColor(

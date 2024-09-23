@@ -5,25 +5,31 @@ import { FontFamily } from "@/constants/Styles";
 
 import { useThemeColor } from "@/components/themed/useThemeColor";
 import { TextInputProps } from "@/components/themed/TextInput";
+
 import Eye from "@/assets/images/icons/eye.svg";
+import EyeOff from "@/assets/images/icons/eye-off.svg";
 
 export function PasswordInput(props: TextInputProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
+  const { style, lightColor, darkColor, hasError, inputRef, ...otherProps } =
+    props;
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "background",
   );
   const color = useThemeColor({ dark: lightColor, light: darkColor }, "text");
 
-  const [passwordVisible, setPasswordVisible] = useState(true);
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(true);
 
   const onChangeVisibility = () => {
     setPasswordVisible((lastState) => !lastState);
   };
 
   return (
-    <View className="border border-gray-500 rounded-lg p-3 flex flex-row items-center h-11">
+    <View
+      className={`${hasError ? "border-red-500" : "border-gray-500"} border rounded-lg flex flex-row items-center h-11 p-2`}
+    >
       <DefaultTextInput
+        ref={inputRef}
         secureTextEntry={passwordVisible}
         style={[
           { backgroundColor, color, fontFamily: FontFamily.regular },
@@ -33,7 +39,7 @@ export function PasswordInput(props: TextInputProps) {
         {...otherProps}
       />
       <Pressable onPress={onChangeVisibility} className="-mr-px">
-        <Eye />
+        {passwordVisible ? <Eye /> : <EyeOff />}
       </Pressable>
     </View>
   );

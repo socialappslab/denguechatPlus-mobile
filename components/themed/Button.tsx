@@ -4,27 +4,37 @@ import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 
 interface BaseButtonProps {
   title: string;
+  primary?: boolean;
 }
 
 export type ButtonProps = ThemeProps &
   BaseButtonProps &
   TouchableOpacity["props"];
 
-function Button(props: ButtonProps) {
-  const { style, title, lightColor, darkColor, ...otherProps } = props;
-
-  const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "primary",
-  );
+export function Button(props: ButtonProps) {
+  const {
+    style,
+    title,
+    disabled,
+    lightColor,
+    darkColor,
+    primary,
+    ...otherProps
+  } = props;
 
   return (
     <TouchableOpacity
-      style={[{ backgroundColor }, style]}
+      style={style}
       {...otherProps}
-      className="w-full p-3 bg-primary rounded-lg"
+      disabled={disabled}
+      className={`${disabled ? "opacity-50" : ""} w-full border-solid border ${primary ? "bg-primary border-primary" : "bg-white border-gray-200"} p-3 rounded-lg`}
+      activeOpacity={0.8}
     >
-      <Text className="text-white text-center font-bold">{title}</Text>
+      <Text
+        className={`text-center font-bold ${primary ? "text-white" : "text-black"}`}
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 }
