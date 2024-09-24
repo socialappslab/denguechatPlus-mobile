@@ -5,13 +5,14 @@
     "back": "Atrás",
     "next": "Siguiente",
     "error": "Error",
-    "success": "'Éxito'",
+    "success": "Éxito",
     "logout": "Cerrar Sesión",
     "textChatsTab": "Navega al tab de perfil para hacer logout.",
     "backToHome": "Ir al inicio",
     "editFromStart": "Editar desde inicio",
     "finalize": "Finalizar",
     "placeholder": "Escribe aquí...",
+    "quantity": "Cantidad",
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",
@@ -89,7 +90,12 @@
         "status": "Estatus de la casa",
         "containers": "Contenedores",
         "houseNumber": "Número de casa",
-        "date": "Fecha"
+        "date": "Fecha",
+        "statuscolor": {
+          "green": "Verde",
+          "yellow": "Amarillo",
+          "red": "Rojo"
+        }
       },
       "final": {
         "title": "¡Muchas gracias!",

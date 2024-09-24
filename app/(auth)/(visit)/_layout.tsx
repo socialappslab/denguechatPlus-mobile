@@ -37,6 +37,10 @@ export default function VisitLayout(props: ThemeProps) {
       }}
     >
       <Stack.Screen
+        name="add-comment"
+        options={{ headerShown: true, headerShadowVisible: false }}
+      />
+      <Stack.Screen
         name="select-house"
         options={{ headerShown: true, headerShadowVisible: false }}
       />

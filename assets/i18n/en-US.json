@@ -12,6 +12,7 @@
     "editFromStart": "Edit from start",
     "finalize": "Finalize",
     "placeholder": "Write here...",
+    "quantity": "Quantity",
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
@@ -87,7 +88,12 @@
         "status": "Status of the house",
         "containers": "Containers",
         "houseNumber": "House Number",
-        "date": "Date"
+        "date": "Date",
+        "statusColor": {
+          "green": "Green",
+          "yellow": "Yellow",
+          "red": "Red"
+        }
       },
       "final": {
         "title": "Thank you very much!",

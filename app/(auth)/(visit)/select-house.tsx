@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
 
-import { RadioButton } from "@/components/themed";
+import { SelectableItem } from "@/components/themed";
 import { House } from "@/types";
 import { useVisit } from "@/hooks/useVisit";
 import {
@@ -103,8 +103,8 @@ export default function SelectHouseScreen() {
           {!loading && houseOptions.length > 0 && (
             <View className="my-1">
               {houseOptions.map((house) => (
-                <RadioButton
-                  value={house.id === houseSelectedId}
+                <SelectableItem
+                  checked={house.id === houseSelectedId}
                   onValueChange={() => {
                     setHouseSelectedId(house.id);
                   }}

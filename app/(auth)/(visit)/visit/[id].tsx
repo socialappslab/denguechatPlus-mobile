@@ -1,70 +1,101 @@
-import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
+import QuestionnaireRenderer, {
+  FormStateOption,
+} from "@/components/QuestionnaireRenderer";
 import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { TypeField } from "@/types";
-import { parseId } from "@/util";
+import { Question } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+// When next is -1 we end the flow
 const TERMINATE = -1;
 
+// Custom validation function
+const isValid = (
+  currentValue: FormStateOption | FormStateOption[],
+  question?: Question,
+): boolean => {
+  if (!question || !currentValue) return false;
+
+  const required = question.options?.filter((item) => item.required) || [];
+
+  if (!Array.isArray(currentValue)) {
+    if (currentValue.optionType === "inputNumber") {
+      return !!currentValue.text;
+    }
+    return !!currentValue;
+  }
+
+  if (Array.isArray(currentValue)) {
+    // Check if all requierd fields are present
+    if (required.length > 0) {
+      const currentIds = currentValue?.map((item: any) => item.value) || [];
+      const requiredIds = required.map((item) => item.id);
+      return requiredIds.every((req) => currentIds?.includes(req));
+    }
+
+    // Check if at least one is marked
+    return currentValue.length > 0;
+  }
+
+  return false;
+};
+
 export default function Visit() {
-  const { questionnaire, isLoadingQuestionnaire, visitData } = useVisit();
-  const [currentQuestion, setCurrentQuestion] = useState<null | number>();
+  const {
+    questionnaire,
+    isLoadingQuestionnaire,
+    setFormData,
+    visitMap,
+    currentFormData,
+  } = useVisit();
+  const [currentQuestion, setCurrentQuestion] = useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { t } = useTranslation();
 
   useEffect(() => {
-    const parsedId = parseInt(id as string, 10);
-    setCurrentQuestion(parsedId);
-  }, [id, setCurrentQuestion]);
+    setCurrentQuestion(String(id));
+  }, [id, setCurrentQuestion, visitMap]);
 
   const methods = useForm({
-    defaultValues: visitData.answers,
+    defaultValues: currentFormData,
   });
 
   const { getValues, watch } = methods;
 
-  let current = questionnaire?.questions.find((q) => q.id === currentQuestion);
+  let current = questionnaire?.questions.find(
+    (q) => String(q.id) === currentQuestion,
+  );
 
   const findNext = () => {
     let next = current?.next;
     if (next) return next;
 
-    // look inside options
-    if (!next) {
-      const curr = getValues(String(currentQuestion));
-      const selectedOption = Object.keys(curr).find(
-        (key) => curr[key] === true,
-      );
-      if (!selectedOption) return TERMINATE;
-      const selectedOptionNumber = parseId(selectedOption);
-      const nextFromOption = current?.options?.find(
-        (o) => o.id === selectedOptionNumber,
-      );
-
-      return nextFromOption?.next;
+    const curr = getValues(currentQuestion);
+    // look inside current option selected
+    // which extends an option object
+    if (!next && !Array.isArray(curr)) {
+      return curr.next;
+    } else if (Array.isArray(curr)) {
+      const [first] = curr;
+      return first.next;
     }
     return TERMINATE;
   };
 
   const onNext = () => {
-    const values = methods.watch(String(currentQuestion));
-    console.log("values>>>>>>", values);
-    const next = findNext();
-    console.log(">>>>next", next);
-    router.push(`visit/${next}`);
+    const values = methods.watch(currentQuestion);
+    if (values) setFormData(currentQuestion, values);
 
-    if (next === TERMINATE) {
-      router.push("summary");
-      return;
-    }
+    const next = findNext();
+    if (next !== TERMINATE) return router.push(`visit/${next}`);
+    if (next === TERMINATE) return router.push("add-comment");
   };
 
   const isSplash = current?.typeField === "splash";
@@ -73,26 +104,9 @@ export default function Visit() {
     router.back();
   };
 
-  const currentValue = watch(String(currentQuestion)) as
-    | Record<any, any>
-    | any[];
-  const isSelected = useCallback(
-    (fieldType?: TypeField) => {
-      if (!fieldType) return false;
-      switch (fieldType) {
-        case "list":
-          return currentValue;
-        case "multiple":
-          if (Array.isArray(currentValue)) {
-            return currentValue.length > 0;
-          }
-          return false;
-        default:
-          return false;
-      }
-    },
-    [currentValue],
-  );
+  const currentValue = watch(currentQuestion) as
+    | FormStateOption
+    | FormStateOption[];
 
   if (isLoadingQuestionnaire) {
     return (
@@ -124,7 +138,7 @@ export default function Visit() {
                 primary
                 title={t("next")}
                 onPress={onNext}
-                disabled={!isSelected(current?.typeField)}
+                disabled={!isValid(currentValue, current)}
               />
             )}
           </View>
