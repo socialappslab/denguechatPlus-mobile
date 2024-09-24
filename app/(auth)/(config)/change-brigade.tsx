@@ -59,16 +59,14 @@ export default function BrigaderList() {
   const onChangeBrigade = async () => {
     setLoading(true);
     try {
-      await authApi.put(`/users/${user?.id}`, {
-        userProfileAttributes: {
-          teamId: selection?.newBrigade?.id,
-          houseBlockId: selection?.newHouseBlock?.id,
-        },
+      await authApi.put(`/users/change_team`, {
+        teamId: selection?.newBrigade?.id,
+        houseBlockId: selection?.newHouseBlock?.id,
       });
       setSuccess(true);
       setNewBrigade(selection?.newBrigade?.name);
     } catch (error) {
-      console.error(error);
+      console.error("error change team", error);
     } finally {
       setLoading(false);
     }

@@ -85,20 +85,20 @@ export default function TabLayout(props: ThemeProps) {
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="profile" color={color} />
           ),
-          headerRight: () => (
-            <Link href="/chat" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="user-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          // headerRight: () => (
+          //   <Link href="/chat" asChild>
+          //     <Pressable>
+          //       {({ pressed }) => (
+          //         <FontAwesome
+          //           name="user-circle"
+          //           size={25}
+          //           color={Colors[colorScheme ?? "light"].text}
+          //           style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+          //         />
+          //       )}
+          //     </Pressable>
+          //   </Link>
+          // ),
         }}
       />
     </Tabs>

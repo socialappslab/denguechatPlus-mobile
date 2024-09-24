@@ -136,7 +136,13 @@ createAuthRefreshInterceptor(authApi, refreshAuthLogic, {
 
     console.log(
       "shouldRefresh method url>>>>>>",
-      error.response?.config?.method + " " + error.response?.config?.url,
+      error.response?.status +
+        " " +
+        error.response?.config?.method +
+        " " +
+        error.response?.config?.url +
+        " " +
+        JSON.stringify(error.response?.config?.params),
     );
     if (
       errorData?.errors &&

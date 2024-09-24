@@ -41,7 +41,7 @@ export default function SelectBrigade() {
   const [hasMore, setHasMore] = useState(true);
 
   const router = useRouter();
-  const { filters, setSelection } = useBrigades();
+  const { filters, selection, setSelection } = useBrigades();
 
   const fetchData = async (
     page: number,
@@ -175,6 +175,10 @@ export default function SelectBrigade() {
       <ListItem
         key={String(team.id)}
         square
+        // disabled={
+        //   Number(team.id) ===
+        //   Number((selection?.brigader?.team as BaseObject)?.id)
+        // }
         title={`${team?.name}`}
         initials={getInitialsBase(String(team.name), "")}
         onPressElement={() => onPressElement(team)}
@@ -208,7 +212,7 @@ export default function SelectBrigade() {
             />
           </View>
           <FilterButton
-            filters={countSetFilters(filters)}
+            filters={countSetFilters(filters, ["wedge", "sector"])}
             onPress={onPressFilter}
           />
         </View>

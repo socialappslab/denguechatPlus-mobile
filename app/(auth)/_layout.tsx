@@ -64,7 +64,7 @@ const CustomDrawerContent = () => {
             <Brigades />
             <Text className="font-semibold ml-3"> {t("drawer.brigades")}</Text>
           </TouchableOpacity>
-          <ProtectedView hasPermission={["users-update"]}>
+          <ProtectedView hasPermission={["users-change_team"]}>
             <TouchableOpacity
               className="flex py-3 flex-row items-center"
               onPress={() => router.push("select-user")}

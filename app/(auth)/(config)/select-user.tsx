@@ -200,7 +200,7 @@ export default function SelectUser() {
             />
           </View>
           <FilterButton
-            filters={countSetFilters(filters)}
+            filters={countSetFilters(filters, ["team"])}
             onPress={onPressFilter}
           />
         </View>
