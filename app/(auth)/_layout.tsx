@@ -83,7 +83,7 @@ const CustomDrawerContent = () => {
             darkColor="rgba(255,255,255,0.1)"
           />
           <View className="flex-row items-center px-2">
-            <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mr-3">
+            <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3">
               <Text className="font-bold text-sm text-green-700">
                 {meData?.userProfile
                   ? getInitialsBase(

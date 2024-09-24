@@ -5,7 +5,6 @@ import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
 import { Platform, StatusBar } from "react-native";
 
-import { RadioButton } from "@/components/themed";
 import { BaseObject } from "@/schema";
 import {
   View,
@@ -14,12 +13,13 @@ import {
   TextInput,
   ScrollView,
   SafeAreaView,
+  SelectableItem,
   Loading,
 } from "@/components/themed";
 import { useBrigades } from "@/hooks/useBrigades";
 import { HouseBlock } from "@/types";
 
-export default function FilterBrigade() {
+export default function SelectHouseBlock() {
   const { t } = useTranslation();
   const { selection, setSelection } = useBrigades();
 
@@ -80,9 +80,15 @@ export default function FilterBrigade() {
           </View>
         )}
 
-        {!loading && error !== undefined && !houseBlockOptions.length && (
+        {!loading && !!error && !houseBlockOptions.length && (
           <View className="my-4">
             <Text>{t("errorCodes.generic")}</Text>
+          </View>
+        )}
+
+        {!loading && !error && !houseBlockOptions.length && (
+          <View className="my-4">
+            <Text>{t("config.noResultsHouseBlock")}</Text>
           </View>
         )}
 
@@ -90,8 +96,9 @@ export default function FilterBrigade() {
           {!loading && houseBlockOptions.length > 0 && (
             <View className="my-1">
               {houseBlockOptions.map((houseBlock) => (
-                <RadioButton
-                  value={houseBlock.id === houseBlockSelected?.id}
+                <SelectableItem
+                  key={houseBlock.id}
+                  checked={houseBlock.id === houseBlockSelected?.id}
                   onValueChange={() => {
                     setHouseBlockSelected(houseBlock);
                   }}

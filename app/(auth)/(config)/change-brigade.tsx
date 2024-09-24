@@ -36,7 +36,7 @@ export default function BrigaderList() {
       String(user?.lastName),
     );
     return (
-      <View className="flex items-center justify-center w-24 h-24 rounded-full bg-green-100 mb-2">
+      <View className="flex items-center justify-center w-24 h-24 rounded-full bg-green-400 mb-2">
         <Text className="font-selmibold text-4xl text-green-700">
           {initials}
         </Text>

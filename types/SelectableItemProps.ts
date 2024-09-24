@@ -1,5 +1,6 @@
 import type { SyntheticEvent } from "react";
 import type { ColorValue, NativeSyntheticEvent, ViewProps } from "react-native";
+import { OptionType } from ".";
 
 export type CheckboxEvent = {
   /**
@@ -14,12 +15,12 @@ export type CheckboxEvent = {
 };
 
 // @needsAudit
-export type CheckboxProps = ViewProps & {
+export type SelectableItemProps = ViewProps & {
   /**
-   * Value indicating if the checkbox should be rendered as checked or not.
+   * Value to pass during event changes
    * @default false
    */
-  value?: boolean;
+  value?: string;
   /**
    * If the checkbox is disabled, it becomes opaque and uncheckable.
    */
@@ -41,7 +42,7 @@ export type CheckboxProps = ViewProps & {
    * Callback that is invoked when the user presses the checkbox.
    * @param value A boolean indicating the new checked state of the checkbox.
    */
-  onValueChange?: (value: boolean) => void;
+  onValueChange?: (value: any) => void;
   /**
    * The label of the checkbox.
    */
@@ -54,6 +55,24 @@ export type CheckboxProps = ViewProps & {
    * The name of the chip.
    */
   chip?: string | null;
+  /**
+   * Renders an image alongside the item.
+   */
   image?: string;
-  textArea?: string;
+  /**
+   * Renders a text area or an input alongside the item.
+   */
+  optionType?: OptionType;
+  /**
+   * Value indicating if checkbox is checked.
+   */
+  checked?: boolean;
+  /**
+   * How to render, checkbox or radio
+   */
+  type?: "radio" | "checkbox";
+  /**
+   * Text to render when inputs are rendered
+   */
+  defaultText?: string;
 };

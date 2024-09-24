@@ -36,7 +36,7 @@ export function ListItem(props: ListItemProps) {
       {initials && (
         <View
           className={`flex items-center justify-center w-12 h-12 
-         ${square ? "rounded-md" : "rounded-full"}  bg-green-100 mr-3`}
+         ${square ? "rounded-md" : "rounded-full"}  bg-green-400 mr-3`}
         >
           <Text className="font-bold text-sm text-green-700">{initials}</Text>
         </View>

@@ -5,7 +5,6 @@ import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
 import { Platform, StatusBar } from "react-native";
 
-import { RadioButton } from "@/components/themed";
 import { BaseObject, Team } from "@/schema";
 import {
   View,
@@ -13,6 +12,7 @@ import {
   Button,
   TextInput,
   ScrollView,
+  SelectableItem,
   SafeAreaView,
   Loading,
 } from "@/components/themed";
@@ -46,6 +46,7 @@ export default function FilterBrigade() {
       const deserializedData = deserialize<Team>(data);
       if (!deserializedData || !Array.isArray(deserializedData)) return;
 
+      console.log("deserializedData TEAM>>>>>>>>>>", deserializedData);
       setItemOptions(deserializedData);
       setTeamSelected(undefined);
     }
@@ -78,7 +79,7 @@ export default function FilterBrigade() {
           </View>
         )}
 
-        {!loading && error !== undefined && !itemOptions.length && (
+        {!loading && !!error && !itemOptions.length && (
           <View className="my-4">
             <Text>{t("errorCodes.generic")}</Text>
           </View>
@@ -88,8 +89,9 @@ export default function FilterBrigade() {
           {!loading && itemOptions.length > 0 && (
             <View className="my-1">
               {itemOptions.map((team) => (
-                <RadioButton
-                  value={team.id === teamSelected?.id}
+                <SelectableItem
+                  key={team.id}
+                  checked={team.id === teamSelected?.id}
                   onValueChange={() => {
                     setTeamSelected(team);
                   }}

@@ -6,7 +6,7 @@ import { View, Button, SafeAreaView, ListItem } from "@/components/themed";
 import { Platform, StatusBar } from "react-native";
 import { useBrigades } from "@/hooks/useBrigades";
 
-export default function FilterBrigade() {
+export default function FiltersUsers() {
   const { t } = useTranslation();
   const { filters } = useBrigades();
 

@@ -5,7 +5,6 @@ import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
 import { Platform, StatusBar } from "react-native";
 
-import { RadioButton } from "@/components/themed";
 import { BaseObject } from "@/schema";
 import {
   View,
@@ -14,12 +13,13 @@ import {
   TextInput,
   ScrollView,
   SafeAreaView,
+  SelectableItem,
   Loading,
 } from "@/components/themed";
 import { useBrigades } from "@/hooks/useBrigades";
 import { Neighborhood } from "@/types";
 
-export default function FilterBrigade() {
+export default function FilterSector() {
   const { t } = useTranslation();
   const { setFilter } = useBrigades();
 
@@ -29,6 +29,7 @@ export default function FilterBrigade() {
   const router = useRouter();
 
   const onFilter = () => {
+    console.log("onFilter>>>> ", itemSelected);
     setFilter({ sector: itemSelected });
     router.back();
   };
@@ -88,8 +89,9 @@ export default function FilterBrigade() {
           {!loading && itemOptions.length > 0 && (
             <View className="my-1">
               {itemOptions.map((item) => (
-                <RadioButton
-                  value={item.id === itemSelected?.id}
+                <SelectableItem
+                  key={item.id}
+                  checked={item.id === itemSelected?.id}
                   onValueChange={() => {
                     setNeighborhoodSelected(item);
                   }}

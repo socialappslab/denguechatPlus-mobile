@@ -28,7 +28,7 @@ import { authApi } from "@/config/axios";
 import { BaseObject } from "@/schema";
 import { useBrigades } from "@/hooks/useBrigades";
 
-export default function BrigaderList() {
+export default function SelectUser() {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
   const [searchText, setSearchText] = useState<string>("");

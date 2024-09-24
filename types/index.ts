@@ -1,3 +1,5 @@
+import { ISelectableItem } from "@/components/QuestionnaireRenderer";
+
 // <Questionnaire types>
 export type TypeField = "text" | "multiple" | "list" | "splash";
 
@@ -20,9 +22,13 @@ export interface Question {
   image?: Image;
 }
 
+export type ResourceType = "attribute" | "relation";
 export interface InspectionQuestion extends Question {
   resourceName?: string;
+  resourceType?: ResourceType;
 }
+
+export type OptionType = "inputNumber" | "textArea";
 
 export interface Option {
   id: number;
@@ -30,9 +36,12 @@ export interface Option {
   required?: boolean;
   textArea?: boolean;
   next?: number;
-  image?: boolean;
+  image?: string;
   value?: string;
   resourceId: string;
+  optionType: OptionType;
+  group: string;
+  statusColor?: string;
 }
 
 export interface Image {
@@ -52,16 +61,20 @@ export interface Answer {
 
 export interface Inspection {
   code_reference?: string;
-  container_test_result: string;
-  has_lid: boolean;
+  container_test_result?: string;
   has_water: boolean;
-  in_use: boolean;
-  tracking_type_required: string;
-  was_chemically_treated: boolean;
-  treated_by_id: number;
+  was_chemically_treated: string;
   breeding_site_type_id: number;
   elimination_method_type_id: number;
-  water_source_type_id: number;
+  water_source_type_id?: number;
+  water_source_other?: string;
+  container_protection_id: number;
+  other_protection?: string;
+  visited_at?: string;
+  type_content_id?: number[];
+  quantity_founded: number;
+  photo_id?: string;
+  tracking_type_required?: string;
 }
 
 export interface Country {
@@ -129,7 +142,8 @@ export interface House {
   house_block_id?: number;
 }
 
-export type FormAnswer = Record<string, Record<string, boolean | string>>;
+type QuestionId = string;
+export type FormState = Record<QuestionId, ISelectableItem | ISelectableItem[]>;
 export type FormPayload = Answer[];
 
 interface VisitAttributes {
@@ -140,6 +154,7 @@ interface VisitAttributes {
   teamId: number;
   userAccountId: string;
   notes?: string;
+  visitedAt: string;
   house?: House;
   inspections: Inspection[];
 }
@@ -148,8 +163,16 @@ export interface VisitPayload extends VisitAttributes {
 }
 
 export interface VisitData extends VisitAttributes {
-  answers: FormAnswer;
+  answers: FormState;
 }
+
+/*
+  A HashMap to access a given house's Visit Data
+  the HouseKey format is:
+  {userId}-{houseId}
+*/
+export type HouseKey = `${number}-${number}`;
+export type VisitMap = Record<HouseKey, FormState>;
 
 export interface ResourceData {
   id: number;

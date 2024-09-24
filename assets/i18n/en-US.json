@@ -12,9 +12,12 @@
     "editFromStart": "Edit from start",
     "finalize": "Finalize",
     "placeholder": "Write here...",
+    "quantity": "Quantity",
     "config": {
       "search": "Search",
       "noResults": "No results for your search",
+      "noResultsWedges": "No wedges in selected sector",
+      "noResultsHouseBlock": "No house blocks in selected brigade",
       "filter": "Filter",
       "select": "Select",
       "filterSingular": "filter",
@@ -116,7 +119,12 @@
         "status": "Status of the house",
         "containers": "Containers",
         "houseNumber": "House Number",
-        "date": "Date"
+        "date": "Date",
+        "statusColor": {
+          "green": "Green",
+          "yellow": "Yellow",
+          "red": "Red"
+        }
       },
       "final": {
         "title": "Thank you very much!",

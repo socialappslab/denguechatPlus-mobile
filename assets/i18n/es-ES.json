@@ -5,16 +5,19 @@
     "back": "Atrás",
     "next": "Siguiente",
     "error": "Error",
-    "success": "'Éxito'",
+    "success": "Éxito",
     "logout": "Cerrar Sesión",
     "textChatsTab": "Navega al tab de perfil para hacer logout.",
     "backToHome": "Ir al inicio",
     "editFromStart": "Editar desde inicio",
     "finalize": "Finalizar",
     "placeholder": "Escribe aquí...",
+    "quantity": "Cantidad",
     "config": {
       "search": "Buscar",
       "noResults": "No hay resultados para tu búsqueda",
+      "noResultsWedges": "No hay cuñas en el sector seleccionado",
+      "noResultsHouseBlock": "No hay frente a frente en la brigada seleccionada",
       "filter": "Filtrar",
       "select": "Seleccionar",
       "filterSingular": "filtro",
@@ -118,7 +121,12 @@
         "status": "Estatus de la casa",
         "containers": "Contenedores",
         "houseNumber": "Número de casa",
-        "date": "Fecha"
+        "date": "Fecha",
+        "statuscolor": {
+          "green": "Verde",
+          "yellow": "Amarillo",
+          "red": "Rojo"
+        }
       },
       "final": {
         "title": "¡Muchas gracias!",

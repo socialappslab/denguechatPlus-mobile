@@ -5,7 +5,6 @@ import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
 import { Platform, StatusBar } from "react-native";
 
-import { RadioButton } from "@/components/themed";
 import { BaseObject } from "@/schema";
 import {
   View,
@@ -14,14 +13,15 @@ import {
   TextInput,
   ScrollView,
   SafeAreaView,
+  SelectableItem,
   Loading,
 } from "@/components/themed";
 import { useBrigades } from "@/hooks/useBrigades";
 import { Wedge } from "@/types";
 
-export default function FilterBrigade() {
+export default function FilterWedge() {
   const { t } = useTranslation();
-  const { setFilter } = useBrigades();
+  const { filters, setFilter } = useBrigades();
 
   const [itemSelected, setWedgeSelected] = useState<BaseObject>();
   const [searchText, setSearchText] = useState<string>("");
@@ -29,13 +29,15 @@ export default function FilterBrigade() {
   const router = useRouter();
 
   const onFilter = () => {
-    setFilter({ sector: itemSelected });
+    console.log("onFilter>>>> ", itemSelected);
+    setFilter({ wedge: itemSelected });
     router.back();
   };
 
   const [{ data, loading, error }] = useAxios({
     url: `/wedges`,
     params: {
+      "filter[sector_id]": filters.sector?.id,
       "filter[name]": searchText,
       "page[number]": 1,
       "page[size]": 100,
@@ -49,8 +51,7 @@ export default function FilterBrigade() {
         if (!deserializedData || !Array.isArray(deserializedData)) return;
         setWedgeOptions(deserializedData);
         setWedgeSelected(undefined);
-      } catch (error) {
-        console.log("error", error);
+      } catch (e) {
         setWedgeOptions([]);
         setWedgeSelected(undefined);
       }
@@ -84,9 +85,15 @@ export default function FilterBrigade() {
           </View>
         )}
 
-        {!loading && error !== undefined && !itemOptions.length && (
+        {!loading && !!error && !itemOptions.length && (
           <View className="my-4">
             <Text>{t("errorCodes.generic")}</Text>
+          </View>
+        )}
+
+        {!loading && !error && !itemOptions.length && (
+          <View className="my-4">
+            <Text>{t("config.noResultsWedges")}</Text>
           </View>
         )}
 
@@ -94,8 +101,9 @@ export default function FilterBrigade() {
           {!loading && itemOptions.length > 0 && (
             <View className="my-1">
               {itemOptions.map((item) => (
-                <RadioButton
-                  value={item.id === itemSelected?.id}
+                <SelectableItem
+                  key={item.id}
+                  checked={item.id === itemSelected?.id}
                   onValueChange={() => {
                     setWedgeSelected(item);
                   }}

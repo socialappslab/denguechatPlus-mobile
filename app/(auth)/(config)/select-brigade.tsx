@@ -20,15 +20,15 @@ import {
   Loading,
   ListItem,
 } from "@/components/themed";
-import { Team } from "@/schema/auth";
 
 import { countSetFilters, getInitialsBase } from "@/util";
 import Colors from "@/constants/Colors";
 import { authApi } from "@/config/axios";
-import { BaseObject } from "@/schema";
-import { useBrigades } from "@/hooks/useBrigades";
 
-export default function BrigaderList() {
+import { useBrigades } from "@/hooks/useBrigades";
+import { Team } from "@/schema";
+
+export default function SelectBrigade() {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
   const [searchText, setSearchText] = useState<string>("");
@@ -49,7 +49,7 @@ export default function BrigaderList() {
     sectorId?: number,
     wedgeId?: number,
   ) => {
-    console.log("fetchData>>>> ", page, query, sectorId, wedgeId);
+    // console.log("fetchData>>>> ", page, query, sectorId, wedgeId);
     setError("");
     try {
       const response = await authApi.get("teams", {
@@ -66,7 +66,6 @@ export default function BrigaderList() {
 
       const data = response.data;
 
-      console.log("data>>>> ", data);
       if (data) {
         const deserializedData = deserialize<Team>(data);
         if (!deserializedData || !Array.isArray(deserializedData)) return;
