@@ -65,12 +65,12 @@ export default function TabTwoScreen() {
             >
               <View className="mb-2">
                 <Text className="text-xl font-bold mb-2">{team?.name}</Text>
-                <Text className="text-md font-normal mb-4">
+                <Text className="font-normal mb-4">
                   {team?.sector?.name} - {team?.wedge?.name}
                 </Text>
               </View>
               <View className="p-4 mb-4 border border-gray-200 rounded-lg">
-                <Text className="text-md text-gray-600 mb-2">
+                <Text className="text-gray-600 mb-2">
                   {t("brigade.cards.numberVisits")}
                 </Text>
                 <View className="flex-row items-center justify-between">
@@ -90,7 +90,7 @@ export default function TabTwoScreen() {
               </View>
 
               <View className="p-4 mb-4 border border-gray-200 rounded-lg">
-                <Text className="text-md text-gray-600 mb-2">
+                <Text className="text-gray-600 mb-2">
                   {t("brigade.cards.numberSites")}
                 </Text>
                 <View className="flex-row items-center justify-between">

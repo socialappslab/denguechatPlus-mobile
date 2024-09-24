@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -20,17 +20,20 @@ import Brigades from "@/assets/images/icons/brigades.svg";
 import AssignBrigade from "@/assets/images/icons/add-brigade.svg";
 
 import { getInitialsBase } from "@/util";
+import ProtectedView from "@/components/control/ProtectedView";
 
 const CustomDrawerContent = () => {
   const router = useRouter();
   const { meData, logout } = useAuth();
   const { t } = useTranslation();
 
-  console.log("meData>>>", meData);
+  // console.log("meData>>>", meData);
 
   return (
     <SafeAreaView>
-      <View className="flex flex-1 flex-col pl-2 pt-2 pb-4">
+      <View
+        className={`flex flex-1 flex-col pl-2 pb-4 ${Platform.OS === "android" ? "mt-2 pt-8" : "pt-2"}`}
+      >
         <View className="flex flex-row items-center mb-6 px-2">
           <Logo className="mr-2"></Logo>
           <Text className="text-lg font-semibold">DengueChat+</Text>
@@ -38,7 +41,7 @@ const CustomDrawerContent = () => {
         <View className="flex flex-1 flex-col px-2">
           <TouchableOpacity
             className="flex py-3 flex-row items-center"
-            onPress={() => router.push("select-house")}
+            onPress={() => router.push("my-city")}
           >
             <MyCity />
             <Text className="font-semibold ml-3">{t("drawer.myCity")}</Text>
@@ -46,7 +49,7 @@ const CustomDrawerContent = () => {
 
           <TouchableOpacity
             className="flex py-3 flex-row items-center"
-            onPress={() => router.push("tabs/mi-comunidad")}
+            onPress={() => router.push("my-community")}
           >
             <MyCommunity />
             <Text className="font-semibold ml-3">
@@ -56,21 +59,22 @@ const CustomDrawerContent = () => {
 
           <TouchableOpacity
             className="flex py-3 flex-row items-center"
-            onPress={() => router.push("tabs/brigadas")}
+            onPress={() => router.push("brigades")}
           >
             <Brigades />
             <Text className="font-semibold ml-3"> {t("drawer.brigades")}</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity
-            className="flex py-3 flex-row items-center"
-            onPress={() => router.push("tabs/asignar-brigada")}
-          >
-            <AssignBrigade />
-            <Text className="font-semibold ml-3">
-              {t("drawer.assignBrigade")}
-            </Text>
-          </TouchableOpacity>
+          <ProtectedView hasPermission={["users-update"]}>
+            <TouchableOpacity
+              className="flex py-3 flex-row items-center"
+              onPress={() => router.push("select-user")}
+            >
+              <AssignBrigade />
+              <Text className="font-semibold ml-3">
+                {t("drawer.assignBrigade")}
+              </Text>
+            </TouchableOpacity>
+          </ProtectedView>
         </View>
         <View className="flex justify-end">
           <View
