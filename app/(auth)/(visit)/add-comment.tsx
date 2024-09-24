@@ -28,18 +28,18 @@ const AddComment = () => {
     <SafeAreaView>
       <View className="flex flex-1 py-5 px-5 h-full">
         <View className="flex justify-start flex-1">
-          <Text type="title">Agregar comentarios sobre la visita</Text>
+          <Text type="title">{t("visit.addComment.title")}</Text>
           <TextInput
             className="w-full h-32 mt-6 rounded border border-slate-300 text-md p-3"
             multiline
             numberOfLines={4}
             onChangeText={onChangeText}
             value={text}
-            placeholder="Escribe tus comentarios"
+            placeholder={t("visit.addComment.placeholder")}
             keyboardType="default"
           />
           <Text type="small" className="mt-2">
-            Los comentarios son opcionales.
+            {t("visit.addComment.commentsAreOptional")}
           </Text>
         </View>
         <View className="flex flex-row gap-2">

@@ -11,6 +11,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Routes } from "../_layout";
 
 // When next is -1 we end the flow
 const TERMINATE = -1;
@@ -96,12 +97,18 @@ export default function Visit() {
     const values = methods.watch(currentQuestion);
     if (values) setFormData(currentQuestion, values);
 
-    const resourceName = current.resourceName;
-    if (resourceName === PhotoId) return router.push("container-picture");
-
     const next = findNext();
-    if (next !== TERMINATE) return router.push(`visit/${next}`);
-    if (next === TERMINATE) return router.push("add-comment");
+
+    const resourceName = current.resourceName;
+    if (resourceName === PhotoId) {
+      return router.push({
+        pathname: Routes.ContainerPicture,
+        params: { next },
+      });
+    }
+
+    if (next !== TERMINATE) return router.push(`${Routes.Visit}/${next}`);
+    if (next === TERMINATE) return router.push(Routes.AddComment);
   };
 
   const isSplash = current?.typeField === "splash";

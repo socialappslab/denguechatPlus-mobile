@@ -1,6 +1,7 @@
 import { Button, Text, View } from "@/components/themed";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { Routes } from "./_layout";
 
 export default function Summary() {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ export default function Summary() {
           <Button
             primary
             title={t("backToHome")}
-            onPress={() => router.push("(visit)")}
+            onPress={() => router.push(`(${Routes.Visit})`)}
           />
         </View>
       </View>

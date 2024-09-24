@@ -128,6 +128,17 @@
           "red": "Rojo"
         }
       },
+      "addComment": {
+        "title": "Agregar comentarios sobre la visita",
+        "placeholder": "Escribe tus comentarios",
+        "commentsAreOptional": "Los comentarios son opcionales"
+      },
+      "containerPicture": {
+        "title": "Foto del contenedor",
+        "description": "Toma una fotografía del contenedor y regístrala",
+        "takePhoto": "Tomar foto",
+        "chooseFromGallery": "Elegir desde la galería"
+      },
       "final": {
         "title": "¡Muchas gracias!",
         "greetings": "Agradecemos a los residentes de casa, e indicamos que haremos otra visita próximamente."

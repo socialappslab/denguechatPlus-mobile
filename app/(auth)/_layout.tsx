@@ -8,19 +8,19 @@ import { Platform, TouchableOpacity } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
-import { View, Text, SafeAreaView } from "@/components/themed";
+import { SafeAreaView, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import { VisitProvider } from "@/context/VisitContext";
 
-import Logo from "@/assets/images/logo-small.svg";
-import Logout from "@/assets/images/icons/logout.svg";
+import AssignBrigade from "@/assets/images/icons/add-brigade.svg";
+import Brigades from "@/assets/images/icons/brigades.svg";
 import MyCity from "@/assets/images/icons/city.svg";
 import MyCommunity from "@/assets/images/icons/community.svg";
-import Brigades from "@/assets/images/icons/brigades.svg";
-import AssignBrigade from "@/assets/images/icons/add-brigade.svg";
+import Logout from "@/assets/images/icons/logout.svg";
+import Logo from "@/assets/images/logo-small.svg";
 
-import { getInitialsBase } from "@/util";
 import ProtectedView from "@/components/control/ProtectedView";
+import { getInitialsBase } from "@/util";
 
 const CustomDrawerContent = () => {
   const router = useRouter();

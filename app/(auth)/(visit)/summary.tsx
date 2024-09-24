@@ -7,6 +7,7 @@ import { extractAxiosErrorData, formatDate, QuantityFound } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
+import { Routes } from "./_layout";
 
 // StatusColor utils
 enum StatusColor {
@@ -155,7 +156,7 @@ export default function Summary() {
         type: "success",
         text1: t("success"),
       });
-      router.push("final");
+      router.push(Routes.Final);
     } catch (error) {
       const errorData = extractAxiosErrorData(error);
       // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
@@ -175,19 +176,37 @@ export default function Summary() {
   };
 
   return (
-    <SafeAreaView className="h-full p-6 pb-10 flex flex-col justify-between">
-      <View className="flex flex-col justify-center items-center">
-        <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-          <Text className="text-center text">Ilustración o ícono</Text>
+    <SafeAreaView>
+      <View className="h-full p-6 pb-10 flex flex-col justify-between">
+        <View className="flex flex-col justify-center items-center">
+          <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
+            <Text className="text-center text">Ilustración o ícono</Text>
+          </View>
         </View>
-      </View>
-      <Text type="title" className="mb-4">
-        {t("visit.summary.title")}
-      </Text>
-      <View className="mb-4">
-        <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">{t("visit.summary.status")}</Text>
-          <RenderStatus statusColor={statusColor || StatusColor.NO_INFECTED} />
+        <Text type="title" className="mb-4">
+          {t("visit.summary.title")}
+        </Text>
+        <View className="mb-4">
+          <View className="flex flex-row mb-4 w-full justify-between items-center">
+            <Text type="header">{t("visit.summary.status")}</Text>
+            <RenderStatus
+              statusColor={statusColor || StatusColor.NO_INFECTED}
+            />
+          </View>
+          <View className="flex flex-row mb-4 w-full justify-between items-center">
+            <Text type="header">{t("visit.summary.containers")}</Text>
+            <Text type="text">
+              {quantity + visitData.inspections.length || 1}
+            </Text>
+          </View>
+          <View className="flex flex-row mb-4 w-full justify-between items-center">
+            <Text type="header">{t("visit.summary.houseNumber")}</Text>
+            <Text type="text">{visitData.houseId}</Text>
+          </View>
+          <View className="flex flex-row mb-4 w-full justify-between items-center">
+            <Text type="header">{t("visit.summary.date")}</Text>
+            <Text type="text">{formatDate(new Date().toString())}</Text>
+          </View>
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.containers")}</Text>
@@ -208,7 +227,9 @@ export default function Summary() {
         <View className="flex-1">
           <Button
             title={t("editFromStart")}
-            onPress={() => router.push("visit/1")}
+            onPress={() =>
+              router.push(`${Routes.Visit}/${questionnaire?.initialQuestion}`)
+            }
           />
         </View>
         <View className="flex-1">

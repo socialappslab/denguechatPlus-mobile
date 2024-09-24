@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import { Text, View, SafeAreaView } from "@/components/themed";
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import { useVisit } from "@/hooks/useVisit";
+import { Routes } from "../(visit)/_layout";
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ export default function TabTwoScreen() {
             primary
             className="w-1/2 mt-6"
             title={t("visit.start")}
-            onPress={() => router.push("select-house")}
+            onPress={() => router.push(Routes.SelectHouse)}
           />
         </View>
       </CheckTeam>
