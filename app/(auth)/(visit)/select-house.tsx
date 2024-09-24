@@ -99,6 +99,7 @@ export default function SelectHouseScreen() {
             </Text>
           </View>
         )}
+
         <ScrollView className="pb-4" showsVerticalScrollIndicator={false}>
           {!loading && houseOptions.length > 0 && (
             <View className="my-1">

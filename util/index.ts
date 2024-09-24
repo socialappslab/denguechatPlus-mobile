@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
-import { ErrorResponse } from "../schema";
+import { ErrorResponse } from "@/schema";
+import { FilterData } from "@/context/BrigadeContext";
 
 // Function to extract error information from an Axios error
 export function extractAxiosErrorData(error: unknown): ErrorResponse | null {
@@ -41,12 +42,26 @@ export const formatDate = (dateString: string, fallback?: string) => {
 };
 
 export const getInitialsBase = (firstName: string, lastName: string) => {
-  const firstInitial = firstName.charAt(0).toUpperCase();
-  const lastInitial = lastName.charAt(0).toUpperCase();
+  const firstInitial =
+    firstName.length > 1 ? firstName.charAt(0).toUpperCase() : "";
+  const lastInitial =
+    lastName.length > 1 ? lastName.charAt(0).toUpperCase() : "";
   return `${firstInitial}${lastInitial}`;
 };
 
 export const getInitials = (fullName: string) => {
   const [firstName = "", lastName = ""] = fullName.split(" ");
   return getInitialsBase(firstName, lastName);
+};
+
+export const countSetFilters = (
+  filters: FilterData,
+  keys?: (keyof FilterData)[],
+): number => {
+  return (Object.keys(filters) as (keyof FilterData)[]).reduce((count, key) => {
+    if (filters[key] && (!keys || keys.includes(key))) {
+      count += 1;
+    }
+    return count;
+  }, 0);
 };

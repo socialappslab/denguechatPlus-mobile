@@ -2,35 +2,38 @@ import { useEffect, useState } from "react";
 
 import { useAuth } from "@/context/AuthProvider";
 import { Text, View, ScrollView, SafeAreaView } from "@/components/themed";
-
+import { Platform } from "react-native";
 import { useTranslation } from "react-i18next";
 import useAxios from "axios-hooks";
-
-import { SimpleChip, ProgressBar, Loading } from "@/components/themed";
+import { useIsFocused } from "@react-navigation/native";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
+
 import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import Colors from "@/constants/Colors";
 import { getInitials } from "@/util";
+import { SimpleChip, ProgressBar, Loading } from "@/components/themed";
 
 // example JSON Data
 const visitsData = {
-  visits: 1210,
   weeklyChange: "+15%",
 };
 
 const sitesData = {
   totalSites: 170,
   weeklyChange: "+15%",
-  greenSites: 75,
-  yellowSites: 60,
-  redSites: 35,
 };
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
-  const { meData } = useAuth();
+  const isFocused = useIsFocused();
+  const { meData, reFetchMe } = useAuth();
   const [team, setTeam] = useState<Team | null>(null);
+
+  useEffect(() => {
+    if (isFocused) reFetchMe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
 
   const [{ data: teamData, loading: loadingTeam }] = useAxios<
     ExistingDocumentObject,
@@ -54,7 +57,7 @@ export default function TabTwoScreen() {
       <CheckTeam view="profile">
         <View className="flex flex-1">
           {loadingTeam && (
-            <View className="my-4">
+            <View className="flex flex-1 items-center justify-center">
               <Loading />
             </View>
           )}
@@ -65,12 +68,12 @@ export default function TabTwoScreen() {
             >
               <View className="mb-2">
                 <Text className="text-xl font-bold mb-2">{team?.name}</Text>
-                <Text className="text-md font-normal mb-4">
+                <Text className="font-normal mb-4">
                   {team?.sector?.name} - {team?.wedge?.name}
                 </Text>
               </View>
               <View className="p-4 mb-4 border border-gray-200 rounded-lg">
-                <Text className="text-md text-gray-600 mb-2">
+                <Text className="text-gray-600 mb-2">
                   {t("brigade.cards.numberVisits")}
                 </Text>
                 <View className="flex-row items-center justify-between">
@@ -90,7 +93,7 @@ export default function TabTwoScreen() {
               </View>
 
               <View className="p-4 mb-4 border border-gray-200 rounded-lg">
-                <Text className="text-md text-gray-600 mb-2">
+                <Text className="text-gray-600 mb-2">
                   {t("brigade.cards.numberSites")}
                 </Text>
                 <View className="flex-row items-center justify-between">
@@ -117,7 +120,7 @@ export default function TabTwoScreen() {
                   <ProgressBar
                     label={t("brigade.sites.yellow")}
                     progress={team?.sitesStatuses?.yellow ?? 0}
-                    color="yellow"
+                    color="yellow-50"
                   />
                   <ProgressBar
                     label={t("brigade.sites.red")}
@@ -139,7 +142,7 @@ export default function TabTwoScreen() {
                     key={member.id}
                     className={`flex-row items-center p-4 border-gray-200 ${index === team?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
                   >
-                    <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mr-3">
+                    <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-300 mr-3">
                       <Text className="font-bold text-sm text-green-700">
                         {getInitials(member.fullName)}
                       </Text>
@@ -160,7 +163,7 @@ export default function TabTwoScreen() {
                   </View>
                 ))}
               </View>
-              <View className="h-6"></View>
+              <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View>
             </ScrollView>
           )}
         </View>
