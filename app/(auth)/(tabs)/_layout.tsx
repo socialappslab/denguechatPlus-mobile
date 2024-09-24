@@ -45,6 +45,7 @@ export default function TabLayout(props: ThemeProps) {
         headerStyle: {
           backgroundColor,
         },
+        headerTitleAlign: "center",
         headerShadowVisible: false,
         headerTintColor: color,
         tabBarStyle: {

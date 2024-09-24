@@ -41,12 +41,23 @@ export const formatDate = (dateString: string, fallback?: string) => {
 };
 
 export const getInitialsBase = (firstName: string, lastName: string) => {
-  const firstInitial = firstName.charAt(0).toUpperCase();
-  const lastInitial = lastName.charAt(0).toUpperCase();
+  const firstInitial =
+    firstName.length > 1 ? firstName.charAt(0).toUpperCase() : "";
+  const lastInitial =
+    lastName.length > 1 ? lastName.charAt(0).toUpperCase() : "";
   return `${firstInitial}${lastInitial}`;
 };
 
 export const getInitials = (fullName: string) => {
   const [firstName = "", lastName = ""] = fullName.split(" ");
   return getInitialsBase(firstName, lastName);
+};
+
+export const countSetFilters = (filters: any): number => {
+  return Object.keys(filters).reduce((count, key) => {
+    if (filters[key]) {
+      count += 1;
+    }
+    return count;
+  }, 0);
 };
