@@ -151,7 +151,7 @@ export default function Summary() {
     };
 
     try {
-      await createVisit({ json_params: JSON.stringify(normalizedData) });
+      // await createVisit({ json_params: JSON.stringify(normalizedData) });
       await cleanStore();
       Toast.show({
         type: "success",

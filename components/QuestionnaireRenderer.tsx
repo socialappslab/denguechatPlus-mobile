@@ -165,13 +165,6 @@ const QuestionnaireRenderer = ({
     [currentValues],
   );
 
-  console.log(
-    (currentValues || []).length,
-    "values>>",
-    "rerender",
-    "-------------------",
-  );
-
   return (
     <FormProvider {...methods}>
       {question.typeField === "splash" && (
@@ -236,15 +229,6 @@ const ControlledCheckbox = ({
   useEffect(() => {
     setItemsChecked(currentValues);
   }, [currentValues]);
-
-  console.log(
-    itemsChecked.length,
-    currentValues.length,
-    "items>>>",
-    option.value,
-    option.label,
-    "rerender",
-  );
 
   const onChange = (text: string) => {
     let values = getValues(name);
