@@ -56,7 +56,7 @@ export default function ChangeBrigade() {
       });
 
       router.back();
-      router.replace("change-brigade-success");
+      router.push("change-brigade-success");
     } catch (error) {
       console.error("error change team", error);
     } finally {

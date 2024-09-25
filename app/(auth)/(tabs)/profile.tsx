@@ -24,7 +24,7 @@ const sitesData = {
   weeklyChange: "+15%",
 };
 
-export default function TabTwoScreen() {
+export default function Profile() {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
   const { meData, reFetchMe } = useAuth();
@@ -35,13 +35,18 @@ export default function TabTwoScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
-  const [{ data: teamData, loading: loadingTeam }] = useAxios<
+  const [{ data: teamData, loading: loadingTeam }, refetchTeam] = useAxios<
     ExistingDocumentObject,
     unknown,
     ErrorResponse
   >({
     url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
   });
+
+  useEffect(() => {
+    if (meData) refetchTeam();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meData]);
 
   useEffect(() => {
     if (!teamData) return;
