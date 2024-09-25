@@ -197,7 +197,7 @@ export default function Summary() {
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.containers")}</Text>
           <Text type="text">
-            {quantity + visitData.inspections.length || 1}
+            {quantity + visitData?.inspections?.length || 1}
           </Text>
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
