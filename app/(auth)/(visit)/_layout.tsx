@@ -6,6 +6,15 @@ import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
+export enum Routes {
+  SelectHouse = "select-house",
+  ContainerPicture = "container-picture",
+  AddComment = "add-comment",
+  Summary = "summary",
+  Final = "final",
+  Visit = "visit",
+}
+
 export default function VisitLayout(props: ThemeProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -38,11 +47,11 @@ export default function VisitLayout(props: ThemeProps) {
       }}
     >
       <Stack.Screen
-        name="add-comment"
+        name={Routes.AddComment}
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen
-        name="select-house"
+        name={Routes.SelectHouse}
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen
@@ -50,11 +59,15 @@ export default function VisitLayout(props: ThemeProps) {
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen
-        name="summary"
+        name={Routes.ContainerPicture}
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen
-        name="final"
+        name={Routes.Summary}
+        options={{ headerShown: true, headerShadowVisible: false }}
+      />
+      <Stack.Screen
+        name={Routes.Final}
         options={{ headerShown: true, headerShadowVisible: false }}
       />
     </Stack>
