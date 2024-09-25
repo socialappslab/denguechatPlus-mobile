@@ -13,6 +13,7 @@
     "finalize": "Finalizar",
     "placeholder": "Escreva aqui...",
     "quantity": "Quantidade",
+    "ilustrationOrIcon": "Ilustração ou ícone",
     "config": {
       "search": "Buscar",
       "noResults": "Não há resultados para sua busca",

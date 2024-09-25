@@ -1,13 +1,15 @@
-import { Button, SafeAreaView, Text, View } from "@/components/themed";
+import { Button, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { FormState, VisitData, VisitPayload } from "@/types";
-import { extractAxiosErrorData, formatDate, QuantityFound } from "@/util";
+import { extractAxiosErrorData, formatDate } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
-import { Routes } from "./_layout";
+
+// Inspection type
+const QuantityFound = "quantity_founded";
 
 // StatusColor utils
 enum StatusColor {
@@ -16,15 +18,17 @@ enum StatusColor {
   NO_INFECTED = "GREEN",
 }
 
-const RenderStatus = ({ statusColor }: { statusColor: StatusColor }) => {
+const RenderStatus = ({
+  statusColor = StatusColor.NO_INFECTED,
+}: {
+  statusColor: StatusColor;
+}) => {
   const { t } = useTranslation();
 
   return (
     <View className="flex flex-row justify-center items-center">
       <Text>{t(`visit.summary.statusColor.${statusColor.toLowerCase()}`)}</Text>
-      <View
-        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLowerCase()}-100`}
-      />
+      <View className={`h-6 w-6 ml-3 rounded-full bg-green-100`} />
     </View>
   );
 };
@@ -134,18 +138,18 @@ export default function Summary() {
         //   was_chemically_treated: "si, si, si",
         //   photo_id: "CRCODE",
         // },
-        {
-          breeding_site_type_id: 1,
-          elimination_method_type_id: 1,
-          water_source_type_id: 1,
-          // code_reference: "CRCODE",
-          has_water: true,
-          was_chemically_treated: "si, si, si",
-          // water_source_other: "Fuente de agua",
-          container_protection_id: 1,
-          type_content_id: [1, 2],
-          quantity_founded: 3,
-        },
+        // {
+        //   breeding_site_type_id: 1,
+        //   elimination_method_type_id: 1,
+        //   water_source_type_id: 1,
+        //   // code_reference: "CRCODE",
+        //   has_water: true,
+        //   was_chemically_treated: "si, si, si",
+        //   // water_source_other: "Fuente de agua",
+        //   container_protection_id: 1,
+        //   type_content_id: [1, 2],
+        //   quantity_founded: 3,
+        // },
       ],
     };
 
@@ -156,7 +160,7 @@ export default function Summary() {
         type: "success",
         text1: t("success"),
       });
-      router.push(Routes.Final);
+      router.push("final");
     } catch (error) {
       const errorData = extractAxiosErrorData(error);
       // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
@@ -176,37 +180,19 @@ export default function Summary() {
   };
 
   return (
-    <SafeAreaView>
-      <View className="h-full p-6 pb-10 flex flex-col justify-between">
-        <View className="flex flex-col justify-center items-center">
-          <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-            <Text className="text-center text">Ilustración o ícono</Text>
-          </View>
+    <View className="h-full p-6 pb-10 flex flex-col justify-between">
+      <View className="flex flex-col justify-center items-center">
+        <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
+          <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
         </View>
-        <Text type="title" className="mb-4">
-          {t("visit.summary.title")}
-        </Text>
-        <View className="mb-4">
-          <View className="flex flex-row mb-4 w-full justify-between items-center">
-            <Text type="header">{t("visit.summary.status")}</Text>
-            <RenderStatus
-              statusColor={statusColor || StatusColor.NO_INFECTED}
-            />
-          </View>
-          <View className="flex flex-row mb-4 w-full justify-between items-center">
-            <Text type="header">{t("visit.summary.containers")}</Text>
-            <Text type="text">
-              {quantity + visitData.inspections.length || 1}
-            </Text>
-          </View>
-          <View className="flex flex-row mb-4 w-full justify-between items-center">
-            <Text type="header">{t("visit.summary.houseNumber")}</Text>
-            <Text type="text">{visitData.houseId}</Text>
-          </View>
-          <View className="flex flex-row mb-4 w-full justify-between items-center">
-            <Text type="header">{t("visit.summary.date")}</Text>
-            <Text type="text">{formatDate(new Date().toString())}</Text>
-          </View>
+      </View>
+      <Text type="title" className="mb-4">
+        {t("visit.summary.title")}
+      </Text>
+      <View className="mb-4">
+        <View className="flex flex-row mb-4 w-full justify-between items-center">
+          <Text type="header">{t("visit.summary.status")}</Text>
+          <RenderStatus statusColor={statusColor} />
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.containers")}</Text>
@@ -228,7 +214,7 @@ export default function Summary() {
           <Button
             title={t("editFromStart")}
             onPress={() =>
-              router.push(`${Routes.Visit}/${questionnaire?.initialQuestion}`)
+              router.push(`visit/${questionnaire?.initialQuestion}`)
             }
           />
         </View>
@@ -236,6 +222,6 @@ export default function Summary() {
           <Button primary title={t("finalize")} onPress={onFinalize} />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

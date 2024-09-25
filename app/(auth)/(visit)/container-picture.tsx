@@ -102,7 +102,7 @@ export default function ContainerPicture() {
         <View className="flex flex-col justify-center items-center flex-1">
           {!photoUri && (
             <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-              <Text className="text-center text">Ilustración o ícono</Text>
+              <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
             </View>
           )}
           {photoUri && (
