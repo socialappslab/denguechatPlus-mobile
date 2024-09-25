@@ -3,10 +3,12 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import useAxios from "axios-hooks";
 import { deserialize } from "jsonapi-fractal";
+import { useIsFocused } from "@react-navigation/native";
 
 import { SelectableItem } from "@/components/themed";
 import { House } from "@/types";
 import { useVisit } from "@/hooks/useVisit";
+
 import {
   Text,
   View,
@@ -20,22 +22,31 @@ import { formatDate } from "@/util";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
+  const isFocused = useIsFocused();
 
   const [houseSelectedId, setHouseSelectedId] = useState<number>();
   const [searchText, setSearchText] = useState<string>("");
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
-  const { setVisitData, questionnaire } = useVisit();
+  const { setVisitData, questionnaire, language } = useVisit();
 
   const updateHouse = async () => {
     await setVisitData({ houseId: houseSelectedId });
     router.push(`visit/${questionnaire?.initialQuestion}`);
   };
 
-  const [{ data, loading, error }] = useAxios({
-    url: `/houses/list_to_visit?filter[reference_code]=${searchText}`,
-  });
+  const [{ data, loading, error }, refetch] = useAxios(
+    {
+      url: `/houses/list_to_visit?filter[reference_code]=${searchText}`,
+    },
+    { manual: true },
+  );
+
+  useEffect(() => {
+    if (isFocused) refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
 
   useEffect(() => {
     if (data) {
@@ -49,7 +60,7 @@ export default function SelectHouseScreen() {
 
   const renderHouse = (house: House) => {
     const lastVisit = house.lastVisit
-      ? `(${formatDate(house.lastVisit, t("visit.houses.notVisited"))})`
+      ? `(${formatDate(house.lastVisit, language, t("visit.houses.notVisited"))})`
       : "";
     return `${house.specialPlace ? house.specialPlace.name : t("visit.houses.house")} ${house.referenceCode} ${lastVisit}`;
   };
@@ -125,7 +136,7 @@ export default function SelectHouseScreen() {
             </Text>
             <Button
               title={t("visit.houses.registerNewHouse")}
-              className="bg-green-100 border-green-100"
+              className="bg-green-400 border-green-400"
             />
           </View>
         </ScrollView>
