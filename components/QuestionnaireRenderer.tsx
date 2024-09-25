@@ -212,7 +212,7 @@ const ControlledCheckbox = ({
   option,
   getValues,
   setValue,
-  currentValues,
+  currentValues = [],
 }: {
   name: string;
   control: Control<FieldValues>;
@@ -221,8 +221,8 @@ const ControlledCheckbox = ({
   getValues: UseFormGetValues<FieldValues>;
   currentValues: FormStateOption[];
 }) => {
-  const [itemsChecked, setItemsChecked] = useState(currentValues || []);
-  const isSelected = itemsChecked.some(
+  const [itemsChecked, setItemsChecked] = useState<FormStateOption[]>(currentValues);
+  const isSelected = itemsChecked?.some(
     (item: FormStateOption) => item.value === option.value,
   );
 
@@ -262,7 +262,7 @@ const ControlledCheckbox = ({
     }
   };
 
-  const conditionalDisablingItem = itemsChecked.find(
+  const conditionalDisablingItem = itemsChecked?.find(
     (item) => item.disableOtherOptions === true,
   );
   const shouldDisable =
@@ -285,7 +285,7 @@ const ControlledCheckbox = ({
             optionType={option.optionType}
             type="checkbox"
             image={option.image}
-            defaultText={isSelected.text}
+            // defaultText={isSelected.text}
             disabled={!!shouldDisable}
           />
         );
