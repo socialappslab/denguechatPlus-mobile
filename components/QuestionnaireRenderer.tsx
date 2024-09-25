@@ -262,7 +262,7 @@ const ControlledCheckbox = ({
     }
   };
 
-  const conditionalDisablingItem = itemsChecked?.find(
+  const conditionalDisablingItem = itemsChecked.find(
     (item) => item.disableOtherOptions === true,
   );
   const shouldDisable =
