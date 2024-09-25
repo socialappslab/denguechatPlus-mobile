@@ -165,13 +165,6 @@ const QuestionnaireRenderer = ({
     [currentValues],
   );
 
-  console.log(
-    (currentValues || []).length,
-    "values>>",
-    "rerender",
-    "-------------------",
-  );
-
   return (
     <FormProvider {...methods}>
       {question.typeField === "splash" && (
@@ -219,7 +212,7 @@ const ControlledCheckbox = ({
   option,
   getValues,
   setValue,
-  currentValues,
+  currentValues = [],
 }: {
   name: string;
   control: Control<FieldValues>;
@@ -228,23 +221,14 @@ const ControlledCheckbox = ({
   getValues: UseFormGetValues<FieldValues>;
   currentValues: FormStateOption[];
 }) => {
-  const [itemsChecked, setItemsChecked] = useState(currentValues || []);
-  const isSelected = itemsChecked.some(
+  const [itemsChecked, setItemsChecked] = useState<FormStateOption[]>(currentValues);
+  const isSelected = itemsChecked?.some(
     (item: FormStateOption) => item.value === option.value,
   );
 
   useEffect(() => {
     setItemsChecked(currentValues);
   }, [currentValues]);
-
-  console.log(
-    itemsChecked.length,
-    currentValues.length,
-    "items>>>",
-    option.value,
-    option.label,
-    "rerender",
-  );
 
   const onChange = (text: string) => {
     let values = getValues(name);
@@ -301,7 +285,7 @@ const ControlledCheckbox = ({
             optionType={option.optionType}
             type="checkbox"
             image={option.image}
-            defaultText={isSelected.text}
+            // defaultText={isSelected.text}
             disabled={!!shouldDisable}
           />
         );
