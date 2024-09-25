@@ -157,6 +157,7 @@ interface VisitAttributes {
   notes?: string;
   visitedAt: string;
   house?: House;
+  photoUri?: string;
   inspections: Inspection[];
 }
 export interface VisitPayload extends VisitAttributes {
