@@ -114,6 +114,31 @@
         "noHouses": "Can't find the site?",
         "noHousesMessage": "Register a new site here."
       },
+      "newHouse": {
+        "title": "Register new site",
+        "siteInformation": "Site Information",
+        "sector": "Sector",
+        "wedge": "Wedge",
+        "houseBlock": "House Block",
+        "houseNumber": "Site Number",
+        "requiredFields": "* Required fields.",
+        "location": "Location",
+        "addLocation": "Add location",
+        "siteTypeQuestion": "What type of site is it?",
+        "siteType": {
+          "house": "House",
+          "organization": "Organizations",
+          "garden": "Garden",
+          "education": "Education",
+          "business": "Business"
+        },
+        "siteLocation": "Site Location",
+        "addAddress": "Add site address",
+        "addressPlaceholder": "Enter the site address",
+        "confirmLocation": "Confirm location",
+        "noConnection": "You have no connection",
+        "noMapConnection": "We cannot load the map because you have no internet connection."
+      },
       "summary": {
         "title": "Summary of the visit",
         "status": "Status of the house",

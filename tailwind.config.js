@@ -40,9 +40,11 @@ module.exports = {
         neutral: "#79716B",
         green: {
           100: "#2FFB2D", // status color
+          200: "#04BF00",
           300: "#EEFFED",
           400: "#D6FFD6",
           500: "#067507",
+          900: "#085F09",
         },
         sky: {
           400: "#344054",

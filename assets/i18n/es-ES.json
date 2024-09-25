@@ -116,6 +116,31 @@
         "noHouses": "¿No encuentras el sitio?",
         "noHousesMessage": "Registra un nuevo sitio aquí."
       },
+      "newHouse": {
+        "title": "Registrar sitio nuevo",
+        "siteInformation": "Información del sitio",
+        "sector": "Sector",
+        "wedge": "Cuña",
+        "houseBlock": "Frente a Frente",
+        "houseNumber": "Número de sitio",
+        "requiredFields": "* Campo requeridos.",
+        "location": "Ubicación",
+        "addLocation": "Añadir ubicación",
+        "siteTypeQuestion": "¿Qué sitio es?",
+        "siteType": {
+          "house": "Casa",
+          "organization": "Organizaciones",
+          "garden": "Huerta",
+          "education": "Educación",
+          "business": "Negocio"
+        },
+        "siteLocation": "Ubicación del sitio",
+        "addAddress": "Añadir dirección del sitio",
+        "addressPlaceholder": "Escribe la dirección del sitio",
+        "confirmLocation": "Confirmar ubicación",
+        "noConnection": "No tienes conexión",
+        "noMapConnection": "No podemos cargar el mapa porque no tienes conexión a internet."
+      },
       "summary": {
         "title": "Resumen de la visita",
         "status": "Estatus de la casa",

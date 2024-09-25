@@ -46,6 +46,10 @@ export default function VisitLayout(props: ThemeProps) {
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen
+        name="new-house"
+        options={{ headerShown: true, headerShadowVisible: false }}
+      />
+      <Stack.Screen
         name="visit/[id]"
         options={{ headerShown: true, headerShadowVisible: false }}
       />

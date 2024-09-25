@@ -114,6 +114,31 @@
         "noHouses": "Não encontra o local?",
         "noHousesMessage": "Registre um novo local aqui."
       },
+      "newHouse": {
+        "title": "Registrar novo site",
+        "siteInformation": "Informações do site",
+        "sector": "Setor",
+        "wedge": "Cunha",
+        "houseBlock": "Quadra",
+        "houseNumber": "Número do site",
+        "requiredFields": "* Campos obrigatórios.",
+        "location": "Localização",
+        "addLocation": "Adicionar localização",
+        "siteTypeQuestion": "Que tipo de site é?",
+        "siteType": {
+          "house": "Casa",
+          "organization": "Organizações",
+          "garden": "Horta",
+          "education": "Educação",
+          "business": "Negócio"
+        },
+        "siteLocation": "Localização do site",
+        "addAddress": "Adicionar endereço do site",
+        "addressPlaceholder": "Digite o endereço do site",
+        "confirmLocation": "Confirmar localização",
+        "noConnection": "Você não tem conexão",
+        "noMapConnection": "Não podemos carregar o mapa porque você não tem conexão com a internet."
+      },
       "summary": {
         "title": "Resumo da visita",
         "status": "Status da casa",
