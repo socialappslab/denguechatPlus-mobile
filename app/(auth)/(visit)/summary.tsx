@@ -92,7 +92,8 @@ const prepareFormData = (formData: FormState) => {
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, currentFormData, visitData, cleanStore } = useVisit();
+  const { questionnaire, currentFormData, visitData, language, cleanStore } =
+    useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { inspection, answers, statusColor } = prepareFormData(currentFormData);
@@ -203,7 +204,7 @@ export default function Summary() {
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.date")}</Text>
-          <Text type="text">{formatDate(new Date().toString())}</Text>
+          <Text type="text">{formatDate(new Date().toString(), language)}</Text>
         </View>
       </View>
       <View className="flex flex-row gap-2">
