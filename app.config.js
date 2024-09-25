@@ -27,20 +27,7 @@ export default {
         backgroundColor: "#067507",
       },
     },
-    plugins: [
-      "expo-router",
-      "expo-font",
-      "expo-localization",
-      [
-        "expo-camera",
-        {
-          cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
-          microphonePermission:
-            "Allow $(PRODUCT_NAME) to access your microphone",
-          recordAudioAndroid: true,
-        },
-      ],
-    ],
+    plugins: ["expo-router", "expo-font", "expo-localization"],
     experiments: {
       typedRoutes: true,
     },

@@ -170,7 +170,7 @@ const QuestionnaireRenderer = ({
       {question.typeField === "splash" && (
         <View className="flex flex-col justify-center items-center h-full">
           <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-            <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
+            <Text className="text-center text">Ilustración o ícono</Text>
           </View>
           <Text type="title" className="text-center">
             {question.question}
@@ -221,8 +221,7 @@ const ControlledCheckbox = ({
   getValues: UseFormGetValues<FieldValues>;
   currentValues: FormStateOption[];
 }) => {
-  const [itemsChecked, setItemsChecked] =
-    useState<FormStateOption[]>(currentValues);
+  const [itemsChecked, setItemsChecked] = useState<FormStateOption[]>(currentValues);
   const isSelected = itemsChecked?.some(
     (item: FormStateOption) => item.value === option.value,
   );

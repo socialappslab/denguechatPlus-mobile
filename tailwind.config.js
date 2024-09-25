@@ -10,7 +10,6 @@ module.exports = {
     "text-neutral",
     "bg-red-100",
     "bg-red-500",
-    "bg-green-100",
     "bg-green-300",
     "bg-green-400",
     "border-green-300",
