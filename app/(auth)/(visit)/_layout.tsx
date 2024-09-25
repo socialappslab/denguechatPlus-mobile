@@ -24,6 +24,7 @@ export default function VisitLayout(props: ThemeProps) {
         headerStyle: {
           backgroundColor,
         },
+        headerTitleAlign: "center",
         headerTintColor: color,
         title: t("visit.stackTitle"),
         headerLeft: () => (

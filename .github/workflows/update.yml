@@ -6,6 +6,7 @@ on:
   push:
     branches: 
       - develop
+      - staging
 
 jobs:
   # This workflow contains a single job called "deploy"

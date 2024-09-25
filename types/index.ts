@@ -42,6 +42,7 @@ export interface Option {
   optionType: OptionType;
   group: string;
   statusColor?: string;
+  disableOtherOptions?: boolean;
 }
 
 export interface Image {

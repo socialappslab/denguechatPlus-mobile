@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { PropsWithChildren } from "react";
 
-import { IUser } from "../../schema/auth";
-import { useAuth } from "../../context/AuthProvider";
+import { IUser } from "@/schema/auth";
+import { useAuth } from "@/context/AuthProvider";
 
 export interface ProtectedViewProps extends PropsWithChildren {
   hasPermission?: string | string[];
@@ -58,19 +58,19 @@ export default function ProtectedView({
   hasSomePermission,
   hasSomeResource,
 }: ProtectedViewProps) {
-  const { user } = useAuth();
+  const { meData } = useAuth();
 
-  if (!user) return null;
+  if (!meData) return null;
 
-  if (hasPermission && chekcHasPermission(user, hasPermission)) {
+  if (hasPermission && chekcHasPermission(meData, hasPermission)) {
     return <>{children}</>;
   }
 
-  if (hasSomePermission && checkHasSomePermission(user, hasSomePermission)) {
+  if (hasSomePermission && checkHasSomePermission(meData, hasSomePermission)) {
     return <>{children}</>;
   }
 
-  if (hasSomeResource && checkHasSomeResource(user, hasSomeResource)) {
+  if (hasSomeResource && checkHasSomeResource(meData, hasSomeResource)) {
     return <>{children}</>;
   }
 }

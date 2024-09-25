@@ -42,6 +42,7 @@ interface VisitContextType {
   currentFormData: FormState;
   visitMap: VisitMap;
   cleanStore: () => Promise<void>;
+  language: string | null;
 }
 
 const VisitContext = createContext<VisitContextType | undefined>(undefined);
@@ -240,6 +241,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
         visitMap,
         cleanStore,
         currentFormData,
+        language: language ?? "es",
       }}
     >
       {children}

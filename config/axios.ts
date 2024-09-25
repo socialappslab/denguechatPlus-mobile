@@ -134,7 +134,16 @@ createAuthRefreshInterceptor(authApi, refreshAuthLogic, {
     }
     const errorData = extractAxiosErrorData(error);
 
-    console.log("shouldRefresh url >>>>>>", JSON.stringify(error.response));
+    console.log(
+      "shouldRefresh method url>>>>>>",
+      error.response?.status +
+        " " +
+        error.response?.config?.method +
+        " " +
+        error.response?.config?.url +
+        " " +
+        JSON.stringify(error.response?.config?.params),
+    );
     if (
       errorData?.errors &&
       `${errorData?.errors[0]?.error_code}` === "expired_token"
