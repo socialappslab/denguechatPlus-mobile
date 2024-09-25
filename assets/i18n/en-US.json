@@ -13,7 +13,6 @@
     "finalize": "Finalize",
     "placeholder": "Write here...",
     "quantity": "Quantity",
-    "ilustrationOrIcon": "Ilustration or icon",
     "config": {
       "search": "Search",
       "noResults": "No results for your search",
@@ -126,17 +125,6 @@
           "yellow": "Yellow",
           "red": "Red"
         }
-      },
-      "addComment": {
-        "title": "Add comments about the visit",
-        "placeholder": "Write your comments",
-        "commentsAreOptional": "Comments are optional"
-      },
-      "containerPicture": {
-        "title": "Container photo",
-        "description": "Take a photo of the container and register it",
-        "takePhoto": "Take photo",
-        "chooseFromGallery": "Choose from gallery"
       },
       "final": {
         "title": "Thank you very much!",

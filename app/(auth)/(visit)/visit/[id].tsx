@@ -4,14 +4,12 @@ import QuestionnaireRenderer, {
 import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { InspectionQuestion, Question } from "@/types";
-import { PhotoId } from "@/util";
+import { Question } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Routes } from "../_layout";
 
 // When next is -1 we end the flow
 const TERMINATE = -1;
@@ -73,12 +71,10 @@ export default function Visit() {
 
   let current = questionnaire?.questions.find(
     (q) => String(q.id) === currentQuestion,
-  ) as InspectionQuestion;
+  );
 
   const findNext = () => {
-    if (!current) return;
-    let next = current.next;
-
+    let next = current?.next;
     if (next) return next;
 
     const curr = getValues(currentQuestion);
@@ -98,17 +94,8 @@ export default function Visit() {
     if (values) setFormData(currentQuestion, values);
 
     const next = findNext();
-
-    const resourceName = current.resourceName;
-    if (resourceName === PhotoId) {
-      return router.push({
-        pathname: Routes.ContainerPicture,
-        params: { next },
-      });
-    }
-
-    if (next !== TERMINATE) return router.push(`${Routes.Visit}/${next}`);
-    if (next === TERMINATE) return router.push(Routes.AddComment);
+    if (next !== TERMINATE) return router.push(`visit/${next}`);
+    if (next === TERMINATE) return router.push("add-comment");
   };
 
   const isSplash = current?.typeField === "splash";

@@ -13,7 +13,6 @@
     "finalize": "Finalizar",
     "placeholder": "Escreva aqui...",
     "quantity": "Quantidade",
-    "ilustrationOrIcon": "Ilustração ou ícone",
     "config": {
       "search": "Buscar",
       "noResults": "Não há resultados para sua busca",
@@ -126,17 +125,6 @@
           "yellow": "Amarelo",
           "red": "Vermelho"
         }
-      },
-      "addComment": {
-        "title": "Adicionar comentários sobre a visita",
-        "placeholder": "Escreva seus comentários",
-        "commentsAreOptional": "Os comentários são opcionais"
-      },
-      "containerPicture": {
-        "title": "Foto do contêiner",
-        "description": "Tire uma foto do contêiner e registre-a",
-        "takePhoto": "Tirar foto",
-        "chooseFromGallery": "Escolher da galeria"
       },
       "final": {
         "title": "Muito obrigado!",

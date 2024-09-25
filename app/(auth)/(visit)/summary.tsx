@@ -18,17 +18,15 @@ enum StatusColor {
   NO_INFECTED = "GREEN",
 }
 
-const RenderStatus = ({
-  statusColor = StatusColor.NO_INFECTED,
-}: {
-  statusColor: StatusColor;
-}) => {
+const RenderStatus = ({ statusColor }: { statusColor: StatusColor }) => {
   const { t } = useTranslation();
 
   return (
     <View className="flex flex-row justify-center items-center">
       <Text>{t(`visit.summary.statusColor.${statusColor.toLowerCase()}`)}</Text>
-      <View className={`h-6 w-6 ml-3 rounded-full bg-green-100`} />
+      <View
+        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLowerCase()}-100`}
+      />
     </View>
   );
 };
@@ -183,7 +181,7 @@ export default function Summary() {
     <View className="h-full p-6 pb-10 flex flex-col justify-between">
       <View className="flex flex-col justify-center items-center">
         <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-          <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
+          <Text className="text-center text">Ilustración o ícono</Text>
         </View>
       </View>
       <Text type="title" className="mb-4">
@@ -213,9 +211,7 @@ export default function Summary() {
         <View className="flex-1">
           <Button
             title={t("editFromStart")}
-            onPress={() =>
-              router.push(`visit/${questionnaire?.initialQuestion}`)
-            }
+            onPress={() => router.push("visit/1")}
           />
         </View>
         <View className="flex-1">
