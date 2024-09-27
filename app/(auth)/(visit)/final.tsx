@@ -27,7 +27,11 @@ export default function Summary() {
           <Button
             primary
             title={t("backToHome")}
-            onPress={() => router.push(`(${Routes.Visit})`)}
+            onPress={() => {
+              while (router.canGoBack()) {
+                router.back();
+              }
+            }}
           />
         </View>
       </View>
