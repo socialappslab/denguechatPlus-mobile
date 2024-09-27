@@ -28,7 +28,9 @@ const RenderStatus = ({
   return (
     <View className="flex flex-row justify-center items-center">
       <Text>{t(`visit.summary.statusColor.${statusColor.toLowerCase()}`)}</Text>
-      <View className={`h-6 w-6 ml-3 rounded-full bg-green-100`} />
+      <View
+        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLocaleLowerCase()}-100`}
+      />
     </View>
   );
 };
