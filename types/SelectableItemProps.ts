@@ -75,4 +75,9 @@ export type SelectableItemProps = ViewProps & {
    * Text to render when inputs are rendered
    */
   defaultText?: string;
+  /**
+   * If an item with this option is selected,
+   * all the other options should be disabled
+   */
+  disableOtherOptions?: boolean;
 };

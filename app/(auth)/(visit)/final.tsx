@@ -1,6 +1,7 @@
 import { Button, Text, View } from "@/components/themed";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { Routes } from "./_layout";
 
 export default function Summary() {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export default function Summary() {
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between">
       <View className="flex flex-col justify-center items-center">
         <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-          <Text className="text-center text">Ilustración o ícono</Text>
+          <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
         </View>
         <View>
           <Text type="title" className="text-center mb-4">
@@ -26,7 +27,11 @@ export default function Summary() {
           <Button
             primary
             title={t("backToHome")}
-            onPress={() => router.push("(visit)")}
+            onPress={() => {
+              while (router.canGoBack()) {
+                router.back();
+              }
+            }}
           />
         </View>
       </View>

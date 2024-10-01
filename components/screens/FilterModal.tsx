@@ -24,6 +24,7 @@ export interface FilterModalProps {
   endpoint: string;
   messageNoResults?: string;
   messageNoResultsOnSelection?: string;
+  actionLabel?: string;
   extraSearchParams?: Record<string, string | number | undefined>;
 }
 
@@ -32,6 +33,7 @@ export function FilterModal({
   messageNoResults,
   messageNoResultsOnSelection,
   endpoint,
+  actionLabel,
   extraSearchParams,
 }: FilterModalProps) {
   const { t } = useTranslation();
@@ -169,7 +171,11 @@ export function FilterModal({
         </ScrollView>
 
         <View className="pt-5">
-          <Button primary onPress={handleFilter} title={t("config.filter")} />
+          <Button
+            primary
+            onPress={handleFilter}
+            title={actionLabel ?? t("config.filter")}
+          />
         </View>
       </View>
     </SafeAreaView>

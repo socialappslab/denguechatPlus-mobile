@@ -55,6 +55,16 @@ export default function VisitLayout(props: ThemeProps) {
           }}
         />
         <Stack.Screen
+          name="change-brigade-success"
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: t("config.changeBrigade"),
+            headerLeft: () => null,
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen
           name="select-house-block"
           options={{
             headerShown: true,

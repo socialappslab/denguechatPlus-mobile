@@ -42,6 +42,7 @@ export interface Option {
   optionType: OptionType;
   group: string;
   statusColor?: string;
+  disableOtherOptions?: boolean;
 }
 
 export interface Image {
@@ -157,6 +158,7 @@ interface VisitAttributes {
   notes?: string;
   visitedAt: string;
   house?: Partial<House>;
+  photoUri?: string;
   inspections: Inspection[];
 }
 export interface VisitPayload extends VisitAttributes {

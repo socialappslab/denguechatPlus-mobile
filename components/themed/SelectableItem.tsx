@@ -8,6 +8,7 @@ import { SelectableItemProps } from "@/types/SelectableItemProps";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  Image,
   Platform,
   Pressable,
   StyleSheet,
@@ -15,6 +16,11 @@ import {
 } from "react-native";
 import { SimpleChip } from "./SimpleChip";
 import { TextInput } from "./TextInput";
+
+// image fallback
+// <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
+//   <Text className="text-center text">Imagen</Text>
+// </View>
 
 export function SelectableItem({
   color,
@@ -61,18 +67,18 @@ export function SelectableItem({
 
   return (
     <TouchableOpacity
-      onPress={handleChange}
-      className={`flex p-4 mb-2 rounded-md ${checked ? "bg-green-400" : "bg-gray-400"}`}
+      onPress={!disabled ? handleChange : () => {}}
+      className={`flex p-4 mb-2 rounded-md ${checked ? "bg-green-400" : "bg-gray-400"} ${disabled && "opacity-50"}`}
     >
       <View className="flex bg-transparent">
         {image && (
           <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
-            <Text className="text-center text">Imagen</Text>
+            <Image className="w-full h-full" source={{ uri: `${image}.png` }} />
           </View>
         )}
         <View className="flex flex-row bg-transparent">
           <Pressable
-            className="bg-white mr-2"
+            className="mr-2"
             {...other}
             disabled={disabled}
             // Announces "checked" status and "checkbox" as the focused element
@@ -81,12 +87,12 @@ export function SelectableItem({
             style={[
               styles.root,
               style,
+              disabled && styles.disabled,
               checked && styles.checked,
               !!color && {
                 backgroundColor: checked ? color : undefined,
                 borderColor: color,
               },
-              disabled && styles.disabled,
               checked && disabled && styles.checkedAndDisabled,
             ]}
             onPress={handleChange}
@@ -183,6 +189,7 @@ const boxStyles = StyleSheet.create({
   disabled: {
     borderColor: disabledGrayColor,
     backgroundColor: "transparent",
+    opacity: 0.5,
   },
   checkedAndDisabled: {
     backgroundColor: disabledCheckedGrayColor,

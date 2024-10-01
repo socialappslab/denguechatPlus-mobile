@@ -1,6 +1,6 @@
 import { SelectableItem, Text, View } from "@/components/themed";
 import { InspectionQuestion, OptionType, ResourceType } from "@/types";
-import { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Control,
   Controller,
@@ -31,6 +31,7 @@ export interface ISelectableItem {
   text?: string;
   resourceType?: ResourceType;
   statusColor?: string;
+  disableOtherOptions?: boolean;
 }
 
 /** Utils */
@@ -52,6 +53,7 @@ const formatOptionsForSelectableItems = ({
         required,
         group,
         statusColor,
+        disableOtherOptions,
       }) => ({
         value: id,
         label: name,
@@ -64,6 +66,7 @@ const formatOptionsForSelectableItems = ({
         group,
         resourceType,
         statusColor,
+        disableOtherOptions,
       }),
     )
     .sort((a, b) => a.value - b.value) || [];
@@ -77,6 +80,7 @@ export interface FormStateOption {
   resourceType?: string;
   optionType?: string;
   statusColor?: string;
+  disableOtherOptions?: boolean;
 }
 
 const prepareOption = ({
@@ -88,6 +92,7 @@ const prepareOption = ({
     resourceType,
     optionType,
     statusColor,
+    disableOtherOptions,
   },
   text,
 }: {
@@ -102,6 +107,7 @@ const prepareOption = ({
   text,
   optionType,
   statusColor,
+  disableOtherOptions,
 });
 
 const groupOptions = (
@@ -122,44 +128,51 @@ const QuestionnaireRenderer = ({
 }: QuestionnaireRendererProps) => {
   const { t } = useTranslation();
   const hasRequiredOptions = question?.options?.some((o) => o.required);
-  const { control, getValues, setValue } = methods;
+  const { control, getValues, setValue, watch } = methods;
   const name = question.id.toString();
   const formattedOptions: ISelectableItem[] =
     formatOptionsForSelectableItems(question);
   const hasGroup = formattedOptions.every((option) => option.group);
   const groupedOptions = groupOptions(formattedOptions);
+  const currentValues = watch(name);
 
-  const renderOptions = (option: ISelectableItem) => {
-    return (
-      <>
-        {question.typeField === "multiple" && (
-          <ControlledCheckbox
-            setValue={setValue}
-            getValues={getValues}
-            name={name}
-            control={control}
-            option={option}
-          />
-        )}
-        {question.typeField === "list" && (
-          <ControlledList
-            getValues={getValues}
-            setValue={setValue}
-            name={name}
-            control={control}
-            option={option}
-          />
-        )}
-      </>
-    );
-  };
+  const renderOptions = useCallback(
+    (option: ISelectableItem) => {
+      return (
+        <React.Fragment
+          key={`${option.optionType}-${option.label}-${option.required}`}
+        >
+          {question.typeField === "multiple" && (
+            <ControlledCheckbox
+              setValue={setValue}
+              getValues={getValues}
+              name={name}
+              control={control}
+              option={option}
+              currentValues={currentValues}
+            />
+          )}
+          {question.typeField === "list" && (
+            <ControlledList
+              getValues={getValues}
+              setValue={setValue}
+              name={name}
+              control={control}
+              option={option}
+            />
+          )}
+        </React.Fragment>
+      );
+    },
+    [currentValues],
+  );
 
   return (
     <FormProvider {...methods}>
       {question.typeField === "splash" && (
         <View className="flex flex-col justify-center items-center h-full">
           <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-            <Text className="text-center text">Ilustración o ícono</Text>
+            <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
           </View>
           <Text type="title" className="text-center">
             {question.question}
@@ -201,17 +214,24 @@ const ControlledCheckbox = ({
   option,
   getValues,
   setValue,
+  currentValues = [],
 }: {
   name: string;
   control: Control<FieldValues>;
   option: ISelectableItem;
   setValue: UseFormSetValue<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
+  currentValues: FormStateOption[];
 }) => {
-  const [itemsChecked, setItemsChecked] = useState(getValues(name) || []);
-  const isSelected = itemsChecked.some(
-    (item: ISelectableItem) => item.value === option.value,
+  const [itemsChecked, setItemsChecked] =
+    useState<FormStateOption[]>(currentValues);
+  const isSelected = itemsChecked?.some(
+    (item: FormStateOption) => item.value === option.value,
   );
+
+  useEffect(() => {
+    setItemsChecked(currentValues);
+  }, [currentValues]);
 
   const onChange = (text: string) => {
     let values = getValues(name);
@@ -230,12 +250,27 @@ const ControlledCheckbox = ({
       setValue(name, valuesToSave);
       setItemsChecked(valuesToSave);
     } else {
-      const valuesToSave = [...values, prepareOption({ option, text })];
+      let valuesToSave = [...values, prepareOption({ option, text })];
+
+      if (option.disableOtherOptions) {
+        valuesToSave = [prepareOption({ option, text })];
+      } else {
+        if (itemsChecked.some((item) => item.disableOtherOptions)) {
+          valuesToSave = values;
+        }
+      }
 
       setValue(name, valuesToSave);
       setItemsChecked(valuesToSave);
     }
   };
+
+  const conditionalDisablingItem = itemsChecked.find(
+    (item) => item.disableOtherOptions === true,
+  );
+  const shouldDisable =
+    !!conditionalDisablingItem &&
+    option.value !== conditionalDisablingItem?.value;
 
   return (
     <Controller
@@ -253,7 +288,8 @@ const ControlledCheckbox = ({
             optionType={option.optionType}
             type="checkbox"
             image={option.image}
-            defaultText={isSelected.text}
+            // defaultText={isSelected.text}
+            disabled={!!shouldDisable}
           />
         );
       }}

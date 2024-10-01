@@ -55,11 +55,11 @@ export default function NewHouse() {
   } = methods;
 
   const onSubmitHandler: SubmitHandler<HouseInputType> = async (values) => {
-    console.log("values", values);
-
     setVisitData({
+      houseId: undefined,
       house: {
         ...visitData?.house,
+        houseBlockId: (meData?.userProfile?.houseBlock as BaseObject)?.id,
         referenceCode: String(values.number),
         specialPlaceId: itemSelectedId !== ID_CASA ? itemSelectedId : undefined,
       },

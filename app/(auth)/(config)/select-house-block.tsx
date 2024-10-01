@@ -23,6 +23,7 @@ export default function SelectHouseBlock() {
       extraSearchParams={{ "filter[team_id]": selection?.newBrigade?.id }}
       messageNoResults={t("config.noResults")}
       messageNoResultsOnSelection={t("config.noResultsHouseBlock")}
+      actionLabel={t("config.select")}
     ></FilterModal>
   );
 }

@@ -8,6 +8,8 @@ import "moment/locale/pt"; // Import Portuguese locale
 import { ErrorResponse } from "@/schema";
 import { FilterData } from "@/context/BrigadeContext";
 
+export * from "./inspection";
+
 // Function to extract error information from an Axios error
 export function extractAxiosErrorData(error: unknown): ErrorResponse | null {
   if (error !== null && typeof error === "object") {

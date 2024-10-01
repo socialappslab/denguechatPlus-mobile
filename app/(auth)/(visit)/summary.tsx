@@ -18,14 +18,18 @@ enum StatusColor {
   NO_INFECTED = "GREEN",
 }
 
-const RenderStatus = ({ statusColor }: { statusColor: StatusColor }) => {
+const RenderStatus = ({
+  statusColor = StatusColor.NO_INFECTED,
+}: {
+  statusColor: StatusColor;
+}) => {
   const { t } = useTranslation();
 
   return (
     <View className="flex flex-row justify-center items-center">
       <Text>{t(`visit.summary.statusColor.${statusColor.toLowerCase()}`)}</Text>
       <View
-        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLowerCase()}-100`}
+        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLocaleLowerCase()}-100`}
       />
     </View>
   );
@@ -152,7 +156,7 @@ export default function Summary() {
     };
 
     try {
-      await createVisit({ json_params: JSON.stringify(normalizedData) });
+      // await createVisit({ json_params: JSON.stringify(normalizedData) });
       await cleanStore();
       Toast.show({
         type: "success",
@@ -181,7 +185,7 @@ export default function Summary() {
     <View className="h-full p-6 pb-10 flex flex-col justify-between">
       <View className="flex flex-col justify-center items-center">
         <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-          <Text className="text-center text">Ilustración o ícono</Text>
+          <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
         </View>
       </View>
       <Text type="title" className="mb-4">
@@ -195,7 +199,7 @@ export default function Summary() {
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.containers")}</Text>
           <Text type="text">
-            {quantity + visitData.inspections.length || 1}
+            {quantity + visitData?.inspections?.length || 1}
           </Text>
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
@@ -211,7 +215,9 @@ export default function Summary() {
         <View className="flex-1">
           <Button
             title={t("editFromStart")}
-            onPress={() => router.push("visit/1")}
+            onPress={() =>
+              router.push(`visit/${questionnaire?.initialQuestion}`)
+            }
           />
         </View>
         <View className="flex-1">
