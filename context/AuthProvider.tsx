@@ -2,7 +2,7 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import { useContext } from "react";
 import { router, useSegments } from "expo-router";
 import useAxios from "axios-hooks";
-import { ExistingDocumentObject, deserialize } from "jsonapi-fractal";
+import { ExistingDocumentObject, deserialize, CaseType } from "jsonapi-fractal";
 
 import { IUser } from "@/schema/auth";
 import { useStorageState } from "@/hooks/useStorageState";
@@ -100,7 +100,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     console.log("error>>>", error);
     console.log("dataMe>>>", dataMe);
     if (!dataMe) return;
-    const deserializedData = deserialize<IUser>(dataMe) as IUser;
+    const deserializedData = deserialize<IUser>(dataMe, {
+      changeCase: CaseType.camelCase,
+    }) as IUser;
 
     setMeData(deserializedData);
     console.log("deserialized USER ME>>", deserializedData);

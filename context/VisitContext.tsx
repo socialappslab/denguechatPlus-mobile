@@ -1,3 +1,16 @@
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useAxios from "axios-hooks";
+import NetInfo from "@react-native-community/netinfo";
+import * as SecureStore from "expo-secure-store";
+import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
+
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import {
   CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
@@ -14,21 +27,10 @@ import {
   HouseKey,
   Questionnaire,
   Resource,
+  ResourceData,
   VisitData,
   VisitMap,
 } from "@/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import useAxios from "axios-hooks";
-import * as SecureStore from "expo-secure-store";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import React, {
-  createContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-
 interface VisitContextType {
   questionnaire?: Questionnaire;
   isLoadingQuestionnaire: boolean;
@@ -42,7 +44,9 @@ interface VisitContextType {
   currentFormData: FormState;
   visitMap: VisitMap;
   cleanStore: () => Promise<void>;
+  getResourceByName: (resourceName: string) => ResourceData[] | undefined;
   language: string | null;
+  isConnected: boolean;
 }
 
 const VisitContext = createContext<VisitContextType | undefined>(undefined);
@@ -54,6 +58,7 @@ const VisitContext = createContext<VisitContextType | undefined>(undefined);
 const VisitProvider = ({ children }: { children: ReactNode }) => {
   const [[_, language]] = useStorageState(LANGUAGE_LOCAL_STORAGE_KEY);
   const { meData } = useAuth();
+  const [connected, setConnected] = useState<boolean>(true);
   const [visitMap, setVisitMapState] = useState<VisitMap>({});
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
@@ -188,6 +193,17 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      console.log("Is connected to internet?", state.isInternetReachable);
+      setConnected(state.isInternetReachable ?? false);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   /**
    *  State Map
    *  {
@@ -219,6 +235,15 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     [visitData, meData],
   );
 
+  const getResourceByName = (
+    resourceName: string,
+  ): ResourceData[] | undefined => {
+    const resource = resources.find(
+      (resource) => resource.resourceName === resourceName,
+    );
+    return resource?.resourceData;
+  };
+
   const cleanStore = async () => {
     SecureStore.setItemAsync(
       CURRENT_VISIT_LOCAL_STORAGE_KEY,
@@ -238,10 +263,12 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
         isLoadingQuestionnaire: isLoadingQuestionnaire || isLoadingParams,
         setVisitData,
         setFormData,
+        getResourceByName,
         visitMap,
         cleanStore,
         currentFormData,
         language: language ?? "es",
+        isConnected: connected,
       }}
     >
       {children}

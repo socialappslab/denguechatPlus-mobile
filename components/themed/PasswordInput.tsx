@@ -26,7 +26,7 @@ export function PasswordInput(props: TextInputProps) {
 
   return (
     <View
-      className={`${hasError ? "border-red-500" : "border-gray-500"} border rounded-lg flex flex-row items-center h-11 p-2`}
+      className={`${hasError ? "border-red-500" : "border-gray-200"} border rounded-lg flex flex-row items-center h-11 p-2`}
     >
       <DefaultTextInput
         ref={inputRef}

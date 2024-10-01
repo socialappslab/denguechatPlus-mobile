@@ -16,18 +16,29 @@ export default {
     },
     ios: {
       supportsTablet: true,
-      bundleIdentifier: "org.denguechat.plus",
+      bundleIdentifier: "org.denguechatplus",
       buildNumber: "1",
     },
     android: {
-      package: "org.denguechat.plus",
+      package: "org.denguechatplus",
       versionCode: 1,
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#067507",
       },
     },
-    plugins: ["expo-router", "expo-font", "expo-localization"],
+    plugins: [
+      "expo-router",
+      "expo-font",
+      "expo-localization",
+      [
+        "expo-location",
+        {
+          locationAlwaysAndWhenInUsePermission:
+            "Allow $(PRODUCT_NAME) to use your location.",
+        },
+      ],
+    ],
     experiments: {
       typedRoutes: true,
     },

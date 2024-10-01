@@ -22,6 +22,7 @@ module.exports = {
     "text-blue-500",
     "bg-yellow-100",
     "bg-yellow-50",
+    "bg-gray-50",
   ],
   theme: {
     extend: {
@@ -50,6 +51,7 @@ module.exports = {
           400: "#344054",
         },
         gray: {
+          50: "#F9FAFB",
           300: "#475467",
           400: "#F9F9F9",
         },

@@ -139,7 +139,8 @@ export interface House {
   houseBlock?: HouseBlock;
   specialPlace?: SpecialPlace | null;
   createdBy?: CreatedBy;
-  house_block_id?: number;
+  houseBlockId?: number;
+  specialPlaceId?: number;
 }
 
 type QuestionId = string;
@@ -155,7 +156,7 @@ interface VisitAttributes {
   userAccountId: string;
   notes?: string;
   visitedAt: string;
-  house?: House;
+  house?: Partial<House>;
   inspections: Inspection[];
 }
 export interface VisitPayload extends VisitAttributes {
@@ -180,6 +181,14 @@ export interface ResourceData {
   updated_at: string;
   breeding_site_type_id?: number;
   photo_url?: string;
+}
+
+export interface ResourceDataWithTranslations {
+  id: number;
+  name_en: string;
+  name_es: string;
+  name_pt: string;
+  updated_at: string;
 }
 
 export interface Resource {

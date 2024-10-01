@@ -120,6 +120,7 @@ export default function SelectHouseScreen() {
             <View className="my-1">
               {houseOptions.map((house) => (
                 <SelectableItem
+                  key={house.id}
                   checked={house.id === houseSelectedId}
                   onValueChange={() => {
                     setHouseSelectedId(house.id);

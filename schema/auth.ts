@@ -1,9 +1,5 @@
 import { TypeOf, object, string, z } from "zod";
-import i18nInstance from "../config/i18n";
-import { BaseObject } from ".";
-
-const t = (key: string, args?: { [key: string]: string | number }) =>
-  i18nInstance.t(key, args);
+import { BaseObject, t, Team } from "@/schema";
 
 const passwordSchema = () =>
   string()
@@ -60,7 +56,7 @@ export interface UserProfile {
   city?: string | BaseObject;
   neighborhood?: string | BaseObject;
   organization?: string | BaseObject;
-  team?: string | BaseObject;
+  team?: string | BaseObject | Team;
   houseBlock?: string | BaseObject;
   roles?: BaseObject[];
 

@@ -50,6 +50,10 @@ export default function VisitLayout(props: ThemeProps) {
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen
+        name="add-location"
+        options={{ headerShown: false, headerShadowVisible: false }}
+      />
+      <Stack.Screen
         name="visit/[id]"
         options={{ headerShown: true, headerShadowVisible: false }}
       />

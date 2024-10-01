@@ -7,6 +7,7 @@
     "error": "Erro",
     "success": "Sucesso",
     "logout": "Sair",
+    "retry": "Tentar novamente",
     "textChatsTab": "Navegue até a aba de perfil para sair.",
     "backToHome": "Ir para a página inicial",
     "editFromStart": "Editar do início",
@@ -82,6 +83,7 @@
       "phone-tab": "Telefone"
     },
     "validation": {
+      "invalidNumber": "Deve ser um número",
       "required": "Campo obrigatório",
       "requiredField": {
         "email": "E-mail é obrigatório",
@@ -89,7 +91,8 @@
         "password": "Senha é obrigatória",
         "confirmPassword": "Por favor, confirme sua senha",
         "name": "Nome é obrigatório",
-        "phone": "Telefone é obrigatório"
+        "phone": "Telefone é obrigatório",
+        "number": "O número é obrigatório"
       },
       "notMatch": "As senhas não coincidem",
       "invalidEmail": "E-mail inválido",
@@ -120,17 +123,14 @@
         "sector": "Setor",
         "wedge": "Cunha",
         "houseBlock": "Quadra",
-        "houseNumber": "Número do site",
+        "houseNumber": "Número do site *",
+        "houseNumberPlaceholder": "Digite o número do site",
         "requiredFields": "* Campos obrigatórios.",
         "location": "Localização",
         "addLocation": "Adicionar localização",
         "siteTypeQuestion": "Que tipo de site é?",
         "siteType": {
-          "house": "Casa",
-          "organization": "Organizações",
-          "garden": "Horta",
-          "education": "Educação",
-          "business": "Negócio"
+          "house": "Casa"
         },
         "siteLocation": "Localização do site",
         "addAddress": "Adicionar endereço do site",

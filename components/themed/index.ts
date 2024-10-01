@@ -12,3 +12,6 @@ export * from "./ProgressBar";
 export * from "./FilterButton";
 export * from "./ListItem";
 export * from "./IconMaterial";
+export * from "./SimpleSelectableItem";
+export * from "./LocationButton";
+export * from "./SimpleBottomSheet";

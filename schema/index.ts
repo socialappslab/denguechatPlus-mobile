@@ -1,3 +1,9 @@
+import { TypeOf, object, z } from "zod";
+import i18nInstance from "@/config/i18n";
+
+export const t = (key: string, args?: { [key: string]: string | number }) =>
+  i18nInstance.t(key, args);
+
 export type ErrorResponse = {
   errors: {
     error_code: number;
@@ -32,6 +38,14 @@ export const TEAM_LEADER_ROLE = "team_leader";
 
 export interface Team extends BaseObject {
   organization: Organization;
+  sectorId?: number;
+  sectorName?: string;
+  wedgeId?: number;
+  wedgeName?: string;
+  sector_id?: number;
+  sector_name?: string;
+  wedge_id?: number;
+  wedge_name?: string;
   sector?: BaseObject;
   wedge?: BaseObject;
   members: Member[];
@@ -43,3 +57,15 @@ export interface Team extends BaseObject {
     red?: number;
   };
 }
+
+export const createHouseSchema = () => {
+  return object({
+    number: z.coerce.number({
+      required_error: t("validation.required"),
+      invalid_type_error: t("validation.invalidNumber"),
+    }),
+  });
+};
+
+const houseSchema = createHouseSchema();
+export type HouseInputType = TypeOf<typeof houseSchema>;

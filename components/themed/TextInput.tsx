@@ -1,28 +1,35 @@
 import { TextInput as DefaultTextInput, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { useRef } from "react";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { FontFamily } from "@/constants/Styles";
-import { View } from "@/components/themed";
+import { IconMaterial, View } from "@/components/themed";
 import Clear from "@/assets/images/icons/clear.svg";
-import { useRef } from "react";
 
 export type TextInputProps = ThemeProps &
   DefaultTextInput["props"] & {
     inputRef?: React.RefObject<DefaultTextInput>;
     search?: boolean;
     onClear?: () => void;
+    isSheet?: boolean;
+    iconMaterial?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
   };
 
 export function TextInput(props: TextInputProps) {
   const {
     style,
+    readOnly,
     lightColor,
     darkColor,
     hasError,
     search,
     inputRef,
     value,
+    isSheet,
+    iconMaterial,
     onClear,
     ...otherProps
   } = props;
@@ -42,40 +49,78 @@ export function TextInput(props: TextInputProps) {
     }
   };
 
-  if (!search) {
+  const classNameBorder = `${hasError ? "border-red-500" : "border-gray-200"} ${readOnly ? "bg-gray-50 opacity-60" : ""}  border rounded-lg p-2 h-11`;
+  const styleInput = { backgroundColor, color, fontFamily: FontFamily.regular };
+
+  if (!search && !iconMaterial) {
+    if (isSheet) {
+      return (
+        <View className={`flex flex-row items-center ${classNameBorder}`}>
+          <BottomSheetTextInput
+            value={value}
+            style={[
+              styleInput,
+              {
+                marginLeft: 4,
+                display: "flex",
+                flex: 1,
+              },
+              style,
+            ]}
+            className={classNameBorder}
+            {...otherProps}
+          />
+        </View>
+      );
+    }
+
     return (
       <DefaultTextInput
         ref={inputRef}
         value={value}
-        style={[
-          { backgroundColor, color, fontFamily: FontFamily.regular },
-          style,
-        ]}
-        className={`${hasError ? "border-red-500" : "border-gray-500"} border rounded-lg p-2 h-11`}
+        style={[styleInput, style]}
+        className={classNameBorder}
         {...otherProps}
       />
     );
   } else {
     return (
-      <View
-        className={`${hasError ? "border-red-500" : "border-gray-500"} border flex flex-row items-center rounded-lg p-2 h-11`}
-      >
-        <Feather name="search" size={20} color="gray" />
-        <DefaultTextInput
-          ref={inputRefSearch}
-          value={value}
-          style={[
-            {
-              backgroundColor,
-              color,
-              marginLeft: 4,
-              fontFamily: FontFamily.regular,
-            },
-            style,
-          ]}
-          {...otherProps}
-        />
-        {value && (
+      <View className={`flex flex-row items-center ${classNameBorder}`}>
+        {search && <Feather name="search" size={20} color="gray" />}
+        {iconMaterial && <IconMaterial size={24} name={iconMaterial} />}
+        {!isSheet && (
+          <DefaultTextInput
+            ref={inputRefSearch}
+            value={value}
+            style={[
+              styleInput,
+              {
+                marginLeft: 4,
+                display: "flex",
+                flex: 1,
+              },
+              style,
+            ]}
+            {...otherProps}
+          />
+        )}
+        {isSheet && (
+          <BottomSheetTextInput
+            value={value}
+            style={[
+              styleInput,
+              {
+                marginLeft: 4,
+                display: "flex",
+                flex: 1,
+              },
+              style,
+            ]}
+            {...otherProps}
+          />
+        )}
+
+        {value && search && !isSheet && (
           <TouchableOpacity onPress={clearText}>
             <Clear />
           </TouchableOpacity>
