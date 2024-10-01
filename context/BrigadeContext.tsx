@@ -3,7 +3,7 @@ import React, { createContext, ReactNode, useState } from "react";
 import { BaseObject, Team } from "@/schema";
 import { IUser } from "@/schema/auth";
 
-interface FilterData {
+export interface FilterData {
   team?: BaseObject;
   sector?: BaseObject;
   wedge?: BaseObject;

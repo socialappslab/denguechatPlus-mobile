@@ -134,6 +134,7 @@ export default function Visit() {
       <View className="flex flex-1 py-5 px-5 h-full">
         <ScrollView
           showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
           {!isLoadingQuestionnaire && current && (

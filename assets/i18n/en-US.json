@@ -7,6 +7,7 @@
     "error": "Error",
     "success": "Success",
     "logout": "Logout",
+    "retry": "Retry",
     "textChatsTab": "Navigate to profile tab to logout.",
     "backToHome": "Go home",
     "editFromStart": "Edit from start",
@@ -83,6 +84,7 @@
       "phone-tab": "Phone"
     },
     "validation": {
+      "invalidNumber": "Must be a number",
       "required": "Field is required",
       "requiredField": {
         "email": "Email is required",
@@ -90,7 +92,8 @@
         "password": "Password is required",
         "confirmPassword": "Please confirm your password",
         "name": "Name is required",
-        "phone": "Phone is required"
+        "phone": "Phone is required",
+        "number": "Number is required"
       },
       "notMatch": "Password does not match",
       "invalidEmail": "Invalid email",
@@ -114,6 +117,28 @@
         "optionsTitle": "Choose a site",
         "noHouses": "Can't find the site?",
         "noHousesMessage": "Register a new site here."
+      },
+      "newHouse": {
+        "title": "Register new site",
+        "siteInformation": "Site Information",
+        "sector": "Sector",
+        "wedge": "Wedge",
+        "houseBlock": "House Block",
+        "houseNumber": "Site Number *",
+        "houseNumberPlaceholder": "Enter the site number",
+        "requiredFields": "* Required fields.",
+        "location": "Location",
+        "addLocation": "Add location",
+        "siteTypeQuestion": "What type of site is it?",
+        "siteType": {
+          "house": "House"
+        },
+        "siteLocation": "Site Location",
+        "addAddress": "Add site address",
+        "addressPlaceholder": "Enter the site address",
+        "confirmLocation": "Confirm location",
+        "noConnection": "You have no connection",
+        "noMapConnection": "We cannot load the map because you have no internet connection."
       },
       "summary": {
         "title": "Summary of the visit",

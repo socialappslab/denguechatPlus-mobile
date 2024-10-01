@@ -7,6 +7,7 @@
     "error": "Error",
     "success": "Éxito",
     "logout": "Cerrar Sesión",
+    "retry": "Reintentar",
     "textChatsTab": "Navega al tab de perfil para hacer logout.",
     "backToHome": "Ir al inicio",
     "editFromStart": "Editar desde inicio",
@@ -33,15 +34,15 @@
       "sector": "Sector",
       "wedge": "Cuña",
       "brigade": "Brigada",
-      "houseBlocks": "Manzanas",
-      "houseBlock": "Manzana",
+      "houseBlocks": "Frente a Frentes",
+      "houseBlock": "Frente a Frente",
       "changeBrigade": "Cambiar Brigada",
       "chooseBrigadeTitle": "Elegir nueva brigada",
       "noBrigade": "Sin Brigada",
       "allSectors": "Todos los Sectores",
       "allWedges": "Todas las Cuñas",
       "allBrigades": "Todas las Brigadas",
-      "allHouseBlocks": "Todas las Manzanas",
+      "allHouseBlocks": "Todas los Frente a Frente",
       "successTitle": "Nueva brigada asignada",
       "successDescription": "ahora pertenece a"
     },
@@ -85,6 +86,7 @@
       "phone-tab": "Teléfono"
     },
     "validation": {
+      "invalidNumber": "Must be a number",
       "required": "Este campo es requerido",
       "requiredField": {
         "email": "El correo electrónico es requerido",
@@ -92,7 +94,8 @@
         "password": "El password es requerido",
         "confirmPassword": "Por favor confirme su password",
         "name": "El nombre es requerido",
-        "phone": "El teléfono es requerido"
+        "phone": "El teléfono es requerido",
+        "number": "El número es obligatorio"
       },
       "notMatch": "Las contraseñas no coinciden",
       "invalidEmail": "Correo electrónico inválido",
@@ -116,6 +119,28 @@
         "optionsTitle": "Elige un sitio",
         "noHouses": "¿No encuentras el sitio?",
         "noHousesMessage": "Registra un nuevo sitio aquí."
+      },
+      "newHouse": {
+        "title": "Registrar sitio nuevo",
+        "siteInformation": "Información del sitio",
+        "sector": "Sector",
+        "wedge": "Cuña",
+        "houseBlock": "Frente a Frente",
+        "houseNumber": "Número de sitio *",
+        "houseNumberPlaceholder": "Escribe el número de sitio",
+        "requiredFields": "* Campo requeridos.",
+        "location": "Ubicación",
+        "addLocation": "Añadir ubicación",
+        "siteTypeQuestion": "¿Qué sitio es?",
+        "siteType": {
+          "house": "Casa"
+        },
+        "siteLocation": "Ubicación del sitio",
+        "addAddress": "Añadir dirección del sitio",
+        "addressPlaceholder": "Escribe la dirección del sitio",
+        "confirmLocation": "Confirmar ubicación",
+        "noConnection": "No tienes conexión",
+        "noMapConnection": "No podemos cargar el mapa porque no tienes conexión a internet."
       },
       "summary": {
         "title": "Resumen de la visita",

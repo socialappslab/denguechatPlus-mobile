@@ -75,3 +75,8 @@ export const countSetFilters = (
     return count;
   }, 0);
 };
+
+export const getLanguageCode = (language: string | null): string => {
+  if (!language) return "es";
+  return language.split("-")[0];
+};

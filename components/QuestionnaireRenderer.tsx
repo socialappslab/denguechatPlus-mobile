@@ -1,6 +1,6 @@
 import { SelectableItem, Text, View } from "@/components/themed";
 import { InspectionQuestion, OptionType, ResourceType } from "@/types";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Control,
   Controller,
@@ -139,7 +139,9 @@ const QuestionnaireRenderer = ({
   const renderOptions = useCallback(
     (option: ISelectableItem) => {
       return (
-        <>
+        <React.Fragment
+          key={`${option.optionType}-${option.label}-${option.required}`}
+        >
           {question.typeField === "multiple" && (
             <ControlledCheckbox
               setValue={setValue}
@@ -159,7 +161,7 @@ const QuestionnaireRenderer = ({
               option={option}
             />
           )}
-        </>
+        </React.Fragment>
       );
     },
     [currentValues],

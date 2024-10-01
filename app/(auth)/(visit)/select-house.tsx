@@ -77,6 +77,10 @@ export default function SelectHouseScreen() {
     return `${house.neighborhood?.name}${houseWedge}${houseBlock}`;
   };
 
+  const handleNewHouse = () => {
+    router.push("new-house");
+  };
+
   return (
     <SafeAreaView>
       <View className="flex flex-1 py-5 px-5">
@@ -116,6 +120,7 @@ export default function SelectHouseScreen() {
             <View className="my-1">
               {houseOptions.map((house) => (
                 <SelectableItem
+                  key={house.id}
                   checked={house.id === houseSelectedId}
                   onValueChange={() => {
                     setHouseSelectedId(house.id);
@@ -135,6 +140,7 @@ export default function SelectHouseScreen() {
               {t("visit.houses.noHousesMessage")}
             </Text>
             <Button
+              onPress={handleNewHouse}
               title={t("visit.houses.registerNewHouse")}
               className="bg-green-400 border-green-400"
             />

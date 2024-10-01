@@ -199,7 +199,7 @@ export default function Login() {
                 render={({ field: { onBlur, value } }) => (
                   <>
                     <View
-                      className={`${!!errors.phone ? "border-red-500" : "border-gray-500"} border p-2 rounded-md`}
+                      className={`${!!errors.phone ? "border-red-500" : "border-gray-200"} border p-2 rounded-md`}
                     >
                       <PhoneInput
                         ref={phoneInput}
