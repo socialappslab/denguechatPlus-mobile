@@ -39,10 +39,6 @@ const AddLocation = () => {
     }
   }, [requestPermission, status]);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
   const [markerCoords, setMarkerCoords] = useState({
     latitude: -3.738474,
     longitude: -73.246593,
@@ -132,7 +128,7 @@ const AddLocation = () => {
           </View>
         </View>
       )}
-      <SimpleBottomSheet onChange={handleSheetChanges}>
+      <SimpleBottomSheet>
         <View className="flex px-5 mt-6">
           <Text className="text-2xl font-bold text-center mb-4">
             {!isConnected

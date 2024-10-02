@@ -26,6 +26,13 @@ export function SimpleBottomSheet(props: SimpleBottomSheetProps) {
     bottomSheetRef.current?.snapToIndex(0); // Return to the original snap point
   };
 
+  const handleSheetChanges = (index: number) => {
+    console.log("handleSheetChanges", index);
+    if (index < 0) {
+      bottomSheetRef.current?.snapToIndex(0);
+    }
+  };
+
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
@@ -42,6 +49,7 @@ export function SimpleBottomSheet(props: SimpleBottomSheetProps) {
       ref={bottomSheetRef}
       index={0}
       snapPoints={snapPoints}
+      onChange={handleSheetChanges}
       style={[styles.container, style]}
       keyboardBehavior={Platform.OS === "ios" ? "extend" : "fillParent"}
       keyboardBlurBehavior="restore"

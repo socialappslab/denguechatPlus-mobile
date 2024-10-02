@@ -46,6 +46,36 @@
       "successTitle": "Nueva brigada asignada",
       "successDescription": "ahora pertenece a"
     },
+    "chat": {
+      "empty": "No hay publicaciones",
+      "sharePlaceholder": "Comparte con los demás...",
+      "visibility": {
+        "title": "¿Quién puede ver?",
+        "all": "Todos",
+        "myBrigade": "Mi Brigada"
+      },
+      "like": "Me gusta",
+      "comments": {
+        "empty": "Sin comentarios",
+        "emptyMessage": "Deja un comentario y empieza la conversación",
+        "title": "Comentarios",
+        "number": "comentarios",
+        "placeholder": "Deja un comentario...",
+        "deleteMessage": "¿Estás seguro de que quieres borrar este comentario? Esta acción no puede deshacerse."
+      },
+      "actions": {
+        "delete": "Borrar",
+        "cancel": "Cancelar",
+        "post": "Publicar",
+        "edit": "Editar",
+        "deleteComment": "Borrar comentario",
+        "deleteDraft": "Descartar borrador"
+      },
+      "deleteDraftMessage": "¿Estás seguro de que quieres descartar este borrador? Esta acción no puede deshacerse.",
+      "createPost": "Crear publicación",
+      "postSendSuccess": "Publicación enviada",
+      "draftDescarted": "Borrador descartado"
+    },
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",
