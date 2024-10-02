@@ -32,7 +32,7 @@ export default function SelectHouseScreen() {
   const { setVisitData, questionnaire, language } = useVisit();
 
   const updateHouse = async () => {
-    await setVisitData({ houseId: houseSelectedId });
+    await setVisitData({ houseId: houseSelectedId, house: undefined });
     router.push(`visit/${questionnaire?.initialQuestion}`);
   };
 

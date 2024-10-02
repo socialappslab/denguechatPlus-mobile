@@ -38,7 +38,7 @@ export const formatDate = (
 ) => {
   try {
     const date = moment(dateString);
-    date.locale(language ?? "es"); // Set the locale based on the language parameter
+    date.locale(language ?? "es");
 
     const formattedDate = date.format("YYYY-MMM-DD");
     const capitalizedDate = formattedDate.replace(
@@ -50,6 +50,27 @@ export const formatDate = (
     return fallback;
   }
 };
+
+export const capitalizeFirstLetter = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export function formatDatePosts(
+  timestamp: number,
+  language: string | null,
+): string {
+  const date = moment(timestamp);
+  date.locale(language ?? "es");
+  const now = moment();
+
+  if (now.isSame(date, "day")) {
+    return date.fromNow();
+  } else if (now.isSame(date, "year")) {
+    return capitalizeFirstLetter(date.format("MMM D"));
+  } else {
+    return capitalizeFirstLetter(date.format("MMM D, YYYY"));
+  }
+}
 
 export const getInitialsBase = (firstName: string, lastName: string) => {
   const firstInitial =

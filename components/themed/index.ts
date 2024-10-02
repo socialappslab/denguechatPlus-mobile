@@ -15,3 +15,4 @@ export * from "./IconMaterial";
 export * from "./SimpleSelectableItem";
 export * from "./LocationButton";
 export * from "./SimpleBottomSheet";
+export * from "./PostItem";

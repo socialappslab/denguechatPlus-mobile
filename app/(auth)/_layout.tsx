@@ -41,7 +41,7 @@ const CustomDrawerContent = () => {
         <View className="flex flex-1 flex-col px-2">
           <TouchableOpacity
             className="flex py-3 flex-row items-center"
-            onPress={() => router.push("add-location")}
+            onPress={() => router.push("my-city")}
           >
             <MyCity />
             <Text className="font-semibold ml-3">{t("drawer.myCity")}</Text>

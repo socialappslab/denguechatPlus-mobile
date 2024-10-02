@@ -199,3 +199,18 @@ export interface Resource {
   resourceName: string;
   resourceData: ResourceData[];
 }
+
+export interface Post {
+  id: number;
+  createdAt: number;
+  userAccountId: number;
+  createdBy: string;
+  location: string;
+  postText: string;
+  photoUrl?: {
+    photo_url: string;
+  };
+  commentsCount: number | null;
+  likesCount: number;
+  likedByUser: boolean;
+}
