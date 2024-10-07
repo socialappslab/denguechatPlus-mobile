@@ -13,18 +13,22 @@ import { useVisit } from "@/hooks/useVisit";
 export type PostItemProps = ThemeProps &
   TouchableOpacity["props"] & {
     onPressElement: () => void;
+    onPressComments: () => void;
     post: Post;
   };
 
 export function PostItem(props: PostItemProps) {
-  const { onPressElement, post } = props;
+  const { onPressElement, onPressComments, post } = props;
   const { language } = useVisit();
   const { t } = useTranslation();
 
-  const initials = getInitialsBase(String(post.createdBy), "");
+  const initials = getInitialsBase(
+    String(post.createByUser.userName),
+    String(post.createByUser.lastName),
+  );
 
   return (
-    <View className="flex flex-col px-5  py-4 border-b border-gray-200">
+    <View className="flex flex-col px-5  py-4 border-b border-neutral-200">
       <Pressable
         className="flex flex-row items-center mb-4"
         onPress={onPressElement}
@@ -63,15 +67,18 @@ export function PostItem(props: PostItemProps) {
         <TouchableOpacity className="flex flex-row items-center">
           <Like active={post.likedByUser} />
           <Text
-            className={`ml-2 text-sm ${post.likedByUser ? "text-blue-700" : "text-neutral"}`}
+            className={`ml-2 text-sm ${post.likedByUser ? "text-blue-700" : "text-neutral-500"}`}
           >
             {post.likesCount === 0 ? t("chat.like") : `${post.likesCount}`}
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="flex flex-row items-center">
+        <TouchableOpacity
+          className="flex flex-row items-center"
+          onPress={onPressComments}
+        >
           <Comment />
-          <Text className="ml-2 text-neutral text-sm">
+          <Text className="ml-2 text-neutral-500 text-sm">
             {post.commentsCount
               ? `${post.commentsCount} ${t("chat.comments.number")}`
               : t("chat.comments.empty")}

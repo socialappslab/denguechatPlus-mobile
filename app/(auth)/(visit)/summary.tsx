@@ -126,7 +126,7 @@ export default function Summary() {
       answers: [],
       host: "ejemplo.com",
       visitPermission: true,
-      houseId: 1,
+      houseId: 1, // visitData.houseId or visitData.houseId if not houseId
       questionnaireId: "1",
       teamId: 1,
       userAccountId: "1",

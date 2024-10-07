@@ -123,7 +123,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       questions: [...deserializedQuestionnaire.questions],
     });
 
-    console.log("deserializedQuestionnaire>>", deserializedQuestionnaire);
+    // console.log("deserializedQuestionnaire>>", deserializedQuestionnaire);
   }, [questionnaireData]);
 
   useEffect(() => {

@@ -132,7 +132,7 @@ export default function SelectHouseScreen() {
             </View>
           )}
 
-          <View className="my-6 p-8 rounded-2xl border border-gray-300">
+          <View className="my-6 p-8 rounded-2xl border border-neutral-200">
             <Text className="text-xl font-bold text-center mb-2">
               {t("visit.houses.noHouses")}
             </Text>

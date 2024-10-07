@@ -23,7 +23,7 @@ export function SimpleSelectableItem({
   return (
     <TouchableOpacity
       disabled={disabled}
-      className={`flex-row items-center px-4 py-4 ${checked ? "border-2 border-green-200 bg-green-300" : "border border-gray-200 bg-transparent"} rounded-xl`}
+      className={`flex-row items-center px-4 py-4 ${checked ? "border-2 border-green-200 bg-green-300" : "border border-neutral-200 bg-transparent"} rounded-xl`}
       onPress={onPressElement}
       {...other}
     >
@@ -38,7 +38,7 @@ export function SimpleSelectableItem({
         <View className="ml-4 bg-transparent">
           {checked && <CheckGreen />}
           {!checked && (
-            <View className="ml-4 bg-transparent w-4 h-4 rounded-full border border-gray-200" />
+            <View className="ml-4 bg-transparent w-4 h-4 rounded-full border border-neutral-200" />
           )}
         </View>
       </View>

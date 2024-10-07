@@ -110,11 +110,10 @@ const refreshAuthLogic = async (failedRequest: any) => {
       if (!newToken) {
         return Promise.reject();
       }
-
-      console.log("failedRequest with new token>>>>>>", newToken);
       // eslint-disable-next-line no-param-reassign
       failedRequest.response.config.headers["X-Authorization"] = `${newToken}`;
       setAccessTokenToHeaders(newToken);
+      saveAccessToken(newToken);
       return Promise.resolve();
     })
     .catch((error) => {
@@ -154,10 +153,14 @@ createAuthRefreshInterceptor(authApi, refreshAuthLogic, {
     return false;
   },
   onRetry: (requestConfig) => {
-    console.log("onRetry url >>>>>>", requestConfig.url);
+    console.log(
+      "onRetry url >>>>>>",
+      requestConfig.url + " " + requestConfig?.headers,
+    );
+
     return requestConfig;
   },
-  pauseInstanceWhileRefreshing: false,
+  pauseInstanceWhileRefreshing: true,
 });
 
 configure({ axios: authApi, cache: false });

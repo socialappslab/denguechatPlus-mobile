@@ -56,7 +56,7 @@ export const capitalizeFirstLetter = (string: string) => {
 };
 
 export function formatDatePosts(
-  timestamp: number,
+  timestamp: number | string,
   language: string | null,
 ): string {
   const date = moment(timestamp);

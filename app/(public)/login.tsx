@@ -132,13 +132,13 @@ export default function Login() {
             <Text className="text-3xl font-semibold mb-2">DengueChat+</Text>
           </View>
           <FormProvider {...methods}>
-            <View className="flex-row border-b border-gray-300 mb-4">
+            <View className="flex-row border-b border-neutral-300 mb-4">
               <TouchableOpacity
                 onPress={() => setActiveTab("username")}
                 className={`flex-1 items-center py-2 ${activeTab === "username" ? "border-b-4 border-primary" : ""}`}
               >
                 <Text
-                  className={`text-sm font-semibold ${activeTab === "username" ? "text-primary" : "text-gray-500"}`}
+                  className={`text-sm font-semibold ${activeTab === "username" ? "text-primary" : "text-neutral-500"}`}
                 >
                   {t("login.username-tab")}
                 </Text>
@@ -148,7 +148,7 @@ export default function Login() {
                 className={`flex-1 items-center py-2 ${activeTab === "phone" ? "border-b-4 border-primary" : ""}`}
               >
                 <Text
-                  className={`text-sm font-semibold ${activeTab === "phone" ? "text-primary" : "text-gray-500"}`}
+                  className={`text-sm font-semibold ${activeTab === "phone" ? "text-primary" : "text-neutral-500"}`}
                 >
                   {t("login.phone-tab")}
                 </Text>
@@ -199,7 +199,7 @@ export default function Login() {
                 render={({ field: { onBlur, value } }) => (
                   <>
                     <View
-                      className={`${!!errors.phone ? "border-red-500" : "border-gray-200"} border p-2 rounded-md`}
+                      className={`${!!errors.phone ? "border-red-500" : "border-neutral-200"} border p-2 rounded-md`}
                     >
                       <PhoneInput
                         ref={phoneInput}

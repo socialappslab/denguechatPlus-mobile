@@ -1,17 +1,14 @@
-import React from "react";
-
+import React, { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
 import { Platform, TouchableOpacity } from "react-native";
-
 import { useTranslation } from "react-i18next";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 import { SafeAreaView, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import { VisitProvider } from "@/context/VisitContext";
-
 import AssignBrigade from "@/assets/images/icons/add-brigade.svg";
 import Brigades from "@/assets/images/icons/brigades.svg";
 import MyCity from "@/assets/images/icons/city.svg";
@@ -26,8 +23,6 @@ const CustomDrawerContent = () => {
   const router = useRouter();
   const { meData, logout } = useAuth();
   const { t } = useTranslation();
-
-  // console.log("meData>>>", meData);
 
   return (
     <SafeAreaView>
@@ -113,10 +108,16 @@ export default function AuthLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <VisitProvider>
-        <Drawer
-          drawerContent={() => <CustomDrawerContent />}
-          screenOptions={{ headerShown: false, swipeEdgeWidth: 0 }}
-        ></Drawer>
+        <BottomSheetModalProvider>
+          <Drawer
+            backBehavior="history"
+            drawerContent={() => <CustomDrawerContent />}
+            screenOptions={{
+              headerShown: false,
+              swipeEdgeWidth: 0,
+            }}
+          ></Drawer>
+        </BottomSheetModalProvider>
       </VisitProvider>
     </GestureHandlerRootView>
   );
