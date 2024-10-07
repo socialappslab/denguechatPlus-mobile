@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { deserialize } from "jsonapi-fractal";
@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 import {
   Text,
@@ -19,22 +20,25 @@ import {
   PostItem,
 } from "@/components/themed";
 import { Post } from "@/types";
-
 import Colors from "@/constants/Colors";
 import { authApi } from "@/config/axios";
 import { Team } from "@/schema";
 import { useAuth } from "@/context/AuthProvider";
 import { SimpleSelectableChip } from "@/components/themed/SelectableChip";
+import CommentsSheet from "@/components/segments/CommentsSheet";
 
-export default function SelectUser() {
+export default function Chat() {
   const { t } = useTranslation();
   const { meData, reFetchMe } = useAuth();
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const isFocused = useIsFocused();
   const [all, setAll] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [dataList, setDataList] = useState<Post[]>([]);
+  const [selectedPost, setSelectedPost] = useState<Post>();
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
@@ -44,20 +48,26 @@ export default function SelectUser() {
 
   useEffect(() => {
     if (isFocused) {
-      reFetchMe();
       firstLoad();
+
+      if (!meData) {
+        reFetchMe();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
+  }, [isFocused, meData]);
 
-  const fetchData = async (page: number, sectorId?: number) => {
+  const fetchData = async (page: number, teamId?: number) => {
     setError("");
     try {
       const response = await authApi.get("posts", {
+        headers: {
+          source: "mobile",
+        },
         params: {
-          "filter[sector_id]": sectorId,
+          "filter[team_id]": teamId,
           "page[number]": page,
-          "page[size]": 15,
+          "page[size]": 4,
           sort: "created_at",
           order: "asc",
         },
@@ -68,12 +78,12 @@ export default function SelectUser() {
         const deserializedData = deserialize<Post>(data);
         if (!deserializedData || !Array.isArray(deserializedData)) return;
 
-        // console.log(
-        //   `rows of PAGE ${page} with SECTOR ID ${sectorId} >>>>`,
-        //   deserializedData.map(
-        //     (post, index) => `${post.id}-${post.createdBy}-${post.postText}\n`,
-        //   ),
-        // );
+        console.log(
+          `rows of PAGE ${page} with TEAM ID ${teamId} >>>>`,
+          deserializedData.map(
+            (post, index) => `${post.id}-${post.createdBy}-${post.postText}\n`,
+          ),
+        );
 
         if (page === 1) {
           setDataList(deserializedData);
@@ -95,6 +105,7 @@ export default function SelectUser() {
         setHasMore(data.links?.self !== data.links?.last);
       }
     } catch (err) {
+      console.log("error>>>>>>", err);
       setError(t("errorCodes.generic"));
     } finally {
       setLoading(false);
@@ -107,21 +118,18 @@ export default function SelectUser() {
     setCurrentPage(1);
     setHasMore(true);
     setLoading(true);
-    fetchData(
-      1,
-      all ? undefined : (meData?.userProfile?.team as Team)?.sector_id,
-    );
+    fetchData(1, all ? undefined : (meData?.userProfile?.team as Team)?.id);
   };
 
   const loadMoreData = () => {
-    if (!loadingMore && hasMore) {
+    if (!loadingMore && hasMore && !error) {
       setLoadingMore(true);
       const nextPage = currentPage + 1;
       console.log("loadMoreData>>>> ", nextPage);
       setCurrentPage(nextPage);
       fetchData(
         nextPage,
-        all ? undefined : (meData?.userProfile?.team as Team)?.sector_id,
+        all ? undefined : (meData?.userProfile?.team as Team)?.id,
       );
     }
   };
@@ -141,7 +149,7 @@ export default function SelectUser() {
   };
 
   const onPressNewPost = () => {
-    router.push(`new-post`);
+    router.push(`/new-post`);
   };
 
   const firstLoad = () => {
@@ -158,16 +166,25 @@ export default function SelectUser() {
         key={String(post.id)}
         post={post}
         onPressElement={() => onPressElement(post)}
+        onPressComments={() => handlePressComments(post)}
       />
     );
   };
 
   const showNoResultsOrErrors = () => {
     if (error) {
-      return <Text>{error}</Text>;
+      return (
+        <View className="flex flex-1 items-center justify-center">
+          <Text className="font-thin">{error}</Text>
+        </View>
+      );
     }
     if (!loading && dataList?.length === 0 && !hasMore) {
-      return <Text>{t("chat.empty")}</Text>;
+      return (
+        <View className="flex flex-1 items-center justify-center">
+          <Text className="font-thin">{t("chat.empty")}</Text>
+        </View>
+      );
     }
     return null;
   };
@@ -180,15 +197,22 @@ export default function SelectUser() {
     handleFilterChange(false);
   };
 
+  const handlePressComments = (post: Post) => {
+    setSelectedPost(post);
+    bottomSheetModalRef.current?.present();
+  };
+
   return (
     <SafeAreaView>
       <View className="flex flex-1 py-5">
         <View className="flex flex-row items-center px-5 mb-4">
           <TouchableOpacity
             onPress={onPressNewPost}
-            className={`flex flex-1 flex-row items-center border-gray-200 border rounded-lg py-2 px-4 h-11`}
+            className={`flex flex-1 flex-row items-center border-neutral-200 border rounded-lg py-2 px-4 h-11`}
           >
-            <Text className="text-gray-300">{t("chat.sharePlaceholder")}</Text>
+            <Text className="text-neutral-300">
+              {t("chat.sharePlaceholder")}
+            </Text>
           </TouchableOpacity>
         </View>
         <View className="flex flex-row items-center px-5 mb-4">
@@ -201,12 +225,12 @@ export default function SelectUser() {
           <SimpleSelectableChip
             label={t("chat.visibility.myBrigade")}
             checked={!all}
-            disabled={!(meData?.userProfile?.team as Team)?.sector_id}
+            disabled={!(meData?.userProfile?.team as Team)?.id}
             onPressElement={handlePressMyBrigade}
           />
         </View>
-        {loading && (
-          <View className="my-4">
+        {loading && !loadingMore && (
+          <View className="flex flex-1 items-center justify-center">
             <Loading />
           </View>
         )}
@@ -217,7 +241,7 @@ export default function SelectUser() {
             refreshControl={
               <RefreshControl
                 progressViewOffset={Platform.OS === "ios" ? 20 : undefined}
-                refreshing={loading || loadingMore}
+                refreshing={loadingMore}
                 onRefresh={firstLoad}
                 colors={[Colors.light.primary]}
                 tintColor={Colors.light.primary}
@@ -228,12 +252,17 @@ export default function SelectUser() {
             renderItem={renderItem}
             keyExtractor={(item: Post, index: number) => String(item.id)}
             onEndReached={loadMoreData}
-            onEndReachedThreshold={0.9}
+            onEndReachedThreshold={0.2}
             ListEmptyComponent={showNoResultsOrErrors}
-            ListFooterComponent={renderSpinner}
+            ListFooterComponent={dataList.length ? renderSpinner : undefined}
           />
         )}
       </View>
+      <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View>
+      <CommentsSheet
+        postId={selectedPost?.id}
+        bottomSheetModalRef={bottomSheetModalRef}
+      />
     </SafeAreaView>
   );
 }

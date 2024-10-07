@@ -92,12 +92,13 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     console.log("userFromLocalStorage>>>", userFromLocalStorage);
     if (!userFromLocalStorage) return;
     setLoadedUser(userFromLocalStorage);
-    console.log("featchMe   >>>");
-    featchMe();
-  }, [userFromLocalStorage, featchMe]);
+  }, [userFromLocalStorage]);
 
   useEffect(() => {
     console.log("error>>>", error);
+  }, [error]);
+
+  useEffect(() => {
     console.log("dataMe>>>", dataMe);
     if (!dataMe) return;
     const deserializedData = deserialize<IUser>(dataMe, {
@@ -106,7 +107,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
     setMeData(deserializedData);
     console.log("deserialized USER ME>>", deserializedData);
-  }, [dataMe, error]);
+  }, [dataMe]);
 
   const login = (token: string, refreshToken: string, user: IUser) => {
     setUserLocalStorage(user, true);

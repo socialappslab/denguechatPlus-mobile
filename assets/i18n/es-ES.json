@@ -158,7 +158,7 @@
         "houseBlock": "Frente a Frente",
         "houseNumber": "Número de sitio *",
         "houseNumberPlaceholder": "Escribe el número de sitio",
-        "requiredFields": "* Campo requeridos.",
+        "requiredFields": "* Campo requerido.",
         "location": "Ubicación",
         "addLocation": "Añadir ubicación",
         "siteTypeQuestion": "¿Qué sitio es?",

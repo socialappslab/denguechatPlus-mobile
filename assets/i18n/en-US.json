@@ -129,7 +129,8 @@
       "invalidEmail": "Invalid email",
       "passwordLength": "Password must be at least {{length}} characters",
       "usernameLength": "Username must be at least {{length}} characters",
-      "phoneLength": "Phone is too short"
+      "phoneLength": "Phone is too short",
+      "contentPostLength": "Post text is too large"
     },
     "visit": {
       "stackTitle": "Visit Registration",

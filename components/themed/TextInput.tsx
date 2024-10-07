@@ -49,7 +49,7 @@ export function TextInput(props: TextInputProps) {
     }
   };
 
-  const classNameBorder = `${hasError ? "border-red-500" : "border-gray-200"} ${readOnly ? "bg-gray-50 opacity-60" : ""}  border rounded-lg p-2 h-11`;
+  const classNameBorder = `${hasError ? "border-red-500" : "border-neutral-200"} ${readOnly ? "bg-neutral-50 opacity-60" : ""}  border rounded-lg p-2 h-11`;
   const styleInput = { backgroundColor, color, fontFamily: FontFamily.regular };
 
   if (!search && !iconMaterial) {
@@ -86,7 +86,7 @@ export function TextInput(props: TextInputProps) {
   } else {
     return (
       <View className={`flex flex-row items-center ${classNameBorder}`}>
-        {search && <Feather name="search" size={20} color="gray" />}
+        {search && <Feather name="search" size={20} color="#A9A29D" />}
         {iconMaterial && <IconMaterial size={24} name={iconMaterial} />}
         {!isSheet && (
           <DefaultTextInput

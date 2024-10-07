@@ -23,7 +23,7 @@ export function SimpleSelectableChip({
   return (
     <TouchableOpacity
       disabled={disabled}
-      className={`flex-row items-center px-2 py-1 ${checked ? "border-2 border-green-250 bg-green-150" : "border border-gray-200 bg-transparent"} rounded-md`}
+      className={`flex-row items-center px-2 py-1 ${disabled ? "opacity-10" : ""} ${checked ? "border-2 border-green-250 bg-green-150" : "border border-neutral-200 bg-neutral-50"} rounded-md`}
       onPress={onPressElement}
       {...other}
     >
@@ -35,7 +35,7 @@ export function SimpleSelectableChip({
         )}
         <View className="flex flex-col bg-transparent">
           <Text
-            className={`text-sm ${disabled ? "opacity-60" : ""} ${checked ? "text-green-900" : ""}`}
+            className={`text-sm ${disabled ? "opacity-40" : ""} ${checked ? "text-green-900" : "text-neutral-700"}`}
           >
             {label}
           </Text>

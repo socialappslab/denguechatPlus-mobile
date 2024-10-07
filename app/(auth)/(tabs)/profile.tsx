@@ -77,8 +77,8 @@ export default function Profile() {
                   {team?.sector?.name} - {team?.wedge?.name}
                 </Text>
               </View>
-              <View className="p-4 mb-4 border border-gray-200 rounded-lg">
-                <Text className="text-gray-600 mb-2">
+              <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+                <Text className="text-neutral-600 mb-2">
                   {t("brigade.cards.numberVisits")}
                 </Text>
                 <View className="flex-row items-center justify-between">
@@ -88,8 +88,8 @@ export default function Profile() {
                   <SimpleChip
                     border="1"
                     padding="small"
-                    textColor="neutral"
-                    borderColor="neutral"
+                    textColor="neutral-500"
+                    borderColor="neutral-500"
                     ionIcon="arrow-up"
                     iconColor={Colors.light.neutral}
                     label={`${visitsData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
@@ -97,8 +97,8 @@ export default function Profile() {
                 </View>
               </View>
 
-              <View className="p-4 mb-4 border border-gray-200 rounded-lg">
-                <Text className="text-gray-600 mb-2">
+              <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+                <Text className="text-neutral-600 mb-2">
                   {t("brigade.cards.numberSites")}
                 </Text>
                 <View className="flex-row items-center justify-between">
@@ -109,8 +109,8 @@ export default function Profile() {
                   <SimpleChip
                     border="1"
                     padding="small"
-                    textColor="neutral"
-                    borderColor="neutral"
+                    textColor="neutral-500"
+                    borderColor="neutral-500"
                     ionIcon="arrow-up"
                     iconColor={Colors.light.neutral}
                     label={`${sitesData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
@@ -125,7 +125,7 @@ export default function Profile() {
                   <ProgressBar
                     label={t("brigade.sites.yellow")}
                     progress={team?.sitesStatuses?.yellow ?? 0}
-                    color="yellow-50"
+                    color="yellow-300"
                   />
                   <ProgressBar
                     label={t("brigade.sites.red")}
@@ -135,9 +135,9 @@ export default function Profile() {
                 </View>
               </View>
 
-              <View className="rounded-lg border border-gray-200 mb-8">
-                <View className="bg-gray-100 border-b border-gray-200 rounded-t-lg px-4 py-4">
-                  <Text className="text-gray-600 font-medium">
+              <View className="rounded-lg border border-neutral-200 mb-8">
+                <View className="bg-neutral-100 border-b border-neutral-200 rounded-t-lg px-4 py-4">
+                  <Text className="text-neutral-600 font-medium">
                     {t("brigade.cards.participants")}
                   </Text>
                 </View>
@@ -145,7 +145,7 @@ export default function Profile() {
                 {team?.members?.map((member, index) => (
                   <View
                     key={member.id}
-                    className={`flex-row items-center p-4 border-gray-200 ${index === team?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
+                    className={`flex-row items-center p-4 border-neutral-200 ${index === team?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
                   >
                     <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-300 mr-3">
                       <Text className="font-bold text-sm text-green-700">

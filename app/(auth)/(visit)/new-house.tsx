@@ -124,6 +124,7 @@ export default function NewHouse() {
 
             <TextInput
               readOnly={true}
+              editable={false}
               value={(meData?.userProfile?.team as Team)?.sector_name}
             />
           </View>
@@ -135,6 +136,7 @@ export default function NewHouse() {
 
             <TextInput
               readOnly={true}
+              editable={false}
               value={(meData?.userProfile?.team as Team)?.wedge_name}
             />
           </View>
@@ -146,6 +148,7 @@ export default function NewHouse() {
 
             <TextInput
               readOnly={true}
+              editable={false}
               value={(meData?.userProfile?.houseBlock as BaseObject)?.name}
             />
           </View>

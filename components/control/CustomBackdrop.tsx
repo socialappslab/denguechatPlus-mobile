@@ -5,6 +5,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { StyleSheet } from "react-native";
 
 const CustomBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
   // animated variables
@@ -21,10 +22,12 @@ const CustomBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
   const containerStyle = useMemo(
     () => [
       style,
+      { top: -10 },
       {
         backgroundColor: "#a8b5eb",
       },
       containerAnimatedStyle,
+      StyleSheet.absoluteFill,
     ],
     [style, containerAnimatedStyle],
   );

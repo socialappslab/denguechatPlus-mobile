@@ -69,3 +69,16 @@ export const createHouseSchema = () => {
 
 const houseSchema = createHouseSchema();
 export type HouseInputType = TypeOf<typeof houseSchema>;
+
+export const createPostSchema = () => {
+  return object({
+    content: z
+      .string({
+        required_error: t("validation.required"),
+      })
+      .max(10, t("validation.contentPostLength")),
+  });
+};
+
+const postSchema = createPostSchema();
+export type PostInputType = TypeOf<typeof postSchema>;

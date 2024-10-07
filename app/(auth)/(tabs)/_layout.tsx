@@ -1,7 +1,7 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
+import { Platform, Pressable } from "react-native";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 
 import Colors from "@/constants/Colors";
@@ -12,6 +12,8 @@ import House from "@/assets/images/icons/house.svg";
 import Brigade from "@/assets/images/icons/brigade.svg";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View } from "../../../components/themed";
 
 type TabsNames = "chat" | "homes" | "profile";
 
@@ -30,6 +32,7 @@ function TabBarIcon(props: { name: TabsNames; color: string }) {
 export default function TabLayout(props: ThemeProps) {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const { lightColor, darkColor } = props;
 
   const backgroundColor = useThemeColor(
@@ -39,8 +42,11 @@ export default function TabLayout(props: ThemeProps) {
 
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
+  console.log(`INSETS ${Platform.OS} `, insets);
   return (
     <Tabs
+      initialRouteName="index"
+      backBehavior="history"
       screenOptions={{
         headerStyle: {
           backgroundColor,
@@ -50,8 +56,8 @@ export default function TabLayout(props: ThemeProps) {
         headerTintColor: color,
         tabBarStyle: {
           position: "absolute",
-          height: 85,
-          paddingBottom: 35,
+          height: Platform.OS === "ios" ? 85 : 75,
+          paddingBottom: Platform.OS === "ios" ? insets.bottom : 20,
           backgroundColor: Colors[colorScheme ?? "light"].backgroundTabs,
         },
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,

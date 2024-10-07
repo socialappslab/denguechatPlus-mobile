@@ -200,11 +200,33 @@ export interface Resource {
   resourceData: ResourceData[];
 }
 
+export interface Comment {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  likesCount: number;
+  likedByMe: boolean;
+  canDeleteByUser: boolean;
+  createdBy: {
+    accountId: number;
+    userName: string;
+    lastName: string;
+  };
+  photos?: {
+    photo_url: string;
+  };
+}
 export interface Post {
   id: number;
   createdAt: number;
   userAccountId: number;
   createdBy: string;
+  createByUser: {
+    accountId: number;
+    userName: string;
+    lastName: string;
+  };
   location: string;
   postText: string;
   photoUrl?: {
@@ -213,4 +235,5 @@ export interface Post {
   commentsCount: number | null;
   likesCount: number;
   likedByUser: boolean;
+  comments?: Comment[];
 }

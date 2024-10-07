@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Platform } from "react-native";
 import useAxios from "axios-hooks";
 import MapView, { Marker } from "react-native-maps";
@@ -36,6 +36,8 @@ const AddLocation = () => {
       });
     } else if (status?.status === "undetermined") {
       requestPermission();
+    } else if (status?.status === "denied") {
+      console.log("denied");
     }
   }, [requestPermission, status]);
 
@@ -78,14 +80,32 @@ const AddLocation = () => {
   };
 
   const handleConfirmAddress = () => {
-    console.log("handleConfirmAddress");
-    setVisitData({
-      house: {
-        latitude: markerCoords.latitude,
-        longitude: markerCoords.longitude,
-        address,
-      },
-    });
+    if (status?.status === "granted" && location?.coords) {
+      if (isConnected) {
+        setVisitData({
+          house: {
+            latitude: markerCoords.latitude,
+            longitude: markerCoords.longitude,
+            address,
+          },
+        });
+      } else {
+        setVisitData({
+          house: {
+            latitude: location?.coords.latitude,
+            longitude: location?.coords.longitude,
+            address,
+          },
+        });
+      }
+    } else {
+      setVisitData({
+        house: {
+          address,
+        },
+      });
+    }
+
     router.back();
   };
 
