@@ -1,23 +1,25 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
-import useAxios from "axios-hooks";
-import { deserialize } from "jsonapi-fractal";
 import { useIsFocused } from "@react-navigation/native";
+import useAxios from "axios-hooks";
+import { useRouter } from "expo-router";
+import { deserialize } from "jsonapi-fractal";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { SelectableItem } from "@/components/themed";
-import { House } from "@/types";
 import { useVisit } from "@/hooks/useVisit";
+import { House, VisitId } from "@/types";
 
 import {
-  Text,
-  View,
   Button,
-  TextInput,
-  ScrollView,
-  SafeAreaView,
   Loading,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
 } from "@/components/themed";
+import { useAuth } from "@/context/AuthProvider";
+import { useVisitStore } from "@/hooks/useVisitStore";
 import { formatDate } from "@/util";
 
 export default function SelectHouseScreen() {
@@ -29,9 +31,20 @@ export default function SelectHouseScreen() {
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
+  const { user } = useAuth();
   const { setVisitData, questionnaire, language } = useVisit();
+  const { initialiseCurrentVisit } = useVisitStore();
 
   const updateHouse = async () => {
+    const catchAll =
+      !(user && user.id) || !houseSelectedId || !questionnaire?.initialQuestion;
+    if (catchAll) return;
+
+    const visitId = `${user.id}-${houseSelectedId}` as VisitId;
+
+    // Set the VisitId
+    initialiseCurrentVisit(visitId, questionnaire.initialQuestion.toString());
+
     await setVisitData({ houseId: houseSelectedId, house: undefined });
     router.push(`visit/${questionnaire?.initialQuestion}`);
   };

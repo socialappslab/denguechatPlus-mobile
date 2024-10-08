@@ -51,7 +51,7 @@ export default function Profile() {
   useEffect(() => {
     if (!teamData) return;
     const deserializedData = deserialize<Team>(teamData);
-    console.log("deserializedData TEAM>>>>>>>>>>", deserializedData);
+    // console.log("deserializedData TEAM>>>>>>>>>>", deserializedData);
     if (deserializedData && !Array.isArray(deserializedData)) {
       setTeam(deserializedData);
     }

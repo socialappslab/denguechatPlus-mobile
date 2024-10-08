@@ -171,11 +171,12 @@ export interface VisitData extends VisitAttributes {
 
 /*
   A HashMap to access a given house's Visit Data
-  the HouseKey format is:
-  {userId}-{houseId}
 */
-export type HouseKey = `${number}-${number}`;
-export type VisitMap = Record<HouseKey, FormState>;
+type UserId = number;
+type HouseId = number;
+
+export type VisitId = `${UserId}-${HouseId}`;
+export type VisitMap = Record<VisitId, FormState>;
 
 export interface ResourceData {
   id: number;

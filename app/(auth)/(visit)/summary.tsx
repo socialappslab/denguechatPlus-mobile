@@ -2,11 +2,13 @@ import { Button, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
+import { useVisitStore } from "@/hooks/useVisitStore";
 import { FormState, VisitData, VisitPayload } from "@/types";
 import { extractAxiosErrorData, formatDate } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
+import * as Network from "expo-network";
 
 // Inspection type
 const QuantityFound = "quantity_founded";
@@ -35,26 +37,32 @@ const RenderStatus = ({
   );
 };
 
+type Inspection = Record<string, string | undefined | string[]>;
+type Answer = Record<string, string | number | undefined>;
+
 /**
  *
  * @param formData
  * @returns takes all SelectableItems from a given formState and returns
  * formatted inspection, answers and colorStatus
  */
-const prepareFormData = (formData: FormState) => {
+export const prepareFormData = (formData: FormState) => {
   const questions = Object.keys(formData);
-  let inspection: Record<string, string | undefined | string[]> = {};
-  let answers: Record<string, string | number | undefined> = {};
+  let inspections: Inspection[] = [];
+  let answers: Answer[] = [];
   let statusColors: StatusColor[] = [];
 
   questions.forEach((question) => {
     const answer = formData[question];
+    const index = parseInt(question.split("-")[1]);
+    if (!inspections[index]) inspections[index] = {};
+    if (!answers[index]) answers[index] = {};
 
     if (Array.isArray(answer)) {
       const [first] = answer;
       const resourceName = first.resourceName as string;
       if (!resourceName) return;
-      inspection[resourceName] = answer.map(
+      inspections[index][resourceName] = answer.map(
         (item) => item.text || (item.resourceId as string),
       );
 
@@ -68,10 +76,12 @@ const prepareFormData = (formData: FormState) => {
 
     if (answer.resourceName) {
       const resourceName = answer.resourceName;
-      if (answer.resourceType === "relation")
-        inspection[resourceName] = answer.text || answer.resourceId;
-      if (answer.resourceType === "attribute")
-        inspection[resourceName] = answer.text || answer.label;
+      if (answer.resourceType === "relation") {
+        inspections[index][resourceName] = answer.text || answer.resourceId;
+      }
+      if (answer.resourceType === "attribute") {
+        inspections[index][resourceName] = answer.text || answer.label;
+      }
       if (answer.statusColor) {
         statusColors.push(answer.statusColor as StatusColor);
       }
@@ -79,7 +89,7 @@ const prepareFormData = (formData: FormState) => {
 
     // console.log(inspection);
     const questionId = `question_${question}`;
-    answers[questionId] = answer.value;
+    answers[index][questionId] = answer.value;
   });
 
   // We order with RED beign first, then YELLOW, then GREEN
@@ -91,17 +101,19 @@ const prepareFormData = (formData: FormState) => {
   // And get the first
   const [statusColor] = orderedStatus;
 
-  return { inspection, answers, statusColor: statusColor as StatusColor };
+  return { inspections, answers, statusColor: statusColor as StatusColor };
 };
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, currentFormData, visitData, language, cleanStore } =
-    useVisit();
+  const { questionnaire, visitData, language, cleanStore } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { inspection, answers, statusColor } = prepareFormData(currentFormData);
-  const quantity = parseInt(inspection[QuantityFound] as string) + 1;
+  const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
+  const { inspections, answers, statusColor } = prepareFormData(
+    visitMap[visitId],
+  );
+  const quantity = 1;
 
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
@@ -109,7 +121,7 @@ export default function Summary() {
   >("visits", { "Content-Type": "multipart/form-data" });
 
   const onFinalize = async () => {
-    console.log(">>>>>inspection", inspection, Object.keys(inspection).length);
+    // console.log(">>>>>inspection", inspection, Object.keys(inspection).length);
     // console.log(">>>>>answers", answers, Object.keys(answers).length);
     // const answers = normalizeAnswer(visitData.answers);
 
@@ -156,8 +168,20 @@ export default function Summary() {
     };
 
     try {
+      console.log(visitMap);
+      const { inspections, statusColor, answers } = prepareFormData(
+        visitMap[visitId],
+      );
+      console.log(inspections, statusColor, answers, visitData);
+      const completeVisitData = {
+        ...visitData,
+        visitedAt: new Date(),
+        inspections,
+        answers,
+        statusColor,
+      };
+      finaliseCurrentVisit(true, completeVisitData);
       // await createVisit({ json_params: JSON.stringify(normalizedData) });
-      await cleanStore();
       Toast.show({
         type: "success",
         text1: t("success"),
