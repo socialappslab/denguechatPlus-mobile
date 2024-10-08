@@ -32,7 +32,7 @@ export function ListItem(props: ListItemProps) {
   return (
     <TouchableOpacity
       disabled={disabled}
-      className={`flex-row items-center px-0 py-4 border-b border-gray-200 `}
+      className={`flex-row items-center px-0 py-4 border-b border-neutral-200 `}
       onPress={onPressElement}
     >
       {initials && (
