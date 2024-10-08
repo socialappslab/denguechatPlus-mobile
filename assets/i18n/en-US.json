@@ -137,6 +137,11 @@
       "start": "Start a visit",
       "title": "Visit Registration",
       "required": "* Required fields.",
+      "list": {
+        "visitList": "Visit List",
+        "done": "All visits are synchronized",
+        "pending": "You have {{storedVisits}} pending visits to be synchronized."
+      },
       "houses": {
         "title": "Sites",
         "searchPlaceholder": "Search by site number",

@@ -13,12 +13,13 @@ import * as Network from "expo-network";
 import { useEffect } from "react";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { VisitData } from "@/types";
+import { formatDate } from "@/util";
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { storedVisits, setNetworkState, networkState } = useVisitStore();
-  const { questionnaire } = useVisit();
+  const { language } = useVisit();
 
   /**
    * Set network state
@@ -48,7 +49,7 @@ export default function TabTwoScreen() {
     <SafeAreaView>
       <CheckTeam view="visit">
         <View className="flex flex-1 py-5 px-5 w-full">
-          <View className="my-4 p-8 rounded-2xl border border-gray-200">
+          <View className="my-4 p-8 rounded-2xl border border-neutral-200">
             <Text className="text-xl font-bold text-center mb-2">
               {t("visit.houses.noHouses")}
             </Text>
@@ -61,30 +62,37 @@ export default function TabTwoScreen() {
               onPress={() => router.push(Routes.SelectHouse)}
             />
           </View>
-          <View className="my-4 p-8 rounded-2xl border border-gray-200">
+          <View className="my-4 p-8 rounded-2xl border border-neutral-200">
             <Text className="text-xl font-bold text-center mb-2">
-              Lista de visitas
+              {t("visit.list.visitList")}
             </Text>
             {hasVisits && (
               <>
                 <Text className="text-center mb-6">
-                  Tienes 2 visitas pendientes a ser sincronizadas.
+                  {t("visit.list.pending", {
+                    storedVisits: storedVisits.length,
+                  })}
                 </Text>
                 {storedVisits.map((visit) => {
                   return (
                     <ListItem
-                      title="Casa 1"
+                      title={`${t("visit.houses.house")} ${visit.houseId!}`}
                       onPressElement={() => {}}
-                      filled="2017-04-20"
+                      filled={formatDate(visit.visitedAt, language)}
                     />
                   );
                 })}
-                <Button
+                {/* <Button
                   title="Sincronizar visitas"
                   onPress={synchronizeVisits}
                   className="bg-green-300 border-transparent shadow-sm shadow-green-300 mt-8"
                   disabled={!hasConnection}
-                />
+                /> */}
+              </>
+            )}
+            {!hasVisits && (
+              <>
+                <Text className="text-center">{t("visit.list.done")}</Text>
               </>
             )}
           </View>
