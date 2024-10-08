@@ -8,7 +8,7 @@ import { InspectionQuestion, Question } from "@/types";
 import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { useEffect, useState } from "react";
+import { AnswerState, useVisitStore } from "@/hooks/useVisitStore";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Routes } from "../_layout";
@@ -25,6 +25,7 @@ const isValid = (
 
   const required = question.options?.filter((item) => item.required) || [];
 
+  // Radio buttons
   if (!Array.isArray(currentValue)) {
     if (currentValue.optionType === "inputNumber") {
       return !!currentValue.text;
@@ -32,6 +33,7 @@ const isValid = (
     return !!currentValue;
   }
 
+  // Checkboxes
   if (Array.isArray(currentValue)) {
     // Check if all requierd fields are present
     if (required.length > 0) {
@@ -48,40 +50,28 @@ const isValid = (
 };
 
 export default function Visit() {
-  const {
-    questionnaire,
-    isLoadingQuestionnaire,
-    setFormData,
-    visitMap,
-    currentFormData,
-  } = useVisit();
-  const [currentQuestion, setCurrentQuestion] = useState<string>("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { questionnaire, isLoadingQuestionnaire } = useVisit();
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setCurrentQuestion(String(id));
-  }, [id, setCurrentQuestion, visitMap]);
-
-  const methods = useForm({
-    defaultValues: currentFormData,
-  });
+  const { setCurrentVisitData, answerId, visitMap, visitId } = useVisitStore();
+  const questionId = id.toString();
+  const methods = useForm({});
 
   const { getValues, watch } = methods;
 
-  let current = questionnaire?.questions.find(
-    (q) => String(q.id) === currentQuestion,
-  ) as InspectionQuestion;
+  let currentQuestion: InspectionQuestion | undefined =
+    questionnaire?.questions.find((q) => String(q.id) === questionId);
+  const isSplash = currentQuestion?.typeField === "splash";
+  const currentValues = watch(answerId) as AnswerState;
 
   const findNext = () => {
-    if (!current) return;
-    let next = current.next;
+    if (!currentQuestion) return;
+    let next = currentQuestion.next;
 
     if (next) return next;
 
-    const curr = getValues(currentQuestion);
+    const curr = getValues(answerId);
     // look inside current option selected
     // which extends an option object
     if (!next && !Array.isArray(curr)) {
@@ -94,32 +84,29 @@ export default function Visit() {
   };
 
   const onNext = () => {
-    const values = methods.watch(currentQuestion);
-    if (values) setFormData(currentQuestion, values);
+    if (!currentQuestion) return;
 
     const next = findNext();
+    const resourceName = currentQuestion.resourceName;
+    const values = methods.getValues(answerId);
 
-    const resourceName = current.resourceName;
+    // Persist values
+    if (values) setCurrentVisitData(questionId, values);
+
+    // Branches
     if (resourceName === PhotoId) {
       return router.push({
         pathname: Routes.ContainerPicture,
         params: { next },
       });
     }
-
     if (next !== TERMINATE) return router.push(`${Routes.Visit}/${next}`);
-    if (next === TERMINATE) return router.push(Routes.AddComment);
+    if (next === TERMINATE) return router.push(Routes.AddContainer);
   };
-
-  const isSplash = current?.typeField === "splash";
 
   const onBack = () => {
     router.back();
   };
-
-  const currentValue = watch(currentQuestion) as
-    | FormStateOption
-    | FormStateOption[];
 
   if (isLoadingQuestionnaire) {
     return (
@@ -129,6 +116,8 @@ export default function Visit() {
     );
   }
 
+  const disableNextButton = !isValid(currentValues, currentQuestion);
+
   return (
     <SafeAreaView>
       <View className="flex flex-1 py-5 px-5 h-full">
@@ -137,8 +126,13 @@ export default function Visit() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          {!isLoadingQuestionnaire && current && (
-            <QuestionnaireRenderer methods={methods} question={current} />
+          {!isLoadingQuestionnaire && currentQuestion && (
+            <QuestionnaireRenderer
+              name={answerId}
+              methods={methods}
+              question={currentQuestion}
+              currentValues={currentValues}
+            />
           )}
         </ScrollView>
         <View className="flex flex-row gap-2">
@@ -152,7 +146,7 @@ export default function Visit() {
                 primary
                 title={t("next")}
                 onPress={onNext}
-                disabled={!isValid(currentValue, current)}
+                disabled={disableNextButton}
               />
             )}
           </View>

@@ -92,7 +92,7 @@ export async function getRefreshToken() {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const refreshAuthLogic = async (failedRequest: any) => {
   const refreshToken = await getRefreshToken();
-  console.log("refreshAuthLogic with refresh>>>>>>", refreshToken);
+  // console.log("refreshAuthLogic with refresh>>>>>>", refreshToken);
   return publicApi
     .post(
       "/users/session/refresh_token",

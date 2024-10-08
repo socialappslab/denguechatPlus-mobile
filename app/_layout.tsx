@@ -12,6 +12,7 @@ import AuthProvider, { useAuth } from "@/context/AuthProvider";
 
 import { LANGUAGE_LOCAL_STORAGE_KEY } from "@/constants/Keys";
 import { useStorageState } from "@/hooks/useStorageState";
+import { useVisitStore } from "@/hooks/useVisitStore";
 import * as Localization from "expo-localization";
 import { LogBox } from "react-native";
 import Toast from "react-native-toast-message";
@@ -19,6 +20,7 @@ import { setHeaderFromLocalStorage } from "../config/axios";
 import { initI18n } from "../config/i18n";
 import { toastConfig } from "../config/toast";
 import useUser from "../hooks/useUser";
+import { useZustandDevtool } from "@/util/zustandDevTool";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -110,26 +112,33 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const state = useVisitStore();
+  const StoreState: React.FC<any> = (props) => {
+    return null;
+  };
   return (
-    <AuthProvider>
-      <ThemeProvider value={DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(auth)/(tabs)"
-            options={{ headerShown: false, headerShadowVisible: false }}
-          />
-          <Stack.Screen
-            name="(public)/login"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="(public)/logout"
-            options={{ headerShown: false }}
-          />
-        </Stack>
-        <Toast position="bottom" bottomOffset={40} config={toastConfig} />
-      </ThemeProvider>
-    </AuthProvider>
+    <>
+      <StoreState {...state} />
+      <AuthProvider>
+        <ThemeProvider value={DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            {/* <Stack.Screen
+              name="(auth)/(tabs)"
+              options={{ headerShown: false, headerShadowVisible: false }}
+            /> */}
+            <Stack.Screen
+              name="(public)/login"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="(public)/logout"
+              options={{ headerShown: false }}
+            />
+          </Stack>
+          <Toast position="bottom" bottomOffset={40} config={toastConfig} />
+        </ThemeProvider>
+      </AuthProvider>
+    </>
   );
 }
