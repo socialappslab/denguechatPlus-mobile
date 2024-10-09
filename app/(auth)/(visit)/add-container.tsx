@@ -70,6 +70,7 @@ const AddContainer = () => {
             title={t("next")}
             onPress={onNext}
             className="flex-1"
+            disabled={selected === undefined}
           />
         </View>
       </View>
