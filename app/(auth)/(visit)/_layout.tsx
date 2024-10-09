@@ -13,6 +13,7 @@ export enum Routes {
   Summary = "summary",
   Final = "final",
   Visit = "visit",
+  AddContainer = "add-container",
 }
 
 export default function VisitLayout(props: ThemeProps) {
@@ -68,6 +69,10 @@ export default function VisitLayout(props: ThemeProps) {
       />
       <Stack.Screen
         name={Routes.ContainerPicture}
+        options={{ headerShown: true, headerShadowVisible: false }}
+      />
+      <Stack.Screen
+        name={Routes.AddContainer}
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen

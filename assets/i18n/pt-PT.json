@@ -140,6 +140,11 @@
       "start": "Iniciar uma visita",
       "title": "Registro de Visita",
       "required": "* Campos obrigatórios.",
+      "list": {
+        "visitList": "Lista de visitas",
+        "done": "Todas as visitas estão sincronizadas",
+        "pending": "Você tem {{storedVisits}} visitas pendentes para sincronizar."
+      },
       "houses": {
         "title": "Locais",
         "searchPlaceholder": "Pesquisar por número do local",

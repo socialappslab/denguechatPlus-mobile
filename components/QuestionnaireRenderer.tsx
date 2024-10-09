@@ -1,6 +1,6 @@
 import { SelectableItem, Text, View } from "@/components/themed";
 import { InspectionQuestion, OptionType, ResourceType } from "@/types";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Control,
   Controller,
@@ -16,6 +16,8 @@ import { useTranslation } from "react-i18next";
 interface QuestionnaireRendererProps {
   question: InspectionQuestion;
   methods: UseFormReturn<FieldValues, any, undefined>;
+  name: string;
+  currentValues: any;
 }
 
 export interface ISelectableItem {
@@ -81,6 +83,7 @@ export interface FormStateOption {
   optionType?: string;
   statusColor?: string;
   disableOtherOptions?: boolean;
+  inspectionIdx?: number;
 }
 
 const prepareOption = ({
@@ -95,9 +98,11 @@ const prepareOption = ({
     disableOtherOptions,
   },
   text,
+  inspectionIdx,
 }: {
   option: ISelectableItem;
   text?: string;
+  inspectionIdx?: number;
 }): FormStateOption => ({
   value,
   resourceName,
@@ -108,6 +113,7 @@ const prepareOption = ({
   optionType,
   statusColor,
   disableOtherOptions,
+  inspectionIdx,
 });
 
 const groupOptions = (
@@ -125,16 +131,16 @@ const groupOptions = (
 const QuestionnaireRenderer = ({
   question,
   methods,
+  name,
+  currentValues,
 }: QuestionnaireRendererProps) => {
   const { t } = useTranslation();
   const hasRequiredOptions = question?.options?.some((o) => o.required);
-  const { control, getValues, setValue, watch } = methods;
-  const name = question.id.toString();
+  const { control, getValues, setValue } = methods;
   const formattedOptions: ISelectableItem[] =
     formatOptionsForSelectableItems(question);
   const hasGroup = formattedOptions.every((option) => option.group);
   const groupedOptions = groupOptions(formattedOptions);
-  const currentValues = watch(name);
 
   const renderOptions = useCallback(
     (option: ISelectableItem) => {
@@ -144,6 +150,7 @@ const QuestionnaireRenderer = ({
         >
           {question.typeField === "multiple" && (
             <ControlledCheckbox
+              key={option.value}
               setValue={setValue}
               getValues={getValues}
               name={name}
@@ -154,6 +161,7 @@ const QuestionnaireRenderer = ({
           )}
           {question.typeField === "list" && (
             <ControlledList
+              key={option.value}
               getValues={getValues}
               setValue={setValue}
               name={name}
@@ -164,7 +172,7 @@ const QuestionnaireRenderer = ({
         </React.Fragment>
       );
     },
-    [currentValues],
+    [name, getValues],
   );
 
   return (
@@ -194,7 +202,7 @@ const QuestionnaireRenderer = ({
           {!hasGroup && formattedOptions.map(renderOptions)}
           {hasGroup &&
             Object.keys(groupedOptions).map((title) => (
-              <View className="mb-2">
+              <View key={title} className="mb-2">
                 <Text type="subtitle" className="mb-3">
                   {title}
                 </Text>
@@ -223,15 +231,10 @@ const ControlledCheckbox = ({
   getValues: UseFormGetValues<FieldValues>;
   currentValues: FormStateOption[];
 }) => {
-  const [itemsChecked, setItemsChecked] =
-    useState<FormStateOption[]>(currentValues);
-  const isSelected = itemsChecked?.some(
-    (item: FormStateOption) => item.value === option.value,
-  );
-
-  useEffect(() => {
-    setItemsChecked(currentValues);
-  }, [currentValues]);
+  const [itemsChecked, setItemsChecked] = useState<FormStateOption[]>([]);
+  const isSelected =
+    Array.isArray(itemsChecked) &&
+    itemsChecked.some((item: FormStateOption) => item.value === option.value);
 
   const onChange = (text: string) => {
     let values = getValues(name);
@@ -265,9 +268,9 @@ const ControlledCheckbox = ({
     }
   };
 
-  const conditionalDisablingItem = itemsChecked.find(
-    (item) => item.disableOtherOptions === true,
-  );
+  const conditionalDisablingItem =
+    Array.isArray(itemsChecked) &&
+    itemsChecked.find((item) => item.disableOtherOptions === true);
   const shouldDisable =
     !!conditionalDisablingItem &&
     option.value !== conditionalDisablingItem?.value;

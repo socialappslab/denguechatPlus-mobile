@@ -14,6 +14,7 @@ export type ListItemProps = ThemeProps &
     emptyString?: string;
     disabled?: boolean;
     square?: boolean;
+    className?: string;
   };
 
 export function ListItem(props: ListItemProps) {
@@ -25,12 +26,13 @@ export function ListItem(props: ListItemProps) {
     initials,
     emptyString,
     filled,
+    className,
   } = props;
 
   return (
     <TouchableOpacity
       disabled={disabled}
-      className="flex-row items-center px-0 py-4 border-b border-gray-200"
+      className={`flex-row items-center px-0 py-4 border-b border-neutral-200 `}
       onPress={onPressElement}
     >
       {initials && (
@@ -42,7 +44,7 @@ export function ListItem(props: ListItemProps) {
         </View>
       )}
 
-      <View className="flex flex-1 flex-row items-center">
+      <View className={`flex flex-1 flex-row items-center`}>
         <View className="flex flex-1 flex-col">
           <Text className={`${disabled ? "opacity-60" : ""}`}>{title}</Text>
           {filled && (
