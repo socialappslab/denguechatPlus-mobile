@@ -139,6 +139,9 @@
       "stackTitle": "Visit Registration",
       "start": "Start a visit",
       "title": "Visit Registration",
+      "newVisit": "New Visit",
+      "registerCopy": "Register a new visit here.",
+      "registerVisit": "Register a new visit",
       "required": "* Required fields.",
       "list": {
         "visitList": "Visit List",
@@ -195,6 +198,11 @@
         "title": "Add comments about the visit",
         "placeholder": "Write your comments",
         "commentsAreOptional": "Comments are optional"
+      },
+      "addContainer": {
+        "registerNewContainer": "Register another container?",
+        "registerYes": "Yes, register another container",
+        "registerNo": "No, it's not necessary"
       },
       "containerPicture": {
         "title": "Container photo",

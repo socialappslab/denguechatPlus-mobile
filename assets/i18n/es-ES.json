@@ -141,6 +141,9 @@
       "stackTitle": "Registro de visita",
       "start": "Iniciar una visita",
       "title": "Registro de visita",
+      "newVisit": "Nueva Visita",
+      "registerCopy": "Registra una nueva visita aquí.",
+      "registerVisit": "Registrar una nueva visita",
       "required": "* Campos requeridos.",
       "list": {
         "visitList": "Lista de visitas",
@@ -197,6 +200,11 @@
         "title": "Agregar comentarios sobre la visita",
         "placeholder": "Escribe tus comentarios",
         "commentsAreOptional": "Los comentarios son opcionales"
+      },
+      "addContainer": {
+        "registerNewContainer": "Registrar otro contenedor?",
+        "registerYes": "Sí, registrar otro contenedor",
+        "registerNo": "No, no es necesario"
       },
       "containerPicture": {
         "title": "Foto del contenedor",

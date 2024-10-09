@@ -146,7 +146,7 @@ const QuestionnaireRenderer = ({
     (option: ISelectableItem) => {
       return (
         <React.Fragment
-          key={`${option.optionType}-${option.label}-${option.required}`}
+          key={`${option.optionType}-${option.label}-${option.required}-${option.value}`}
         >
           {question.typeField === "multiple" && (
             <ControlledCheckbox
@@ -283,6 +283,7 @@ const ControlledCheckbox = ({
         return (
           <SelectableItem
             value={`${option.value}`}
+            key={option.value}
             checked={isSelected}
             className="bg-white"
             onValueChange={onChange}
@@ -328,6 +329,7 @@ const ControlledList = ({
         return (
           <SelectableItem
             value={`${option.value}`}
+            key={option.value}
             checked={isSelected}
             className="bg-white"
             onValueChange={onChange}

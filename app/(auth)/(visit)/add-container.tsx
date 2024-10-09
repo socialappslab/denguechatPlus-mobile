@@ -48,18 +48,18 @@ const AddContainer = () => {
           {/* Wrapped in scroll view to hid the keyboard */}
           <ScrollView>
             <Text type="title" className="mb-8">
-              Registrar otro contenedor?
+              {t("visit.addContainer.registerNewContainer")}
             </Text>
 
             <SelectableItem
               checked={selected === Selection.Yes}
               onValueChange={onAddContainer}
-              label="Sí, registrar otro contenedor"
+              label={t("visit.addContainer.registerYes")}
             />
             <SelectableItem
               checked={selected === Selection.No}
               onValueChange={onContinueWithoutNewContainer}
-              label="No, no es necesario"
+              label={t("visit.addContainer.registerNo")}
             />
           </ScrollView>
         </View>
@@ -70,6 +70,7 @@ const AddContainer = () => {
             title={t("next")}
             onPress={onNext}
             className="flex-1"
+            disabled={selected === undefined}
           />
         </View>
       </View>
