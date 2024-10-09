@@ -3,24 +3,23 @@ import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { useState } from "react";
+import * as Localization from "expo-localization";
+import { LogBox } from "react-native";
+import Toast from "react-native-toast-message";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+// import { useZustandDevtool } from "@/util/zustandDevTool";
 
 import AuthProvider, { useAuth } from "@/context/AuthProvider";
-
 import { LANGUAGE_LOCAL_STORAGE_KEY } from "@/constants/Keys";
 import { useStorageState } from "@/hooks/useStorageState";
+import { setHeaderFromLocalStorage } from "@/config/axios";
+import { initI18n } from "@/config/i18n";
+import { toastConfig } from "@/config/toast";
+import useUser from "@/hooks/useUser";
 import { useVisitStore } from "@/hooks/useVisitStore";
-import * as Localization from "expo-localization";
-import { LogBox } from "react-native";
-import Toast from "react-native-toast-message";
-import { setHeaderFromLocalStorage } from "../config/axios";
-import { initI18n } from "../config/i18n";
-import { toastConfig } from "../config/toast";
-import useUser from "../hooks/useUser";
-import { useZustandDevtool } from "@/util/zustandDevTool";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -136,7 +135,12 @@ function RootLayoutNav() {
               options={{ headerShown: false }}
             />
           </Stack>
-          <Toast position="bottom" bottomOffset={40} config={toastConfig} />
+          <Toast
+            position="top"
+            topOffset={110}
+            visibilityTime={2000}
+            config={toastConfig}
+          />
         </ThemeProvider>
       </AuthProvider>
     </>

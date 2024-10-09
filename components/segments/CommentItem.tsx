@@ -23,7 +23,7 @@ export default function CommnetItem(props: CommnetItemProps) {
   const { language } = useVisit();
   const { t } = useTranslation();
 
-  console.log("comment>>>>>>>>>>", comment);
+  // console.log("comment>>>>>>>>>>", comment);
 
   const initials = getInitialsBase(
     comment.createdBy.userName,
@@ -49,14 +49,17 @@ export default function CommnetItem(props: CommnetItemProps) {
             <Text>{comment.content}</Text>
           </View>
           {comment.photos && (
-            <Image
-              className="rounded-lg"
-              source={{ uri: comment.photos.photo_url }}
-              style={{ height: 210 }}
-            />
+            <>
+              <Image
+                className="rounded-lg"
+                source={{ uri: comment.photos.photo_url }}
+                style={{ height: 210 }}
+              />
+              <View className="h-2" />
+            </>
           )}
-          <View className="h-4" />
-          <View className="flex flex-1 flex-row justify-between">
+
+          <View className="flex flex-1 flex-row justify-between mt-1">
             <TouchableOpacity
               className="flex flex-row items-center"
               onPress={onPressLike}

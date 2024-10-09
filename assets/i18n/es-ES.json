@@ -60,11 +60,13 @@
         "emptyMessage": "Deja un comentario y empieza la conversación",
         "title": "Comentarios",
         "number": "comentarios",
+        "numberSingular": "comentario",
         "placeholder": "Deja un comentario...",
         "deleteMessage": "¿Estás seguro de que quieres borrar este comentario? Esta acción no puede deshacerse."
       },
       "actions": {
         "delete": "Borrar",
+        "discard": "Descartar",
         "cancel": "Cancelar",
         "post": "Publicar",
         "edit": "Editar",
@@ -131,7 +133,9 @@
       "invalidEmail": "Correo electrónico inválido",
       "passwordLength": "La contraseña debe tener al menos {{length}} caracteres",
       "usernameLength": "El nombre de usuario debe tener al menos {{length}} caracteres",
-      "phoneLength": "El teléfono es muy corto"
+      "phoneLength": "El teléfono es muy corto",
+      "contentPostLengthMin": "El texto de la publicación no puede estar vacío",
+      "contentPostLengthMax": "El texto de la publicación es demasiado largo"
     },
     "visit": {
       "stackTitle": "Registro de visita",

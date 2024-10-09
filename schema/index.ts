@@ -73,12 +73,13 @@ export type HouseInputType = TypeOf<typeof houseSchema>;
 export const createPostSchema = () => {
   return object({
     content: z
-      .string({
-        required_error: t("validation.required"),
-      })
-      .max(10, t("validation.contentPostLength")),
+      .string()
+      .min(1, { message: t("validation.contentPostLengthMin") })
+      .max(280, { message: t("validation.contentPostLengthMax") }),
   });
 };
 
 const postSchema = createPostSchema();
 export type PostInputType = TypeOf<typeof postSchema>;
+
+export type PostVisibility = "public" | "team";

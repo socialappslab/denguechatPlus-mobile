@@ -5,6 +5,7 @@ import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 interface BaseButtonProps {
   title: string;
   primary?: boolean;
+  textClassName?: string;
 }
 
 export type ButtonProps = ThemeProps &
@@ -19,8 +20,11 @@ export function Button(props: ButtonProps) {
     lightColor,
     darkColor,
     primary,
+    textClassName,
     ...otherProps
   } = props;
+
+  const primaryTextColor = primary ? "text-white" : "text-black";
 
   return (
     <TouchableOpacity
@@ -31,7 +35,7 @@ export function Button(props: ButtonProps) {
       activeOpacity={0.8}
     >
       <Text
-        className={`text-center font-bold ${primary ? "text-white" : "text-black"}`}
+        className={`text-center font-bold ${!textClassName ? primaryTextColor : textClassName}`}
       >
         {title}
       </Text>

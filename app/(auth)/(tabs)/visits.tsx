@@ -66,7 +66,7 @@ export default function TabTwoScreen() {
             <Text className="text-xl font-bold text-center mb-2">
               {t("visit.list.visitList")}
             </Text>
-            {hasVisits && (
+            {!!hasVisits && (
               <>
                 <Text className="text-center mb-6">
                   {t("visit.list.pending", {

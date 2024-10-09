@@ -39,7 +39,7 @@ export function PostItem(props: PostItemProps) {
           <Text className="font-bold text-sm text-green-700">{initials}</Text>
         </View>
         <View className="flex flex-1 flex-col">
-          <Text className="font-semibold">{post.createdBy}</Text>
+          <Text className="font-semibold">{`${post.createByUser.userName} ${post.createByUser.lastName}`}</Text>
           <Text className={`text-sm opacity-60`}>
             {post.location} • {formatDatePosts(post.createdAt, language)}
           </Text>
@@ -58,7 +58,7 @@ export function PostItem(props: PostItemProps) {
           <Image
             className="rounded-lg"
             source={{ uri: post.photoUrl.photo_url }}
-            style={{ height: 210 }}
+            style={{ height: 210, resizeMode: "contain" }}
           />
         </Pressable>
       )}
@@ -69,7 +69,9 @@ export function PostItem(props: PostItemProps) {
           <Text
             className={`ml-2 text-sm ${post.likedByUser ? "text-blue-700" : "text-neutral-500"}`}
           >
-            {post.likesCount === 0 ? t("chat.like") : `${post.likesCount}`}
+            {!post.likesCount || post.likesCount === 0
+              ? t("chat.like")
+              : `${post.likesCount}`}
           </Text>
         </TouchableOpacity>
 
@@ -79,9 +81,13 @@ export function PostItem(props: PostItemProps) {
         >
           <Comment />
           <Text className="ml-2 text-neutral-500 text-sm">
-            {post.commentsCount
-              ? `${post.commentsCount} ${t("chat.comments.number")}`
-              : t("chat.comments.empty")}
+            {!post.commentsCount && t("chat.comments.empty")}
+            {post.commentsCount !== null &&
+              post.commentsCount > 1 &&
+              `${post.commentsCount} ${t("chat.comments.number")}`}
+            {post.commentsCount !== null &&
+              post.commentsCount === 1 &&
+              `${post.commentsCount} ${t("chat.comments.numberSingular")}`}
           </Text>
         </TouchableOpacity>
       </View>

@@ -47,6 +47,13 @@ export default {
           recordAudioAndroid: true,
         },
       ],
+      [
+        "expo-image-picker",
+        {
+          photosPermission:
+            "Allow $(PRODUCT_NAME) to access your photos for posts",
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
