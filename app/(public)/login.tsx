@@ -264,6 +264,7 @@ export default function Login() {
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
+                    autoCapitalize="none"
                     autoCorrect={false}
                     onSubmitEditing={() => refPassword.current?.blur()}
                   />

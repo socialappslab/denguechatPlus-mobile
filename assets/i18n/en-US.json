@@ -60,11 +60,13 @@
         "emptyMessage": "Leave a comment and start the conversation",
         "title": "Comments",
         "number": "comments",
+        "numberSingular": "comment",
         "placeholder": "Leave a comment...",
         "deleteMessage": "Are you sure you want to delete this comment? This action cannot be undone."
       },
       "actions": {
         "delete": "Delete",
+        "discard": "Discard",
         "cancel": "Cancel",
         "post": "Post",
         "edit": "Edit",
@@ -130,7 +132,8 @@
       "passwordLength": "Password must be at least {{length}} characters",
       "usernameLength": "Username must be at least {{length}} characters",
       "phoneLength": "Phone is too short",
-      "contentPostLength": "Post text is too large"
+      "contentPostLengthMin": "The post text cannot be empty",
+      "contentPostLengthMax": "Post text is too large"
     },
     "visit": {
       "stackTitle": "Visit Registration",

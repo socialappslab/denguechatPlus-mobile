@@ -67,9 +67,9 @@ export default function Chat() {
         params: {
           "filter[team_id]": teamId,
           "page[number]": page,
-          "page[size]": 4,
+          "page[size]": 6,
           sort: "created_at",
-          order: "asc",
+          order: "desc",
         },
       });
 
@@ -78,12 +78,12 @@ export default function Chat() {
         const deserializedData = deserialize<Post>(data);
         if (!deserializedData || !Array.isArray(deserializedData)) return;
 
-        console.log(
-          `rows of PAGE ${page} with TEAM ID ${teamId} >>>>`,
-          deserializedData.map(
-            (post, index) => `${post.id}-${post.createdBy}-${post.postText}\n`,
-          ),
-        );
+        // console.log(
+        //   `rows of PAGE ${page} with TEAM ID ${teamId} >>>>`,
+        //   deserializedData.map(
+        //     (post, index) => `${post.id}-${post.createdBy}-${post.postText}\n`,
+        //   ),
+        // );
 
         if (page === 1) {
           setDataList(deserializedData);
@@ -145,7 +145,7 @@ export default function Chat() {
 
   const onPressElement = (post: Post) => {
     console.log("onPressElement>>>> ", post);
-    router.push(`post/${post.id}`);
+    // router.push(`post/${post.id}`);
   };
 
   const onPressNewPost = () => {

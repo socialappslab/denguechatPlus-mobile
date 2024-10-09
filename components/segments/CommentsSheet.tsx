@@ -31,19 +31,23 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const insets = useSafeAreaInsets();
   const { bottomSheetModalRef, postId, lightColor, darkColor } = props;
   const [post, setPost] = useState<Post | null>(null);
+  const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
 
   const [{ data, loading }, refetchPost] = useAxios<
     ExistingDocumentObject,
     unknown,
     ErrorResponse
-  >({
-    url: `posts/${postId}`,
-  });
+  >(
+    {
+      url: `posts/${postId}`,
+    },
+    { manual: true },
+  );
 
   useEffect(() => {
     if (isFocused) {
+      setLoadingInitial(true);
       setPost(null);
-      refetchPost();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
@@ -65,6 +69,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         (item) => item.data.attributes,
       );
       setPost(deserializedPost);
+      setLoadingInitial(false);
     }
   }, [data]);
 
@@ -80,12 +85,20 @@ export default function CommentsSheet(props: CommentsSheetProps) {
 
   const snapPoints = useMemo(() => ["90%"], []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-    if (index === -1) {
-      setPost(null);
-    }
-  }, []);
+  const handleSheetChanges = useCallback(
+    (index: number) => {
+      if (index === -1) {
+        setLoadingInitial(true);
+        setPost(null);
+      }
+      if (index === 0) {
+        setLoadingInitial(true);
+        setPost(null);
+        refetchPost();
+      }
+    },
+    [refetchPost],
+  );
 
   const handleClosePress = () => {
     bottomSheetModalRef.current?.close();
@@ -139,13 +152,13 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         </BottomSheetScrollView>
       )}
 
-      {loading && (
+      {(loading || loadingInitial) && (
         <View className="flex flex-1 items-center justify-center">
           <Loading />
         </View>
       )}
 
-      {!post?.comments?.length && !loading && (
+      {!post?.comments?.length && !loading && !loadingInitial && (
         <View className="flex flex-1 items-center justify-center">
           <Text className="text-neutral-400 font-bold text-2xl text-center mb-2">
             {t("chat.comments.empty")}
@@ -183,17 +196,9 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
-  scrollContainer: {
-    backgroundColor: "green",
-  },
   contentContainer: {
     backgroundColor: "transparent",
     width: "100%",
-  },
-  itemContainer: {
-    padding: 6,
-    margin: 6,
-    backgroundColor: "#eee",
   },
   handleIndicator: {
     width: 0,
@@ -201,7 +206,7 @@ const styles = StyleSheet.create({
   },
   background: {
     display: "flex",
-    borderTopLeftRadius: 12, // Adjust the radius as needed
-    borderTopRightRadius: 12, // Adjust the radius as needed
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
   },
 });

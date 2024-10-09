@@ -16,3 +16,5 @@ export * from "./SimpleSelectableItem";
 export * from "./LocationButton";
 export * from "./SimpleBottomSheet";
 export * from "./PostItem";
+export * from "./SimpleTextInput";
+export * from "./SelectorButton";
