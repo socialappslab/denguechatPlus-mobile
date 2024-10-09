@@ -1,25 +1,28 @@
-import { StyleSheet } from "react-native";
-
 import Button from "@/components/themed/Button";
-import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
-import { Text, View, SafeAreaView, ListItem } from "@/components/themed";
 import { CheckTeam } from "@/components/segments/CheckTeam";
-import { useVisit } from "@/hooks/useVisit";
-import { Routes } from "../(visit)/_layout";
-import { useVisitStore } from "@/hooks/useVisitStore";
-import * as Network from "expo-network";
-import { useEffect } from "react";
+import { OfflineVisitSheet } from "@/components/segments/OfflineVisitSheet";
+import { ListItem, SafeAreaView, Text, View } from "@/components/themed";
 import useCreateMutation from "@/hooks/useCreateMutation";
+import { useVisit } from "@/hooks/useVisit";
+import { useVisitStore } from "@/hooks/useVisitStore";
 import { VisitData } from "@/types";
 import { formatDate } from "@/util";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import * as Network from "expo-network";
+import { useEffect, useRef } from "react";
+import { Routes } from "../(visit)/_layout";
+import { Platform } from "react-native";
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { storedVisits, setNetworkState, networkState } = useVisitStore();
   const { language } = useVisit();
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   /**
    * Set network state
@@ -31,13 +34,17 @@ export default function TabTwoScreen() {
     })();
   }, []);
 
-  const hasVisits = storedVisits.length;
+  const hasVisits = storedVisits.length > 0;
   const hasConnection = networkState?.isConnected;
 
   const synchronizeVisits = async () => {
     for (let visit of storedVisits) {
       console.log(visit);
     }
+  };
+
+  const handlePressVisit = () => {
+    bottomSheetModalRef.current?.present();
   };
 
   const { createMutation: createVisit, loading } = useCreateMutation<
@@ -77,7 +84,7 @@ export default function TabTwoScreen() {
                   return (
                     <ListItem
                       title={`${t("visit.houses.house")} ${visit.houseId!}`}
-                      onPressElement={() => {}}
+                      onPressElement={handlePressVisit}
                       filled={formatDate(visit.visitedAt, language)}
                     />
                   );
@@ -98,6 +105,9 @@ export default function TabTwoScreen() {
           </View>
         </View>
       </CheckTeam>
+
+      {/* <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View> */}
+      {/* <OfflineVisitSheet bottomSheetModalRef={bottomSheetModalRef} /> */}
     </SafeAreaView>
   );
 }
