@@ -57,8 +57,9 @@ export function PostItem(props: PostItemProps) {
         <Pressable onPress={onPressElement}>
           <Image
             className="rounded-lg"
+            contentFit="contain"
             source={{ uri: post.photoUrl.photo_url }}
-            style={{ height: 210, resizeMode: "contain" }}
+            style={{ height: 210 }}
           />
         </Pressable>
       )}

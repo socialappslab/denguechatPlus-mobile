@@ -76,6 +76,7 @@
       "deleteDraftMessage": "Tem certeza de que deseja descartar este rascunho? Esta ação não pode ser desfeita.",
       "createPost": "Criar publicação",
       "postSendSuccess": "Publicação enviada",
+      "commentDeleted": "Comentário excluído",
       "draftDescarted": "Rascunho descartado"
     },
     "tabs": {

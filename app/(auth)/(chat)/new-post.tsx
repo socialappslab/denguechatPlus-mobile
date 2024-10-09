@@ -52,7 +52,7 @@ export default function NewPost() {
   const [loading, setLoading] = useState<boolean>(false);
   const [visibility, setVisibility] = useState<PostVisibility>("public");
   const [loadingPhoto, setLoadingPhoto] = useState<boolean>(false);
-  const [numberOfLines, setNumberOfLines] = useState(2); // State for dynamic number of lines
+  const [numberOfLines, setNumberOfLines] = useState(2);
 
   const methods = useForm<PostInputType>({
     resolver: zodResolver(createPostSchema()),
@@ -270,8 +270,9 @@ export default function NewPost() {
               {selectedPhoto && (
                 <Image
                   className="rounded-lg mb-4"
+                  contentFit="contain"
                   source={{ uri: selectedPhoto?.uri }}
-                  style={{ height: 210, resizeMode: "contain" }}
+                  style={{ height: 210 }}
                 />
               )}
               {loadingPhoto && (

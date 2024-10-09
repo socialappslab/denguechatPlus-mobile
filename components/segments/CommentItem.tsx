@@ -12,8 +12,8 @@ import { useVisit } from "@/hooks/useVisit";
 
 export type CommnetItemProps = ThemeProps &
   TouchableOpacity["props"] & {
-    onPressLike: () => void;
-    onPressDelete: () => void;
+    onPressLike: (id: number) => void;
+    onPressDelete: (id: number) => void;
     canDelete?: boolean;
     comment: Comment;
   };
@@ -52,6 +52,7 @@ export default function CommnetItem(props: CommnetItemProps) {
             <>
               <Image
                 className="rounded-lg mt-3"
+                contentFit="cover"
                 source={{ uri: comment.photos.photo_url }}
                 style={{ height: 210 }}
               />
@@ -62,7 +63,7 @@ export default function CommnetItem(props: CommnetItemProps) {
           <View className="flex flex-1 flex-row justify-between mt-2">
             <TouchableOpacity
               className="flex flex-row items-center"
-              onPress={onPressLike}
+              onPress={() => onPressLike(comment.id)}
             >
               <Like active={comment.likedByMe} />
               <Text
@@ -77,7 +78,7 @@ export default function CommnetItem(props: CommnetItemProps) {
             {comment.canDeleteByUser && (
               <TouchableOpacity
                 className="flex flex-row items-center"
-                onPress={onPressDelete}
+                onPress={() => onPressDelete(comment.id)}
               >
                 <Delete />
                 <Text className="ml-2 text-neutral-500 text-sm">
