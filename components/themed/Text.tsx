@@ -12,7 +12,7 @@ const classNameMap: ClassNameMap = {
   title: "text-2xl font-bold",
   header: "text-2xl font-semibold",
   text: "text-base font-normal",
-  default: "text-md",
+  default: "text-md font-normal",
   small: "text-sm text-slate-500",
   subtitle: "text-lg font-semibold",
 };

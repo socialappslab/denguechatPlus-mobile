@@ -76,6 +76,7 @@
       "deleteDraftMessage": "¿Estás seguro de que quieres descartar este borrador? Esta acción no puede deshacerse.",
       "createPost": "Crear publicación",
       "postSendSuccess": "Publicación enviada",
+      "commentDeleted": "Comentario borrado",
       "draftDescarted": "Borrador descartado"
     },
     "tabs": {

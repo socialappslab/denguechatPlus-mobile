@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-
-import { useAuth } from "@/context/AuthProvider";
-import { Text, View, ScrollView, SafeAreaView } from "@/components/themed";
 import { Platform } from "react-native";
 import { useTranslation } from "react-i18next";
 import useAxios from "axios-hooks";
@@ -12,17 +9,17 @@ import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import Colors from "@/constants/Colors";
 import { getInitials } from "@/util";
-import { SimpleChip, ProgressBar, Loading } from "@/components/themed";
-
-// example JSON Data
-const visitsData = {
-  weeklyChange: "+15%",
-};
-
-const sitesData = {
-  totalSites: 170,
-  weeklyChange: "+15%",
-};
+import {
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+  SimpleChip,
+  ProgressBar,
+  Loading,
+} from "@/components/themed";
+import { useAuth } from "@/context/AuthProvider";
+import { ReportData } from "@/types";
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -43,6 +40,11 @@ export default function Profile() {
     url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
   });
 
+  const [{ data: reportData, loading: loadingReport }, refetchReport] =
+    useAxios<ReportData, unknown, ErrorResponse>({
+      url: `reports/house_status`,
+    });
+
   useEffect(() => {
     if (meData) refetchTeam();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,7 +63,7 @@ export default function Profile() {
     <SafeAreaView>
       <CheckTeam view="profile">
         <View className="flex flex-1">
-          {loadingTeam && (
+          {(loadingTeam || loadingReport) && (
             <View className="flex flex-1 items-center justify-center">
               <Loading />
             </View>
@@ -83,17 +85,23 @@ export default function Profile() {
                 </Text>
                 <View className="flex-row items-center justify-between">
                   <Text className="text-3xl font-semibold">
-                    {team?.visits ?? 0}
+                    {reportData?.visitQuantity ?? 0}
                   </Text>
-                  <SimpleChip
-                    border="1"
-                    padding="small"
-                    textColor="neutral-500"
-                    borderColor="neutral-500"
-                    ionIcon="arrow-up"
-                    iconColor={Colors.light.neutral}
-                    label={`${visitsData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
-                  />
+                  {reportData?.visitVariationPercentage && (
+                    <SimpleChip
+                      border="1"
+                      padding="small"
+                      textColor="neutral-500"
+                      borderColor="neutral-500"
+                      ionIcon={
+                        reportData?.visitVariationPercentage > 0
+                          ? "arrow-up"
+                          : "arrow-down"
+                      }
+                      iconColor={Colors.light.neutral}
+                      label={`${reportData?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                    />
+                  )}
                 </View>
               </View>
 
@@ -103,34 +111,40 @@ export default function Profile() {
                 </Text>
                 <View className="flex-row items-center justify-between">
                   <Text className="text-3xl font-semibold">
-                    {sitesData.totalSites}
+                    {reportData?.houseQuantity ?? 0}
                   </Text>
 
-                  <SimpleChip
-                    border="1"
-                    padding="small"
-                    textColor="neutral-500"
-                    borderColor="neutral-500"
-                    ionIcon="arrow-up"
-                    iconColor={Colors.light.neutral}
-                    label={`${sitesData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
-                  />
+                  {reportData?.siteVariationPercentage && (
+                    <SimpleChip
+                      border="1"
+                      padding="small"
+                      textColor="neutral-500"
+                      borderColor="neutral-500"
+                      ionIcon={
+                        reportData?.siteVariationPercentage > 0
+                          ? "arrow-up"
+                          : "arrow-down"
+                      }
+                      iconColor={Colors.light.neutral}
+                      label={`${reportData?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                    />
+                  )}
                 </View>
                 <View className="flex flex-col mt-6">
                   <ProgressBar
                     label={t("brigade.sites.green")}
-                    progress={team?.sitesStatuses?.green ?? 0}
-                    color="primary"
+                    progress={reportData?.greenQuantity ?? 0}
+                    color="verde-600"
                   />
                   <ProgressBar
                     label={t("brigade.sites.yellow")}
-                    progress={team?.sitesStatuses?.yellow ?? 0}
-                    color="yellow-300"
+                    progress={reportData?.orangeQuantity ?? 0}
+                    color="yellow-400"
                   />
                   <ProgressBar
                     label={t("brigade.sites.red")}
-                    progress={team?.sitesStatuses?.red ?? 0}
-                    color="red-500"
+                    progress={reportData?.redQuantity ?? 0}
+                    color="red-600"
                   />
                 </View>
               </View>
@@ -161,7 +175,7 @@ export default function Profile() {
                         textColor="blue-500"
                         border="1"
                         borderColor="blue-400"
-                        backgroundColor="blue-100"
+                        backgroundColor="blue-50"
                         label={`${t("brigade.teamLeader")}`}
                       />
                     )}

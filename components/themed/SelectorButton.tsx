@@ -2,7 +2,8 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { TouchableOpacity } from "react-native";
 
 import { ThemeProps } from "@/components/themed/useThemeColor";
-import { Text, IconMaterial } from "@/components/themed";
+import { Text } from "@/components/themed/Text";
+import { IconMaterial } from "@/components/themed/IconMaterial";
 
 export type SelectorButtonProps = ThemeProps &
   TouchableOpacity["props"] & {

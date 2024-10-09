@@ -1,5 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { StyleSheet, TouchableOpacity, Platform } from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { StyleSheet, TouchableOpacity, Platform, Keyboard } from "react-native";
 import { useTranslation } from "react-i18next";
 import {
   BottomSheetModal,
@@ -9,6 +15,8 @@ import {
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import useAxios from "axios-hooks";
 import { Image } from "expo-image";
+import { KeyboardAccessoryView } from "react-native-keyboard-accessory";
+import { BottomSheetScrollViewMethods } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types";
 
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -36,6 +44,8 @@ import { authApi } from "@/config/axios";
 import Media from "@/components/icons/Media";
 import Send from "@/components/icons/Send";
 import DeleteSmall from "@/components/icons/DeleteSmall";
+import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
+import { Button } from "@/components/themed";
 
 export type CommentsSheetProps = ThemeProps & {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -47,7 +57,13 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const isFocused = useIsFocused();
   const insets = useSafeAreaInsets();
   const { bottomSheetModalRef, postId, lightColor, darkColor } = props;
+  const bottomSheetModalDeleteRef = useRef<BottomSheetModal>(null);
+
+  const [showOptions, setShowOptions] = useState<boolean>(false);
   const [post, setPost] = useState<Post | null>(null);
+  const [commentToDeleteId, setCommentToDeleteId] = useState<number | null>(
+    null,
+  );
   const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
 
   const [postingComment, setPostigComment] = useState<boolean>(false);
@@ -67,6 +83,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     { manual: true },
   );
 
+  console.log("CommentsSheet postId:", postId);
   const methods = useForm<PostInputType>({
     resolver: zodResolver(createPostSchema()),
     mode: "onChange",
@@ -86,6 +103,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   useEffect(() => {
     setSelectedPhoto(undefined);
     reset({ content: "" });
+    setShowOptions(false);
   }, [isFocused, reset]);
 
   const onSubmitHandler: SubmitHandler<PostInputType> = async (values) => {
@@ -103,8 +121,6 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         name: fileName,
         type: "image/png",
       };
-
-      // const fileBlob = await (await fetch(selectedPhoto.uri)).blob();
       form.append("photo", file as any);
     }
 
@@ -124,7 +140,11 @@ export default function CommentsSheet(props: CommentsSheetProps) {
       setTimeout(() => {
         setSelectedPhoto(undefined);
         reset({ content: "" });
+        setShowOptions(false);
       }, 100);
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd();
+      }, 1000);
     } catch (error) {
       console.error("Error posting data:", JSON.stringify(error?.response));
       Toast.show({
@@ -225,6 +245,8 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     [refetchPost],
   );
 
+  const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null);
+
   const handleClosePress = () => {
     bottomSheetModalRef.current?.close();
   };
@@ -232,6 +254,65 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const handleRemoveMedia = () => {
     setSelectedPhoto(undefined);
   };
+
+  const checkShowOptions = useCallback(() => {
+    if (watchContent.length === 0 && !selectedPhoto) {
+      setShowOptions(false);
+    } else {
+      setShowOptions(true);
+    }
+  }, [watchContent, selectedPhoto]);
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        checkShowOptions();
+      },
+    );
+
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setShowOptions(true);
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, [checkShowOptions]);
+
+  const handlePressCancel = () => {
+    bottomSheetModalDeleteRef.current?.close();
+  };
+
+  const handlePressDelete = (id: number) => {
+    setCommentToDeleteId(id);
+    bottomSheetModalDeleteRef.current?.present();
+  };
+
+  const handlePressConfirmDelete = async () => {
+    try {
+      setPostigComment(true);
+      await authApi.delete(`posts/${postId}/comments/${commentToDeleteId}`);
+      console.log("Comment deleted:");
+      refetchPost();
+      bottomSheetModalDeleteRef.current?.close();
+      bottomSheetModalRef.current?.present();
+      Toast.show({
+        type: "success",
+        text1: t("chat.commentDeleted"),
+      });
+    } catch (error) {
+      console.log("Error deleting comment", error);
+    } finally {
+      setPostigComment(false);
+    }
+  };
+
+  const snapPointsDelete = useMemo(() => ["45%"], []);
 
   return (
     <BottomSheetModal
@@ -267,6 +348,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
 
       {!!post?.comments?.length && (
         <BottomSheetScrollView
+          ref={scrollViewRef}
           style={styles.contentContainer}
           contentContainerStyle={styles.contentContainer}
         >
@@ -274,7 +356,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
             <CommentItem
               key={comment.id}
               comment={comment}
-              onPressDelete={() => {}}
+              onPressDelete={handlePressDelete}
               onPressLike={() => {}}
             />
           ))}
@@ -297,98 +379,151 @@ export default function CommentsSheet(props: CommentsSheetProps) {
           </Text>
         </View>
       )}
-
-      <View
-        className="flex flex-col items-center px-5 pt-2"
-        style={{ paddingBottom: insets.bottom }}
+      <KeyboardAccessoryView
+        alwaysVisible
+        heightProperty={showOptions ? "minHeight" : "height"}
+        style={[
+          {
+            backgroundColor,
+          },
+          !showOptions && {
+            borderTopColor: "transparent",
+          },
+          ,
+        ]}
+        androidAdjustResize={true}
+        animateOn={Platform.OS === "ios" ? "all" : "none"}
       >
-        <FormProvider {...methods}>
-          <View className="w-full pb-3 pt-2 px-4 border border-neutral-200 rounded-lg">
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <SimpleTextInput
-                  readOnly={loadingPhoto || postingComment}
-                  editable={!loadingPhoto && !postingComment}
-                  placeholder={t("chat.comments.placeholder")}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  multiline={true}
-                  numberOfLines={numberOfLines}
-                  onContentSizeChange={(e) =>
-                    setNumberOfLines(
-                      Math.max(
-                        2,
-                        Math.floor(e.nativeEvent.contentSize.height / 20),
-                      ),
-                    )
-                  }
-                  style={{ textAlignVertical: "top" }}
-                />
-              )}
-              name="content"
-            />
-            {selectedPhoto && (
-              <View
-                className="relative inline-flex my-4"
-                style={{ height: 60, width: 60 }}
-              >
-                <Image
-                  className="relative rounded-lg"
-                  source={{ uri: selectedPhoto?.uri }}
-                  style={{ height: 60, width: 60, resizeMode: "cover" }}
-                />
-                <TouchableOpacity
-                  className="absolute -top-2 -right-2"
-                  onPress={handleRemoveMedia}
+        <View
+          className={`flex flex-col items-center px-5 ${showOptions ? "pt-5" : "pt-2"}`}
+          style={{
+            paddingBottom:
+              showOptions && Keyboard.isVisible() ? 0 : insets.bottom,
+          }}
+        >
+          <FormProvider {...methods}>
+            <View
+              className={`w-full px-4 border border-neutral-200 rounded-lg ${Platform.OS === "ios" ? "pb-3 pt-2" : "pb-1 pt-1"}`}
+            >
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <SimpleTextInput
+                    autoFocus={false}
+                    readOnly={loadingPhoto || postingComment}
+                    editable={!loadingPhoto && !postingComment}
+                    placeholder={t("chat.comments.placeholder")}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                    multiline={true}
+                    numberOfLines={numberOfLines}
+                    onContentSizeChange={(e) => {
+                      const contentHeight = e.nativeEvent.contentSize.height;
+                      const lineHeight = 20;
+                      const calculatedLines = Math.ceil(
+                        contentHeight / lineHeight,
+                      );
+                      const extra = calculatedLines > 2 ? 1 : 0;
+                      setNumberOfLines(calculatedLines + extra);
+                    }}
+                  />
+                )}
+                name="content"
+              />
+              {selectedPhoto && (
+                <View
+                  className="relative inline-flex my-4"
+                  style={{ height: 60, width: 60 }}
                 >
-                  <DeleteSmall />
-                </TouchableOpacity>
-              </View>
-            )}
-            {loadingPhoto && (
-              <View className="flex items-center justify-center">
-                <Loading />
-              </View>
-            )}
-          </View>
+                  <Image
+                    className="relative rounded-lg"
+                    source={{ uri: selectedPhoto?.uri }}
+                    contentFit="cover"
+                    style={{ height: 60, width: 60 }}
+                  />
+                  <TouchableOpacity
+                    className="absolute -top-2 -right-2"
+                    onPress={handleRemoveMedia}
+                  >
+                    <DeleteSmall />
+                  </TouchableOpacity>
+                </View>
+              )}
+              {loadingPhoto && (
+                <View className="flex items-center justify-center">
+                  <Loading />
+                </View>
+              )}
+            </View>
 
-          {/* {errors?.content?.message && !isValid && (
+            {/* {errors?.content?.message && !isValid && (
             <View className="w-full mt-2 flex items-start">
               <Text className="font-normal text-red-400 text-xs">
                 {errors.content.message}
               </Text>
             </View>
           )} */}
-        </FormProvider>
-
-        {!!watchContent && (
-          <View className="mt-4 flex flex-row justify-between w-full">
-            <TouchableOpacity
-              disabled={loadingPhoto || postingComment}
-              onPress={handleAddMedia}
+          </FormProvider>
+          {showOptions && (
+            <View
+              className={`flex flex-row items-center justify-between w-full`}
             >
-              <Media disabled={loadingPhoto || postingComment} />
-            </TouchableOpacity>
-            {postingComment && (
-              <View
-                className="flex items-center justify-center"
-                style={{ height: 60 }}
+              <TouchableOpacity
+                disabled={loadingPhoto || postingComment}
+                onPress={handleAddMedia}
+                className="pt-4 pb-5 pr-6 pl-4 right-4"
               >
-                <Loading />
-              </View>
-            )}
-            <TouchableOpacity
-              disabled={loadingPhoto || !isValid || postingComment}
-              onPress={handleSubmit(onSubmitHandler)}
-            >
-              <Send disabled={loadingPhoto || !isValid || postingComment} />
-            </TouchableOpacity>
-          </View>
+                <Media disabled={loadingPhoto || postingComment} />
+              </TouchableOpacity>
+              {postingComment && (
+                <View
+                  className="flex flex-col items-center justify-center"
+                  style={{ height: 60 }}
+                >
+                  <Loading />
+                </View>
+              )}
+              <TouchableOpacity
+                disabled={loadingPhoto || !isValid || postingComment}
+                onPress={handleSubmit(onSubmitHandler)}
+                className="pt-4 pb-5 pl-6 pr-4 left-4"
+              >
+                <Send disabled={loadingPhoto || !isValid || postingComment} />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        {(!showOptions || !Keyboard.isVisible()) && (
+          <View className={Platform.OS === "ios" ? "h-1" : "h-2"} />
         )}
-      </View>
-      <View className="h-2" />
+      </KeyboardAccessoryView>
+      <ClosableBottomSheet
+        title={t("chat.actions.deleteComment")}
+        snapPoints={snapPointsDelete}
+        bottomSheetModalRef={bottomSheetModalDeleteRef}
+      >
+        <View className="flex flex-col w-full px-5">
+          <View className="flex items-center justify-center my-6 p-4 rounded-2xl border border-neutral-200">
+            <Text className="text-neutral-700 text-center text-base mb-2 w-10/12">
+              {t("chat.comments.deleteMessage")}
+            </Text>
+          </View>
+
+          <Button
+            disabled={postingComment}
+            title={t("chat.actions.delete")}
+            onPress={handlePressConfirmDelete}
+            textClassName="text-white"
+            className="bg-red-400 border-red-400 mb-4"
+          />
+          <Button
+            disabled={postingComment}
+            title={t("chat.actions.cancel")}
+            onPress={handlePressCancel}
+          />
+        </View>
+      </ClosableBottomSheet>
     </BottomSheetModal>
   );
 }

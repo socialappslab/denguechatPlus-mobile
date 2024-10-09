@@ -76,6 +76,7 @@
       "deleteDraftMessage": "Are you sure you want to discard this draft? This action cannot be undone.",
       "createPost": "Create post",
       "postSendSuccess": "Post sent",
+      "commentDeleted": "Comment deleted",
       "draftDescarted": "Draft discarded"
     },
     "tabs": {
