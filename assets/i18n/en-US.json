@@ -139,6 +139,9 @@
       "stackTitle": "Visit Registration",
       "start": "Start a visit",
       "title": "Visit Registration",
+      "newVisit": "New Visit",
+      "registerCopy": "Register a new visit here.",
+      "registerVisit": "Register a new visit",
       "required": "* Required fields.",
       "list": {
         "visitList": "Visit List",
