@@ -5,25 +5,7 @@ import { View, Text } from "@/components/themed";
 import Colors from "@/constants/Colors";
 
 export type SimpleChipProps = ThemeProps & {
-  ionIcon?:
-    | "arrow-up"
-    | "search"
-    | "repeat"
-    | "link"
-    | "at"
-    | "body"
-    | "code"
-    | "map"
-    | "menu"
-    | "time"
-    | "ellipse"
-    | "filter"
-    | "image"
-    | "stop"
-    | "text"
-    | "alert"
-    | "checkbox"
-    | "radio";
+  ionIcon?: React.ComponentProps<typeof Ionicons>["name"];
   textColor?: string;
   borderColor?: string;
   iconColor?: string;

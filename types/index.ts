@@ -238,3 +238,14 @@ export interface Post {
   likedByUser: boolean;
   comments?: Comment[];
 }
+
+export type ReportData = {
+  houseQuantity: number;
+  visitQuantity: number;
+  greenQuantity: number;
+  orangeQuantity: number;
+  redQuantity: number;
+  visitPercent: number;
+  siteVariationPercentage: number;
+  visitVariationPercentage: number;
+};
