@@ -49,7 +49,7 @@ export const OfflineVisitSheet: React.FC<OfflineVisitSheetProps> = ({
     >
       <View className="flex flex-row items-center px-5 mb-2">
         <View className="flex flex-1 flex-col">
-          <Text className="font-bold text-2xl">Sip</Text>
+          <Text className="font-bold text-2xl">Vista Previa: Casa 1</Text>
         </View>
         <TouchableOpacity className="ml-4" onPress={handleClosePress}>
           <CloseCircle />
