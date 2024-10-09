@@ -201,6 +201,11 @@
         "placeholder": "Escribe tus comentarios",
         "commentsAreOptional": "Los comentarios son opcionales"
       },
+      "addContainer": {
+        "registerNewContainer": "Registrar otro contenedor?",
+        "registerYes": "Sí, registrar otro contenedor",
+        "registerNo": "No, no es necesario"
+      },
       "containerPicture": {
         "title": "Foto del contenedor",
         "description": "Toma una fotografía del contenedor y regístrala",
