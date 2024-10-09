@@ -76,7 +76,7 @@ export default function TabTwoScreen() {
                 {storedVisits.map((visit) => {
                   return (
                     <ListItem
-                      title={`${t("visit.houses.house")} ${visit.houseId!}`}
+                      title={`${t("visit.houses.house")} ${visit.houseId}`}
                       onPressElement={() => handlePressVisit(visit)}
                       filled={formatDate(visit.visitedAt, language)}
                     />
