@@ -8,17 +8,34 @@ import {
 } from "@gorhom/bottom-sheet";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import useAxios from "axios-hooks";
+import { Image } from "expo-image";
+
+import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
+
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useIsFocused } from "@react-navigation/native";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  useForm,
+  SubmitHandler,
+  FormProvider,
+  Controller,
+} from "react-hook-form";
+import Toast from "react-native-toast-message";
 
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
-import { Loading, Text, View } from "@/components/themed";
-import { ErrorResponse } from "@/schema";
+import { Loading, SimpleTextInput, Text, View } from "@/components/themed";
+import { createPostSchema, ErrorResponse, PostInputType } from "@/schema";
 import { Post } from "@/types";
-
 import CloseCircle from "@/assets/images/icons/close-circle.svg";
 import CommentItem from "@/components/segments/CommentItem";
+
+import { authApi } from "@/config/axios";
+import Media from "@/components/icons/Media";
+import Send from "@/components/icons/Send";
+import DeleteSmall from "@/components/icons/DeleteSmall";
 
 export type CommentsSheetProps = ThemeProps & {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -33,6 +50,12 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const [post, setPost] = useState<Post | null>(null);
   const [loadingInitial, setLoadingInitial] = useState<boolean>(true);
 
+  const [postingComment, setPostigComment] = useState<boolean>(false);
+  const [selectedPhoto, setSelectedPhoto] =
+    useState<ImagePicker.ImagePickerAsset>();
+  const [loadingPhoto, setLoadingPhoto] = useState<boolean>(false);
+  const [numberOfLines, setNumberOfLines] = useState(2);
+
   const [{ data, loading }, refetchPost] = useAxios<
     ExistingDocumentObject,
     unknown,
@@ -43,6 +66,75 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     },
     { manual: true },
   );
+
+  const methods = useForm<PostInputType>({
+    resolver: zodResolver(createPostSchema()),
+    mode: "onChange",
+    defaultValues: { content: "" },
+  });
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors, isValid },
+  } = methods;
+
+  const watchContent = watch("content", "");
+
+  useEffect(() => {
+    setSelectedPhoto(undefined);
+    reset({ content: "" });
+  }, [isFocused, reset]);
+
+  const onSubmitHandler: SubmitHandler<PostInputType> = async (values) => {
+    setPostigComment(true);
+    const form = new FormData();
+
+    if (selectedPhoto) {
+      const trimmedURI =
+        Platform.OS === "android"
+          ? selectedPhoto.uri
+          : selectedPhoto.uri.replace("file://", "");
+      const fileName = trimmedURI.split("/").pop();
+      const file = {
+        uri: selectedPhoto.uri,
+        name: fileName,
+        type: "image/png",
+      };
+
+      // const fileBlob = await (await fetch(selectedPhoto.uri)).blob();
+      form.append("photo", file as any);
+    }
+
+    form.append("content", values.content);
+
+    try {
+      const response = await authApi.post(`posts/${postId}/comments`, form, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        transformRequest: (d) => form,
+      });
+
+      console.log("Comment successful:", response.data);
+
+      refetchPost();
+      setTimeout(() => {
+        setSelectedPhoto(undefined);
+        reset({ content: "" });
+      }, 100);
+    } catch (error) {
+      console.error("Error posting data:", JSON.stringify(error?.response));
+      Toast.show({
+        type: "error",
+        text1: t("errorCodes.generic"),
+      });
+    } finally {
+      setPostigComment(false);
+    }
+  };
 
   useEffect(() => {
     if (isFocused) {
@@ -73,6 +165,39 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     }
   }, [data]);
 
+  const handleAddMedia = async () => {
+    setLoadingPhoto(true);
+
+    try {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        quality: 1,
+      });
+
+      console.log(result);
+
+      if (!result.canceled) {
+        const resizedImage = await ImageManipulator.manipulateAsync(
+          result.assets[0].uri,
+          [{ resize: { height: 1024 } }],
+          { compress: 0.7, format: ImageManipulator.SaveFormat.PNG },
+        );
+
+        if (resizedImage && resizedImage.uri) {
+          setSelectedPhoto(resizedImage);
+        } else {
+          console.log("Error resizing image");
+        }
+      }
+    } catch (error) {
+      console.error("Error selecting image:", error);
+    } finally {
+      setLoadingPhoto(false);
+    }
+  };
+
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "background",
@@ -102,6 +227,10 @@ export default function CommentsSheet(props: CommentsSheetProps) {
 
   const handleClosePress = () => {
     bottomSheetModalRef.current?.close();
+  };
+
+  const handleRemoveMedia = () => {
+    setSelectedPhoto(undefined);
   };
 
   return (
@@ -170,15 +299,94 @@ export default function CommentsSheet(props: CommentsSheetProps) {
       )}
 
       <View
-        className="flex flex-row items-center px-5 pt-2"
+        className="flex flex-col items-center px-5 pt-2"
         style={{ paddingBottom: insets.bottom }}
       >
-        <TouchableOpacity
-          onPress={() => {}}
-          className={`flex flex-1 flex-row items-center border-neutral-200 border rounded-lg py-2 px-4 h-11`}
-        >
-          <Text className="text-neutral-300">{t("chat.sharePlaceholder")}</Text>
-        </TouchableOpacity>
+        <FormProvider {...methods}>
+          <View className="w-full pb-3 pt-2 px-4 border border-neutral-200 rounded-lg">
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <SimpleTextInput
+                  readOnly={loadingPhoto || postingComment}
+                  editable={!loadingPhoto && !postingComment}
+                  placeholder={t("chat.comments.placeholder")}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  multiline={true}
+                  numberOfLines={numberOfLines}
+                  onContentSizeChange={(e) =>
+                    setNumberOfLines(
+                      Math.max(
+                        2,
+                        Math.floor(e.nativeEvent.contentSize.height / 20),
+                      ),
+                    )
+                  }
+                  style={{ textAlignVertical: "top" }}
+                />
+              )}
+              name="content"
+            />
+            {selectedPhoto && (
+              <View
+                className="relative inline-flex my-4"
+                style={{ height: 60, width: 60 }}
+              >
+                <Image
+                  className="relative rounded-lg"
+                  source={{ uri: selectedPhoto?.uri }}
+                  style={{ height: 60, width: 60, resizeMode: "cover" }}
+                />
+                <TouchableOpacity
+                  className="absolute -top-2 -right-2"
+                  onPress={handleRemoveMedia}
+                >
+                  <DeleteSmall />
+                </TouchableOpacity>
+              </View>
+            )}
+            {loadingPhoto && (
+              <View className="flex items-center justify-center">
+                <Loading />
+              </View>
+            )}
+          </View>
+
+          {/* {errors?.content?.message && !isValid && (
+            <View className="w-full mt-2 flex items-start">
+              <Text className="font-normal text-red-400 text-xs">
+                {errors.content.message}
+              </Text>
+            </View>
+          )} */}
+        </FormProvider>
+
+        {!!watchContent && (
+          <View className="mt-4 flex flex-row justify-between w-full">
+            <TouchableOpacity
+              disabled={loadingPhoto || postingComment}
+              onPress={handleAddMedia}
+            >
+              <Media disabled={loadingPhoto || postingComment} />
+            </TouchableOpacity>
+            {postingComment && (
+              <View
+                className="flex items-center justify-center"
+                style={{ height: 60 }}
+              >
+                <Loading />
+              </View>
+            )}
+            <TouchableOpacity
+              disabled={loadingPhoto || !isValid || postingComment}
+              onPress={handleSubmit(onSubmitHandler)}
+            >
+              <Send disabled={loadingPhoto || !isValid || postingComment} />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <View className="h-2" />
     </BottomSheetModal>
