@@ -1,7 +1,6 @@
 import React from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
-import { Platform, Pressable } from "react-native";
+import { Tabs } from "expo-router";
+import { Platform } from "react-native";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 
 import Colors from "@/constants/Colors";
@@ -13,7 +12,6 @@ import Brigade from "@/assets/images/icons/brigade.svg";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View } from "../../../components/themed";
 
 type TabsNames = "chat" | "homes" | "profile";
 
@@ -42,7 +40,6 @@ export default function TabLayout(props: ThemeProps) {
 
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
-  console.log(`INSETS ${Platform.OS} `, insets);
   return (
     <Tabs
       initialRouteName="index"

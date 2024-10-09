@@ -31,8 +31,8 @@ export default function CommnetItem(props: CommnetItemProps) {
   );
 
   return (
-    <View className="flex flex-col px-5 py-4">
-      <View className="flex flex-row items-start mb-4">
+    <View className="flex flex-col px-5 py-2 mb-3">
+      <View className="flex flex-row items-start">
         <View
           className={`flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3`}
         >
@@ -45,21 +45,21 @@ export default function CommnetItem(props: CommnetItemProps) {
               • {formatDatePosts(comment.createdAt, language)}
             </Text>
           </View>
-          <View className="flex flex-1 flex-row items-center mb-3">
+          <View className="flex flex-1 flex-row items-center">
             <Text>{comment.content}</Text>
           </View>
           {comment.photos && (
             <>
               <Image
-                className="rounded-lg"
+                className="rounded-lg mt-3"
                 source={{ uri: comment.photos.photo_url }}
                 style={{ height: 210 }}
               />
-              <View className="h-2" />
+              <View className="h-1" />
             </>
           )}
 
-          <View className="flex flex-1 flex-row justify-between mt-1">
+          <View className="flex flex-1 flex-row justify-between mt-2">
             <TouchableOpacity
               className="flex flex-row items-center"
               onPress={onPressLike}
