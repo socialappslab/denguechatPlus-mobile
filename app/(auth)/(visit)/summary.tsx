@@ -3,15 +3,11 @@ import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { useVisitStore } from "@/hooks/useVisitStore";
-import { FormState, VisitData, VisitPayload } from "@/types";
+import { FormState, VisitData } from "@/types";
 import { extractAxiosErrorData, formatDate } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
-import * as Network from "expo-network";
-
-// Inspection type
-const QuantityFound = "quantity_founded";
 
 // StatusColor utils
 enum StatusColor {
@@ -37,7 +33,7 @@ const RenderStatus = ({
   );
 };
 
-type Inspection = Record<string, string | undefined | string[]>;
+type Inspection = Record<string, string | undefined | boolean | string[]>;
 type Answer = Record<string, string | number | undefined>;
 
 /**
@@ -74,22 +70,38 @@ export const prepareFormData = (formData: FormState) => {
       return;
     }
 
+    /**
+     * We check for inspection questions
+     */
     if (answer.resourceName) {
       const resourceName = answer.resourceName;
-      if (answer.resourceType === "relation") {
+      if (answer.resourceType === "relation")
         inspections[index][resourceName] = answer.text || answer.resourceId;
-      }
+
       if (answer.resourceType === "attribute") {
-        inspections[index][resourceName] = answer.text || answer.label;
+        inspections[index][resourceName] =
+          answer.text || answer.bool || answer.label;
       }
-      if (answer.statusColor) {
+
+      if (answer.statusColor)
         statusColors.push(answer.statusColor as StatusColor);
+
+      if (resourceName === "quantity_founded") {
+        inspections[index][resourceName] = answer.bool ? answer.text : "1";
+      }
+
+      if (resourceName === "photo_id") {
+        inspections[index][resourceName] = "temp";
       }
     }
 
-    // console.log(inspection);
-    const questionId = `question_${question}`;
-    answers[index][questionId] = answer.value;
+    /**
+     * All other questions are stored in answers
+     */
+    if (!answer.resourceName) {
+      const questionId = `question_${question}`;
+      answers[index][questionId] = answer.value;
+    }
   });
 
   // We order with RED beign first, then YELLOW, then GREEN
@@ -106,7 +118,7 @@ export const prepareFormData = (formData: FormState) => {
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, language, cleanStore } = useVisit();
+  const { questionnaire, visitData, language, isConnected } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
@@ -121,10 +133,6 @@ export default function Summary() {
   >("visits", { "Content-Type": "multipart/form-data" });
 
   const onFinalize = async () => {
-    // console.log(">>>>>inspection", inspection, Object.keys(inspection).length);
-    // console.log(">>>>>answers", answers, Object.keys(answers).length);
-    // const answers = normalizeAnswer(visitData.answers);
-
     // This should never happen, but we're being cautious
     if (!user || !questionnaire) {
       return Toast.show({
@@ -133,61 +141,35 @@ export default function Summary() {
       });
     }
 
-    // console.log(prepareFormDataPayload(payload));
-    const normalizedData: VisitPayload = {
-      answers: [],
-      host: "ejemplo.com",
-      visitPermission: true,
-      houseId: 1, // visitData.houseId or visitData.houseId if not houseId
-      questionnaireId: "1",
-      teamId: 1,
-      userAccountId: "1",
-      notes: "Algo a notar",
-      visitedAt: "1212",
-      inspections: [
-        // {
-        //   ...inspection,
-        //   breeding_site_type_id: 1,
-        //   has_water: true, // will be static depending on water ding
-        //   was_chemically_treated: "si, si, si",
-        //   photo_id: "CRCODE",
-        // },
-        // {
-        //   breeding_site_type_id: 1,
-        //   elimination_method_type_id: 1,
-        //   water_source_type_id: 1,
-        //   // code_reference: "CRCODE",
-        //   has_water: true,
-        //   was_chemically_treated: "si, si, si",
-        //   // water_source_other: "Fuente de agua",
-        //   container_protection_id: 1,
-        //   type_content_id: [1, 2],
-        //   quantity_founded: 3,
-        // },
-      ],
-    };
-
     try {
-      console.log(visitMap);
-      const { inspections, statusColor, answers } = prepareFormData(
-        visitMap[visitId],
-      );
-      console.log(inspections, statusColor, answers, visitData);
       const completeVisitData = {
         ...visitData,
+        house: null,
+        host: user.email,
         visitedAt: new Date(),
         inspections,
         answers,
         statusColor,
       };
-      finaliseCurrentVisit(true, completeVisitData);
-      // await createVisit({ json_params: JSON.stringify(normalizedData) });
+
+      console.log(JSON.stringify(completeVisitData));
+
+      // We only make the request if it's connected
+      if (isConnected)
+        await createVisit({ json_params: JSON.stringify(completeVisitData) });
+
+      // Cleanup, if it's not connected we send house details
+      finaliseCurrentVisit(isConnected, {
+        ...completeVisitData,
+        house: visitData.house,
+      });
       Toast.show({
         type: "success",
         text1: t("success"),
       });
       router.push("final");
     } catch (error) {
+      console.log(error);
       const errorData = extractAxiosErrorData(error);
       // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
       errorData?.errors?.forEach((error: any) => {
@@ -245,7 +227,12 @@ export default function Summary() {
           />
         </View>
         <View className="flex-1">
-          <Button primary title={t("finalize")} onPress={onFinalize} />
+          <Button
+            primary
+            title={t("finalize")}
+            onPress={onFinalize}
+            disabled={loading}
+          />
         </View>
       </View>
     </View>

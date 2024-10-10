@@ -28,7 +28,7 @@ export interface InspectionQuestion extends Question {
   resourceType?: ResourceType;
 }
 
-export type OptionType = "inputNumber" | "textArea";
+export type OptionType = "inputNumber" | "textArea" | "boolean";
 
 export interface Option {
   id: number;
@@ -61,21 +61,21 @@ export interface Answer {
 }
 
 export interface Inspection {
-  code_reference?: string;
-  container_test_result?: string;
-  has_water: boolean;
-  was_chemically_treated: string;
   breeding_site_type_id: number;
   elimination_method_type_id: number;
   water_source_type_id?: number;
+  code_reference?: string;
+  has_water: boolean;
   water_source_other?: string;
+  was_chemically_treated: string;
+  container_test_result?: string;
   container_protection_id: number;
   other_protection?: string;
-  visited_at?: string;
   type_content_id?: number[];
   quantity_founded: number;
+  // tracking_type_required?: string;
+  visited_at?: string;
   photo_id?: string;
-  tracking_type_required?: string;
 }
 
 export interface Country {

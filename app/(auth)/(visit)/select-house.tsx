@@ -26,7 +26,7 @@ export default function SelectHouseScreen() {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
 
-  const [houseSelectedId, setHouseSelectedId] = useState<number>();
+  const [houseSelected, setHouseSelected] = useState<House>();
   const [searchText, setSearchText] = useState<string>("");
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
@@ -37,15 +37,21 @@ export default function SelectHouseScreen() {
 
   const updateHouse = async () => {
     const catchAll =
-      !(user && user.id) || !houseSelectedId || !questionnaire?.initialQuestion;
+      !user?.id || !houseSelected?.id || !questionnaire?.initialQuestion;
     if (catchAll) return;
 
-    const visitId = `${user.id}-${houseSelectedId}` as VisitId;
+    const visitId = `${user.id}-${houseSelected?.id}` as VisitId;
 
     // Set the VisitId
     initialiseCurrentVisit(visitId, questionnaire.initialQuestion.toString());
 
-    await setVisitData({ houseId: houseSelectedId, house: undefined });
+    // We set the relevant meta
+    await setVisitData({
+      houseId: houseSelected?.id,
+      house: houseSelected,
+      questionnaireId: questionnaire.id,
+      teamId: user.teamId,
+    });
     router.push(`visit/${questionnaire?.initialQuestion}`);
   };
 
@@ -67,7 +73,7 @@ export default function SelectHouseScreen() {
       if (!deserializedData || !Array.isArray(deserializedData)) return;
 
       setHouseOptions(deserializedData);
-      setHouseSelectedId(undefined);
+      setHouseSelected(undefined);
     }
   }, [data]);
 
@@ -134,9 +140,9 @@ export default function SelectHouseScreen() {
               {houseOptions.map((house) => (
                 <SelectableItem
                   key={house.id}
-                  checked={house.id === houseSelectedId}
+                  checked={house.id === houseSelected?.id}
                   onValueChange={() => {
-                    setHouseSelectedId(house.id);
+                    setHouseSelected(house);
                   }}
                   label={renderHouse(house)}
                   chip={house.specialPlace && t("visit.houses.specialPlace")}
@@ -162,7 +168,7 @@ export default function SelectHouseScreen() {
         <View className="pt-5">
           <Button
             primary
-            disabled={!houseSelectedId}
+            disabled={!houseSelected?.id}
             onPress={updateHouse}
             title={t("next")}
           />

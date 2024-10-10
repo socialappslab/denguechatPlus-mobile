@@ -34,6 +34,7 @@ export interface ISelectableItem {
   resourceType?: ResourceType;
   statusColor?: string;
   disableOtherOptions?: boolean;
+  bool?: boolean;
 }
 
 /** Utils */
@@ -56,7 +57,9 @@ const formatOptionsForSelectableItems = ({
         group,
         statusColor,
         disableOtherOptions,
+        value,
       }) => ({
+        position: id,
         value: id,
         label: name,
         optionType,
@@ -69,9 +72,10 @@ const formatOptionsForSelectableItems = ({
         resourceType,
         statusColor,
         disableOtherOptions,
+        bool: optionType === "boolean" ? !!parseInt(value!) : undefined,
       }),
     )
-    .sort((a, b) => a.value - b.value) || [];
+    .sort((a, b) => a.position - b.position) || [];
 
 export interface FormStateOption {
   value?: string | number;
@@ -84,6 +88,8 @@ export interface FormStateOption {
   statusColor?: string;
   disableOtherOptions?: boolean;
   inspectionIdx?: number;
+  label?: string;
+  bool?: boolean;
 }
 
 const prepareOption = ({
@@ -96,6 +102,8 @@ const prepareOption = ({
     optionType,
     statusColor,
     disableOtherOptions,
+    label,
+    bool,
   },
   text,
   inspectionIdx,
@@ -103,18 +111,22 @@ const prepareOption = ({
   option: ISelectableItem;
   text?: string;
   inspectionIdx?: number;
-}): FormStateOption => ({
-  value,
-  resourceName,
-  resourceId,
-  resourceType,
-  next,
-  text,
-  optionType,
-  statusColor,
-  disableOtherOptions,
-  inspectionIdx,
-});
+}): FormStateOption => {
+  return {
+    value,
+    resourceName,
+    resourceId,
+    resourceType,
+    next,
+    text,
+    optionType,
+    statusColor,
+    disableOtherOptions,
+    inspectionIdx,
+    label,
+    bool,
+  };
+};
 
 const groupOptions = (
   options: ISelectableItem[],
