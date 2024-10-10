@@ -15,11 +15,12 @@ import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
 import { VisitData } from "@/types";
-import { formatDate } from "@/util";
+import { extractAxiosErrorData, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useMemo, useRef, useState } from "react";
 import { Platform } from "react-native";
 import { Routes } from "../(visit)/_layout";
+import Toast from "react-native-toast-message";
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
@@ -49,8 +50,19 @@ export default function TabTwoScreen() {
       createVisit({ json_params: JSON.stringify(newVisit) });
       cleanUpStoredVisit(newVisit);
       bottomSheetModalRef.current?.close();
-    } catch (e) {
-      console.log(e);
+      Toast.show({
+        type: "success",
+        text1: t("success"),
+      });
+    } catch (error) {
+      const errorData = extractAxiosErrorData(error);
+      errorData?.errors?.forEach((error: any) => {
+        Toast.show({
+          type: "error",
+          text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
+        });
+      });
+      console.log(error);
     }
   };
 
