@@ -32,9 +32,10 @@ interface VisitStore {
   ) => void;
   increaseCurrentVisitInspection: () => void;
   initialiseCurrentVisit: (visitId: VisitId, questionId: QuestionId) => void;
-  finaliseCurrentVisit: (isOffline: boolean, data: any) => void;
+  finaliseCurrentVisit: (isConnected: boolean, data: any) => void;
   networkState?: NetworkState;
   setNetworkState: (state: NetworkState) => void;
+  cleanUpStoredVisit: (visit: any) => void;
 }
 
 export const useVisitStore = create<VisitStore>()(
@@ -76,10 +77,11 @@ export const useVisitStore = create<VisitStore>()(
          * To be called when a visit is finalised
          * this will save offline visits and clean the current store
          */
-        finaliseCurrentVisit: (isOffline, data: any) =>
+        finaliseCurrentVisit: (isConnected, data: any) =>
           set((state) => {
             // Store QuestionnaireState
-            if (isOffline) state.storedVisits = [...state.storedVisits, data];
+            if (!isConnected)
+              state.storedVisits = [...state.storedVisits, data];
             // Cleanup
             state.visitMap[state.visitId] = {};
           }),
@@ -91,6 +93,13 @@ export const useVisitStore = create<VisitStore>()(
             ++state.visitMetadata[state.visitId].inspectionIdx;
           }),
         setNetworkState: (networkState) => set((state) => ({ networkState })),
+        cleanUpStoredVisit: (visit) =>
+          set((state) => {
+            const index = state.storedVisits.findIndex(
+              (stored) => visit.visitedAt === stored.visitedAt,
+            );
+            state.storedVisits.splice(index, 1);
+          }),
         /**
          * To be called on each saved
          * @param questionId the current question being rendered

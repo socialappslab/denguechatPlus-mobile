@@ -94,7 +94,7 @@ export default function Visit() {
     if (values) setCurrentVisitData(questionId, values);
 
     // Branches
-    if (resourceName === PhotoId) {
+    if (resourceName === PhotoId && values.bool) {
       return router.push({
         pathname: Routes.ContainerPicture,
         params: { next },
