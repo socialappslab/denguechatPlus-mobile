@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
 import { CheckTeam } from "@/components/segments/CheckTeam";
-import { OfflineVisitSheet } from "@/components/segments/OfflineVisitSheet";
 import {
   ListItem,
   SafeAreaView,
@@ -11,22 +10,22 @@ import {
   Text,
   View,
 } from "@/components/themed";
+import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
-import { Questionnaire, VisitData } from "@/types";
-import { formatDate, formatDatePosts } from "@/util";
+import { VisitData } from "@/types";
+import { extractAxiosErrorData, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import * as Network from "expo-network";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Routes } from "../(visit)/_layout";
+import { useMemo, useRef, useState } from "react";
 import { Platform } from "react-native";
-import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
+import { Routes } from "../(visit)/_layout";
+import Toast from "react-native-toast-message";
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { storedVisits } = useVisitStore();
+  const { storedVisits, cleanUpStoredVisit } = useVisitStore();
   const { language, isConnected } = useVisit();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
 
@@ -39,10 +38,31 @@ export default function TabTwoScreen() {
   >("visits", { "Content-Type": "multipart/form-data" });
 
   const synchronizeVisit = async (visit: any) => {
+    const newVisit = {
+      ...visit,
+      host: "nunu",
+      house: visit.houseId ? undefined : visit.house,
+      notes: "hi",
+      visitPermission: true,
+    };
+    console.log(JSON.stringify(newVisit));
     try {
-      createVisit({ json_params: JSON.stringify(visit) });
-    } catch (e) {
-      console.log(e);
+      createVisit({ json_params: JSON.stringify(newVisit) });
+      cleanUpStoredVisit(newVisit);
+      bottomSheetModalRef.current?.close();
+      Toast.show({
+        type: "success",
+        text1: t("success"),
+      });
+    } catch (error) {
+      const errorData = extractAxiosErrorData(error);
+      errorData?.errors?.forEach((error: any) => {
+        Toast.show({
+          type: "error",
+          text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
+        });
+      });
+      console.log(error);
     }
   };
 
