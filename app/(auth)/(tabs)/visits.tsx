@@ -41,7 +41,7 @@ export default function TabTwoScreen() {
     const newVisit = {
       ...visit,
       host: "nunu",
-      house: undefined,
+      house: visit.houseId ? undefined : visit.house,
       notes: "hi",
       visitPermission: true,
     };

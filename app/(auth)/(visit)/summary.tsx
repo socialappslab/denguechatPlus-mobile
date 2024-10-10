@@ -118,7 +118,7 @@ export const prepareFormData = (formData: FormState) => {
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, language, isConnected } = useVisit();
+  const { questionnaire, visitData, language } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
@@ -126,6 +126,7 @@ export default function Summary() {
     visitMap[visitId],
   );
   const quantity = 1;
+  const isConnected = false;
 
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
@@ -144,7 +145,7 @@ export default function Summary() {
     try {
       const completeVisitData = {
         ...visitData,
-        house: undefined,
+        house: visitData.houseId ? undefined : visitData.house,
         visitPermission: true,
         host: user.firstName,
         visitedAt: new Date(),
