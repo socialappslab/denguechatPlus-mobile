@@ -9,6 +9,7 @@ import { ErrorResponse } from "@/schema";
 import { FilterData } from "@/context/BrigadeContext";
 
 export * from "./inspection";
+export * from "./prepareFormData";
 
 // Function to extract error information from an Axios error
 export function extractAxiosErrorData(error: unknown): ErrorResponse | null {

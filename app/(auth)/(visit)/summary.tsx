@@ -3,122 +3,20 @@ import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { useVisitStore } from "@/hooks/useVisitStore";
-import { FormState, VisitData } from "@/types";
-import { extractAxiosErrorData, formatDate } from "@/util";
+import { VisitData } from "@/types";
+import {
+  extractAxiosErrorData,
+  formatDate,
+  prepareFormData,
+  StatusColor,
+} from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 
-// StatusColor utils
-enum StatusColor {
-  INFECTED = "RED",
-  POTENTIONALLY_INFECTED = "YELLOW",
-  NO_INFECTED = "GREEN",
-}
-
-const RenderStatus = ({
-  statusColor = StatusColor.NO_INFECTED,
-}: {
-  statusColor: StatusColor;
-}) => {
-  const { t } = useTranslation();
-
-  return (
-    <View className="flex flex-row justify-center items-center">
-      <Text>{t(`visit.summary.statusColor.${statusColor.toLowerCase()}`)}</Text>
-      <View
-        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLocaleLowerCase()}-100`}
-      />
-    </View>
-  );
-};
-
-type Inspection = Record<string, string | undefined | boolean | string[]>;
-type Answer = Record<string, string | number | undefined>;
-
-/**
- *
- * @param formData
- * @returns takes all SelectableItems from a given formState and returns
- * formatted inspection, answers and colorStatus
- */
-export const prepareFormData = (formData: FormState) => {
-  const questions = Object.keys(formData);
-  let inspections: Inspection[] = [];
-  let answers: Answer[] = [];
-  let statusColors: StatusColor[] = [];
-
-  questions.forEach((question) => {
-    const answer = formData[question];
-    const index = parseInt(question.split("-")[1]);
-    if (!inspections[index]) inspections[index] = {};
-    if (!answers[index]) answers[index] = {};
-
-    if (Array.isArray(answer)) {
-      const [first] = answer;
-      const resourceName = first.resourceName as string;
-      if (!resourceName) return;
-      inspections[index][resourceName] = answer.map(
-        (item) => item.text || (item.resourceId as string),
-      );
-
-      const colors: StatusColor[] = answer
-        .filter((item) => typeof item.statusColor === "string")
-        .map((item) => item.statusColor as StatusColor);
-
-      statusColors.push(...colors);
-      return;
-    }
-
-    /**
-     * We check for inspection questions
-     */
-    if (answer.resourceName) {
-      const resourceName = answer.resourceName;
-      if (answer.resourceType === "relation")
-        inspections[index][resourceName] = answer.text || answer.resourceId;
-
-      if (answer.resourceType === "attribute") {
-        inspections[index][resourceName] =
-          answer.text || answer.bool || answer.label;
-      }
-
-      if (answer.statusColor)
-        statusColors.push(answer.statusColor as StatusColor);
-
-      if (resourceName === "quantity_founded") {
-        inspections[index][resourceName] = answer.bool ? answer.text : "1";
-      }
-
-      if (resourceName === "photo_id") {
-        inspections[index][resourceName] = "temp";
-      }
-    }
-
-    /**
-     * All other questions are stored in answers
-     */
-    if (!answer.resourceName) {
-      const questionId = `question_${question}`;
-      answers[index][questionId] = answer.value;
-    }
-  });
-
-  // We order with RED beign first, then YELLOW, then GREEN
-  const orderedStatus = statusColors.sort((a, b) => {
-    if (a < b) return 1;
-    if (a > b) return -1;
-    return 0;
-  });
-  // And get the first
-  const [statusColor] = orderedStatus;
-
-  return { inspections, answers, statusColor: statusColor as StatusColor };
-};
-
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, language, isConnected } = useVisit();
+  const { questionnaire, visitData, language } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
@@ -126,6 +24,7 @@ export default function Summary() {
     visitMap[visitId],
   );
   const quantity = 1;
+  const isConnected = false;
 
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
@@ -239,3 +138,20 @@ export default function Summary() {
     </View>
   );
 }
+
+const RenderStatus = ({
+  statusColor = StatusColor.NO_INFECTED,
+}: {
+  statusColor: StatusColor;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <View className="flex flex-row justify-center items-center">
+      <Text>{t(`visit.summary.statusColor.${statusColor.toLowerCase()}`)}</Text>
+      <View
+        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLocaleLowerCase()}-100`}
+      />
+    </View>
+  );
+};

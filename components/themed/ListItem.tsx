@@ -26,7 +26,6 @@ export function ListItem(props: ListItemProps) {
     initials,
     emptyString,
     filled,
-    className,
   } = props;
 
   return (

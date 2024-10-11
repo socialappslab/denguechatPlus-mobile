@@ -211,8 +211,13 @@
         "chooseFromGallery": "Escolher da galeria"
       },
       "final": {
-        "title": "Muito obrigado!",
-        "greetings": "Agradecemos aos moradores da casa e informamos que faremos outra visita em breve."
+        "title": "Visita concluída!",
+        "offline": {
+          "greetings": "Os dados da visita foram salvos."
+        },
+        "online": {
+          "greetings": "Os dados da sua visita foram salvos em seu dispositivo."
+        }
       }
     },
     "brigade": {

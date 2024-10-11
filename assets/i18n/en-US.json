@@ -211,8 +211,13 @@
         "chooseFromGallery": "Choose from gallery"
       },
       "final": {
-        "title": "Thank you very much!",
-        "greetings": "We thank the residents of the house and indicate that we will make another visit soon."
+        "title": "Visit completed!",
+        "offline": {
+          "greetings": "The visit data has been saved."
+        },
+        "online": {
+          "greetings": "The data from your visit has been saved on your device."
+        }
       }
     },
     "brigade": {
