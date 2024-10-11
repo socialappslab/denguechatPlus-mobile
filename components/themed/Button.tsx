@@ -1,6 +1,6 @@
+import { ThemeProps } from "@/components/themed/useThemeColor";
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
-import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
+import { Text, TouchableOpacity } from "react-native";
 
 interface BaseButtonProps {
   title: string;
@@ -31,7 +31,7 @@ export function Button(props: ButtonProps) {
       style={style}
       {...otherProps}
       disabled={disabled}
-      className={`${disabled ? "opacity-50" : ""} w-full border-solid border ${primary ? "bg-primary border-primary" : "bg-white border-gray-200"} p-3 rounded-lg`}
+      className={`${disabled ? "opacity-50" : ""} w-full border-solid border ${primary ? "bg-primary border-primary" : "bg-white border-neutral-200"} p-3 rounded-lg`}
       activeOpacity={0.8}
     >
       <Text
