@@ -134,7 +134,9 @@
       "usernameLength": "Username must be at least {{length}} characters",
       "phoneLength": "Phone is too short",
       "contentPostLengthMin": "The post text cannot be empty",
-      "contentPostLengthMax": "Post text is too large"
+      "contentPostLengthMax": "Post text is too large",
+      "contentCommentLengthMin": "Comment text cannot be empty",
+      "contentCommentLengthMax": "Comment text is too large"
     },
     "visit": {
       "stackTitle": "Visit Registration",

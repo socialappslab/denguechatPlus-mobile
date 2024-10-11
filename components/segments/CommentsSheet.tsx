@@ -35,7 +35,7 @@ import Toast from "react-native-toast-message";
 
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { Loading, SimpleTextInput, Text, View } from "@/components/themed";
-import { createPostSchema, ErrorResponse, PostInputType } from "@/schema";
+import { createCommentSchema, ErrorResponse, CommentInputType } from "@/schema";
 import { Post } from "@/types";
 import CloseCircle from "@/assets/images/icons/close-circle.svg";
 import CommentItem from "@/components/segments/CommentItem";
@@ -95,9 +95,8 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     { manual: true },
   );
 
-  console.log("CommentsSheet postId:", postId);
-  const methods = useForm<PostInputType>({
-    resolver: zodResolver(createPostSchema()),
+  const methods = useForm<CommentInputType>({
+    resolver: zodResolver(createCommentSchema()),
     mode: "onChange",
     defaultValues: { content: "" },
   });
@@ -118,7 +117,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     setShowOptions(false);
   }, [isFocused, reset]);
 
-  const onSubmitHandler: SubmitHandler<PostInputType> = async (values) => {
+  const onSubmitHandler: SubmitHandler<CommentInputType> = async (values) => {
     setPostigComment(true);
     const form = new FormData();
 
@@ -393,7 +392,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         />
       )}
     >
-      <View className="flex flex-row items-center px-5 mb-2">
+      <View isSheet className="flex flex-row items-center px-5 mb-2">
         <View className="flex flex-1 flex-col">
           <Text className="font-bold text-2xl">{t("chat.comments.title")}</Text>
         </View>
@@ -424,20 +423,23 @@ export default function CommentsSheet(props: CommentsSheetProps) {
       )}
 
       {(loading || loadingInitial) && (
-        <View className="flex flex-1 items-center justify-center">
+        <View isSheet className="flex flex-1 items-center justify-center">
           <Loading />
         </View>
       )}
 
       {!post?.comments?.length && !loading && !loadingInitial && (
-        <View className="flex flex-1 items-center justify-center">
+        <BottomSheetScrollView
+          className="flex flex-1 items-center justify-center"
+          contentContainerStyle={styles.emptyContentContainer}
+        >
           <Text className="text-neutral-400 font-bold text-2xl text-center mb-2">
             {t("chat.comments.empty")}
           </Text>
           <Text className="text-neutral-400 text-center text-base mb-2 w-6/12">
             {t("chat.comments.emptyMessage")}
           </Text>
-        </View>
+        </BottomSheetScrollView>
       )}
       <KeyboardAccessoryView
         alwaysVisible
@@ -463,7 +465,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         >
           <FormProvider {...methods}>
             <View
-              className={`w-full px-4 border border-neutral-200 rounded-lg ${Platform.OS === "ios" ? "pb-3 pt-2" : "pb-1 pt-1"}`}
+              className={`w-full px-4 border border-neutral-200 rounded-lg ${Platform.OS === "ios" ? "pb-3 pt-2" : "pb-1 pt-1"} ${errors?.content?.message && !isValid && showOptions ? "border-red-400" : ""}`}
             >
               <Controller
                 control={control}
@@ -516,14 +518,13 @@ export default function CommentsSheet(props: CommentsSheetProps) {
                 </View>
               )}
             </View>
-
-            {/* {errors?.content?.message && !isValid && (
-            <View className="w-full mt-2 flex items-start">
-              <Text className="font-normal text-red-400 text-xs">
-                {errors.content.message}
-              </Text>
-            </View>
-          )} */}
+            {errors?.content?.message && !isValid && showOptions && (
+              <View className="w-full mt-2 flex items-start">
+                <Text className="font-normal text-red-400 text-xs">
+                  {errors.content.message}
+                </Text>
+              </View>
+            )}
           </FormProvider>
           {showOptions && (
             <View
@@ -602,6 +603,13 @@ const styles = StyleSheet.create({
   contentContainer: {
     backgroundColor: "transparent",
     width: "100%",
+  },
+  emptyContentContainer: {
+    backgroundColor: "transparent",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
   },
   handleIndicator: {
     width: 0,

@@ -83,3 +83,15 @@ const postSchema = createPostSchema();
 export type PostInputType = TypeOf<typeof postSchema>;
 
 export type PostVisibility = "public" | "team";
+
+export const createCommentSchema = () => {
+  return object({
+    content: z
+      .string()
+      .min(1, { message: t("validation.contentCommentLengthMin") })
+      .max(280, { message: t("validation.contentCommentLengthMax") }),
+  });
+};
+
+const commentSchema = createCommentSchema();
+export type CommentInputType = TypeOf<typeof commentSchema>;

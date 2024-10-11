@@ -134,7 +134,9 @@
       "usernameLength": "O nome de usuário deve ter pelo menos {{length}} caracteres",
       "phoneLength": "O número de telefone é muito curto",
       "contentPostLengthMin": "O texto da publicação não pode estar vazio",
-      "contentPostLengthMax": "O texto da publicação é muito grande"
+      "contentPostLengthMax": "O texto da publicação é muito grande",
+      "contentCommentLengthMin": "O texto do comentário não pode estar vazio",
+      "contentCommentLengthMax": "O texto do comentário é muito grande"
     },
     "visit": {
       "stackTitle": "Registro de Visita",
