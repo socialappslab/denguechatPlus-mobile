@@ -87,7 +87,7 @@ export default function Profile() {
                   <Text className="text-3xl font-semibold">
                     {reportData?.visitQuantity ?? 0}
                   </Text>
-                  {reportData?.visitVariationPercentage && (
+                  {!!reportData?.visitVariationPercentage && (
                     <SimpleChip
                       border="1"
                       padding="small"
@@ -114,7 +114,7 @@ export default function Profile() {
                     {reportData?.houseQuantity ?? 0}
                   </Text>
 
-                  {reportData?.siteVariationPercentage && (
+                  {!!reportData?.siteVariationPercentage && (
                     <SimpleChip
                       border="1"
                       padding="small"
