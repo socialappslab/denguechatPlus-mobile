@@ -99,7 +99,7 @@ export default function Profile() {
                           : "arrow-down"
                       }
                       iconColor={Colors.light.neutral}
-                      label={`${reportData?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                      label={`${reportData?.visitVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
                     />
                   )}
                 </View>
@@ -126,7 +126,7 @@ export default function Profile() {
                           : "arrow-down"
                       }
                       iconColor={Colors.light.neutral}
-                      label={`${reportData?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                      label={`${reportData?.siteVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
                     />
                   )}
                 </View>
