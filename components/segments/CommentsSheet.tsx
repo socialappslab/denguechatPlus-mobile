@@ -52,6 +52,16 @@ export type CommentsSheetProps = ThemeProps & {
   postId?: number;
 };
 
+type CommentsState = Record<
+  number,
+  {
+    likedByMe: boolean;
+    comment: Comment;
+    likesCount: number;
+    loadingLike: boolean;
+  }
+>;
+
 export default function CommentsSheet(props: CommentsSheetProps) {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
@@ -71,6 +81,8 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     useState<ImagePicker.ImagePickerAsset>();
   const [loadingPhoto, setLoadingPhoto] = useState<boolean>(false);
   const [numberOfLines, setNumberOfLines] = useState(2);
+
+  const [state, setState] = useState<CommentsState>({});
 
   const [{ data, loading }, refetchPost] = useAxios<
     ExistingDocumentObject,
@@ -160,6 +172,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     if (isFocused) {
       setLoadingInitial(true);
       setPost(null);
+      setState({});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
@@ -176,10 +189,19 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     }
 
     if (deserializedPost) {
-      deserializedPost.comments = deserializedPost.comments?.map(
+      const newState: CommentsState = {};
+      deserializedPost.comments?.forEach((item) => {
         // @ts-ignore
-        (item) => item.data.attributes,
-      );
+        const comment = item.data?.attributes as Commnent;
+        newState[comment.id] = {
+          likedByMe: comment.likedByMe,
+          comment,
+          likesCount: comment.likesCount,
+          loadingLike: false,
+        };
+      });
+
+      setState(newState);
       setPost(deserializedPost);
       setLoadingInitial(false);
     }
@@ -235,10 +257,12 @@ export default function CommentsSheet(props: CommentsSheetProps) {
       if (index === -1) {
         setLoadingInitial(true);
         setPost(null);
+        setState({});
       }
       if (index === 0) {
         setLoadingInitial(true);
         setPost(null);
+        setState({});
         refetchPost();
       }
     },
@@ -291,6 +315,38 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const handlePressDelete = (id: number) => {
     setCommentToDeleteId(id);
     bottomSheetModalDeleteRef.current?.present();
+  };
+
+  const handlePressLike = async (id: number) => {
+    try {
+      setState((prev) => {
+        const newState = { ...prev };
+        newState[id].likedByMe = !newState[id].likedByMe;
+        newState[id].likesCount = prev[id].likedByMe
+          ? prev[id].likesCount + 1
+          : prev[id].likesCount - 1;
+        newState[id].loadingLike = true;
+        return newState;
+      });
+      await authApi.post(`posts/${postId}/comments/${id}/like`);
+      console.log("Comment liked:");
+      setState((prev) => {
+        const newState = { ...prev };
+        newState[id].loadingLike = false;
+        return newState;
+      });
+    } catch (error) {
+      console.log("Error liking comment", error);
+      setState((prev) => {
+        const newState = { ...prev };
+        newState[id].likedByMe = !newState[id].likedByMe;
+        newState[id].likesCount = prev[id].likedByMe
+          ? prev[id].likesCount - 1
+          : prev[id].likesCount + 1;
+        newState[id].loadingLike = false;
+        return newState;
+      });
+    }
   };
 
   const handlePressConfirmDelete = async () => {
@@ -346,18 +402,22 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         </TouchableOpacity>
       </View>
 
-      {!!post?.comments?.length && (
+      {!!Object.keys(state)?.length && (
         <BottomSheetScrollView
           ref={scrollViewRef}
           style={styles.contentContainer}
           contentContainerStyle={styles.contentContainer}
         >
-          {post?.comments?.map((comment) => (
+          {Object.keys(state)?.map((commentId) => (
             <CommentItem
-              key={comment.id}
-              comment={comment}
+              key={commentId}
+              // @ts-ignore
+              comment={state[Number(commentId)]?.comment as Comment}
+              likedByMe={state[Number(commentId)]?.likedByMe}
+              likesCount={state[Number(commentId)]?.likesCount}
               onPressDelete={handlePressDelete}
-              onPressLike={() => {}}
+              onPressLike={handlePressLike}
+              loadingLike={state[Number(commentId)]?.loadingLike}
             />
           ))}
         </BottomSheetScrollView>

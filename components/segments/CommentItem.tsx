@@ -16,10 +16,20 @@ export type CommnetItemProps = ThemeProps &
     onPressDelete: (id: number) => void;
     canDelete?: boolean;
     comment: Comment;
+    likesCount: number;
+    likedByMe: boolean;
+    loadingLike: boolean;
   };
 
 export default function CommnetItem(props: CommnetItemProps) {
-  const { onPressLike, onPressDelete, comment } = props;
+  const {
+    onPressLike,
+    onPressDelete,
+    comment,
+    likesCount,
+    likedByMe,
+    loadingLike,
+  } = props;
   const { language } = useVisit();
   const { t } = useTranslation();
 
@@ -63,15 +73,14 @@ export default function CommnetItem(props: CommnetItemProps) {
           <View className="flex flex-1 flex-row justify-between mt-2">
             <TouchableOpacity
               className="flex flex-row items-center"
+              disabled={loadingLike}
               onPress={() => onPressLike(comment.id)}
             >
-              <Like active={comment.likedByMe} />
+              <Like active={likedByMe} />
               <Text
-                className={`ml-2 text-sm ${comment.likedByMe ? "text-blue-700" : "text-neutral-500"}`}
+                className={`ml-2 text-sm ${likedByMe ? "text-blue-700" : "text-neutral-500"} ${loadingLike ? "opacity-50" : ""}`}
               >
-                {comment.likesCount === 0
-                  ? t("chat.like")
-                  : `${comment.likesCount}`}
+                {likesCount === 0 ? t("chat.like") : `${likesCount}`}
               </Text>
             </TouchableOpacity>
 
