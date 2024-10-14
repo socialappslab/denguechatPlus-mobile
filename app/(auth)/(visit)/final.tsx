@@ -1,11 +1,13 @@
 import { Button, Text, View } from "@/components/themed";
+import { useVisit } from "@/hooks/useVisit";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Routes } from "./_layout";
 
 export default function Summary() {
   const { t } = useTranslation();
+  const { isConnected } = useVisit();
   const router = useRouter();
+  const prefix = isConnected ? "online" : "offline";
 
   return (
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between">
@@ -15,10 +17,10 @@ export default function Summary() {
         </View>
         <View>
           <Text type="title" className="text-center mb-4">
-            {t("visit.final.title")}
+            {t(`visit.final.title`)}
           </Text>
           <Text type="text" className="text-center px-10">
-            {t("visit.final.greetings")}
+            {t(`visit.final.${prefix}.greetings`)}
           </Text>
         </View>
       </View>
