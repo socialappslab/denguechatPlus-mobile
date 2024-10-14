@@ -50,6 +50,7 @@ import { Button } from "@/components/themed";
 export type CommentsSheetProps = ThemeProps & {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
   postId?: number;
+  updateCommentCount: (diff: number) => void;
 };
 
 type CommentsState = Record<
@@ -66,7 +67,13 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
   const insets = useSafeAreaInsets();
-  const { bottomSheetModalRef, postId, lightColor, darkColor } = props;
+  const {
+    bottomSheetModalRef,
+    postId,
+    updateCommentCount,
+    lightColor,
+    darkColor,
+  } = props;
   const bottomSheetModalDeleteRef = useRef<BottomSheetModal>(null);
 
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -152,6 +159,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         setSelectedPhoto(undefined);
         reset({ content: "" });
         setShowOptions(false);
+        updateCommentCount(1);
       }, 100);
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd();
@@ -356,6 +364,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
       refetchPost();
       bottomSheetModalDeleteRef.current?.close();
       bottomSheetModalRef.current?.present();
+      updateCommentCount(-1);
       Toast.show({
         type: "success",
         text1: t("chat.commentDeleted"),

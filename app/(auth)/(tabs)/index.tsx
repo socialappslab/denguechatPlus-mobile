@@ -27,6 +27,17 @@ import { useAuth } from "@/context/AuthProvider";
 import { SimpleSelectableChip } from "@/components/themed/SelectableChip";
 import CommentsSheet from "@/components/segments/CommentsSheet";
 
+type PostState = Record<
+  number,
+  {
+    post: Post;
+    commentsCount: number;
+    likedByUser: boolean;
+    likesCount: number;
+    loadingLike: boolean;
+  }
+>;
+
 export default function Chat() {
   const { t } = useTranslation();
   const { meData, reFetchMe } = useAuth();
@@ -38,6 +49,8 @@ export default function Chat() {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [dataList, setDataList] = useState<Post[]>([]);
+  const [state, setState] = useState<PostState>({});
+
   const [selectedPost, setSelectedPost] = useState<Post>();
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -97,6 +110,21 @@ export default function Chat() {
               .map((id) => updatedList.find((item) => item.id === id))
               .filter((item) => item !== undefined);
 
+            setState((prevState) => {
+              const newState = { ...prevState };
+              uniqueList.forEach((post) => {
+                newState[post.id] = {
+                  post: post,
+                  commentsCount: post.commentsCount || 0,
+                  likedByUser: post.likedByUser,
+                  likesCount: post.likesCount,
+                  loadingLike: false,
+                };
+              });
+
+              return newState;
+            });
+
             return uniqueList;
           });
         }
@@ -152,12 +180,54 @@ export default function Chat() {
     router.push(`/new-post`);
   };
 
+  const updateCommentCount = (diff: number) => {
+    if (selectedPost) {
+      setState((prev) => {
+        const newState = { ...prev };
+        newState[selectedPost?.id].commentsCount += diff;
+        return newState;
+      });
+    }
+  };
+
   const firstLoad = () => {
     setAll(true);
     setDataList([]);
     setHasMore(true);
     setCurrentPage(1);
     fetchData(1, undefined);
+  };
+
+  const handlePressLike = async (id: number) => {
+    try {
+      setState((prev) => {
+        const newState = { ...prev };
+        newState[id].likedByUser = !newState[id].likedByUser;
+        newState[id].likesCount = prev[id].likedByUser
+          ? prev[id].likesCount + 1
+          : prev[id].likesCount - 1;
+        newState[id].loadingLike = true;
+        return newState;
+      });
+      await authApi.post(`posts/${id}/like`);
+      console.log("Post liked:");
+      setState((prev) => {
+        const newState = { ...prev };
+        newState[id].loadingLike = false;
+        return newState;
+      });
+    } catch (error) {
+      console.log("Error liking comment", error);
+      setState((prev) => {
+        const newState = { ...prev };
+        newState[id].likedByUser = !newState[id].likedByUser;
+        newState[id].likesCount = prev[id].likedByUser
+          ? prev[id].likesCount - 1
+          : prev[id].likesCount + 1;
+        newState[id].loadingLike = false;
+        return newState;
+      });
+    }
   };
 
   const renderItem: ListRenderItem<Post> = ({ item: post }) => {
@@ -167,6 +237,11 @@ export default function Chat() {
         post={post}
         onPressElement={() => onPressElement(post)}
         onPressComments={() => handlePressComments(post)}
+        onPressLike={handlePressLike}
+        likedByUser={state[post.id]?.likedByUser}
+        likesCount={state[post.id]?.likesCount}
+        loadingLike={state[post.id]?.loadingLike}
+        commentsCount={state[post.id]?.commentsCount}
       />
     );
   };
@@ -262,6 +337,7 @@ export default function Chat() {
       <CommentsSheet
         postId={selectedPost?.id}
         bottomSheetModalRef={bottomSheetModalRef}
+        updateCommentCount={updateCommentCount}
       />
     </SafeAreaView>
   );

@@ -222,6 +222,7 @@ export interface Post {
   id: number;
   createdAt: number;
   userAccountId: number;
+  canDeleteByUser: boolean;
   createdBy: string;
   createByUser: {
     accountId: number;

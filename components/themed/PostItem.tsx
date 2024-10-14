@@ -9,16 +9,31 @@ import { getInitialsBase, formatDatePosts } from "@/util";
 import Like from "@/components/icons/Like";
 import Comment from "@/components/icons/Comment";
 import { useVisit } from "@/hooks/useVisit";
+import MoreHorizontal from "@/components/icons/MoreHorizontal";
 
 export type PostItemProps = ThemeProps &
   TouchableOpacity["props"] & {
     onPressElement: () => void;
+    onPressLike: (id: number) => void;
     onPressComments: () => void;
     post: Post;
+    commentsCount: number;
+    likedByUser: boolean;
+    likesCount: number;
+    loadingLike: boolean;
   };
 
 export function PostItem(props: PostItemProps) {
-  const { onPressElement, onPressComments, post } = props;
+  const {
+    onPressElement,
+    onPressComments,
+    onPressLike,
+    commentsCount,
+    likedByUser,
+    likesCount,
+    loadingLike,
+    post,
+  } = props;
   const { language } = useVisit();
   const { t } = useTranslation();
 
@@ -29,22 +44,23 @@ export function PostItem(props: PostItemProps) {
 
   return (
     <View className="flex flex-col px-5  py-4 border-b border-neutral-200">
-      <Pressable
-        className="flex flex-row items-center mb-4"
-        onPress={onPressElement}
-      >
-        <View
+      <View className="flex flex-row items-center mb-4">
+        <Pressable
           className={`flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3`}
+          onPress={onPressElement}
         >
           <Text className="font-bold text-sm text-green-700">{initials}</Text>
-        </View>
-        <View className="flex flex-1 flex-col">
+        </Pressable>
+        <Pressable className="flex flex-1 flex-col" onPress={onPressElement}>
           <Text className="font-semibold">{`${post.createByUser.userName} ${post.createByUser.lastName}`}</Text>
           <Text className={`text-sm opacity-60`}>
             {post.location} • {formatDatePosts(post.createdAt, language)}
           </Text>
-        </View>
-      </Pressable>
+        </Pressable>
+        <TouchableOpacity onPress={onPressElement}>
+          <MoreHorizontal />
+        </TouchableOpacity>
+      </View>
 
       <Pressable
         className="flex flex-1 flex-row items-center mb-3"
@@ -65,14 +81,16 @@ export function PostItem(props: PostItemProps) {
       )}
       <View className="h-4" />
       <View className="flex flex-1 flex-row justify-between">
-        <TouchableOpacity className="flex flex-row items-center">
-          <Like active={post.likedByUser} />
+        <TouchableOpacity
+          className="flex flex-row items-center"
+          disabled={loadingLike}
+          onPress={() => onPressLike(post.id)}
+        >
+          <Like active={likedByUser} />
           <Text
-            className={`ml-2 text-sm ${post.likedByUser ? "text-blue-700" : "text-neutral-500"}`}
+            className={`ml-2 text-sm ${likedByUser ? "text-blue-700" : "text-neutral-500"}`}
           >
-            {!post.likesCount || post.likesCount === 0
-              ? t("chat.like")
-              : `${post.likesCount}`}
+            {!likesCount || likesCount === 0 ? t("chat.like") : `${likesCount}`}
           </Text>
         </TouchableOpacity>
 
@@ -82,13 +100,13 @@ export function PostItem(props: PostItemProps) {
         >
           <Comment />
           <Text className="ml-2 text-neutral-500 text-sm">
-            {!post.commentsCount && t("chat.comments.empty")}
-            {post.commentsCount !== null &&
-              post.commentsCount > 1 &&
-              `${post.commentsCount} ${t("chat.comments.number")}`}
-            {post.commentsCount !== null &&
-              post.commentsCount === 1 &&
-              `${post.commentsCount} ${t("chat.comments.numberSingular")}`}
+            {!commentsCount && t("chat.comments.empty")}
+            {commentsCount !== null &&
+              commentsCount > 1 &&
+              `${commentsCount} ${t("chat.comments.number")}`}
+            {commentsCount !== null &&
+              commentsCount === 1 &&
+              `${commentsCount} ${t("chat.comments.numberSingular")}`}
           </Text>
         </TouchableOpacity>
       </View>
