@@ -28,7 +28,7 @@ import { SimpleSelectableChip } from "@/components/themed/SelectableChip";
 import CommentsSheet from "@/components/segments/CommentsSheet";
 
 type PostState = Record<
-  number,
+  string,
   {
     post: Post;
     commentsCount: number;
@@ -99,7 +99,28 @@ export default function Chat() {
         // );
 
         if (page === 1) {
-          setDataList(deserializedData);
+          const uniqueList = Array.from(
+            new Set(deserializedData.map((item) => item.id)),
+          )
+            .map((id) => deserializedData.find((item) => item.id === id))
+            .filter((item) => item !== undefined);
+
+          setState((prevState) => {
+            const newState = { ...prevState };
+            uniqueList.forEach((post) => {
+              newState[`${post.id}`] = {
+                post: post,
+                commentsCount: post.commentsCount || 0,
+                likedByUser: post.likedByUser ?? false,
+                likesCount: post.likesCount ?? 0,
+                loadingLike: false,
+              };
+            });
+
+            return newState;
+          });
+
+          setDataList(uniqueList);
         } else {
           setDataList((prevData) => {
             let updatedList = [...prevData, ...deserializedData];
@@ -113,11 +134,11 @@ export default function Chat() {
             setState((prevState) => {
               const newState = { ...prevState };
               uniqueList.forEach((post) => {
-                newState[post.id] = {
+                newState[`${post.id}`] = {
                   post: post,
                   commentsCount: post.commentsCount || 0,
-                  likedByUser: post.likedByUser,
-                  likesCount: post.likesCount,
+                  likedByUser: post.likedByUser ?? false,
+                  likesCount: post.likesCount ?? 0,
                   loadingLike: false,
                 };
               });
@@ -184,7 +205,9 @@ export default function Chat() {
     if (selectedPost) {
       setState((prev) => {
         const newState = { ...prev };
-        newState[selectedPost?.id].commentsCount += diff;
+        const post = newState[`${selectedPost.id}`];
+        if (!post) return prev;
+        post.commentsCount += diff;
         return newState;
       });
     }
@@ -202,46 +225,53 @@ export default function Chat() {
     try {
       setState((prev) => {
         const newState = { ...prev };
-        newState[id].likedByUser = !newState[id].likedByUser;
-        newState[id].likesCount = prev[id].likedByUser
-          ? prev[id].likesCount + 1
-          : prev[id].likesCount - 1;
-        newState[id].loadingLike = true;
+        const post = newState[`${id}`];
+        if (!post) return prev;
+        post.likedByUser = !post.likedByUser;
+        post.likesCount = prev[`${id}`].likedByUser
+          ? prev[`${id}`].likesCount + 1
+          : prev[`${id}`].likesCount - 1;
+        post.loadingLike = true;
         return newState;
       });
       await authApi.post(`posts/${id}/like`);
       console.log("Post liked:");
       setState((prev) => {
         const newState = { ...prev };
-        newState[id].loadingLike = false;
+        const post = newState[`${id}`];
+        if (!post) return prev;
+        post.loadingLike = false;
         return newState;
       });
     } catch (error) {
       console.log("Error liking comment", error);
       setState((prev) => {
         const newState = { ...prev };
-        newState[id].likedByUser = !newState[id].likedByUser;
-        newState[id].likesCount = prev[id].likedByUser
-          ? prev[id].likesCount - 1
-          : prev[id].likesCount + 1;
-        newState[id].loadingLike = false;
+        const post = newState[`${id}`];
+        if (!post) return prev;
+        post.likedByUser = !post.likedByUser;
+        post.likesCount = prev[`${id}`].likedByUser
+          ? prev[`${id}`].likesCount - 1
+          : prev[`${id}`].likesCount + 1;
+        post.loadingLike = false;
         return newState;
       });
     }
   };
 
   const renderItem: ListRenderItem<Post> = ({ item: post }) => {
+    const key = String(post.id);
     return (
       <PostItem
-        key={String(post.id)}
+        key={key}
         post={post}
         onPressElement={() => onPressElement(post)}
         onPressComments={() => handlePressComments(post)}
         onPressLike={handlePressLike}
-        likedByUser={state[post.id]?.likedByUser}
-        likesCount={state[post.id]?.likesCount}
-        loadingLike={state[post.id]?.loadingLike}
-        commentsCount={state[post.id]?.commentsCount}
+        likedByUser={state[key]?.likedByUser}
+        likesCount={state[key]?.likesCount}
+        loadingLike={state[key]?.loadingLike}
+        commentsCount={state[key]?.commentsCount}
       />
     );
   };

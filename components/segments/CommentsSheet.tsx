@@ -328,29 +328,38 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     try {
       setState((prev) => {
         const newState = { ...prev };
-        newState[id].likedByMe = !newState[id].likedByMe;
-        newState[id].likesCount = prev[id].likedByMe
-          ? prev[id].likesCount + 1
-          : prev[id].likesCount - 1;
-        newState[id].loadingLike = true;
+        const post = newState[`${id}`];
+        if (post) {
+          post.likedByMe = !post.likedByMe;
+          post.likesCount = prev[`${id}`].likedByMe
+            ? prev[`${id}`].likesCount + 1
+            : prev[`${id}`].likesCount - 1;
+          post.loadingLike = true;
+        }
         return newState;
       });
       await authApi.post(`posts/${postId}/comments/${id}/like`);
       console.log("Comment liked:");
       setState((prev) => {
         const newState = { ...prev };
-        newState[id].loadingLike = false;
+        const post = newState[`${id}`];
+        if (post) {
+          post.loadingLike = false;
+        }
         return newState;
       });
     } catch (error) {
       console.log("Error liking comment", error);
       setState((prev) => {
         const newState = { ...prev };
-        newState[id].likedByMe = !newState[id].likedByMe;
-        newState[id].likesCount = prev[id].likedByMe
-          ? prev[id].likesCount - 1
-          : prev[id].likesCount + 1;
-        newState[id].loadingLike = false;
+        const post = newState[`${id}`];
+        if (post) {
+          post.likedByMe = !post.likedByMe;
+          post.likesCount = prev[`${id}`].likedByMe
+            ? prev[`${id}`].likesCount - 1
+            : prev[`${id}`].likesCount + 1;
+          post.loadingLike = false;
+        }
         return newState;
       });
     }
