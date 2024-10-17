@@ -70,13 +70,17 @@
         "cancel": "Cancelar",
         "post": "Publicar",
         "edit": "Editar",
+        "editPost": "Editar Publicación",
+        "deletePost": "Borrar Publicación",
         "deleteComment": "Borrar comentario",
         "deleteDraft": "Descartar borrador"
       },
       "deleteDraftMessage": "¿Estás seguro de que quieres descartar este borrador? Esta acción no puede deshacerse.",
+      "deletePosttMessage": "¿Estás seguro de que quieres borrar esta publicación? Esta acción no puede deshacerse.",
       "createPost": "Crear publicación",
       "postSendSuccess": "Publicación enviada",
       "commentDeleted": "Comentario borrado",
+      "postDeleted": "Publicación borrada",
       "draftDescarted": "Borrador descartado"
     },
     "tabs": {

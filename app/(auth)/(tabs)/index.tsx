@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { deserialize } from "jsonapi-fractal";
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import Toast from "react-native-toast-message";
 
 import {
   Text,
@@ -26,6 +27,9 @@ import { Team } from "@/schema";
 import { useAuth } from "@/context/AuthProvider";
 import { SimpleSelectableChip } from "@/components/themed/SelectableChip";
 import CommentsSheet from "@/components/segments/CommentsSheet";
+import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
+import { ActionItem } from "@/components/themed/ActionItem";
+import { Button } from "@/components/themed";
 
 type PostState = Record<
   string,
@@ -56,6 +60,12 @@ export default function Chat() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
   const [hasMore, setHasMore] = useState(true);
+
+  const bottomSheetModalDeleteRef = useRef<BottomSheetModal>(null);
+  const bottomSheetModalOptionsRef = useRef<BottomSheetModal>(null);
+  const snapPointsDelete = useMemo(() => ["45%"], []);
+  const snapPointsOptions = useMemo(() => ["23%"], []);
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -214,7 +224,7 @@ export default function Chat() {
   };
 
   const firstLoad = () => {
-    setAll(true);
+    // setAll(true);
     setDataList([]);
     setHasMore(true);
     setCurrentPage(1);
@@ -259,6 +269,12 @@ export default function Chat() {
     }
   };
 
+  const onPressOptions = (post: Post) => {
+    setSelectedPost(post);
+    console.log("onPressOptions>>>> ", post);
+    bottomSheetModalOptionsRef.current?.present();
+  };
+
   const renderItem: ListRenderItem<Post> = ({ item: post }) => {
     const key = String(post.id);
     return (
@@ -267,6 +283,7 @@ export default function Chat() {
         post={post}
         onPressElement={() => onPressElement(post)}
         onPressComments={() => handlePressComments(post)}
+        onPressOptions={() => onPressOptions(post)}
         onPressLike={handlePressLike}
         likedByUser={state[key]?.likedByUser}
         likesCount={state[key]?.likesCount}
@@ -305,6 +322,40 @@ export default function Chat() {
   const handlePressComments = (post: Post) => {
     setSelectedPost(post);
     bottomSheetModalRef.current?.present();
+  };
+
+  const handlePressCancel = () => {
+    bottomSheetModalDeleteRef.current?.close();
+  };
+
+  const handlePressDelete = () => {
+    bottomSheetModalDeleteRef.current?.present();
+  };
+
+  const handlePressEdit = () => {
+    console.log("Edit post>>>>");
+  };
+
+  const handlePressConfirmDelete = async () => {
+    try {
+      setDeleteLoading(true);
+      console.log("selectedPost?.id to delete>>>>", selectedPost?.id);
+      await authApi.delete(`posts/${selectedPost?.id}`);
+      console.log("Post deleted:");
+
+      firstLoad();
+      bottomSheetModalDeleteRef.current?.close();
+      bottomSheetModalOptionsRef.current?.close();
+
+      Toast.show({
+        type: "success",
+        text1: t("chat.postDeleted"),
+      });
+    } catch (error) {
+      console.log("Error deleting post", error);
+    } finally {
+      setDeleteLoading(false);
+    }
   };
 
   return (
@@ -369,6 +420,56 @@ export default function Chat() {
         bottomSheetModalRef={bottomSheetModalRef}
         updateCommentCount={updateCommentCount}
       />
+      <ClosableBottomSheet
+        onlyBackdrop
+        snapPoints={snapPointsOptions}
+        bottomSheetModalRef={bottomSheetModalOptionsRef}
+      >
+        <View className="flex flex-col w-full px-5">
+          <ActionItem
+            disabled
+            type="edit"
+            title={t("chat.actions.editPost")}
+            onPressElement={handlePressEdit}
+          />
+
+          <View className="h-1 border-b border-neutral-200" />
+          {selectedPost?.canDeleteByUser && (
+            <ActionItem
+              disabled={deleteLoading}
+              type="delete"
+              title={`${t("chat.actions.deletePost")}`}
+              onPressElement={handlePressDelete}
+            />
+          )}
+        </View>
+      </ClosableBottomSheet>
+      <ClosableBottomSheet
+        title={`${t("chat.actions.deletePost")}`}
+        snapPoints={snapPointsDelete}
+        bottomSheetModalRef={bottomSheetModalDeleteRef}
+      >
+        <View className="flex flex-col w-full px-5">
+          <View className="flex items-center justify-center my-6 p-4 rounded-2xl border border-neutral-200">
+            <Text className="text-neutral-700 text-center text-base mb-2 w-10/12">
+              {t("chat.deletePosttMessage")}
+            </Text>
+          </View>
+
+          <Button
+            disabled={deleteLoading}
+            title={t("chat.actions.delete")}
+            onPress={handlePressConfirmDelete}
+            textClassName="text-white"
+            className="bg-red-400 border-red-400 mb-4"
+          />
+          <Button
+            disabled={deleteLoading}
+            title={t("chat.actions.cancel")}
+            onPress={handlePressCancel}
+          />
+        </View>
+      </ClosableBottomSheet>
     </SafeAreaView>
   );
 }
