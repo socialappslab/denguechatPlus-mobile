@@ -1,5 +1,6 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import { PostVisibility } from "@/schema";
+export * from "./prepareFormData";
 
 // <Questionnaire types>
 export type TypeField = "text" | "multiple" | "list" | "splash";
