@@ -1,4 +1,5 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
+export * from "./prepareFormData";
 
 // <Questionnaire types>
 export type TypeField = "text" | "multiple" | "list" | "splash";

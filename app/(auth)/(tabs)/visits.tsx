@@ -3,6 +3,8 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import CircularProgress from "react-native-circular-progress-indicator";
 
+import HouseWarning from "@/assets/images/icons/house-warning.svg";
+
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import {
   ListItem,
@@ -22,7 +24,7 @@ import { VisitData } from "@/types";
 import { extractAxiosErrorData, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { Routes } from "../(visit)/_layout";
 import Toast from "react-native-toast-message";
 import { useAuth } from "@/context/AuthProvider";
@@ -257,10 +259,14 @@ export default function Visits() {
                       storedVisits: storedVisits.length,
                     })}
                   </Text>
-                  {storedVisits.map((visit) => {
+                  {storedVisits.map((visit, idx) => {
                     return (
                       <ListItem
-                        title={`${t("visit.houses.house")} ${visit.houseId}`}
+                        title={
+                          visit.house
+                            ? `${t("visit.houses.house")} ${visit.houseId || idx + 5}`
+                            : "Casa 23"
+                        }
                         onPressElement={() => handlePressVisit(visit)}
                         filled={formatDate(visit.visitedAt, language)}
                       />
@@ -287,7 +293,7 @@ export default function Visits() {
           >
             <View className="h-full w-full flex px-4 py-4">
               <View className="flex-1 mb-4">
-                <View className="border border-neutral-200 rounded-lg w-full h-full px-8">
+                <View className="border border-neutral-200 rounded-lg w-full h-full px-4">
                   {!success && (
                     <>
                       {loading && (
@@ -329,20 +335,18 @@ export default function Visits() {
 const StatusCharts = () => {
   return (
     <View className="flex align-center flex-row py-6 justify-between flex-1">
-      <View className="flex flex-1 align-center justify-center">
-        <CircularProgress
-          value={1}
-          maxValue={1}
-          radius={40}
-          duration={0}
-          activeStrokeColor="#FCC914"
-          circleBackgroundColor="#FCC914"
-        />
-        <Text className="mt-2 text-center" type="small">
-          El sitio es Amarillo
+      <View className="flex flex-1 items-center justify-center">
+        <View
+          className="rounded-full w-20 h-20 flex items-center justify-center"
+          style={[styles.circle]}
+        >
+          <HouseWarning />
+        </View>
+        <Text className="mt-3 text-center" type="small">
+          El sitio es Rojo
         </Text>
       </View>
-      <View className="flex flex-1 align-center justify-center">
+      <View className="flex flex-1 items-center justify-center">
         <CircularProgress
           value={4}
           maxValue={4}
@@ -350,11 +354,11 @@ const StatusCharts = () => {
           duration={0}
           activeStrokeColor="#FCC914"
         />
-        <Text className="mt-2 text-center" type="small">
+        <Text className="mt-3 text-center" type="small">
           Contenedores potenciales
         </Text>
       </View>
-      <View className="flex flex-1 align-center justify-center">
+      <View className="flex flex-1 items-center justify-center">
         <CircularProgress
           duration={0}
           value={1}
@@ -362,10 +366,11 @@ const StatusCharts = () => {
           radius={40}
           activeStrokeColor="#FC0606"
         />
-        <Text className="mt-2 text-center" type="small">
+        <Text className="mt-3 text-center" type="small">
           Contenedores positivos
         </Text>
       </View>
     </View>
   );
 };
+const styles = StyleSheet.create({ circle: { backgroundColor: "#FC0606" } });

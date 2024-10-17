@@ -1,13 +1,5 @@
 import { FormState } from "@/types";
-
-// StatusColor utils
-export enum StatusColor {
-  INFECTED = "RED",
-  POTENTIONALLY_INFECTED = "YELLOW",
-  NO_INFECTED = "GREEN",
-}
-type Inspection = Record<string, string | undefined | boolean | string[]>;
-type Answer = Record<string, string | number | undefined>;
+import { Answer, Inspection, StatusColor } from "@/types/prepareFormData";
 
 /**
  *
@@ -19,18 +11,20 @@ export const prepareFormData = (formData: FormState) => {
   const questions = Object.keys(formData);
   let inspections: Inspection[] = [];
   let answers: Answer[] = [];
-  let statusColors: StatusColor[] = [];
+  let statusColors: StatusColor[][] = [];
 
   questions.forEach((question) => {
     const answer = formData[question];
     const index = parseInt(question.split("-")[1]);
     if (!inspections[index]) inspections[index] = {};
     if (!answers[index]) answers[index] = {};
+    if (!statusColors[index]) statusColors[index] = [];
 
     if (Array.isArray(answer)) {
       const [first] = answer;
       const resourceName = first.resourceName as string;
       if (!resourceName) return;
+
       inspections[index][resourceName] = answer.map(
         (item) => item.text || (item.resourceId as string),
       );
@@ -39,7 +33,7 @@ export const prepareFormData = (formData: FormState) => {
         .filter((item) => typeof item.statusColor === "string")
         .map((item) => item.statusColor as StatusColor);
 
-      statusColors.push(...colors);
+      statusColors[index].push(...colors);
       return;
     }
 
@@ -57,7 +51,7 @@ export const prepareFormData = (formData: FormState) => {
       }
 
       if (answer.statusColor)
-        statusColors.push(answer.statusColor as StatusColor);
+        statusColors[index].push(answer.statusColor as StatusColor);
 
       if (resourceName === "quantity_founded") {
         inspections[index][resourceName] = answer.bool ? answer.text : "1";
@@ -78,13 +72,21 @@ export const prepareFormData = (formData: FormState) => {
   });
 
   // We order with RED beign first, then YELLOW, then GREEN
-  const orderedStatus = statusColors.sort((a, b) => {
-    if (a < b) return 1;
-    if (a > b) return -1;
-    return 0;
-  });
-  // And get the first
-  const [statusColor] = orderedStatus;
+  const orderedStatus = statusColors.map((statuses) => orderStatus(statuses));
 
-  return { inspections, answers, statusColor: statusColor as StatusColor };
+  const returnObject = {
+    inspections,
+    answers,
+    statusColors: orderedStatus,
+  };
+  return returnObject;
+};
+
+export const orderStatus = (statusColors: StatusColor[]) => {
+  const colorOrder = Object.values(StatusColor);
+  const ordered = statusColors.sort(
+    (a, b) => colorOrder.indexOf(a) - colorOrder.indexOf(b),
+  );
+  if (ordered[0]) return ordered[0];
+  return StatusColor.NO_INFECTED;
 };

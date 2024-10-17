@@ -303,7 +303,6 @@ const ControlledCheckbox = ({
             required={!!option.required}
             optionType={option.optionType}
             type="checkbox"
-            image={option.image}
             // defaultText={isSelected.text}
             disabled={!!shouldDisable}
           />
@@ -348,7 +347,6 @@ const ControlledList = ({
             label={option.label}
             required={!!option.required}
             optionType={option.optionType}
-            image={option.image}
             defaultText={getValues(name)?.text}
           />
         );

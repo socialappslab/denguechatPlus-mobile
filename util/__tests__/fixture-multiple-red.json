@@ -1,0 +1,417 @@
+{
+  "contents": {
+    "1-0": {
+      "bool": true,
+      "label": "Sí, tengo permiso para esta visita",
+      "next": 2,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": null,
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 1
+    },
+    "10-0": {
+      "label": "Plantas, frutas y verduras",
+      "next": null,
+      "optionType": null,
+      "resourceId": 10,
+      "resourceName": "breeding_site_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 23
+    },
+    "10-1": {
+      "label": "Criaderos, bebederos y acuarios",
+      "next": null,
+      "optionType": null,
+      "resourceId": 11,
+      "resourceName": "breeding_site_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 24
+    },
+    "10-2": {
+      "label": "Criaderos, bebederos y acuarios",
+      "next": null,
+      "optionType": null,
+      "resourceId": 11,
+      "resourceName": "breeding_site_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 24
+    },
+    "11-0": {
+      "bool": true,
+      "label": "Sí, contiene agua",
+      "next": 12,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "has_water",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 32
+    },
+    "11-1": {
+      "bool": true,
+      "label": "Sí, contiene agua",
+      "next": 12,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "has_water",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 32
+    },
+    "11-2": {
+      "bool": true,
+      "label": "Sí, contiene agua",
+      "next": 12,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "has_water",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 32
+    },
+    "12-0": {
+      "label": "Agua activamente recogida. Ejemplo: canaleta, gotera, techo.",
+      "next": 13,
+      "optionType": null,
+      "resourceId": 2,
+      "resourceName": "water_source_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 35
+    },
+    "12-1": {
+      "label": "Agua pasivamente recogida. Ejemplo: la lluvia lo llenó.",
+      "next": 13,
+      "optionType": null,
+      "resourceId": 3,
+      "resourceName": "water_source_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 36
+    },
+    "12-2": {
+      "label": "Agua activamente recogida. Ejemplo: canaleta, gotera, techo.",
+      "next": 13,
+      "optionType": null,
+      "resourceId": 2,
+      "resourceName": "water_source_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 35
+    },
+    "13-0": {
+      "label": "Sí, tiene una tapa hermética",
+      "next": 14,
+      "optionType": null,
+      "resourceId": 1,
+      "resourceName": "container_protection_id",
+      "resourceType": "relation",
+      "statusColor": "GREEN",
+      "text": null,
+      "value": 38
+    },
+    "13-1": {
+      "label": "Sí, tiene una tapa no hermética",
+      "next": 14,
+      "optionType": null,
+      "resourceId": 2,
+      "resourceName": "container_protection_id",
+      "resourceType": "relation",
+      "statusColor": "YELLOW",
+      "text": null,
+      "value": 39
+    },
+    "13-2": {
+      "label": "Otro tipo de protección",
+      "next": 14,
+      "optionType": null,
+      "resourceId": 4,
+      "resourceName": "container_protection_id",
+      "resourceType": "relation",
+      "statusColor": "YELLOW",
+      "text": null,
+      "value": 41
+    },
+    "14-0": {
+      "label": "No, no fue tratado",
+      "next": 15,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": "was_chemically_treated",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 44
+    },
+    "14-1": {
+      "label": "No lo sé",
+      "next": 15,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": "was_chemically_treated",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 45
+    },
+    "14-2": {
+      "label": "No, no fue tratado",
+      "next": 15,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": "was_chemically_treated",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 44
+    },
+    "15-0": [
+      {
+        "disableOtherOptions": true,
+        "label": "Nada",
+        "next": 16,
+        "optionType": null,
+        "resourceId": 4,
+        "resourceName": "type_content_id",
+        "resourceType": "relation",
+        "statusColor": null,
+        "text": null,
+        "value": 49
+      }
+    ],
+    "15-1": [
+      {
+        "disableOtherOptions": true,
+        "label": "Nada",
+        "next": 16,
+        "optionType": null,
+        "resourceId": 4,
+        "resourceName": "type_content_id",
+        "resourceType": "relation",
+        "statusColor": null,
+        "text": null,
+        "value": 49
+      }
+    ],
+    "15-2": [
+      {
+        "disableOtherOptions": false,
+        "label": "Pupas",
+        "next": 16,
+        "optionType": null,
+        "resourceId": 2,
+        "resourceName": "type_content_id",
+        "resourceType": "relation",
+        "statusColor": "RED",
+        "text": null,
+        "value": 47
+      },
+      {
+        "disableOtherOptions": false,
+        "label": "Larvas",
+        "next": 16,
+        "optionType": null,
+        "resourceId": 1,
+        "resourceName": "type_content_id",
+        "resourceType": "relation",
+        "statusColor": "RED",
+        "text": null,
+        "value": 46
+      },
+      {
+        "disableOtherOptions": false,
+        "label": "Huevos",
+        "next": 16,
+        "optionType": null,
+        "resourceId": 3,
+        "resourceName": "type_content_id",
+        "resourceType": "relation",
+        "statusColor": "RED",
+        "text": null,
+        "value": 48
+      }
+    ],
+    "16-0": {
+      "bool": true,
+      "label": "No",
+      "next": 17,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "quantity_founded",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": "2",
+      "value": 51
+    },
+    "16-1": {
+      "bool": false,
+      "label": "No",
+      "next": 17,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "quantity_founded",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 51
+    },
+    "16-2": {
+      "bool": true,
+      "label": "No",
+      "next": 17,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "quantity_founded",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": "3",
+      "value": 51
+    },
+    "17-0": {
+      "bool": false,
+      "label": "No, no no puedo",
+      "next": 18,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "photo_id",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 53
+    },
+    "17-1": {
+      "bool": false,
+      "label": "No, no no puedo",
+      "next": 18,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "photo_id",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 53
+    },
+    "17-2": {
+      "bool": false,
+      "label": "No, no no puedo",
+      "next": 18,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "photo_id",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 53
+    },
+    "19-0": {
+      "label": "El contenedor fue descartado",
+      "next": null,
+      "optionType": null,
+      "resourceId": 3,
+      "resourceName": "elimination_method_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 55
+    },
+    "19-1": {
+      "label": "El agua del contenedor fue tirada",
+      "next": null,
+      "optionType": null,
+      "resourceId": 4,
+      "resourceName": "elimination_method_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 56
+    },
+    "19-2": {
+      "label": "El agua del contenedor fue tirada",
+      "next": null,
+      "optionType": null,
+      "resourceId": 4,
+      "resourceName": "elimination_method_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 56
+    },
+    "3-0": [
+      {
+        "disableOtherOptions": false,
+        "label": "Adulto mujer",
+        "next": null,
+        "optionType": null,
+        "resourceId": null,
+        "resourceName": null,
+        "resourceType": "attribute",
+        "statusColor": null,
+        "text": null,
+        "value": 9
+      }
+    ],
+    "4-0": [
+      {
+        "disableOtherOptions": false,
+        "label": "Explicación de larvas y pupas",
+        "next": null,
+        "optionType": null,
+        "resourceId": null,
+        "resourceName": null,
+        "resourceType": "attribute",
+        "statusColor": null,
+        "text": null,
+        "value": 13
+      },
+      {
+        "disableOtherOptions": false,
+        "label": "Explicación sobre cómo se reproduce el zancudo",
+        "next": null,
+        "optionType": null,
+        "resourceId": null,
+        "resourceName": null,
+        "resourceType": "attribute",
+        "statusColor": null,
+        "text": null,
+        "value": 14
+      }
+    ],
+    "5-0": {
+      "label": "En la casa",
+      "next": 8,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": null,
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 17
+    },
+    "9-0": {
+      "label": "Sí, encontré",
+      "next": 10,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": null,
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 20
+    }
+  }
+}

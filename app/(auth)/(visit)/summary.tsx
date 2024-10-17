@@ -3,13 +3,8 @@ import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { useVisitStore } from "@/hooks/useVisitStore";
-import { VisitData } from "@/types";
-import {
-  extractAxiosErrorData,
-  formatDate,
-  prepareFormData,
-  StatusColor,
-} from "@/util";
+import { VisitData, StatusColor } from "@/types";
+import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
@@ -20,11 +15,12 @@ export default function Summary() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
-  const { inspections, answers, statusColor } = prepareFormData(
+  const { inspections, answers, statusColors } = prepareFormData(
     visitMap[visitId],
   );
   const quantity = 1;
   const isConnected = false;
+  console.log(visitMap[visitId]);
 
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
@@ -49,7 +45,7 @@ export default function Summary() {
         visitedAt: new Date(),
         inspections,
         answers,
-        statusColor,
+        statusColor: statusColors[0],
       };
 
       console.log(JSON.stringify(completeVisitData));
@@ -100,7 +96,7 @@ export default function Summary() {
       <View className="mb-4">
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.status")}</Text>
-          <RenderStatus statusColor={statusColor} />
+          <RenderStatus statusColor={statusColors[0]} />
         </View>
         <View className="flex flex-row mb-4 w-full justify-between items-center">
           <Text type="header">{t("visit.summary.containers")}</Text>
