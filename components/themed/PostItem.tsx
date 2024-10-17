@@ -16,6 +16,7 @@ export type PostItemProps = ThemeProps &
     onPressElement: () => void;
     onPressLike: (id: number) => void;
     onPressComments: () => void;
+    onPressOptions: () => void;
     post: Post;
     commentsCount: number;
     likedByUser: boolean;
@@ -28,6 +29,7 @@ export function PostItem(props: PostItemProps) {
     onPressElement,
     onPressComments,
     onPressLike,
+    onPressOptions,
     commentsCount,
     likedByUser,
     likesCount,
@@ -57,7 +59,7 @@ export function PostItem(props: PostItemProps) {
             {post.location} • {formatDatePosts(post.createdAt, language)}
           </Text>
         </Pressable>
-        <TouchableOpacity onPress={onPressElement}>
+        <TouchableOpacity onPress={onPressOptions}>
           <MoreHorizontal />
         </TouchableOpacity>
       </View>

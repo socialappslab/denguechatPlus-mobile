@@ -16,8 +16,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export type ClosableBottomSheetProps = ThemeProps &
   BottomSheetProps & {
     bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
-    title: string;
+    title?: string;
     onClose?: () => void;
+    onlyBackdrop?: boolean;
   };
 
 export function ClosableBottomSheet(props: ClosableBottomSheetProps) {
@@ -25,6 +26,7 @@ export function ClosableBottomSheet(props: ClosableBottomSheetProps) {
     style,
     title,
     onClose,
+    onlyBackdrop,
     lightColor,
     darkColor,
     children,
@@ -99,14 +101,16 @@ export function ClosableBottomSheet(props: ClosableBottomSheetProps) {
       )}
       {...otherProps}
     >
-      <View className="flex flex-row items-center px-5 mb-2">
-        <View className="flex flex-1 flex-col">
-          <Text className="font-bold text-2xl">{title}</Text>
+      {!onlyBackdrop && (
+        <View className="flex flex-row items-center px-5 mb-2">
+          <View className="flex flex-1 flex-col">
+            {title && <Text className="font-bold text-2xl">{title}</Text>}
+          </View>
+          <TouchableOpacity className="ml-4" onPress={handleClosePress}>
+            <CloseCircle />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity className="ml-4" onPress={handleClosePress}>
-          <CloseCircle />
-        </TouchableOpacity>
-      </View>
+      )}
 
       <View
         key={currentIndex}

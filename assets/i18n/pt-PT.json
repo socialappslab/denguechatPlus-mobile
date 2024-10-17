@@ -70,13 +70,17 @@
         "cancel": "Cancelar",
         "post": "Publicar",
         "edit": "Editar",
+        "editPost": "Editar Publicação",
+        "deletePost": "Excluir Publicação",
         "deleteComment": "Excluir comentário",
         "deleteDraft": "Descartar rascunho"
       },
       "deleteDraftMessage": "Tem certeza de que deseja descartar este rascunho? Esta ação não pode ser desfeita.",
+      "deletePosttMessage": "Tem certeza de que deseja excluir esta publicação? Esta ação não pode ser desfeita.",
       "createPost": "Criar publicação",
       "postSendSuccess": "Publicação enviada",
       "commentDeleted": "Comentário excluído",
+      "postDeleted": "Publicação excluída",
       "draftDescarted": "Rascunho descartado"
     },
     "tabs": {
