@@ -289,6 +289,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const checkShowOptions = useCallback(() => {
     if (watchContent.length === 0 && !selectedPhoto) {
       setShowOptions(false);
+      reset({ content: "" });
     } else {
       setShowOptions(true);
     }
