@@ -125,6 +125,7 @@ export default function Visit() {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
+          automaticallyAdjustKeyboardInsets={true}
         >
           {!isLoadingQuestionnaire && currentQuestion && (
             <QuestionnaireRenderer

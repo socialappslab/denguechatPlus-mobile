@@ -45,14 +45,14 @@ export function SelectableItem({
   const onChangeText = (text: string) => {
     if (!onValueChange) return;
     setText(text);
-    onValueChange(text);
+    onValueChange(text, !!text);
   };
 
   const handleChange = () => {
     if (!onValueChange) return;
     // Only pass a value when there's a text
     if (text && optionType) {
-      return onValueChange(text);
+      return onValueChange(text, false);
     }
     onValueChange(null);
   };

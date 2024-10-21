@@ -42,7 +42,7 @@ export type SelectableItemProps = ViewProps & {
    * Callback that is invoked when the user presses the checkbox.
    * @param value A boolean indicating the new checked state of the checkbox.
    */
-  onValueChange?: (value: any) => void;
+  onValueChange?: (value: any, isText?: boolean) => void;
   /**
    * The label of the checkbox.
    */
