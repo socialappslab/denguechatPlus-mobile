@@ -248,7 +248,7 @@ const ControlledCheckbox = ({
     Array.isArray(itemsChecked) &&
     itemsChecked.some((item: FormStateOption) => item.value === option.value);
 
-  const onChange = (text: string) => {
+  const onChange = (text: string, isText?: boolean) => {
     let values = getValues(name);
     if (!values) {
       values = [];
@@ -259,6 +259,9 @@ const ControlledCheckbox = ({
     );
 
     if (indexFound > -1) {
+      // we pass a flag to know if the change is only text related and avoid
+      // filtering the current option out
+      if (isText) return;
       const valuesToSave = values.filter(
         (item: ISelectableItem) => item.value !== option.value,
       );
