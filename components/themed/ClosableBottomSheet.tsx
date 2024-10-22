@@ -54,7 +54,9 @@ export function ClosableBottomSheet(props: ClosableBottomSheetProps) {
 
   const handleSheetChanges = (index: number) => {
     if (index === -1 && onClose) {
-      onClose();
+      setTimeout(() => {
+        onClose();
+      }, 300);
     }
     if (index === 0) {
       Keyboard.dismiss();
