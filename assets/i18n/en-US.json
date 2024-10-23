@@ -70,6 +70,7 @@
         "cancel": "Cancel",
         "post": "Post",
         "edit": "Edit",
+        "save": "Save",
         "editPost": "Edit Post",
         "deletePost": "Delete Post",
         "deleteComment": "Delete comment",
@@ -81,6 +82,7 @@
       "postSendSuccess": "Post sent",
       "commentDeleted": "Comment deleted",
       "postDeleted": "Post deleted",
+      "postUpdates": "Post updated",
       "draftDescarted": "Draft discarded"
     },
     "tabs": {

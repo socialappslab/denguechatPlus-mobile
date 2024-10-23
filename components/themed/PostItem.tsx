@@ -59,9 +59,11 @@ export function PostItem(props: PostItemProps) {
             {post.location} • {formatDatePosts(post.createdAt, language)}
           </Text>
         </Pressable>
-        <TouchableOpacity onPress={onPressOptions}>
-          <MoreHorizontal />
-        </TouchableOpacity>
+        {(post.canDeleteByUser || post.canEditByUser) && (
+          <TouchableOpacity onPress={onPressOptions}>
+            <MoreHorizontal />
+          </TouchableOpacity>
+        )}
       </View>
 
       <Pressable

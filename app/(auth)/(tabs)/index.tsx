@@ -63,8 +63,7 @@ export default function Chat() {
 
   const bottomSheetModalDeleteRef = useRef<BottomSheetModal>(null);
   const bottomSheetModalOptionsRef = useRef<BottomSheetModal>(null);
-  const [deleteConfirmationPresented, setDeleteConfirmationPressed] =
-    useState<boolean>(false);
+  const [unmountOptions, setUnmountOptions] = useState<boolean>(false);
   const snapPointsDelete = useMemo(() => ["45%"], []);
   const snapPointsOptions = useMemo(() => ["24%"], []);
 
@@ -211,7 +210,7 @@ export default function Chat() {
   };
 
   const onPressNewPost = () => {
-    router.push(`/new-post`);
+    router.push(`new-post`);
   };
 
   const updateCommentCount = (diff: number) => {
@@ -232,7 +231,7 @@ export default function Chat() {
     setHasMore(true);
     setCurrentPage(1);
     fetchData(1, undefined);
-    setDeleteConfirmationPressed(false);
+    setUnmountOptions(false);
   };
 
   const handlePressLike = async (id: number) => {
@@ -330,16 +329,17 @@ export default function Chat() {
 
   const handlePressCancel = () => {
     bottomSheetModalDeleteRef.current?.close();
-    setDeleteConfirmationPressed(false);
+    setUnmountOptions(false);
   };
 
   const handlePressDelete = () => {
     bottomSheetModalDeleteRef.current?.present();
-    setDeleteConfirmationPressed(true);
+    setUnmountOptions(true);
   };
 
   const handlePressEdit = () => {
-    console.log("Edit post>>>>");
+    router.push(`edit-post?id=${selectedPost?.id}`);
+    setUnmountOptions(true);
   };
 
   const handlePressConfirmDelete = async () => {
@@ -425,7 +425,7 @@ export default function Chat() {
         bottomSheetModalRef={bottomSheetModalRef}
         updateCommentCount={updateCommentCount}
       />
-      {!deleteConfirmationPresented && (
+      {!unmountOptions && (
         <ClosableBottomSheet
           onlyBackdrop
           enablePanDownToClose
@@ -433,13 +433,14 @@ export default function Chat() {
           bottomSheetModalRef={bottomSheetModalOptionsRef}
         >
           <View className="flex flex-col w-full px-5">
-            <ActionItem
-              disabled
-              type="edit"
-              title={t("chat.actions.editPost")}
-              onPressElement={handlePressEdit}
-            />
-
+            {selectedPost?.canEditByUser && (
+              <ActionItem
+                type="edit"
+                disabled={deleteLoading}
+                title={t("chat.actions.editPost")}
+                onPressElement={handlePressEdit}
+              />
+            )}
             <View className="h-1 border-b border-neutral-200" />
             {selectedPost?.canDeleteByUser && (
               <ActionItem
