@@ -70,6 +70,7 @@
         "cancel": "Cancelar",
         "post": "Publicar",
         "edit": "Editar",
+        "save": "Guardar",
         "editPost": "Editar Publicación",
         "deletePost": "Borrar Publicación",
         "deleteComment": "Borrar comentario",
@@ -81,6 +82,7 @@
       "postSendSuccess": "Publicación enviada",
       "commentDeleted": "Comentario borrado",
       "postDeleted": "Publicación borrada",
+      "postUpdated": "Publicación actualizada",
       "draftDescarted": "Borrador descartado"
     },
     "tabs": {

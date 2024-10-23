@@ -63,8 +63,10 @@ export default function Chat() {
 
   const bottomSheetModalDeleteRef = useRef<BottomSheetModal>(null);
   const bottomSheetModalOptionsRef = useRef<BottomSheetModal>(null);
+  const [unmountOptions, setUnmountOptions] = useState<boolean>(false);
   const snapPointsDelete = useMemo(() => ["45%"], []);
-  const snapPointsOptions = useMemo(() => ["23%"], []);
+  const snapPointsOptions = useMemo(() => ["24%"], []);
+
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -208,7 +210,7 @@ export default function Chat() {
   };
 
   const onPressNewPost = () => {
-    router.push(`/new-post`);
+    router.push(`new-post`);
   };
 
   const updateCommentCount = (diff: number) => {
@@ -229,6 +231,7 @@ export default function Chat() {
     setHasMore(true);
     setCurrentPage(1);
     fetchData(1, undefined);
+    setUnmountOptions(false);
   };
 
   const handlePressLike = async (id: number) => {
@@ -326,14 +329,17 @@ export default function Chat() {
 
   const handlePressCancel = () => {
     bottomSheetModalDeleteRef.current?.close();
+    setUnmountOptions(false);
   };
 
   const handlePressDelete = () => {
     bottomSheetModalDeleteRef.current?.present();
+    setUnmountOptions(true);
   };
 
   const handlePressEdit = () => {
-    console.log("Edit post>>>>");
+    router.push(`edit-post?id=${selectedPost?.id}`);
+    setUnmountOptions(true);
   };
 
   const handlePressConfirmDelete = async () => {
@@ -344,8 +350,7 @@ export default function Chat() {
       console.log("Post deleted:");
 
       firstLoad();
-      bottomSheetModalDeleteRef.current?.close();
-      bottomSheetModalOptionsRef.current?.close();
+      handlePressCancel();
 
       Toast.show({
         type: "success",
@@ -420,34 +425,39 @@ export default function Chat() {
         bottomSheetModalRef={bottomSheetModalRef}
         updateCommentCount={updateCommentCount}
       />
-      <ClosableBottomSheet
-        onlyBackdrop
-        snapPoints={snapPointsOptions}
-        bottomSheetModalRef={bottomSheetModalOptionsRef}
-      >
-        <View className="flex flex-col w-full px-5">
-          <ActionItem
-            disabled
-            type="edit"
-            title={t("chat.actions.editPost")}
-            onPressElement={handlePressEdit}
-          />
-
-          <View className="h-1 border-b border-neutral-200" />
-          {selectedPost?.canDeleteByUser && (
-            <ActionItem
-              disabled={deleteLoading}
-              type="delete"
-              title={`${t("chat.actions.deletePost")}`}
-              onPressElement={handlePressDelete}
-            />
-          )}
-        </View>
-      </ClosableBottomSheet>
+      {!unmountOptions && (
+        <ClosableBottomSheet
+          onlyBackdrop
+          enablePanDownToClose
+          snapPoints={snapPointsOptions}
+          bottomSheetModalRef={bottomSheetModalOptionsRef}
+        >
+          <View className="flex flex-col w-full px-5">
+            {selectedPost?.canEditByUser && (
+              <ActionItem
+                type="edit"
+                disabled={deleteLoading}
+                title={t("chat.actions.editPost")}
+                onPressElement={handlePressEdit}
+              />
+            )}
+            <View className="h-1 border-b border-neutral-200" />
+            {selectedPost?.canDeleteByUser && (
+              <ActionItem
+                disabled={deleteLoading}
+                type="delete"
+                title={`${t("chat.actions.deletePost")}`}
+                onPressElement={handlePressDelete}
+              />
+            )}
+          </View>
+        </ClosableBottomSheet>
+      )}
       <ClosableBottomSheet
         title={`${t("chat.actions.deletePost")}`}
         snapPoints={snapPointsDelete}
         bottomSheetModalRef={bottomSheetModalDeleteRef}
+        onClose={handlePressCancel}
       >
         <View className="flex flex-col w-full px-5">
           <View className="flex items-center justify-center my-6 p-4 rounded-2xl border border-neutral-200">

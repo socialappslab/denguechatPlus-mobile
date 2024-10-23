@@ -1,4 +1,5 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
+import { PostVisibility } from "@/schema";
 
 // <Questionnaire types>
 export type TypeField = "text" | "multiple" | "list" | "splash";
@@ -209,6 +210,7 @@ export interface Comment {
   likesCount: number;
   likedByMe: boolean;
   canDeleteByUser: boolean;
+  canEditByUser: boolean;
   createdBy: {
     accountId: number;
     userName: string;
@@ -223,6 +225,7 @@ export interface Post {
   createdAt: number;
   userAccountId: number;
   canDeleteByUser: boolean;
+  canEditByUser: boolean;
   createdBy: string;
   createByUser: {
     accountId: number;
@@ -231,6 +234,7 @@ export interface Post {
   };
   location: string;
   postText: string;
+  content: string;
   photoUrl?: {
     photo_url: string;
   };
@@ -238,6 +242,7 @@ export interface Post {
   likesCount: number;
   likedByUser: boolean;
   comments?: Comment[];
+  visibility: PostVisibility;
 }
 
 export type ReportData = {

@@ -43,7 +43,6 @@ export default function TabLayout(props: ThemeProps) {
   return (
     <Tabs
       initialRouteName="index"
-      backBehavior="history"
       screenOptions={{
         headerStyle: {
           backgroundColor,
