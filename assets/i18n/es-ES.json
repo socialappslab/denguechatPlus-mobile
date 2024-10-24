@@ -95,10 +95,17 @@
       "myCity": "Mi Ciudad",
       "myCommunity": "Mi Comunidad",
       "brigades": "Brigadas",
-      "assignBrigade": "Asignar Brigada"
+      "assignBrigade": "Asignar Brigada",
+      "settings": "Configuración"
     },
     "profile": {
-      "account": "Cuenta"
+      "account": "Cuenta",
+      "deleteAccount": {
+        "title": "Eliminar cuenta",
+        "description": "¿Está seguro de que desea eliminar esta cuenta? Esta acción tiene muchos efectos secundarios y no se puede deshacer.",
+        "delete": "Eliminar cuenta",
+        "cancel": "Cancelar"
+      }
     },
     "login": {
       "username": "Nombre de usuario",
