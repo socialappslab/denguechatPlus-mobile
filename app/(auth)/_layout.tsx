@@ -9,7 +9,7 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 
-import { Button, SafeAreaView, Text, View } from "@/components/themed";
+import { Button, Loading, SafeAreaView, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import { VisitProvider } from "@/context/VisitContext";
 import AssignBrigade from "@/assets/images/icons/add-brigade.svg";
@@ -31,6 +31,7 @@ const CustomDrawerContent = () => {
   const { meData, logout } = useAuth();
   const { t } = useTranslation();
   const [openSettings, setOpenSettings] = useState(false);
+  const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const onPressDeleteAccount = () => {
@@ -39,9 +40,12 @@ const CustomDrawerContent = () => {
 
   const onConfirmDeleteAccount = async () => {
     try {
+      setLoading(true);
       await authApi.delete("/users/delete_account");
+      setLoading(false);
       logout();
     } catch (error) {
+      setLoading(false);
       const errorData = extractAxiosErrorData(error);
       // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
       errorData?.errors?.forEach((error: any) => {
@@ -127,10 +131,17 @@ const CustomDrawerContent = () => {
             bottomSheetModalRef={bottomSheetModalRef}
           >
             <View className="flex flex-col w-full px-5">
-              <View className="flex items-center justify-center my-6 p-4 rounded-2xl border border-neutral-200">
-                <Text className="text-neutral-700 text-center text-base mb-2 w-10/12">
-                  {t("profile.deleteAccount.description")}
-                </Text>
+              <View className="flex items-center justify-center my-6 p-4 rounded-2xl border border-neutral-200 h-36">
+                {loading && (
+                  <View className="w-full h-36 flex items-center justify-center">
+                    <Loading />
+                  </View>
+                )}
+                {!loading && (
+                  <Text className="text-neutral-700 text-center text-base mb-2 w-10/12">
+                    {t("profile.deleteAccount.description")}
+                  </Text>
+                )}
               </View>
 
               <Button
@@ -138,10 +149,12 @@ const CustomDrawerContent = () => {
                 onPress={() => onConfirmDeleteAccount()}
                 textClassName="text-white"
                 className="bg-red-400 border-red-400 mb-4"
+                disabled={loading}
               />
               <Button
                 title={t("profile.deleteAccount.cancel")}
                 onPress={() => bottomSheetModalRef.current?.close()}
+                disabled={loading}
               />
             </View>
           </ClosableBottomSheet>

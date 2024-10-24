@@ -46,9 +46,7 @@ export default function Login() {
 
   const phoneInput = useRef<PhoneInput>(null);
 
-  const methods = useForm<LoginInputType>({
-    resolver: zodResolver(createLoginSchema()),
-  });
+  const methods = useForm<LoginInputType>({});
 
   const refPassword = useRef<RNTextInput>(null);
 
@@ -291,7 +289,7 @@ export default function Login() {
 
             <Button
               primary
-              disabled={loading || !isValid}
+              disabled={loading}
               className="mb-4"
               title={t("login.action")}
               onPress={handleSubmit(onSubmitHandler)}
