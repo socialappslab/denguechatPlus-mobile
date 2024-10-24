@@ -95,10 +95,17 @@
       "myCity": "My City",
       "myCommunity": "My Community",
       "brigades": "Brigades",
-      "assignBrigade": "Assign Brigade"
+      "assignBrigade": "Assign Brigade",
+      "settings": "Settings"
     },
     "profile": {
-      "account": "Account"
+      "account": "Account",
+      "deleteAccount": {
+        "title": "Delete account",
+        "description": "Are you sure you want to delete this account? This action has many side effects and cannot be reversed.",
+        "delete": "Delete account",
+        "cancel": "Cancel"
+      }
     },
     "login": {
       "username": "Username",
