@@ -1,0 +1,193 @@
+{
+  "contents": {
+    "1-0": {
+      "label": "Sí, tengo permiso para esta visita",
+      "next": 2,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": null,
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 1
+    },
+    "10-0": {
+      "label": "Plantas, frutas y verduras",
+      "next": null,
+      "optionType": null,
+      "resourceId": 10,
+      "resourceName": "breeding_site_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 23
+    },
+    "11-0": {
+      "bool": true,
+      "label": "Sí, contiene agua",
+      "next": 12,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "has_water",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 32
+    },
+    "12-0": {
+      "label": "Agua pasivamente recogida. Ejemplo: la lluvia lo llenó.",
+      "next": 13,
+      "optionType": null,
+      "resourceId": 3,
+      "resourceName": "water_source_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 36
+    },
+    "13-0": {
+      "label": "Sí, tiene una tapa no hermética",
+      "next": 14,
+      "optionType": null,
+      "resourceId": 2,
+      "resourceName": "container_protection_id",
+      "resourceType": "relation",
+      "statusColor": "YELLOW",
+      "text": null,
+      "value": 39
+    },
+    "14-0": {
+      "label": "No, no fue tratado",
+      "next": 15,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": "was_chemically_treated",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 44
+    },
+    "15-0": [
+      {
+        "label": "Pupas",
+        "next": 16,
+        "optionType": null,
+        "resourceId": 2,
+        "resourceName": "type_content_id",
+        "resourceType": "relation",
+        "statusColor": "RED",
+        "text": null,
+        "value": 47
+      }
+    ],
+    "16-0": {
+      "bool": false,
+      "label": "No",
+      "next": 17,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "quantity_founded",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 51
+    },
+    "17-0": {
+      "bool": false,
+      "label": "No, no no puedo",
+      "next": 18,
+      "optionType": "boolean",
+      "resourceId": null,
+      "resourceName": "photo_id",
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 53
+    },
+    "19-0": {
+      "label": "El agua del contenedor fue tirada",
+      "next": null,
+      "optionType": null,
+      "resourceId": 4,
+      "resourceName": "elimination_method_type_id",
+      "resourceType": "relation",
+      "statusColor": null,
+      "text": null,
+      "value": 56
+    },
+    "3-0": [
+      {
+        "disableOtherOptions": false,
+        "label": "Adulto mujer",
+        "next": null,
+        "optionType": null,
+        "resourceId": null,
+        "resourceName": null,
+        "resourceType": "attribute",
+        "statusColor": null,
+        "text": null,
+        "value": 9
+      },
+      {
+        "disableOtherOptions": false,
+        "label": "Joven hombre",
+        "next": null,
+        "optionType": null,
+        "resourceId": null,
+        "resourceName": null,
+        "resourceType": "attribute",
+        "statusColor": null,
+        "text": null,
+        "value": 10
+      }
+    ],
+    "4-0": [
+      {
+        "disableOtherOptions": false,
+        "label": "Explicación sobre cómo se reproduce el zancudo",
+        "next": null,
+        "optionType": null,
+        "resourceId": null,
+        "resourceName": null,
+        "resourceType": "attribute",
+        "statusColor": null,
+        "text": null,
+        "value": 14
+      },
+      {
+        "disableOtherOptions": false,
+        "label": "Explicación de larvas y pupas",
+        "next": null,
+        "optionType": null,
+        "resourceId": null,
+        "resourceName": null,
+        "resourceType": "attribute",
+        "statusColor": null,
+        "text": null,
+        "value": 13
+      }
+    ],
+    "5-0": {
+      "label": "En la casa",
+      "next": 8,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": null,
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 17
+    },
+    "9-0": {
+      "label": "Sí, encontré",
+      "next": 10,
+      "optionType": null,
+      "resourceId": null,
+      "resourceName": null,
+      "resourceType": "attribute",
+      "statusColor": null,
+      "text": null,
+      "value": 20
+    }
+  }
+}
