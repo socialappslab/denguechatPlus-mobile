@@ -1,5 +1,6 @@
 import { SelectableItem, Text, View } from "@/components/themed";
 import { InspectionQuestion, OptionType, ResourceType } from "@/types";
+import { Image } from "expo-image";
 import React, { useCallback, useState } from "react";
 import {
   Control,
@@ -11,6 +12,7 @@ import {
   UseFormSetValue,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { SvgUri } from "react-native-svg";
 
 /** Interfaces */
 interface QuestionnaireRendererProps {
@@ -66,7 +68,7 @@ const formatOptionsForSelectableItems = ({
         next,
         resourceName,
         resourceId,
-        image,
+        image: image?.url,
         required,
         group,
         resourceType,
@@ -153,6 +155,7 @@ const QuestionnaireRenderer = ({
     formatOptionsForSelectableItems(question);
   const hasGroup = formattedOptions.every((option) => option.group);
   const groupedOptions = groupOptions(formattedOptions);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const renderOptions = useCallback(
     (option: ISelectableItem) => {
@@ -187,12 +190,24 @@ const QuestionnaireRenderer = ({
     [name, getValues],
   );
 
+  console.log(question?.options?.[0]?.image?.url);
   return (
     <FormProvider {...methods}>
       {question.typeField === "splash" && (
         <View className="flex flex-col justify-center items-center h-full">
-          <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-            <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
+          <View
+            className={`h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center ${!imageLoaded && "bg-green-300"}`}
+          >
+            {!imageLoaded && (
+              <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
+            )}
+            {question.image?.url && (
+              <Image
+                source={question.image.url}
+                className="w-full h-full"
+                onLoad={() => setImageLoaded(true)}
+              />
+            )}
           </View>
           <Text type="title" className="text-center">
             {question.question}
@@ -342,6 +357,7 @@ const ControlledList = ({
         };
         return (
           <SelectableItem
+            image={option.image}
             value={`${option.value}`}
             key={option.value}
             checked={isSelected}

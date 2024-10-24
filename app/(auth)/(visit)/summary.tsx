@@ -8,6 +8,8 @@ import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
+import SummaryImage from "@/assets/images/summary.svg";
+import { Image } from "expo-image";
 
 export default function Summary() {
   const router = useRouter();
@@ -86,8 +88,8 @@ export default function Summary() {
   return (
     <View className="h-full p-6 pb-10 flex flex-col justify-between">
       <View className="flex flex-col justify-center items-center">
-        <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-          <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
+        <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+          <SummaryImage height="100%" width="100%" />
         </View>
       </View>
       <Text type="title" className="mb-4">

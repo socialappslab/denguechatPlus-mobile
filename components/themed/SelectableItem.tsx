@@ -8,12 +8,12 @@ import { SelectableItemProps } from "@/types/SelectableItemProps";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Image,
   Platform,
   Pressable,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { Image } from "expo-image";
 import { SimpleChip } from "./SimpleChip";
 import { TextInput } from "./TextInput";
 
@@ -72,8 +72,8 @@ export function SelectableItem({
     >
       <View className="flex bg-transparent">
         {image && (
-          <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
-            <Image className="w-full h-full" source={{ uri: `${image}.png` }} />
+          <View className="h-64 flex-grow mb-4 rounded-md border-green-300 flex items-center justify-center overflow-hidden">
+            <Image className="w-full h-full" source={`${image}.png`} />
           </View>
         )}
         <View className="flex flex-row bg-transparent">
