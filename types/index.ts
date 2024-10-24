@@ -38,7 +38,7 @@ export interface Option {
   required?: boolean;
   textArea?: boolean;
   next?: number;
-  image?: string;
+  image?: { url: string };
   value?: string;
   resourceId: string;
   optionType: OptionType;
