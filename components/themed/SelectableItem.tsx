@@ -41,6 +41,7 @@ export function SelectableItem({
 }: SelectableItemProps) {
   const [text, setText] = useState(defaultText);
   const { t } = useTranslation();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const onChangeText = (text: string) => {
     if (!onValueChange) return;
@@ -72,8 +73,17 @@ export function SelectableItem({
     >
       <View className="flex bg-transparent">
         {image && (
-          <View className="h-64 flex-grow mb-4 rounded-md border-green-300 flex items-center justify-center overflow-hidden">
-            <Image className="w-full h-full" source={`${image}.png`} />
+          <View
+            className={`h-64 relative flex-grow mb-4 rounded-md border-green-300 flex items-center justify-center overflow-hidden ${!imageLoaded && "bg-green-300"}`}
+          >
+            <Image
+              className="w-full h-full"
+              source={`${image}.png`}
+              onLoad={() => setImageLoaded(true)}
+            />
+            {!imageLoaded && (
+              <Text className="absolute top-1/5">{t("ilustrationOrIcon")}</Text>
+            )}
           </View>
         )}
         <View className="flex flex-row bg-transparent">
