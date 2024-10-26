@@ -13,6 +13,7 @@ import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image } from "react-native";
 import { Routes } from "./_layout";
+import ContainerPictureIllustration from "@/assets/images/container-picture.svg";
 
 export default function ContainerPicture() {
   const { t } = useTranslation();
@@ -101,8 +102,8 @@ export default function ContainerPicture() {
       <View className="flex flex-1 py-5 px-5 h-full">
         <View className="flex flex-col justify-center items-center flex-1">
           {!photoUri && (
-            <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-              <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
+            <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
+              <ContainerPictureIllustration width="100%" height="100%" />
             </View>
           )}
           {photoUri && (
