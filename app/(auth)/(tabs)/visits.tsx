@@ -33,13 +33,87 @@ import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import useAxios from "axios-hooks";
 import Colors from "@/constants/Colors";
 
-const visitsData = {
-  weeklyChange: "+15%",
-};
+interface HouseReport {
+  greenQuantity: number;
+  houseQuantity: number;
+  orangeQuantity: number;
+  redQuantity: number;
+  siteVariationPercentage: number;
+  visitQuantity: number;
+  visitVariationPercentage: number;
+}
 
-const sitesData = {
-  totalSites: 170,
-  weeklyChange: "+15%",
+const VisitsReport = () => {
+  const { meData } = useAuth();
+  const { t } = useTranslation();
+  const [{ data, loading, error }] = useAxios<HouseReport, null, ErrorResponse>(
+    {
+      url: `reports/house_status`,
+    },
+  );
+
+  return (
+    <View>
+      <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+        <Text type="title" className="mb-6">
+          {(meData?.userProfile?.team as Team)?.sector_name}
+        </Text>
+        <Text className="text-neutral-600 mb-2">
+          {t("brigade.cards.numberVisits")}
+        </Text>
+        <View className="flex-row items-center justify-between mb-8">
+          <Text className="text-3xl font-semibold">{data?.visitQuantity}</Text>
+          <SimpleChip
+            border="1"
+            padding="small"
+            textColor="neutral-500"
+            borderColor="neutral-500"
+            ionIcon="arrow-up"
+            iconColor={Colors.light.neutral}
+            label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+          />
+        </View>
+
+        <View>
+          <Text className="text-neutral-600 mb-2">
+            {t("brigade.cards.numberSites")}
+          </Text>
+          <View className="flex-row items-center justify-between">
+            <Text className="text-3xl font-semibold">
+              {data?.houseQuantity}
+            </Text>
+
+            <SimpleChip
+              border="1"
+              padding="small"
+              textColor="neutral-500"
+              borderColor="neutral-500"
+              ionIcon="arrow-up"
+              iconColor={Colors.light.neutral}
+              label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+            />
+          </View>
+        </View>
+        <View className="flex flex-col mt-6">
+          <ProgressBar
+            label={t("brigade.sites.green")}
+            progress={data?.greenQuantity || 0}
+            color="primary"
+          />
+          <ProgressBar
+            label={t("brigade.sites.yellow")}
+            progress={data?.orangeQuantity || 0}
+            color="yellow-300"
+          />
+          <ProgressBar
+            label={t("brigade.sites.red")}
+            progress={data?.redQuantity || 0}
+            color="red-500"
+          />
+        </View>
+      </View>
+    </View>
+  );
 };
 
 export default function Visits() {
@@ -185,68 +259,7 @@ export default function Visits() {
               />
             </View>
 
-            <View>
-              <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
-                <Text type="title" className="mb-6">
-                  {(meData?.userProfile?.team as Team)?.sector_name}
-                </Text>
-                <Text className="text-neutral-600 mb-2">
-                  {t("brigade.cards.numberVisits")}
-                </Text>
-                <View className="flex-row items-center justify-between mb-8">
-                  <Text className="text-3xl font-semibold">
-                    {team?.visits ?? 0}
-                  </Text>
-                  <SimpleChip
-                    border="1"
-                    padding="small"
-                    textColor="neutral-500"
-                    borderColor="neutral-500"
-                    ionIcon="arrow-up"
-                    iconColor={Colors.light.neutral}
-                    label={`${visitsData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
-                  />
-                </View>
-
-                <View>
-                  <Text className="text-neutral-600 mb-2">
-                    {t("brigade.cards.numberSites")}
-                  </Text>
-                  <View className="flex-row items-center justify-between">
-                    <Text className="text-3xl font-semibold">
-                      {sitesData.totalSites}
-                    </Text>
-
-                    <SimpleChip
-                      border="1"
-                      padding="small"
-                      textColor="neutral-500"
-                      borderColor="neutral-500"
-                      ionIcon="arrow-up"
-                      iconColor={Colors.light.neutral}
-                      label={`${sitesData.weeklyChange} ${t("brigade.cards.numberThisWeek")}`}
-                    />
-                  </View>
-                </View>
-                <View className="flex flex-col mt-6">
-                  <ProgressBar
-                    label={t("brigade.sites.green")}
-                    progress={team?.sitesStatuses?.green ?? 0}
-                    color="primary"
-                  />
-                  <ProgressBar
-                    label={t("brigade.sites.yellow")}
-                    progress={team?.sitesStatuses?.yellow ?? 0}
-                    color="yellow-300"
-                  />
-                  <ProgressBar
-                    label={t("brigade.sites.red")}
-                    progress={team?.sitesStatuses?.red ?? 0}
-                    color="red-500"
-                  />
-                </View>
-              </View>
-            </View>
+            <VisitsReport />
 
             <View className="my-4 p-8 rounded-2xl border border-neutral-200">
               <Text className="text-xl font-bold text-center mb-2">
