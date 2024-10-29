@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Platform, TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity, Pressable, TextInput } from "react-native";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -16,6 +16,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
+import useAxios from "axios-hooks";
 
 import {
   createPostSchema,
@@ -25,6 +27,7 @@ import {
   Team,
 } from "@/schema";
 import { useAuth } from "@/context/AuthProvider";
+
 import {
   Text,
   View,
@@ -40,9 +43,8 @@ import { Button } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import Media from "@/components/icons/Media";
 import { authApi } from "@/config/axios";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import useAxios from "axios-hooks";
 import { Post } from "@/types";
+import DeleteSmall from "@/components/icons/DeleteSmall";
 
 export default function EditPost() {
   const { t } = useTranslation();
@@ -51,23 +53,27 @@ export default function EditPost() {
   const router = useRouter();
   const [selectedPhoto, setSelectedPhoto] =
     useState<ImagePicker.ImagePickerAsset>();
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const bottomSheetModalVisibilityRef = useRef<BottomSheetModal>(null);
+  const inputRefContent = useRef<TextInput>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [visibility, setVisibility] = useState<PostVisibility>("public");
   const [loadingPhoto, setLoadingPhoto] = useState<boolean>(false);
+  const [deletedPhoto, setDeletedPhoto] = useState<boolean>(false);
   const [post, setPost] = useState<Post | null>(null);
   const [numberOfLines, setNumberOfLines] = useState(2);
 
   const params = useLocalSearchParams();
 
-  const [{ data, loading: loadingPost }] = useAxios<
+  const [{ data, loading: loadingPost }, refetchPost] = useAxios<
     ExistingDocumentObject,
     unknown,
     ErrorResponse
-  >({
-    url: `posts/${params?.id}`,
-  });
+  >(
+    {
+      url: `posts/${params?.id}`,
+    },
+    { manual: true },
+  );
 
   useEffect(() => {
     if (!data) return;
@@ -102,7 +108,12 @@ export default function EditPost() {
   useEffect(() => {
     setSelectedPhoto(undefined);
     reset({ content: "" });
-  }, [isFocused, reset]);
+    if (isFocused) {
+      refetchPost();
+      setDeletedPhoto(false);
+      setLoading(false);
+    }
+  }, [isFocused, reset, refetchPost]);
 
   useEffect(() => {
     if (post) {
@@ -137,7 +148,10 @@ export default function EditPost() {
 
     form.append("content", values.content);
     form.append("visibility", visibility);
-    // form.append("delete_photo", "false");
+
+    if (deletedPhoto && post?.photoUrl && !selectedPhoto) {
+      form.append("delete_photo", "true");
+    }
 
     try {
       const response = await authApi.put(`posts/${post?.id}`, form, {
@@ -161,19 +175,13 @@ export default function EditPost() {
         type: "error",
         text1: t("errorCodes.generic"),
       });
-    } finally {
       setLoading(false);
     }
   };
 
-  const snapPoints = useMemo(() => ["45%"], []);
-
-  const handlePressDelete = () => {
-    bottomSheetModalRef.current?.present();
-  };
-
-  const handlePressCancel = () => {
-    bottomSheetModalRef.current?.close();
+  const handleRemoveMedia = () => {
+    setSelectedPhoto(undefined);
+    setDeletedPhoto(true);
   };
 
   const handlePressVisibility = () => {
@@ -267,11 +275,15 @@ export default function EditPost() {
               </View>
 
               <FormProvider {...methods}>
-                <View className="mb-4">
+                <Pressable
+                  className="pb-6"
+                  onPress={() => inputRefContent?.current?.focus()}
+                >
                   <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
                       <SimpleTextInput
+                        inputRef={inputRefContent}
                         className="border-0 p-0"
                         placeholder={t("chat.sharePlaceholder")}
                         onChangeText={onChange}
@@ -297,17 +309,29 @@ export default function EditPost() {
                       {errors.content.message}
                     </Text>
                   )}
-                </View>
+                </Pressable>
               </FormProvider>
-              {(selectedPhoto || post?.photoUrl !== null) && (
-                <Image
-                  className="rounded-lg mb-4"
-                  contentFit="contain"
-                  source={{
-                    uri: selectedPhoto?.uri ?? post?.photoUrl?.photo_url,
-                  }}
+              {(selectedPhoto ||
+                (post?.photoUrl !== null && !deletedPhoto)) && (
+                <View
+                  className="relative inline-flex my-4"
                   style={{ height: 210 }}
-                />
+                >
+                  <Image
+                    className="relative rounded-lg"
+                    source={{
+                      uri: selectedPhoto?.uri ?? post?.photoUrl?.photo_url,
+                    }}
+                    style={{ height: 210 }}
+                  />
+                  <TouchableOpacity
+                    style={{ height: 30, width: 25 }}
+                    className="absolute top-3 right-4"
+                    onPress={handleRemoveMedia}
+                  >
+                    <DeleteSmall />
+                  </TouchableOpacity>
+                </View>
               )}
               {loadingPhoto && (
                 <View

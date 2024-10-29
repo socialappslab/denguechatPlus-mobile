@@ -39,6 +39,7 @@ import { Button } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import Media from "@/components/icons/Media";
 import { authApi } from "@/config/axios";
+import DeleteSmall from "@/components/icons/DeleteSmall";
 
 export default function NewPost() {
   const { t } = useTranslation();
@@ -187,6 +188,10 @@ export default function NewPost() {
     String(meData?.userProfile?.lastName),
   );
 
+  const handleRemoveMedia = () => {
+    setSelectedPhoto(undefined);
+  };
+
   return (
     <SafeAreaView>
       <View className="flex flex-1 py-5 px-5 h-full">
@@ -268,12 +273,23 @@ export default function NewPost() {
                 </View>
               </FormProvider>
               {selectedPhoto && (
-                <Image
-                  className="rounded-lg mb-4"
-                  contentFit="contain"
-                  source={{ uri: selectedPhoto?.uri }}
+                <View
+                  className="relative inline-flex my-4"
                   style={{ height: 210 }}
-                />
+                >
+                  <Image
+                    className="relative rounded-lg"
+                    source={{ uri: selectedPhoto?.uri }}
+                    style={{ height: 210 }}
+                  />
+                  <TouchableOpacity
+                    style={{ height: 30, width: 25 }}
+                    className="absolute top-3 right-4"
+                    onPress={handleRemoveMedia}
+                  >
+                    <DeleteSmall />
+                  </TouchableOpacity>
+                </View>
               )}
               {loadingPhoto && (
                 <View
