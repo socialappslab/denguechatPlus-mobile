@@ -2,6 +2,7 @@ import { Button, Text, View } from "@/components/themed";
 import { useVisit } from "@/hooks/useVisit";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import FinalIllustration from "@/assets/images/final.svg";
 
 export default function Summary() {
   const { t } = useTranslation();
@@ -12,8 +13,8 @@ export default function Summary() {
   return (
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between">
       <View className="flex flex-col justify-center items-center">
-        <View className="bg-green-300 h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-          <Text className="text-center text">{t("ilustrationOrIcon")}</Text>
+        <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+          <FinalIllustration width="100%" height="100%" />
         </View>
         <View>
           <Text type="title" className="text-center mb-4">
