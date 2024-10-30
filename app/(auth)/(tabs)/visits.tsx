@@ -1,9 +1,8 @@
 import Button from "@/components/themed/Button";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import CircularProgress from "react-native-circular-progress-indicator";
-
 import HouseWarning from "@/assets/images/icons/house-warning.svg";
+import CircularProgress from "react-native-circular-progress-indicator";
 
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import {
@@ -32,6 +31,7 @@ import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import useAxios from "axios-hooks";
 import Colors from "@/constants/Colors";
+import VisitSummary, { VisitSummaryProps } from "@/components/VisitSummary";
 
 interface HouseReport {
   greenQuantity: number;
@@ -203,29 +203,7 @@ export default function Visits() {
     bottomSheetModalRef.current?.present();
   };
 
-  const snapPoints = useMemo(() => ["60%"], []);
-
-  const VisitSummary = () => {
-    return (
-      <>
-        <View className="border-b border-neutral-200 flex flex-row justify-center justify-around py-6">
-          <View className="flex items-center">
-            <Text className="mb-2 text-base text-gray-300">Fecha</Text>
-            <Text type="subtitle">{`${formatDate(selectedVisit.visitedAt, language)}`}</Text>
-          </View>
-          <View className="flex items-center">
-            <Text className="mb-2 text-base text-gray-300">
-              {(meData?.userProfile?.team as Team)?.sector_name}
-            </Text>
-            <Text type="subtitle">
-              {`${selectedVisit?.house?.houseBlock?.name} Casa ${selectedVisit.houseId}`}
-            </Text>
-          </View>
-        </View>
-        <StatusCharts />
-      </>
-    );
-  };
+  const snapPoints = useMemo(() => ["90%"], []);
 
   const SuccessSummary = () => {
     return (
@@ -314,7 +292,15 @@ export default function Visits() {
                           <Loading />
                         </View>
                       )}
-                      {!loading && <VisitSummary />}
+                      {!loading && (
+                        <VisitSummary
+                          date={`${formatDate(selectedVisit.visitedAt, language)}`}
+                          sector={
+                            (meData?.userProfile?.team as Team)?.sector_name
+                          }
+                          house={`${selectedVisit?.house?.houseBlock?.name} Casa ${selectedVisit.houseId}`}
+                        />
+                      )}
                     </>
                   )}
                   {success && <SuccessSummary />}
@@ -345,45 +331,4 @@ export default function Visits() {
   );
 }
 
-const StatusCharts = () => {
-  return (
-    <View className="flex align-center flex-row py-6 justify-between flex-1">
-      <View className="flex flex-1 items-center justify-center">
-        <View
-          className="rounded-full w-20 h-20 flex items-center justify-center"
-          style={[styles.circle]}
-        >
-          <HouseWarning />
-        </View>
-        <Text className="mt-3 text-center" type="small">
-          El sitio es Rojo
-        </Text>
-      </View>
-      <View className="flex flex-1 items-center justify-center">
-        <CircularProgress
-          value={4}
-          maxValue={4}
-          radius={40}
-          duration={0}
-          activeStrokeColor="#FCC914"
-        />
-        <Text className="mt-3 text-center" type="small">
-          Contenedores potenciales
-        </Text>
-      </View>
-      <View className="flex flex-1 items-center justify-center">
-        <CircularProgress
-          duration={0}
-          value={1}
-          maxValue={5}
-          radius={40}
-          activeStrokeColor="#FC0606"
-        />
-        <Text className="mt-3 text-center" type="small">
-          Contenedores positivos
-        </Text>
-      </View>
-    </View>
-  );
-};
 const styles = StyleSheet.create({ circle: { backgroundColor: "#FC0606" } });
