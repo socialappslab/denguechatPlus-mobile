@@ -1,16 +1,15 @@
-import { Button, ScrollView, Text, View } from "@/components/themed";
+import SummaryImage from "@/assets/images/summary.svg";
+import { Button, ScrollView, View } from "@/components/themed";
+import VisitSummary from "@/components/VisitSummary";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { useVisitStore } from "@/hooks/useVisitStore";
-import { VisitData, StatusColor } from "@/types";
+import { VisitData } from "@/types";
 import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
-import SummaryImage from "@/assets/images/summary.svg";
-import { Image } from "expo-image";
-import VisitSummary from "@/components/VisitSummary";
 
 export default function Summary() {
   const router = useRouter();
@@ -21,9 +20,7 @@ export default function Summary() {
   const { inspections, answers, statusColors } = prepareFormData(
     visitMap[visitId],
   );
-  const quantity = 1;
   const isConnected = false;
-  console.log(visitMap[visitId]);
 
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
@@ -98,6 +95,7 @@ export default function Summary() {
           date={formatDate(new Date().toString(), language) || ""}
           house={visitData.houseId.toString()}
           sector={user?.neighborhoodName}
+          color={statusColors[0].toLocaleLowerCase()}
         />
         <View className="flex flex-row gap-2">
           <View className="flex-1">

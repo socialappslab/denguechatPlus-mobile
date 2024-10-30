@@ -299,6 +299,7 @@ export default function Visits() {
                             (meData?.userProfile?.team as Team)?.sector_name
                           }
                           house={`${selectedVisit?.house?.houseBlock?.name} Casa ${selectedVisit.houseId}`}
+                          color={selectedVisit.statusColor.toLowerCase()}
                         />
                       )}
                     </>
