@@ -1,4 +1,4 @@
-import { Button, Text, View } from "@/components/themed";
+import { Button, ScrollView, Text, View } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 import SummaryImage from "@/assets/images/summary.svg";
 import { Image } from "expo-image";
+import VisitSummary from "@/components/VisitSummary";
 
 export default function Summary() {
   const router = useRouter();
@@ -86,70 +87,37 @@ export default function Summary() {
   };
 
   return (
-    <View className="h-full p-6 pb-10 flex flex-col justify-between">
-      <View className="flex flex-col justify-center items-center">
-        <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
-          <SummaryImage height="100%" width="100%" />
+    <ScrollView>
+      <View className="h-full p-6 pb-10 flex flex-col justify-between">
+        <View className="flex flex-col justify-center items-center">
+          <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+            <SummaryImage height="100%" width="100%" />
+          </View>
+        </View>
+        <VisitSummary
+          date={formatDate(new Date().toString(), language) || ""}
+          house={visitData.houseId.toString()}
+          sector={user?.neighborhoodName}
+        />
+        <View className="flex flex-row gap-2">
+          <View className="flex-1">
+            <Button
+              title={t("editFromStart")}
+              onPress={() =>
+                router.push(`visit/${questionnaire?.initialQuestion}`)
+              }
+            />
+          </View>
+          <View className="flex-1">
+            <Button
+              primary
+              title={t("finalize")}
+              onPress={onFinalize}
+              disabled={loading}
+            />
+          </View>
         </View>
       </View>
-      <Text type="title" className="mb-4">
-        {t("visit.summary.title")}
-      </Text>
-      <View className="mb-4">
-        <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">{t("visit.summary.status")}</Text>
-          <RenderStatus statusColor={statusColors[0]} />
-        </View>
-        <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">{t("visit.summary.containers")}</Text>
-          <Text type="text">
-            {quantity + visitData?.inspections?.length || 1}
-          </Text>
-        </View>
-        <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">{t("visit.summary.houseNumber")}</Text>
-          <Text type="text">{visitData.houseId}</Text>
-        </View>
-        <View className="flex flex-row mb-4 w-full justify-between items-center">
-          <Text type="header">{t("visit.summary.date")}</Text>
-          <Text type="text">{formatDate(new Date().toString(), language)}</Text>
-        </View>
-      </View>
-      <View className="flex flex-row gap-2">
-        <View className="flex-1">
-          <Button
-            title={t("editFromStart")}
-            onPress={() =>
-              router.push(`visit/${questionnaire?.initialQuestion}`)
-            }
-          />
-        </View>
-        <View className="flex-1">
-          <Button
-            primary
-            title={t("finalize")}
-            onPress={onFinalize}
-            disabled={loading}
-          />
-        </View>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
-
-const RenderStatus = ({
-  statusColor = StatusColor.NO_INFECTED,
-}: {
-  statusColor: StatusColor;
-}) => {
-  const { t } = useTranslation();
-
-  return (
-    <View className="flex flex-row justify-center items-center">
-      <Text>{t(`visit.summary.statusColor.${statusColor.toLowerCase()}`)}</Text>
-      <View
-        className={`h-6 w-6 ml-3 rounded-full bg-${statusColor.toLocaleLowerCase()}-100`}
-      />
-    </View>
-  );
-};
