@@ -199,10 +199,11 @@
         "noMapConnection": "We cannot load the map because you have no internet connection."
       },
       "summary": {
+        "siteStatus": "Status of the site",
+        "site": "Site",
         "title": "Summary of the visit",
-        "status": "Status of the house",
-        "containers": "Containers",
-        "houseNumber": "House Number",
+        "containerStatus": "Status of the containers",
+        "description": "Status of the site as of today",
         "date": "Date",
         "statusColor": {
           "green": "Green",

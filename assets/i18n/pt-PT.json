@@ -199,12 +199,13 @@
         "noMapConnection": "Não podemos carregar o mapa porque você não tem conexão com a internet."
       },
       "summary": {
+        "siteStatus": "Status do local",
+        "site": "Local",
         "title": "Resumo da visita",
-        "status": "Status da casa",
-        "containers": "Recipientes",
-        "houseNumber": "Número da Casa",
+        "containerStatus": "Status dos contêineres",
+        "description": "Status do local até hoje",
         "date": "Data",
-        "statuscolor": {
+        "statusColor": {
           "green": "Verde",
           "yellow": "Amarelo",
           "red": "Vermelho"
