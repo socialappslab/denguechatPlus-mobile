@@ -231,10 +231,10 @@
       "final": {
         "title": "¡Visita concretada!",
         "offline": {
-          "greetings": "Los datos de la visita han sido guardados."
+          "greetings": "Los datos de su visita han sido guardados en su dispositivo."
         },
         "online": {
-          "greetings": "Los datos de su visita han sido guardados en su dispositivo."
+          "greetings": "Los datos de la visita han sido guardados."
         }
       }
     },
