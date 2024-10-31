@@ -2,21 +2,22 @@ import HouseWarning from "@/assets/images/icons/house-warning.svg";
 import Ring from "@/assets/images/icons/ring.svg";
 import Stoplight from "@/assets/images/icons/stoplight.svg";
 import { Text, View } from "@/components/themed";
+import { StatusColor } from "@/types";
 import { createElement } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import CircularProgress from "react-native-circular-progress-indicator";
 
 const StatusAssets = {
-  red: {
+  RED: {
     color: "#FC0606",
     image: HouseWarning,
   },
-  green: {
+  GREEN: {
     color: "#00A300",
     image: Stoplight,
   },
-  yellow: {
+  YELLOW: {
     color: "#FCC914",
     image: Ring,
   },
@@ -24,7 +25,10 @@ const StatusAssets = {
 
 export interface VisitSummaryProps {
   date: string;
-  color: keyof typeof StatusAssets;
+  color: StatusColor;
+  greens: number;
+  reds: number;
+  yellows: number;
   sector?: string;
   house?: string;
 }
@@ -44,7 +48,15 @@ const IconStatus = ({ color }: { color: keyof typeof StatusAssets }) => {
   );
 };
 
-const VisitSummary = ({ date, sector, house, color }: VisitSummaryProps) => {
+const VisitSummary = ({
+  date,
+  sector,
+  house,
+  color,
+  greens,
+  reds,
+  yellows,
+}: VisitSummaryProps) => {
   const { t } = useTranslation();
 
   return (
@@ -60,7 +72,7 @@ const VisitSummary = ({ date, sector, house, color }: VisitSummaryProps) => {
           <View className="justify-center">
             <Text className="font-semibold text-xl">
               {t("visit.summary.site")}{" "}
-              {t(`visit.summary.statusColor.${color}`)}
+              {t(`visit.summary.statusColor.${color?.toLocaleLowerCase()}`)}
             </Text>
             <Text className="font-normal text-base opacity-80 text">
               {t("visit.summary.description")}
@@ -76,7 +88,7 @@ const VisitSummary = ({ date, sector, house, color }: VisitSummaryProps) => {
         <View className="flex align-center flex-row py-6 justify-between border-b border-neutral-200 mb-6">
           <View className="flex flex-1 items-center justify-center ">
             <CircularProgress
-              value={1}
+              value={greens}
               maxValue={4}
               radius={35}
               duration={0}
@@ -90,7 +102,7 @@ const VisitSummary = ({ date, sector, house, color }: VisitSummaryProps) => {
           </View>
           <View className="flex flex-1 items-center justify-center">
             <CircularProgress
-              value={0}
+              value={yellows}
               maxValue={4}
               radius={35}
               duration={0}
@@ -105,7 +117,7 @@ const VisitSummary = ({ date, sector, house, color }: VisitSummaryProps) => {
           <View className="flex flex-1 items-center justify-center">
             <CircularProgress
               duration={0}
-              value={0}
+              value={reds}
               maxValue={5}
               radius={35}
               activeStrokeWidth={8}

@@ -4,6 +4,11 @@ export enum StatusColor {
   NO_INFECTED = "GREEN",
 }
 
+export interface Status {
+  color: StatusColor;
+  quantity: number;
+}
+
 export type Inspection = Record<
   string,
   string | undefined | boolean | string[]

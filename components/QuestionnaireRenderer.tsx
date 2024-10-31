@@ -190,7 +190,6 @@ const QuestionnaireRenderer = ({
     [name, getValues],
   );
 
-  console.log(question?.options?.[0]?.image?.url);
   return (
     <FormProvider {...methods}>
       {question.typeField === "splash" && (

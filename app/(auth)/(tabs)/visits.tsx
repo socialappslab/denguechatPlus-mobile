@@ -54,35 +54,23 @@ const VisitsReport = () => {
 
   return (
     <View>
-      <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
-        <Text type="title" className="mb-6">
-          {(meData?.userProfile?.team as Team)?.sector_name}
-        </Text>
-        <Text className="text-neutral-600 mb-2">
-          {t("brigade.cards.numberVisits")}
-        </Text>
-        <View className="flex-row items-center justify-between mb-8">
-          <Text className="text-3xl font-semibold">{data?.visitQuantity}</Text>
-          <SimpleChip
-            border="1"
-            padding="small"
-            textColor="neutral-500"
-            borderColor="neutral-500"
-            ionIcon="arrow-up"
-            iconColor={Colors.light.neutral}
-            label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
-          />
+      {loading && (
+        <View className="flex flex-1 items-center justify-center mb-4">
+          <Loading />
         </View>
-
-        <View>
-          <Text className="text-neutral-600 mb-2">
-            {t("brigade.cards.numberSites")}
+      )}
+      {!loading && (
+        <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+          <Text type="title" className="mb-6">
+            {(meData?.userProfile?.team as Team)?.sector_name}
           </Text>
-          <View className="flex-row items-center justify-between">
+          <Text className="text-neutral-600 mb-2">
+            {t("brigade.cards.numberVisits")}
+          </Text>
+          <View className="flex-row items-center justify-between mb-8">
             <Text className="text-3xl font-semibold">
-              {data?.houseQuantity}
+              {data?.visitQuantity}
             </Text>
-
             <SimpleChip
               border="1"
               padding="small"
@@ -90,28 +78,49 @@ const VisitsReport = () => {
               borderColor="neutral-500"
               ionIcon="arrow-up"
               iconColor={Colors.light.neutral}
-              label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+              label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+            />
+          </View>
+
+          <View>
+            <Text className="text-neutral-600 mb-2">
+              {t("brigade.cards.numberSites")}
+            </Text>
+            <View className="flex-row items-center justify-between">
+              <Text className="text-3xl font-semibold">
+                {data?.houseQuantity}
+              </Text>
+
+              <SimpleChip
+                border="1"
+                padding="small"
+                textColor="neutral-500"
+                borderColor="neutral-500"
+                ionIcon="arrow-up"
+                iconColor={Colors.light.neutral}
+                label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+              />
+            </View>
+          </View>
+          <View className="flex flex-col mt-6">
+            <ProgressBar
+              label={t("brigade.sites.green")}
+              progress={data?.greenQuantity || 0}
+              color="primary"
+            />
+            <ProgressBar
+              label={t("brigade.sites.yellow")}
+              progress={data?.orangeQuantity || 0}
+              color="yellow-300"
+            />
+            <ProgressBar
+              label={t("brigade.sites.red")}
+              progress={data?.redQuantity || 0}
+              color="red-500"
             />
           </View>
         </View>
-        <View className="flex flex-col mt-6">
-          <ProgressBar
-            label={t("brigade.sites.green")}
-            progress={data?.greenQuantity || 0}
-            color="primary"
-          />
-          <ProgressBar
-            label={t("brigade.sites.yellow")}
-            progress={data?.orangeQuantity || 0}
-            color="yellow-300"
-          />
-          <ProgressBar
-            label={t("brigade.sites.red")}
-            progress={data?.redQuantity || 0}
-            color="red-500"
-          />
-        </View>
-      </View>
+      )}
     </View>
   );
 };
