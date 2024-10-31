@@ -138,7 +138,9 @@ const VisitSummary = ({
         </View>
 
         <View className="flex">
-          <Text className="mb-2 text-base text-gray-300">{sector}</Text>
+          <Text className="mb-2 text-base text-gray-300">
+            {sector} || {t("visit.summary.site")}
+          </Text>
           <Text type="subtitle">{house}</Text>
         </View>
       </View>
