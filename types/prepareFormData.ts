@@ -9,8 +9,5 @@ export interface Status {
   quantity: number;
 }
 
-export type Inspection = Record<
-  string,
-  string | undefined | boolean | string[]
->;
+export type Inspection = Record<string, any>;
 export type Answer = Record<string, string | number | undefined>;

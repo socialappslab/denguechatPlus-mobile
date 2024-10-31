@@ -89,9 +89,9 @@ const VisitSummary = ({
           <View className="flex flex-1 items-center justify-center ">
             <CircularProgress
               value={greens}
-              maxValue={4}
+              maxValue={1}
               radius={35}
-              // duration={0}
+              duration={0}
               activeStrokeColor="#00A300"
               activeStrokeWidth={8}
               inActiveStrokeWidth={8}
@@ -103,9 +103,9 @@ const VisitSummary = ({
           <View className="flex flex-1 items-center justify-center">
             <CircularProgress
               value={yellows}
-              maxValue={4}
+              maxValue={1}
               radius={35}
-              // duration={0}
+              duration={0}
               activeStrokeColor="#FCC914"
               activeStrokeWidth={8}
               inActiveStrokeWidth={8}
@@ -116,9 +116,9 @@ const VisitSummary = ({
           </View>
           <View className="flex flex-1 items-center justify-center">
             <CircularProgress
-              // duration={0}
+              duration={0}
               value={reds}
-              maxValue={5}
+              maxValue={1}
               radius={35}
               activeStrokeWidth={8}
               inActiveStrokeWidth={8}
