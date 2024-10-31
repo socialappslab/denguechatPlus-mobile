@@ -79,8 +79,6 @@ export default function Summary() {
         visitedAt: new Date(),
         inspections,
         answers,
-        statusColor: mainStatusColor,
-        colorsAndQuantities,
       };
 
       console.log(JSON.stringify(completeVisitData));
@@ -89,16 +87,18 @@ export default function Summary() {
       if (isConnected)
         await createVisit({ json_params: JSON.stringify(completeVisitData) });
 
-      // Cleanup, if it's not connected we send house details
-      finaliseCurrentVisit(isConnected, {
-        ...completeVisitData,
-        house: visitData.house,
-      });
       Toast.show({
         type: "success",
         text1: t("success"),
       });
       router.push("final");
+      // Cleanup, if it's not connected we send house details
+      finaliseCurrentVisit(isConnected, {
+        ...completeVisitData,
+        house: visitData.house,
+        statusColor: mainStatusColor,
+        colorsAndQuantities,
+      });
     } catch (error) {
       console.log(error);
       const errorData = extractAxiosErrorData(error);

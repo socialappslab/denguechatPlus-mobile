@@ -64,8 +64,8 @@ export const prepareFormData = (formData: FormState) => {
 
       if (resourceName === "quantity_founded") {
         inspections[index][resourceName] = !!answer.text
-          ? `${parseInt(answer.text) + 1}`
-          : "1";
+          ? parseInt(answer.text) + 1
+          : 1;
       }
 
       if (resourceName === "photo_id") {
@@ -83,7 +83,7 @@ export const prepareFormData = (formData: FormState) => {
 
     // Always set quantity_founded
     if (!inspections[index]["quantity_founded"]) {
-      inspections[index]["quantity_founded"] = "1";
+      inspections[index]["quantity_founded"] = 1;
     }
 
     // We order with RED beign first, then YELLOW, then GREEN

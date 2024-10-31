@@ -22,7 +22,8 @@ import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
-import { extractAxiosErrorData, formatDate } from "@/util";
+import { formatDate } from "@/util";
+import { normalizeVisitData } from "@/util/normalizeVisitData";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
@@ -134,6 +135,10 @@ export default function Visits() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  const orderedVisits = storedVisits.sort(
+    (a, b) => new Date(b.visitedAt) - new Date(a.visitedAt),
+  );
+
   const [{ data: teamData, loading: loadingTeam }, refetchTeam] = useAxios<
     ExistingDocumentObject,
     unknown,
@@ -165,32 +170,31 @@ export default function Visits() {
   >("visits", { "Content-Type": "multipart/form-data" });
 
   const synchronizeVisit = async (visit: any) => {
-    const newVisit = {
+    let newVisit = {
       ...visit,
       host: "nunu",
       house: visit.houseId ? undefined : visit.house,
       notes: "hi",
       visitPermission: true,
     };
-    console.log(JSON.stringify(newVisit));
+
+    const visitToSubmit = normalizeVisitData(newVisit);
+    console.log(JSON.stringify(visitToSubmit));
     try {
       setLoading(true);
-      await createVisit({ json_params: JSON.stringify(newVisit) });
-      cleanUpStoredVisit(newVisit);
-      setLoading(false);
+      await createVisit({ json_params: JSON.stringify(visitToSubmit) });
+      cleanUpStoredVisit(visitToSubmit);
       setSuccess(true);
       bottomSheetModalRef.current?.close();
       Toast.show({
         type: "success",
         text1: t("success"),
       });
+      setLoading(false);
     } catch (error) {
-      const errorData = extractAxiosErrorData(error);
-      errorData?.errors?.forEach((error: any) => {
-        Toast.show({
-          type: "error",
-          text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
-        });
+      Toast.show({
+        type: "error",
+        text1: t(["errorCodes.generic"]),
       });
       setLoading(false);
       console.log(error);
@@ -250,7 +254,7 @@ export default function Visits() {
                       storedVisits: storedVisits.length,
                     })}
                   </Text>
-                  {storedVisits.map((visit, idx) => {
+                  {orderedVisits.map((visit, idx) => {
                     return (
                       <ListItem
                         title={
