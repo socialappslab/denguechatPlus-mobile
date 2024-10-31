@@ -79,7 +79,8 @@ export default function Summary() {
         visitedAt: new Date(),
         inspections,
         answers,
-        statusColor: "green",
+        statusColor: mainStatusColor,
+        colorsAndQuantities,
       };
 
       console.log(JSON.stringify(completeVisitData));

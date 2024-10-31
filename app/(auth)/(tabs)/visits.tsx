@@ -1,8 +1,6 @@
 import Button from "@/components/themed/Button";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import HouseWarning from "@/assets/images/icons/house-warning.svg";
-import CircularProgress from "react-native-circular-progress-indicator";
 
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import {
@@ -16,22 +14,22 @@ import {
   View,
 } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
+import VisitSummary from "@/components/VisitSummary";
+import Colors from "@/constants/Colors";
+import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
+import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
 import { extractAxiosErrorData, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import useAxios from "axios-hooks";
+import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet } from "react-native";
-import { Routes } from "../(visit)/_layout";
 import Toast from "react-native-toast-message";
-import { useAuth } from "@/context/AuthProvider";
-import { BaseObject, ErrorResponse, Team } from "@/schema";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import useAxios from "axios-hooks";
-import Colors from "@/constants/Colors";
-import VisitSummary, { VisitSummaryProps } from "@/components/VisitSummary";
+import { Routes } from "../(visit)/_layout";
 
 interface HouseReport {
   greenQuantity: number;
@@ -144,14 +142,6 @@ export default function Visits() {
     url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
   });
 
-  function sleep(ms = 2000): Promise<void> {
-    setLoading(true);
-    console.log("Kindly remember to remove `sleep`");
-    return new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  }
-
   useEffect(() => {
     if (meData) refetchTeam();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,12 +174,12 @@ export default function Visits() {
     };
     console.log(JSON.stringify(newVisit));
     try {
-      await sleep();
+      setLoading(true);
       await createVisit({ json_params: JSON.stringify(newVisit) });
       cleanUpStoredVisit(newVisit);
       setLoading(false);
       setSuccess(true);
-      // bottomSheetModalRef.current?.close();
+      bottomSheetModalRef.current?.close();
       Toast.show({
         type: "success",
         text1: t("success"),
@@ -202,6 +192,7 @@ export default function Visits() {
           text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
         });
       });
+      setLoading(false);
       console.log(error);
     }
   };
@@ -308,7 +299,10 @@ export default function Visits() {
                             (meData?.userProfile?.team as Team)?.sector_name
                           }
                           house={`${selectedVisit?.house?.houseBlock?.name} Casa ${selectedVisit.houseId}`}
-                          color={selectedVisit.statusColor.toLowerCase()}
+                          color={selectedVisit?.statusColor}
+                          greens={selectedVisit?.colorsAndQuantities?.GREEN}
+                          yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
+                          reds={selectedVisit?.colorsAndQuantities?.RED}
                         />
                       )}
                     </>
@@ -330,6 +324,7 @@ export default function Visits() {
                   onPress={() => {
                     setSuccess(false);
                     bottomSheetModalRef.current?.close();
+                    setLoading(false);
                   }}
                 />
               )}

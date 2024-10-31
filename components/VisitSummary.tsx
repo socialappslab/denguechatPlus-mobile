@@ -25,10 +25,10 @@ const StatusAssets = {
 
 export interface VisitSummaryProps {
   date: string;
-  color: StatusColor;
-  greens: number;
-  reds: number;
-  yellows: number;
+  color?: StatusColor;
+  greens?: number;
+  reds?: number;
+  yellows?: number;
   sector?: string;
   house?: string;
 }
@@ -52,10 +52,10 @@ const VisitSummary = ({
   date,
   sector,
   house,
-  color,
-  greens,
-  reds,
-  yellows,
+  color = StatusColor.NO_INFECTED,
+  greens = 0,
+  reds = 0,
+  yellows = 0,
 }: VisitSummaryProps) => {
   const { t } = useTranslation();
 
@@ -139,7 +139,7 @@ const VisitSummary = ({
 
         <View className="flex">
           <Text className="mb-2 text-base text-gray-300">
-            {sector} || {t("visit.summary.site")}
+            {sector || t("visit.summary.site")}
           </Text>
           <Text type="subtitle">{house}</Text>
         </View>
