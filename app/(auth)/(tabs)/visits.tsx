@@ -1,8 +1,6 @@
 import Button from "@/components/themed/Button";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import HouseWarning from "@/assets/images/icons/house-warning.svg";
-import CircularProgress from "react-native-circular-progress-indicator";
 
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import {
@@ -16,22 +14,22 @@ import {
   View,
 } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
+import VisitSummary from "@/components/VisitSummary";
+import Colors from "@/constants/Colors";
+import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
+import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
 import { extractAxiosErrorData, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import useAxios from "axios-hooks";
+import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet } from "react-native";
-import { Routes } from "../(visit)/_layout";
 import Toast from "react-native-toast-message";
-import { useAuth } from "@/context/AuthProvider";
-import { BaseObject, ErrorResponse, Team } from "@/schema";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import useAxios from "axios-hooks";
-import Colors from "@/constants/Colors";
-import VisitSummary, { VisitSummaryProps } from "@/components/VisitSummary";
+import { Routes } from "../(visit)/_layout";
 
 interface HouseReport {
   greenQuantity: number;
@@ -54,35 +52,23 @@ const VisitsReport = () => {
 
   return (
     <View>
-      <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
-        <Text type="title" className="mb-6">
-          {(meData?.userProfile?.team as Team)?.sector_name}
-        </Text>
-        <Text className="text-neutral-600 mb-2">
-          {t("brigade.cards.numberVisits")}
-        </Text>
-        <View className="flex-row items-center justify-between mb-8">
-          <Text className="text-3xl font-semibold">{data?.visitQuantity}</Text>
-          <SimpleChip
-            border="1"
-            padding="small"
-            textColor="neutral-500"
-            borderColor="neutral-500"
-            ionIcon="arrow-up"
-            iconColor={Colors.light.neutral}
-            label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
-          />
+      {loading && (
+        <View className="flex flex-1 items-center justify-center mb-4">
+          <Loading />
         </View>
-
-        <View>
-          <Text className="text-neutral-600 mb-2">
-            {t("brigade.cards.numberSites")}
+      )}
+      {!loading && (
+        <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+          <Text type="title" className="mb-6">
+            {(meData?.userProfile?.team as Team)?.sector_name}
           </Text>
-          <View className="flex-row items-center justify-between">
+          <Text className="text-neutral-600 mb-2">
+            {t("brigade.cards.numberVisits")}
+          </Text>
+          <View className="flex-row items-center justify-between mb-8">
             <Text className="text-3xl font-semibold">
-              {data?.houseQuantity}
+              {data?.visitQuantity}
             </Text>
-
             <SimpleChip
               border="1"
               padding="small"
@@ -90,28 +76,49 @@ const VisitsReport = () => {
               borderColor="neutral-500"
               ionIcon="arrow-up"
               iconColor={Colors.light.neutral}
-              label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+              label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+            />
+          </View>
+
+          <View>
+            <Text className="text-neutral-600 mb-2">
+              {t("brigade.cards.numberSites")}
+            </Text>
+            <View className="flex-row items-center justify-between">
+              <Text className="text-3xl font-semibold">
+                {data?.houseQuantity}
+              </Text>
+
+              <SimpleChip
+                border="1"
+                padding="small"
+                textColor="neutral-500"
+                borderColor="neutral-500"
+                ionIcon="arrow-up"
+                iconColor={Colors.light.neutral}
+                label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+              />
+            </View>
+          </View>
+          <View className="flex flex-col mt-6">
+            <ProgressBar
+              label={t("brigade.sites.green")}
+              progress={data?.greenQuantity || 0}
+              color="primary"
+            />
+            <ProgressBar
+              label={t("brigade.sites.yellow")}
+              progress={data?.orangeQuantity || 0}
+              color="yellow-300"
+            />
+            <ProgressBar
+              label={t("brigade.sites.red")}
+              progress={data?.redQuantity || 0}
+              color="red-500"
             />
           </View>
         </View>
-        <View className="flex flex-col mt-6">
-          <ProgressBar
-            label={t("brigade.sites.green")}
-            progress={data?.greenQuantity || 0}
-            color="primary"
-          />
-          <ProgressBar
-            label={t("brigade.sites.yellow")}
-            progress={data?.orangeQuantity || 0}
-            color="yellow-300"
-          />
-          <ProgressBar
-            label={t("brigade.sites.red")}
-            progress={data?.redQuantity || 0}
-            color="red-500"
-          />
-        </View>
-      </View>
+      )}
     </View>
   );
 };
@@ -134,14 +141,6 @@ export default function Visits() {
   >({
     url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
   });
-
-  function sleep(ms = 2000): Promise<void> {
-    setLoading(true);
-    console.log("Kindly remember to remove `sleep`");
-    return new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  }
 
   useEffect(() => {
     if (meData) refetchTeam();
@@ -175,12 +174,12 @@ export default function Visits() {
     };
     console.log(JSON.stringify(newVisit));
     try {
-      await sleep();
+      setLoading(true);
       await createVisit({ json_params: JSON.stringify(newVisit) });
       cleanUpStoredVisit(newVisit);
       setLoading(false);
       setSuccess(true);
-      // bottomSheetModalRef.current?.close();
+      bottomSheetModalRef.current?.close();
       Toast.show({
         type: "success",
         text1: t("success"),
@@ -193,6 +192,7 @@ export default function Visits() {
           text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
         });
       });
+      setLoading(false);
       console.log(error);
     }
   };
@@ -299,7 +299,10 @@ export default function Visits() {
                             (meData?.userProfile?.team as Team)?.sector_name
                           }
                           house={`${selectedVisit?.house?.houseBlock?.name} Casa ${selectedVisit.houseId}`}
-                          color={selectedVisit.statusColor.toLowerCase()}
+                          color={selectedVisit?.statusColor}
+                          greens={selectedVisit?.colorsAndQuantities?.GREEN}
+                          yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
+                          reds={selectedVisit?.colorsAndQuantities?.RED}
                         />
                       )}
                     </>
@@ -321,6 +324,7 @@ export default function Visits() {
                   onPress={() => {
                     setSuccess(false);
                     bottomSheetModalRef.current?.close();
+                    setLoading(false);
                   }}
                 />
               )}

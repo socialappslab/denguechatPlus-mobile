@@ -11,14 +11,12 @@ export const prepareFormData = (formData: FormState) => {
   const questions = Object.keys(formData);
   let inspections: Inspection[] = [];
   let answers: Answer[] = [];
-  let statusColors: StatusColor[][] = [];
 
   questions.forEach((question) => {
     const answer = formData[question];
     const index = parseInt(question.split("-")[1]);
     if (!inspections[index]) inspections[index] = {};
     if (!answers[index]) answers[index] = {};
-    if (!statusColors[index]) statusColors[index] = [];
 
     if (Array.isArray(answer)) {
       const [first] = answer;
@@ -33,7 +31,11 @@ export const prepareFormData = (formData: FormState) => {
         .filter((item) => typeof item.statusColor === "string")
         .map((item) => item.statusColor as StatusColor);
 
-      statusColors[index].push(...colors);
+      if (Array.isArray(inspections[index].statusColors)) {
+        (inspections[index].statusColors as string[]).push(...colors);
+      } else {
+        inspections[index].statusColors = colors;
+      }
       return;
     }
 
@@ -50,11 +52,20 @@ export const prepareFormData = (formData: FormState) => {
           answer.text || answer.bool || answer.label;
       }
 
-      if (answer.statusColor)
-        statusColors[index].push(answer.statusColor as StatusColor);
+      if (answer.statusColor) {
+        if (Array.isArray(inspections[index].statusColors)) {
+          (inspections[index].statusColors as string[]).push(
+            answer.statusColor,
+          );
+        } else {
+          inspections[index].statusColors = [answer.statusColor];
+        }
+      }
 
       if (resourceName === "quantity_founded") {
-        inspections[index][resourceName] = answer.bool ? answer.text : "1";
+        inspections[index][resourceName] = !!answer.text
+          ? `${parseInt(answer.text) + 1}`
+          : "1";
       }
 
       if (resourceName === "photo_id") {
@@ -69,15 +80,27 @@ export const prepareFormData = (formData: FormState) => {
       const questionId = `question_${question}`;
       answers[index][questionId] = answer.value;
     }
-  });
 
-  // We order with RED beign first, then YELLOW, then GREEN
-  const orderedStatus = statusColors.map((statuses) => orderStatus(statuses));
+    // Always set quantity_founded
+    if (!inspections[index]["quantity_founded"]) {
+      inspections[index]["quantity_founded"] = "1";
+    }
+
+    // We order with RED beign first, then YELLOW, then GREEN
+    if (Array.isArray(inspections[index].statusColors)) {
+      inspections[index].statusColor = orderStatus(
+        (inspections[index].statusColors as StatusColor[]) || [],
+      );
+    }
+
+    // If by the end we don't have a status color, we set it here
+    if (!inspections[index].statusColor)
+      inspections[index].statusColor = StatusColor.NO_INFECTED;
+  });
 
   const returnObject = {
     inspections,
     answers,
-    statusColors: orderedStatus,
   };
   return returnObject;
 };

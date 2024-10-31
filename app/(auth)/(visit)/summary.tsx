@@ -6,22 +6,56 @@ import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { useVisitStore } from "@/hooks/useVisitStore";
 import { VisitData } from "@/types";
-import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
+import { Inspection, StatusColor } from "@/types/prepareFormData";
+import {
+  extractAxiosErrorData,
+  formatDate,
+  orderStatus,
+  prepareFormData,
+} from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 
+const getColorsAndQuantities = (inspections: Inspection[]) => {
+  let color: StatusColor = StatusColor.NO_INFECTED;
+  const colorsAndQuantities: Record<StatusColor, number> = {
+    RED: 0,
+    YELLOW: 0,
+    GREEN: 0,
+  };
+  for (const inspection of inspections) {
+    const quantity =
+      (!Array.isArray(inspection.quantity_founded) &&
+        parseInt(inspection.quantity_founded as string)) ||
+      0;
+    colorsAndQuantities[inspection.statusColor as StatusColor] += quantity;
+  }
+
+  // Ordering
+  const colors = Object.keys(colorsAndQuantities);
+  const unorderedColors: StatusColor[] = [];
+
+  for (const key of colors) {
+    if (colorsAndQuantities[key as StatusColor] >= 1) {
+      unorderedColors.push(key as StatusColor);
+    }
+  }
+  color = orderStatus(unorderedColors);
+
+  return { colorsAndQuantities, mainStatusColor: color };
+};
+
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, language } = useVisit();
+  const { questionnaire, visitData, language, isConnected } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
-  const { inspections, answers, statusColors } = prepareFormData(
-    visitMap[visitId],
-  );
-  const isConnected = false;
+  const { inspections, answers } = prepareFormData(visitMap[visitId]);
 
+  const { mainStatusColor, colorsAndQuantities } =
+    getColorsAndQuantities(inspections);
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
     VisitData
@@ -45,7 +79,8 @@ export default function Summary() {
         visitedAt: new Date(),
         inspections,
         answers,
-        statusColor: statusColors[0],
+        statusColor: mainStatusColor,
+        colorsAndQuantities,
       };
 
       console.log(JSON.stringify(completeVisitData));
@@ -95,7 +130,10 @@ export default function Summary() {
           date={formatDate(new Date().toString(), language) || ""}
           house={visitData.houseId.toString()}
           sector={user?.neighborhoodName}
-          color={statusColors[0].toLocaleLowerCase()}
+          greens={colorsAndQuantities.GREEN}
+          yellows={colorsAndQuantities.YELLOW}
+          reds={colorsAndQuantities.RED}
+          color={mainStatusColor}
         />
         <View className="flex flex-row gap-2">
           <View className="flex-1">
