@@ -68,6 +68,12 @@ export default function NewPost() {
     formState: { errors, isValid },
   } = methods;
 
+  const backBehavior = () => {
+    while (router.canGoBack()) {
+      router.back();
+    }
+  };
+
   useEffect(() => {
     setSelectedPhoto(undefined);
     reset({ content: "" });
@@ -81,7 +87,7 @@ export default function NewPost() {
     });
     setTimeout(() => {
       reset({ content: "" });
-      router.back();
+      backBehavior();
     }, 300);
   };
 
@@ -122,7 +128,7 @@ export default function NewPost() {
         text1: t("chat.postSendSuccess"),
       });
       setTimeout(() => {
-        router.back();
+        backBehavior();
       }, 200);
     } catch (error) {
       console.error("Error posting data:", JSON.stringify(error?.response));

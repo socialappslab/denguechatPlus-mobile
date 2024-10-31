@@ -123,7 +123,9 @@ export default function EditPost() {
   }, [post, reset]);
 
   const onBack = () => {
-    router.back();
+    while (router.canGoBack()) {
+      router.back();
+    }
   };
 
   const onSubmitHandler: SubmitHandler<PostInputType> = async (values) => {
@@ -167,7 +169,7 @@ export default function EditPost() {
         text1: t("chat.postUpdated"),
       });
       setTimeout(() => {
-        router.back();
+        onBack();
       }, 200);
     } catch (error) {
       console.error("Error posting data:", JSON.stringify(error?.response));
