@@ -39,7 +39,14 @@ export const formatDate = (
 ) => {
   try {
     const date = moment(dateString);
-    date.locale(language ?? "es");
+    if (language) {
+      const localeCode = language.split("-")[0];
+      try {
+        date.locale(localeCode ?? "es");
+      } catch {
+        console.error("error setting locale");
+      }
+    }
 
     const formattedDate = date.format("YYYY-MMM-DD");
     const capitalizedDate = formattedDate.replace(
