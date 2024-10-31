@@ -53,7 +53,10 @@ export function PostItem(props: PostItemProps) {
         >
           <Text className="font-bold text-sm text-green-700">{initials}</Text>
         </Pressable>
-        <Pressable className="flex flex-1 flex-col" onPress={onPressElement}>
+        <Pressable
+          className="flex flex-1 flex-col mr-1"
+          onPress={onPressElement}
+        >
           <Text className="font-semibold">{`${post.createByUser.userName} ${post.createByUser.lastName}`}</Text>
           <Text className={`text-sm opacity-60`}>
             {post.location} • {formatDatePosts(post.createdAt, language)}

@@ -61,7 +61,15 @@ export function formatDatePosts(
   language: string | null,
 ): string {
   const date = moment(timestamp);
-  date.locale(language ?? "es");
+  if (language) {
+    const localeCode = language.split("-")[0];
+    try {
+      date.locale(localeCode ?? "es");
+    } catch {
+      console.error("error setting locale");
+    }
+  }
+
   const now = moment();
 
   if (now.isSame(date, "day")) {
