@@ -183,7 +183,7 @@ export default function Chat() {
   };
 
   const loadMoreData = () => {
-    if (!loadingMore && hasMore && !error) {
+    if (!loadingMore && !loading && hasMore && !error) {
       setLoadingMore(true);
       const nextPage = currentPage + 1;
       console.log("loadMoreData>>>> ", nextPage);
@@ -226,11 +226,10 @@ export default function Chat() {
   };
 
   const firstLoad = () => {
-    // setAll(true);
     setDataList([]);
     setHasMore(true);
     setCurrentPage(1);
-    fetchData(1, undefined);
+    fetchData(1, all ? undefined : (meData?.userProfile?.team as Team)?.id);
     setUnmountOptions(false);
   };
 
@@ -412,8 +411,11 @@ export default function Chat() {
             showsHorizontalScrollIndicator={false}
             renderItem={renderItem}
             keyExtractor={(item: Post, index: number) => String(item.id)}
-            onEndReached={loadMoreData}
-            onEndReachedThreshold={0.2}
+            onEndReached={({ distanceFromEnd }) => {
+              if (distanceFromEnd === 0) return;
+              loadMoreData();
+            }}
+            onEndReachedThreshold={0.5}
             ListEmptyComponent={showNoResultsOrErrors}
             ListFooterComponent={dataList.length ? renderSpinner : undefined}
           />
