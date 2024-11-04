@@ -45,7 +45,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   const [[_, language]] = useStorageState(LANGUAGE_LOCAL_STORAGE_KEY);
   const { meData } = useAuth();
   const [connected, setConnected] = useState<boolean>(true);
-  const [visitMap, setVisitMapState] = useState<VisitMap>({});
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
     host: "",

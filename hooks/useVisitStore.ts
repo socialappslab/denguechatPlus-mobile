@@ -18,12 +18,15 @@ export type AnswerState = ISelectableItem | ISelectableItem[];
 export type QuestionnaireState = Record<QuestionId, AnswerState>;
 export type VisitMap = Record<VisitId, QuestionnaireState>;
 export type VisitMetaMap = Record<VisitId, VisitMetadata>;
+export type VisitCase = "house" | "orchard";
 
 interface VisitStore {
   // Set only once in select-house
   visitId: VisitId;
   answerId: AnswerId;
   visitMap: VisitMap;
+  selectedCase: VisitCase;
+  setSelectedCase: (visitCase: VisitCase) => void;
   visitMetadata: VisitMetaMap;
   storedVisits: QuestionnaireState[];
   setCurrentVisitData: (
@@ -47,6 +50,7 @@ export const useVisitStore = create<VisitStore>()(
         answerId: "" as AnswerId,
         visitMap: {},
         visitMetadata: {},
+        selectedCase: "house",
         /**
          * All visits that were not published to the backed
          * will be save in this array as QuestionnaireState
@@ -100,6 +104,8 @@ export const useVisitStore = create<VisitStore>()(
             );
             state.storedVisits.splice(index, 1);
           }),
+        setSelectedCase: (selectedCase: VisitCase) =>
+          set(() => ({ selectedCase })),
         /**
          * To be called on each saved
          * @param questionId the current question being rendered

@@ -1,4 +1,5 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
+import { VisitCase } from "@/hooks/useVisitStore";
 import { PostVisibility } from "@/schema";
 export * from "./prepareFormData";
 
@@ -45,6 +46,8 @@ export interface Option {
   group: string;
   statusColor?: string;
   disableOtherOptions?: boolean;
+  selectedCase?: VisitCase;
+  showInCase?: VisitCase;
 }
 
 export interface Image {

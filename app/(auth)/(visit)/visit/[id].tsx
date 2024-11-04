@@ -8,10 +8,11 @@ import { InspectionQuestion, Question } from "@/types";
 import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AnswerState, useVisitStore } from "@/hooks/useVisitStore";
+import { AnswerState, useVisitStore, VisitCase } from "@/hooks/useVisitStore";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Routes } from "../_layout";
+import { useEffect, useState } from "react";
 
 // When next is -1 we end the flow
 const TERMINATE = -1;
@@ -54,14 +55,44 @@ export default function Visit() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { t } = useTranslation();
-  const { setCurrentVisitData, answerId, visitMap, visitId } = useVisitStore();
+  const {
+    setCurrentVisitData,
+    answerId,
+    setSelectedCase,
+    selectedCase,
+    increaseCurrentVisitInspection,
+  } = useVisitStore();
   const questionId = id.toString();
   const methods = useForm({});
+  const [currentQuestion, setCurrentQuestion] = useState<
+    InspectionQuestion | undefined
+  >();
+
+  useEffect(() => {
+    const _currentQuestion = questionnaire?.questions.find(
+      (q) => String(q.id) === questionId,
+    );
+    const hasShowInCase = _currentQuestion?.options?.findIndex(
+      (option) => option.showInCase === selectedCase,
+    );
+
+    if (Number.isInteger(hasShowInCase) && (hasShowInCase as number) >= 0) {
+      const newOptions = _currentQuestion?.options?.filter((option) => {
+        return option.showInCase === selectedCase || !option.showInCase;
+      });
+      setCurrentQuestion({
+        ..._currentQuestion,
+        options: newOptions,
+      } as InspectionQuestion);
+    } else {
+      setCurrentQuestion(
+        questionnaire?.questions.find((q) => String(q.id) === questionId),
+      );
+    }
+  }, [selectedCase, questionId, questionnaire]);
 
   const { getValues, watch } = methods;
 
-  let currentQuestion: InspectionQuestion | undefined =
-    questionnaire?.questions.find((q) => String(q.id) === questionId);
   const isSplash = currentQuestion?.typeField === "splash";
   const currentValues = watch(answerId) as AnswerState;
 
@@ -89,6 +120,18 @@ export default function Visit() {
     const next = findNext();
     const resourceName = currentQuestion.resourceName;
     const values = methods.getValues(answerId);
+    const options = currentQuestion.options;
+    const selectedOption = options?.find(
+      (option) => option.id === values.value,
+    );
+
+    if (selectedOption?.selectedCase) {
+      setSelectedCase(selectedOption?.selectedCase);
+    }
+
+    if (selectedOption?.showInCase && selectedOption?.value) {
+      increaseCurrentVisitInspection();
+    }
 
     // Persist values
     if (values) setCurrentVisitData(questionId, values);
@@ -100,8 +143,9 @@ export default function Visit() {
         params: { next },
       });
     }
+
     if (next !== TERMINATE) return router.push(`${Routes.Visit}/${next}`);
-    if (next === TERMINATE) return router.push(Routes.AddContainer);
+    if (next === TERMINATE) return router.push(Routes.AddComment);
   };
 
   const onBack = () => {

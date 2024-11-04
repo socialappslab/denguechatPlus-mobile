@@ -12,7 +12,6 @@ import {
   UseFormSetValue,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { SvgUri } from "react-native-svg";
 
 /** Interfaces */
 interface QuestionnaireRendererProps {
