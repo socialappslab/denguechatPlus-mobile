@@ -8,11 +8,11 @@ import { InspectionQuestion, Question } from "@/types";
 import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AnswerState, useVisitStore } from "@/hooks/useVisitStore";
-import { useEffect, useState } from "react";
+import { AnswerState, useVisitStore, VisitCase } from "@/hooks/useVisitStore";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Routes } from "../_layout";
+import { useEffect, useState } from "react";
 
 // When next is -1 we end the flow
 const TERMINATE = -1;

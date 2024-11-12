@@ -83,7 +83,7 @@ export const prepareFormData = (formData: FormState) => {
 
     // Always set quantity_founded
     if (!inspections[index]["quantity_founded"]) {
-      inspections[index]["quantity_founded"] = 0;
+      inspections[index]["quantity_founded"] = 1;
     }
 
     // We order with RED beign first, then YELLOW, then GREEN
