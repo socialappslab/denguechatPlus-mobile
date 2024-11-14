@@ -139,13 +139,15 @@ export default function Visit() {
     // Branches
     if (resourceName === PhotoId && values.bool) {
       return router.push({
-        pathname: Routes.ContainerPicture,
+        pathname: "/container-picture",
         params: { next },
       });
     }
 
-    if (next !== TERMINATE) return router.push(`${Routes.Visit}/${next}`);
-    if (next === TERMINATE) return router.push(Routes.AddComment);
+    if (next !== TERMINATE) {
+      return router.replace({ pathname: "/visit/[id]", params: { id: next } });
+    }
+    if (next === TERMINATE) return router.push("/add-comment");
   };
 
   const onBack = () => {

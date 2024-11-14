@@ -33,9 +33,7 @@ export default function Summary() {
             primary
             title={t("backToHome")}
             onPress={() => {
-              while (router.canGoBack()) {
-                router.back();
-              }
+              router.push("/(auth)/(tabs)");
             }}
           />
         </View>

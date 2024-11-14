@@ -30,9 +30,7 @@ export default function BrigaderList() {
 
   const onEnd = () => {
     clearState();
-    while (router.canGoBack()) {
-      router.back();
-    }
+    router.replace("/(auth)/(tabs)");
   };
 
   return (
