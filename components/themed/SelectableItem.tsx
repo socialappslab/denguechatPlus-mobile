@@ -119,6 +119,7 @@ export function SelectableItem({
         <TextInput
           className="w-full h-32 mt-3 rounded border border-slate-300 text-md p-3"
           multiline
+          textAlignVertical="top"
           numberOfLines={4}
           onChangeText={onChangeText}
           value={text}

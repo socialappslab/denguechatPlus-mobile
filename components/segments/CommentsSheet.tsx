@@ -497,6 +497,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     value={value}
+                    textAlignVertical="top"
                     multiline={true}
                     numberOfLines={numberOfLines}
                     onContentSizeChange={(e) => {
