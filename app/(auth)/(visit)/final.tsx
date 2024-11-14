@@ -11,7 +11,9 @@ export default function Summary() {
   const prefix = isConnected ? "online" : "offline";
 
   return (
-    <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between">
+    <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between items-center">
+      {/* This View is used for space between */}
+      <View />
       <View className="flex flex-col justify-center items-center">
         <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
           <FinalIllustration width="100%" height="100%" />
