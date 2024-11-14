@@ -86,7 +86,7 @@ export function SelectableItem({
             )}
           </View>
         )}
-        <View className="flex flex-row bg-transparent">
+        <View className="flex flex-row bg-transparent text-wrap">
           <Pressable
             className="mr-2"
             {...other}
@@ -109,7 +109,7 @@ export function SelectableItem({
           >
             {checked && checkedView}
           </Pressable>
-          <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow">
+          <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow pr-6">
             {label}
             {required && "*"}
           </Text>
