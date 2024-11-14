@@ -288,6 +288,7 @@ export default function EditPost() {
                         placeholder={t("chat.sharePlaceholder")}
                         onChangeText={onChange}
                         onBlur={onBlur}
+                        textAlignVertical="top"
                         value={value}
                         multiline={true}
                         numberOfLines={numberOfLines}

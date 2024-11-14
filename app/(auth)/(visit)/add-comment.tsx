@@ -35,6 +35,7 @@ const AddComment = () => {
             <TextInput
               className="w-full h-32 mt-6 rounded border border-slate-300 text-md p-3"
               multiline
+              textAlignVertical="top"
               numberOfLines={4}
               onChangeText={onChangeText}
               value={text}
