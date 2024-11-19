@@ -40,7 +40,6 @@ export function PasswordInput(props: TextInputProps) {
             justifyContent: "center",
             paddingTop: 0,
             position: "relative",
-            top: 5,
             textAlignVertical: "center",
           },
           style,
