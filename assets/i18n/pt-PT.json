@@ -21,6 +21,7 @@
       "noResultsWedges": "Não há cunhas no setor selecionado",
       "noResultsHouseBlock": "Não há quadras na brigada selecionada",
       "filter": "Filtrar",
+      "clearFilters": "Filtros limpos",
       "select": "Selecionar",
       "filterSingular": "filtro",
       "filterPlural": "filtros",

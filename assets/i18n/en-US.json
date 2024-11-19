@@ -21,6 +21,7 @@
       "noResultsWedges": "No wedges in selected sector",
       "noResultsHouseBlock": "No house blocks in selected brigade",
       "filter": "Filter",
+      "clearFilters": "Clear filters",
       "select": "Select",
       "filterSingular": "filter",
       "filterPlural": "filters",
