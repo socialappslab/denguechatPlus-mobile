@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import {
+  FilterButton,
   ListItem,
   Loading,
   ProgressBar,
@@ -22,7 +23,7 @@ import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
-import { formatDate } from "@/util";
+import { countSetFilters, formatDate } from "@/util";
 import { normalizeVisitData } from "@/util/normalizeVisitData";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
@@ -31,6 +32,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { Routes } from "../(visit)/_layout";
+import { useBrigades } from "@/hooks/useBrigades";
+import { authApi } from "@/config/axios";
 
 interface HouseReport {
   greenQuantity: number;
@@ -45,11 +48,54 @@ interface HouseReport {
 const VisitsReport = () => {
   const { meData } = useAuth();
   const { t } = useTranslation();
-  const [{ data, loading, error }] = useAxios<HouseReport, null, ErrorResponse>(
-    {
-      url: `reports/house_status`,
-    },
-  );
+  const router = useRouter();
+  const { filters, setFilter } = useBrigades();
+  const [data, setData] = useState<HouseReport>();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setFilter({
+      sector: {
+        id: meData?.userProfile?.team?.sector_id as number,
+        name: meData?.userProfile?.team?.sector_name,
+      },
+      wedge: {
+        id: meData?.userProfile?.team?.wedge_id as number,
+        name: meData?.userProfile?.team?.wedge_name,
+      },
+    });
+  }, [meData]);
+
+  useEffect(() => {
+    fetchData(filters.sector?.id, filters.wedge?.id, filters.team?.id);
+  }, [filters]);
+
+  const fetchData = async (
+    sectorId?: number,
+    wedgeId?: number,
+    teamId?: number,
+  ) => {
+    setLoading(true);
+    try {
+      const response = await authApi.get("reports/house_status", {
+        params: {
+          sort: "name",
+          order: "asc",
+          "filter[sector_id]": sectorId,
+          "filter[wedge_id]": wedgeId,
+          "filter[team_id]": teamId,
+        },
+      });
+      setData(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+    setLoading(false);
+  };
+
+  const onPressFilter = () => {
+    router.push("filters-visit");
+  };
 
   return (
     <View>
@@ -60,9 +106,15 @@ const VisitsReport = () => {
       )}
       {!loading && (
         <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
-          <Text type="title" className="mb-6">
-            {(meData?.userProfile?.team as Team)?.sector_name}
-          </Text>
+          <View className="flex flex-row justify-between">
+            <Text type="title" className="mb-6">
+              {(meData?.userProfile?.team as Team)?.sector_name}
+            </Text>
+            <FilterButton
+              filters={countSetFilters(filters, ["wedge", "sector"])}
+              onPress={onPressFilter}
+            />
+          </View>
           <Text className="text-neutral-600 mb-2">
             {t("brigade.cards.numberVisits")}
           </Text>

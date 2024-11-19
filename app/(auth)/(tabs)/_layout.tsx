@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import { Platform } from "react-native";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 
@@ -12,6 +12,7 @@ import Brigade from "@/assets/images/icons/brigade.svg";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BrigadeProvider } from "@/context/BrigadeContext";
 
 type TabsNames = "chat" | "homes" | "profile";
 

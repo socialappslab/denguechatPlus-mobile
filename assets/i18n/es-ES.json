@@ -21,6 +21,7 @@
       "noResultsWedges": "No hay cuñas en el sector seleccionado",
       "noResultsHouseBlock": "No hay frente a frente en la brigada seleccionada",
       "filter": "Filtrar",
+      "clearFilters": "Limpiar Filtros",
       "select": "Seleccionar",
       "filterSingular": "filtro",
       "filterPlural": "filtros",
