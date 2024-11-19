@@ -30,6 +30,7 @@ import CommentsSheet from "@/components/segments/CommentsSheet";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { ActionItem } from "@/components/themed/ActionItem";
 import { Button } from "@/components/themed";
+import { useVisitStore } from "@/hooks/useVisitStore";
 
 type PostState = Record<
   string,
@@ -68,6 +69,15 @@ export default function Chat() {
   const snapPointsOptions = useMemo(() => ["24%"], []);
 
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const { cleanUpVisits } = useVisitStore();
+
+  console.log("hij");
+  useEffect(() => {
+    (() => {
+      cleanUpVisits();
+      console.log("lolo");
+    })();
+  }, []);
 
   const router = useRouter();
 

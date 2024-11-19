@@ -99,7 +99,7 @@ export default function Summary() {
       router.push("final");
       // Cleanup, if it's not connected we send house details
       finaliseCurrentVisit(isConnected, {
-        ...completeVisitData,
+        ...sanitizedVisitData,
         house: visitData.house,
         statusColor: mainStatusColor,
         colorsAndQuantities,

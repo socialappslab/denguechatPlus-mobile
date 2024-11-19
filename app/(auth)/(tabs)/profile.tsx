@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
-import { Platform } from "react-native";
-import { useTranslation } from "react-i18next";
-import useAxios from "axios-hooks";
 import { useIsFocused } from "@react-navigation/native";
+import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Platform } from "react-native";
 
-import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
 import { CheckTeam } from "@/components/segments/CheckTeam";
-import Colors from "@/constants/Colors";
-import { getInitials } from "@/util";
 import {
+  Loading,
+  ProgressBar,
+  SafeAreaView,
+  ScrollView,
+  SimpleChip,
   Text,
   View,
-  ScrollView,
-  SafeAreaView,
-  SimpleChip,
-  ProgressBar,
-  Loading,
 } from "@/components/themed";
+import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
+import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
 import { ReportData } from "@/types";
+import { getInitials } from "@/util";
 
 export default function Profile() {
   const { t } = useTranslation();

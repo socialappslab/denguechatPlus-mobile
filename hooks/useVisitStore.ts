@@ -39,6 +39,7 @@ interface VisitStore {
   networkState?: NetworkState;
   setNetworkState: (state: NetworkState) => void;
   cleanUpStoredVisit: (visit: any) => void;
+  cleanUpVisits: () => void;
 }
 
 export const useVisitStore = create<VisitStore>()(
@@ -106,6 +107,10 @@ export const useVisitStore = create<VisitStore>()(
           }),
         setSelectedCase: (selectedCase: VisitCase) =>
           set(() => ({ selectedCase })),
+        cleanUpVisits: () =>
+          set((state) => {
+            state.storedVisits = [];
+          }),
         /**
          * To be called on each saved
          * @param questionId the current question being rendered
