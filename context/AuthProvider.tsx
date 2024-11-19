@@ -13,6 +13,7 @@ import {
 import { resetAuthApi, setAccessTokenToHeaders } from "@/config/axios";
 import useUser from "@/hooks/useUser";
 import { ErrorResponse } from "@/schema";
+import { Client } from "rollbar-react-native";
 
 type AuthProviderType = {
   user: IUser | null;
@@ -25,6 +26,7 @@ type AuthProviderType = {
   login: (token: string, refreshToken: string, user: IUser) => boolean;
   logout: () => void;
   reFetchMe: () => void;
+  rollbar: Client;
 };
 
 function useProtectedRoute(user: IUser | null) {
@@ -52,6 +54,7 @@ export const AuthContext = createContext<AuthProviderType>({
   login: () => false,
   setUser: (user: IUser | null) => {},
   logout: () => {},
+  rollbar: null,
 });
 
 export function useAuth() {
@@ -66,6 +69,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [[, userFromLocalStorage], setUserLocalStorage] = useUser();
   const [user, setLoadedUser] = useState<IUser | null>(null);
   const [meData, setMeData] = useState<IUser | null>(null);
+  const [rollbar, setRollbar] = useState<Client | null>(null);
+
+  useEffect(() => {
+    const client = new Client({
+      accessToken: "be7ac3d01b9543209f2f08e446092408",
+      captureUncaught: true,
+      captureDeviceInfo: true,
+    });
+    setRollbar(client);
+  }, []);
 
   const [[loadingToken, token], setToken] = useStorageState(
     ACCESS_TOKEN_LOCAL_STORAGE_KEY,
@@ -141,6 +154,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         reFetchMe,
+        rollbar,
       }}
     >
       {children}
