@@ -16,6 +16,7 @@ import {
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
+import { sanitizeInspections } from "./sanitizeInspections";
 
 const getColorsAndQuantities = (inspections: Inspection[]) => {
   let color: StatusColor = StatusColor.NO_INFECTED;
@@ -49,7 +50,7 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 export default function Summary() {
   const router = useRouter();
   const { questionnaire, visitData, language, isConnected } = useVisit();
-  const { user } = useAuth();
+  const { user, rollbar } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
   const { inspections, answers } = prepareFormData(visitMap[visitId]);
@@ -80,12 +81,16 @@ export default function Summary() {
         inspections,
         answers,
       };
+      const sanitizedVisitData = {
+        ...completeVisitData,
+        inspections: sanitizeInspections(inspections),
+      };
 
-      console.log(JSON.stringify(completeVisitData));
+      rollbar.log(JSON.stringify(sanitizedVisitData));
 
       // We only make the request if it's connected
       if (isConnected)
-        await createVisit({ json_params: JSON.stringify(completeVisitData) });
+        await createVisit({ json_params: JSON.stringify(sanitizedVisitData) });
 
       Toast.show({
         type: "success",
@@ -103,6 +108,7 @@ export default function Summary() {
       console.log(error);
       const errorData = extractAxiosErrorData(error);
       // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
+      rollbar.error(visitData, errorData);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
           type: "error",
