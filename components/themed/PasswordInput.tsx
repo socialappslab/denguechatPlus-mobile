@@ -32,7 +32,17 @@ export function PasswordInput(props: TextInputProps) {
         ref={inputRef}
         secureTextEntry={passwordVisible}
         style={[
-          { backgroundColor, color, fontFamily: FontFamily.regular },
+          {
+            backgroundColor,
+            color,
+            fontFamily: FontFamily.regular,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingTop: 0,
+            position: "relative",
+            top: 5,
+            textAlignVertical: "center",
+          },
           style,
         ]}
         className="flex-grow flex-1 border-0"
