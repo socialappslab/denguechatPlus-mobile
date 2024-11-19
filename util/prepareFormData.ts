@@ -81,8 +81,11 @@ export const prepareFormData = (formData: FormState) => {
       answers[index][questionId] = answer.value;
     }
 
-    // Always set quantity_founded
-    if (!inspections[index]["quantity_founded"]) {
+    // Always set quantity_founded when there's a container
+    if (
+      inspections[index].length > 0 &&
+      !inspections[index]["quantity_founded"]
+    ) {
       inspections[index]["quantity_founded"] = 1;
     }
 

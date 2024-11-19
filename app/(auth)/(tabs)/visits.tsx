@@ -182,7 +182,7 @@ export default function Visits() {
   const { storedVisits, cleanUpStoredVisit } = useVisitStore();
   const { language, isConnected } = useVisit();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
-  const { user, meData } = useAuth();
+  const { user, meData, rollbar } = useAuth();
   const [team, setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -231,7 +231,7 @@ export default function Visits() {
     };
 
     const visitToSubmit = normalizeVisitData(newVisit);
-    console.log(JSON.stringify(visitToSubmit));
+    rollbar.log(JSON.stringify(visitToSubmit));
     try {
       setLoading(true);
       await createVisit({ json_params: JSON.stringify(visitToSubmit) });

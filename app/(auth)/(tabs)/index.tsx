@@ -71,7 +71,6 @@ export default function Chat() {
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
   const { cleanUpVisits } = useVisitStore();
 
-  console.log("hij");
   useEffect(() => {
     (() => {
       cleanUpVisits();
