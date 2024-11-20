@@ -49,11 +49,12 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, language, isConnected } = useVisit();
+  const { questionnaire, visitData, language } = useVisit();
   const { user, rollbar } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
   const { inspections, answers } = prepareFormData(visitMap[visitId]);
+  const isConnected = false;
 
   const { mainStatusColor, colorsAndQuantities } =
     getColorsAndQuantities(inspections);
@@ -70,22 +71,21 @@ export default function Summary() {
         text1: t("generic"),
       });
     }
+    const completeVisitData = {
+      ...visitData,
+      house: visitData.houseId ? undefined : visitData.house,
+      visitPermission: true,
+      host: user.firstName,
+      visitedAt: new Date(),
+      inspections,
+      answers,
+    };
+    const sanitizedVisitData = {
+      ...completeVisitData,
+      inspections: sanitizeInspections(inspections),
+    };
 
     try {
-      const completeVisitData = {
-        ...visitData,
-        house: visitData.houseId ? undefined : visitData.house,
-        visitPermission: true,
-        host: user.firstName,
-        visitedAt: new Date(),
-        inspections,
-        answers,
-      };
-      const sanitizedVisitData = {
-        ...completeVisitData,
-        inspections: sanitizeInspections(inspections),
-      };
-
       rollbar.log(JSON.stringify(sanitizedVisitData));
 
       // We only make the request if it's connected
@@ -108,7 +108,7 @@ export default function Summary() {
       console.log(error);
       const errorData = extractAxiosErrorData(error);
       // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
-      rollbar.error(visitData, errorData);
+      rollbar.error(sanitizedVisitData, errorData);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
           type: "error",
