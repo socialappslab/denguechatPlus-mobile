@@ -145,7 +145,7 @@ export default function Visit() {
     }
 
     if (next !== TERMINATE) {
-      return router.replace({ pathname: "/visit/[id]", params: { id: next } });
+      return router.push({ pathname: "/visit/[id]", params: { id: next } });
     }
     if (next === TERMINATE) return router.push("/add-comment");
   };
