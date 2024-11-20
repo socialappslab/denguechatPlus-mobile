@@ -36,11 +36,6 @@ export function PasswordInput(props: TextInputProps) {
             backgroundColor,
             color,
             fontFamily: FontFamily.regular,
-            alignItems: "center",
-            justifyContent: "center",
-            paddingTop: 0,
-            position: "relative",
-            textAlignVertical: "center",
           },
           style,
         ]}
