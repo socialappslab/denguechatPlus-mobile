@@ -2,7 +2,7 @@ const IS_DEV = process.env.APP_VARIANT === "development";
 
 export default {
   expo: {
-    name: IS_DEV ? "DengueChat+ (Dev)" : "DengueChat+",
+    name: IS_DEV ? "DengueChatPlus (Dev)" : "DengueChatPlus",
     slug: "dengue-chat-plus",
     scheme: "org.denguechat.plus",
     version: "1.0.0",

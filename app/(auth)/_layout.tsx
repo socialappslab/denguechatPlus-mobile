@@ -65,7 +65,7 @@ const CustomDrawerContent = () => {
       >
         <View className="flex flex-row items-center mb-6 px-2">
           <Logo className="mr-2"></Logo>
-          <Text className="text-lg font-semibold">DengueChat+</Text>
+          <Text className="text-lg font-semibold">DengueChatPlus</Text>
         </View>
         <View className="flex flex-1 flex-col px-2">
           <TouchableOpacity
