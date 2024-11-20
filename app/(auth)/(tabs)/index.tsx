@@ -69,14 +69,6 @@ export default function Chat() {
   const snapPointsOptions = useMemo(() => ["24%"], []);
 
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
-  const { cleanUpVisits } = useVisitStore();
-
-  useEffect(() => {
-    (() => {
-      cleanUpVisits();
-      console.log("lolo");
-    })();
-  }, []);
 
   const router = useRouter();
 

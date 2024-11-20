@@ -23,7 +23,7 @@ import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
-import { countSetFilters, formatDate } from "@/util";
+import { countSetFilters, extractAxiosErrorData, formatDate } from "@/util";
 import { normalizeVisitData } from "@/util/normalizeVisitData";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
@@ -34,6 +34,7 @@ import Toast from "react-native-toast-message";
 import { Routes } from "../(visit)/_layout";
 import { useBrigades } from "@/hooks/useBrigades";
 import { authApi } from "@/config/axios";
+import { sanitizeInspections } from "../(visit)/sanitizeInspections";
 
 interface HouseReport {
   greenQuantity: number;
@@ -224,16 +225,23 @@ export default function Visits() {
   const synchronizeVisit = async (visit: any) => {
     let newVisit = {
       ...visit,
-      host: "nunu",
+      host: "Tariki",
       house: visit.houseId ? undefined : visit.house,
-      notes: "hi",
+      notes: "",
       visitPermission: true,
     };
 
-    const visitToSubmit = normalizeVisitData(newVisit);
-    rollbar.log(JSON.stringify(visitToSubmit));
+    const visitToSubmit = {
+      ...newVisit,
+      inspections: sanitizeInspections(newVisit.inspections),
+    };
+
+    delete visitToSubmit.statusColor;
+    delete visitToSubmit.colorsAndQuantities;
+
     try {
       setLoading(true);
+      rollbar.log(JSON.stringify(visitToSubmit));
       await createVisit({ json_params: JSON.stringify(visitToSubmit) });
       cleanUpStoredVisit(visitToSubmit);
       setSuccess(true);
@@ -244,6 +252,8 @@ export default function Visits() {
       });
       setLoading(false);
     } catch (error) {
+      const errorData = extractAxiosErrorData(error);
+      rollbar.error(visitToSubmit, errorData);
       Toast.show({
         type: "error",
         text1: t(["errorCodes.generic"]),
@@ -255,7 +265,6 @@ export default function Visits() {
 
   const handlePressVisit = (visit: any) => {
     setSelectedVisit(visit);
-    console.log(visit);
     bottomSheetModalRef.current?.present();
   };
 
@@ -265,10 +274,7 @@ export default function Visits() {
     return (
       <View className="flex flex-col justify-center items-center flex-1">
         <Text type="title" className="text-center">
-          Visita sincronizada
-        </Text>
-        <Text type="text" className="text-center p-8 pt-4 whitespace-pre-wrap">
-          La visita a la Casa 1 del 2024-Jul-5 ha sido sincronizada.
+          {t("visit.synchronizedVisit")}
         </Text>
       </View>
     );
@@ -331,62 +337,60 @@ export default function Visits() {
         </CheckTeam>
 
         <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View>
-        {selectedVisit && (
-          <ClosableBottomSheet
-            title={`Casa ${selectedVisit.houseId}`}
-            snapPoints={snapPoints}
-            bottomSheetModalRef={bottomSheetModalRef}
-            onClose={() => setSuccess(false)}
-          >
-            <View className="h-full w-full flex px-4 py-4">
-              <View className="flex-1 mb-4">
-                <View className="border border-neutral-200 rounded-lg w-full h-full px-4">
-                  {!success && (
-                    <>
-                      {loading && (
-                        <View className="flex flex-1 items-center justify-center">
-                          <Loading />
-                        </View>
-                      )}
-                      {!loading && (
-                        <VisitSummary
-                          date={`${formatDate(selectedVisit.visitedAt, language)}`}
-                          sector={
-                            (meData?.userProfile?.team as Team)?.sector_name
-                          }
-                          house={`${selectedVisit?.house?.houseBlock?.name} Casa ${selectedVisit.houseId}`}
-                          color={selectedVisit?.statusColor}
-                          greens={selectedVisit?.colorsAndQuantities?.GREEN}
-                          yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
-                          reds={selectedVisit?.colorsAndQuantities?.RED}
-                        />
-                      )}
-                    </>
-                  )}
-                  {success && <SuccessSummary />}
-                </View>
+        <ClosableBottomSheet
+          title={`Casa ${selectedVisit?.houseId || ""}`}
+          snapPoints={snapPoints}
+          bottomSheetModalRef={bottomSheetModalRef}
+          onClose={() => setSuccess(false)}
+        >
+          <View className="h-full w-full flex px-4 py-4">
+            <View className="flex-1 mb-4">
+              <View className="border border-neutral-200 rounded-lg w-full h-full px-4">
+                {!success && (
+                  <>
+                    {loading && (
+                      <View className="flex flex-1 items-center justify-center">
+                        <Loading />
+                      </View>
+                    )}
+                    {!loading && (
+                      <VisitSummary
+                        date={`${formatDate(selectedVisit?.visitedAt || "", language)}`}
+                        sector={
+                          (meData?.userProfile?.team as Team)?.sector_name
+                        }
+                        house={`${selectedVisit?.house?.houseBlock?.name} Casa ${selectedVisit?.houseId}`}
+                        color={selectedVisit?.statusColor}
+                        greens={selectedVisit?.colorsAndQuantities?.GREEN}
+                        yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
+                        reds={selectedVisit?.colorsAndQuantities?.RED}
+                      />
+                    )}
+                  </>
+                )}
+                {success && <SuccessSummary />}
               </View>
-              {!success && (
-                <Button
-                  title="Sincronizar visita"
-                  onPress={() => synchronizeVisit(selectedVisit)}
-                  disabled={!isConnected || loading}
-                  primary
-                />
-              )}
-              {success && (
-                <Button
-                  title="Cerrar"
-                  onPress={() => {
-                    setSuccess(false);
-                    bottomSheetModalRef.current?.close();
-                    setLoading(false);
-                  }}
-                />
-              )}
             </View>
-          </ClosableBottomSheet>
-        )}
+            {!success && (
+              <Button
+                title="Sincronizar visita"
+                onPress={() => synchronizeVisit(selectedVisit)}
+                disabled={!isConnected || loading}
+                primary
+              />
+            )}
+            {success && (
+              <Button
+                title="Cerrar"
+                onPress={() => {
+                  setSuccess(false);
+                  bottomSheetModalRef.current?.close();
+                  setLoading(false);
+                }}
+              />
+            )}
+          </View>
+        </ClosableBottomSheet>
       </ScrollView>
     </SafeAreaView>
   );

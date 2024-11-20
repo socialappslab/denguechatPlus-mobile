@@ -165,6 +165,7 @@
         "done": "All visits are synchronized",
         "pending": "You have {{storedVisits}} pending visits to be synchronized."
       },
+      "synchronizedVisit": "Synchronized visit",
       "houses": {
         "title": "Sites",
         "searchPlaceholder": "Search by site number",

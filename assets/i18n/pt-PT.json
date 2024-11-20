@@ -236,7 +236,8 @@
         "online": {
           "greetings": "Os dados da visita foram salvos."
         }
-      }
+      },
+      "synchronizedVisit": "Visita sincronizada"
     },
     "brigade": {
       "sites": {
@@ -261,10 +262,10 @@
       }
     },
     "errorCodes": {
-      "generic": "Algo deu errado. Por favor, tente novamente.",
       "46": "Credenciais inválidas",
       "51": "Conta não está ativa",
-      "55": "A conta foi temporariamente bloqueada. Várias tentativas de login falharam. Tente novamente mais tarde."
+      "55": "A conta foi temporariamente bloqueada. Várias tentativas de login falharam. Tente novamente mais tarde.",
+      "generic": "Algo deu errado. Por favor, tente novamente."
     }
   }
 }
