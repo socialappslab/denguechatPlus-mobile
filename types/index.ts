@@ -21,6 +21,7 @@ export interface Question {
   typeField: TypeField;
   options?: Option[];
   description?: string;
+  notes?: string;
   next?: number;
   image?: Image;
 }
