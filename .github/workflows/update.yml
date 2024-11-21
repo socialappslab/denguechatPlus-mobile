@@ -4,7 +4,7 @@ name: Publish expo
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: 
+    branches:
       - develop
 
 jobs:
@@ -40,4 +40,4 @@ jobs:
         run: yarn install
 
       - name: Publish update
-        run: eas build --platform android --profile development
+        run: eas build --platform android --profile development --non-interactive --auto-submit
