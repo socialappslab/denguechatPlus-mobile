@@ -220,8 +220,14 @@ const QuestionnaireRenderer = ({
       )}
       {question.typeField !== "splash" && (
         <View>
-          <Text type="title" className="mb-8">
+          <Text type="title" className="mb-5">
             {question.question}
+          </Text>
+          <Text
+            type="text"
+            className="mb-8 text-center text-gray-500 dark:text-gray-400"
+          >
+            {question.notes}
           </Text>
           {/* Conditionally render groupped */}
           {!hasGroup && formattedOptions.map(renderOptions)}
