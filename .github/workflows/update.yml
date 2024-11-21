@@ -40,4 +40,4 @@ jobs:
         run: yarn install
 
       - name: Publish update
-        run: eas update --auto
+        run: eas build --platform android --profile development
