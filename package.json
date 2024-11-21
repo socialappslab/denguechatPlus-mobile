@@ -31,6 +31,7 @@
     "axios-hooks": "^5.0.2",
     "expo": "~51.0.39",
     "expo-camera": "~15.0.16",
+    "expo-dev-client": "~4.0.29",
     "expo-font": "~12.0.10",
     "expo-image": "~1.13.0",
     "expo-image-manipulator": "~12.0.5",
