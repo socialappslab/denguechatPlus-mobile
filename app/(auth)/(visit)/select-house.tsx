@@ -42,7 +42,6 @@ export default function SelectHouseScreen() {
 
     const visitId = `${user.id}-${houseSelected?.id}` as VisitId;
 
-    console.log(houseSelected)
     // Set the VisitId
     initialiseCurrentVisit(visitId, questionnaire.initialQuestion.toString());
 

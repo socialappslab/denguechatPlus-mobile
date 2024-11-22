@@ -82,6 +82,8 @@ export interface Inspection {
   // tracking_type_required?: string;
   visited_at?: string;
   photo_id?: string;
+  site_type?: string;
+  status_color?: string;
 }
 
 export interface Country {
