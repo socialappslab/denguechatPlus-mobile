@@ -41,5 +41,5 @@ jobs:
 
       - name: Publish update
         env:
-          POST_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.rollbarToken }}
+          POST_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.ROLLBAR_TOKEN }}
         run: eas build --platform android --profile development --non-interactive
