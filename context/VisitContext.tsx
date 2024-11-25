@@ -22,6 +22,7 @@ import {
   VisitData,
   VisitMap,
 } from "@/types";
+import questionnaireJson from "./questionnaire.json";
 
 interface VisitContextType {
   questionnaire?: Questionnaire;
@@ -97,9 +98,10 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
 
       return;
     }
-    const deserializedQuestionnaire = deserialize<Questionnaire>(
-      questionnaireData,
-    ) as Questionnaire;
+    const deserializedQuestionnaire = questionnaireJson;
+    // const deserializedQuestionnaire = deserialize<Questionnaire>(
+    //   questionnaireData,
+    // ) as Questionnaire;
 
     setQuestionnaire({
       ...deserializedQuestionnaire,
