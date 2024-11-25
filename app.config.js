@@ -32,6 +32,13 @@ export default {
       "expo-font",
       "expo-localization",
       [
+        "./plugins/rollbar-config-plugin",
+        {
+          environment: "production",
+          rollbarPostToken: process.env.POST_CLIENT_ITEM_ACCESS_TOKEN,
+        },
+      ],
+      [
         "expo-location",
         {
           locationAlwaysAndWhenInUsePermission:
