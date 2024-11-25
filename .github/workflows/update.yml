@@ -40,4 +40,6 @@ jobs:
         run: yarn install
 
       - name: Publish update
+        env:
+          POST_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.rollbarToken }}
         run: eas build --platform android --profile development --non-interactive
