@@ -1,4 +1,5 @@
 import { SelectableItem, Text, View } from "@/components/themed";
+import { VisitCase } from "@/hooks/useVisitStore";
 import { InspectionQuestion, OptionType, ResourceType } from "@/types";
 import { Image } from "expo-image";
 import React, { useCallback, useState } from "react";
@@ -36,6 +37,7 @@ export interface ISelectableItem {
   statusColor?: string;
   disableOtherOptions?: boolean;
   bool?: boolean;
+  selectedCase?: VisitCase;
 }
 
 /** Utils */
@@ -59,6 +61,7 @@ const formatOptionsForSelectableItems = ({
         statusColor,
         disableOtherOptions,
         value,
+        selectedCase,
       }) => ({
         position: id,
         value: id,
@@ -74,6 +77,7 @@ const formatOptionsForSelectableItems = ({
         statusColor,
         disableOtherOptions,
         bool: optionType === "boolean" ? !!parseInt(value!) : undefined,
+        selectedCase,
       }),
     )
     .sort((a, b) => a.position - b.position) || [];
@@ -91,6 +95,7 @@ export interface FormStateOption {
   inspectionIdx?: number;
   label?: string;
   bool?: boolean;
+  selectedCase?: VisitCase;
 }
 
 const prepareOption = ({
@@ -105,6 +110,7 @@ const prepareOption = ({
     disableOtherOptions,
     label,
     bool,
+    selectedCase,
   },
   text,
   inspectionIdx,
@@ -126,6 +132,7 @@ const prepareOption = ({
     inspectionIdx,
     label,
     bool,
+    selectedCase,
   };
 };
 
@@ -223,12 +230,14 @@ const QuestionnaireRenderer = ({
           <Text type="title" className="mb-5">
             {question.question}
           </Text>
-          <Text
-            type="text"
-            className="mb-8 text-center text-gray-500 dark:text-gray-400"
-          >
-            {question.notes}
-          </Text>
+          {question.notes && (
+            <Text
+              type="text"
+              className="mb-8 text-center text-gray-500 dark:text-gray-400"
+            >
+              {question.notes}
+            </Text>
+          )}
           {/* Conditionally render groupped */}
           {!hasGroup && formattedOptions.map(renderOptions)}
           {hasGroup &&

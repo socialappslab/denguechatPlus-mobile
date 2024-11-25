@@ -8,7 +8,7 @@ import { InspectionQuestion, Question } from "@/types";
 import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AnswerState, useVisitStore } from "@/hooks/useVisitStore";
+import { AnswerState, useVisitStore, VisitCase } from "@/hooks/useVisitStore";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -56,6 +56,7 @@ export default function Visit() {
   const { t } = useTranslation();
   const {
     setCurrentVisitData,
+    visitMap,
     answerId,
     setSelectedCase,
     selectedCase,
@@ -68,6 +69,12 @@ export default function Visit() {
   >();
 
   useEffect(() => {
+    const casesSoFar = Object.values(visitMap).flatMap((group) =>
+      Object.values(group).map((item) => item?.selectedCase),
+    );
+    const hasAllVisitCases =
+      casesSoFar.includes("house") && casesSoFar.includes("orchard");
+    console.log(hasAllVisitCases);
     const _currentQuestion = questionnaire?.questions.find(
       (q) => String(q.id) === questionId,
     );
@@ -77,12 +84,26 @@ export default function Visit() {
 
     if (Number.isInteger(hasShowInCase) && (hasShowInCase as number) >= 0) {
       const newOptions = _currentQuestion?.options?.filter((option) => {
-        return option.showInCase === selectedCase || !option.showInCase;
+        return option.showInCase === selectedCase;
       });
-      setCurrentQuestion({
-        ..._currentQuestion,
-        options: newOptions,
-      } as InspectionQuestion);
+      if (hasAllVisitCases) {
+        const newOptions = _currentQuestion?.options?.filter((option) => {
+          return (
+            (option.showInCase === selectedCase &&
+              option.selectedCase === selectedCase) ||
+            !option.showInCase
+          );
+        });
+        setCurrentQuestion({
+          ..._currentQuestion,
+          options: newOptions,
+        } as InspectionQuestion);
+      } else {
+        setCurrentQuestion({
+          ..._currentQuestion,
+          options: newOptions,
+        } as InspectionQuestion);
+      }
     } else {
       setCurrentQuestion(
         questionnaire?.questions.find((q) => String(q.id) === questionId),
@@ -114,6 +135,7 @@ export default function Visit() {
   };
 
   const onNext = () => {
+    console.log(selectedCase);
     if (!currentQuestion) return;
 
     const next = findNext();
