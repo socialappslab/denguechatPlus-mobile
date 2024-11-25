@@ -34,8 +34,8 @@ export default {
       [
         "./plugins/rollbar-config-plugin",
         {
-          environment: "production",
-          rollbarPostToken: process.env.POST_CLIENT_ITEM_ACCESS_TOKEN,
+          environment: "development",
+          rollbarPostToken: process.env.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN,
         },
       ],
       [

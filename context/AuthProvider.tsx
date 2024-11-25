@@ -73,7 +73,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const client = new Client({
-      accessToken: process.env.POST_CLIENT_ITEM_ACCESS_TOKEN,
+      accessToken: process.env.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN,
       captureUncaught: true,
       captureDeviceInfo: true,
     });

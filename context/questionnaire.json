@@ -1094,7 +1094,7 @@
           "statusColor": null,
           "image": null,
           "position": 3,
-          "next": 10,
+          "next": 9,
           "value": "0",
           "showInCase": "house",
           "selectedCase": "orchard"
@@ -1109,7 +1109,7 @@
           "statusColor": null,
           "image": null,
           "position": 3,
-          "next": 10,
+          "next": 9,
           "value": "0",
           "showInCase": "orchard",
           "selectedCase": "house"
