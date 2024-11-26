@@ -307,7 +307,7 @@
           "statusColor": null,
           "image": null,
           "position": 2,
-          "next": 8
+          "next": 20
         }
       ]
     },
@@ -1094,7 +1094,7 @@
           "statusColor": null,
           "image": null,
           "position": 3,
-          "next": 9,
+          "next": 6,
           "value": "0",
           "showInCase": "house",
           "selectedCase": "orchard"
@@ -1109,7 +1109,7 @@
           "statusColor": null,
           "image": null,
           "position": 3,
-          "next": 9,
+          "next": 8,
           "value": "0",
           "showInCase": "orchard",
           "selectedCase": "house"
