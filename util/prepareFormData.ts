@@ -84,7 +84,8 @@ export const prepareFormData = (formData: FormState) => {
     // Always set quantity_founded when there's a container
     if (
       Object.keys(inspections[index]).length > 0 &&
-      !inspections[index]["quantity_founded"]
+      !inspections[index]["quantity_founded"] &&
+      inspections[index]["breeding_site_type_id"]
     ) {
       inspections[index]["quantity_founded"] = 1;
     }
