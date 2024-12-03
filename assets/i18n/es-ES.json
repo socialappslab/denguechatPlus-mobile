@@ -231,7 +231,7 @@
         "chooseFromGallery": "Elegir desde la galería"
       },
       "final": {
-        "title": "¡Visita concretada!",
+        "title": "¡Visita completada!",
         "offline": {
           "greetings": "Los datos de su visita han sido guardados en su dispositivo."
         },
