@@ -135,7 +135,6 @@ export default function Visit() {
   };
 
   const onNext = () => {
-    console.log(selectedCase);
     if (!currentQuestion) return;
 
     const next = findNext();
