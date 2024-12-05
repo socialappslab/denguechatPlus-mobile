@@ -98,10 +98,9 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
 
       return;
     }
-    const deserializedQuestionnaire = questionnaireJson;
-    // const deserializedQuestionnaire = deserialize<Questionnaire>(
-    //   questionnaireData,
-    // ) as Questionnaire;
+    const deserializedQuestionnaire = deserialize<Questionnaire>(
+      questionnaireData,
+    ) as Questionnaire;
 
     setQuestionnaire({
       ...deserializedQuestionnaire,
