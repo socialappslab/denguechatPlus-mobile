@@ -74,7 +74,6 @@ export default function Visit() {
     );
     const hasAllVisitCases =
       casesSoFar.includes("house") && casesSoFar.includes("orchard");
-    console.log(hasAllVisitCases);
     const _currentQuestion = questionnaire?.questions.find(
       (q) => String(q.id) === questionId,
     );
