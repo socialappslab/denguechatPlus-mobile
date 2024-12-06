@@ -133,7 +133,7 @@ export default function Summary() {
         </View>
         <VisitSummary
           date={formatDate(new Date().toString(), language) || ""}
-          house={visitData.houseId.toString()}
+          house={visitData.house?.referenceCode}
           sector={user?.neighborhoodName}
           greens={colorsAndQuantities.GREEN}
           yellows={colorsAndQuantities.YELLOW}
