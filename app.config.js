@@ -22,10 +22,6 @@ export default {
     android: {
       package: "org.denguechatplus",
       versionCode: 1,
-      adaptiveIcon: {
-        foregroundImage: "./assets/images/adaptive-icon.png",
-        backgroundColor: "#067507",
-      },
     },
     plugins: [
       "expo-router",
