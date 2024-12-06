@@ -1,6 +1,6 @@
-import Shutter from "@/assets/images/icons/shutter.svg";
+import ContainerPictureIllustration from "@/assets/images/container-picture.svg";
 import FlipCameraIcon from "@/assets/images/icons/flip-camera.svg";
-import * as ImagePicker from "expo-image-picker";
+import Shutter from "@/assets/images/icons/shutter.svg";
 import { Button, Loading, SafeAreaView, Text, View } from "@/components/themed";
 import {
   CameraCapturedPicture,
@@ -8,12 +8,12 @@ import {
   CameraView,
   useCameraPermissions,
 } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image } from "react-native";
 import { Routes } from "./_layout";
-import ContainerPictureIllustration from "@/assets/images/container-picture.svg";
 
 export default function ContainerPicture() {
   const { t } = useTranslation();
@@ -66,13 +66,7 @@ export default function ContainerPicture() {
   }
 
   if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-      <View>
-        <Text>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
+    requestPermission();
   }
 
   if (photoMode) {
