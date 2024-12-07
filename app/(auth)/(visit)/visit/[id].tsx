@@ -8,7 +8,7 @@ import { InspectionQuestion, Question } from "@/types";
 import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AnswerState, useVisitStore, VisitCase } from "@/hooks/useVisitStore";
+import { AnswerState, useVisitStore } from "@/hooks/useVisitStore";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";

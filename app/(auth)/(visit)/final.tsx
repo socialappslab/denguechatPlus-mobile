@@ -1,8 +1,8 @@
+import FinalIllustration from "@/assets/images/final.svg";
 import { Button, Text, View } from "@/components/themed";
 import { useVisit } from "@/hooks/useVisit";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import FinalIllustration from "@/assets/images/final.svg";
 
 export default function Summary() {
   const { t } = useTranslation();
@@ -33,7 +33,10 @@ export default function Summary() {
             primary
             title={t("backToHome")}
             onPress={() => {
-              router.push("/(auth)/(tabs)");
+              router.push({
+                pathname: "/(auth)/(tabs)/visits",
+                params: { reload: Date.now() },
+              });
             }}
           />
         </View>
