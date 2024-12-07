@@ -1,5 +1,5 @@
 import Button from "@/components/themed/Button";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
 import { CheckTeam } from "@/components/segments/CheckTeam";
@@ -29,7 +29,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, RefreshControl, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { Routes } from "../(visit)/_layout";
 import { useBrigades } from "@/hooks/useBrigades";
@@ -46,53 +46,17 @@ interface HouseReport {
   visitVariationPercentage: number;
 }
 
-const VisitsReport = () => {
+const VisitsReport = ({
+  loading,
+  data,
+}: {
+  loading: boolean;
+  data: HouseReport | undefined;
+}) => {
   const { meData } = useAuth();
   const { t } = useTranslation();
   const router = useRouter();
-  const { filters, setFilter } = useBrigades();
-  const [data, setData] = useState<HouseReport>();
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setFilter({
-      sector: {
-        id: meData?.userProfile?.team?.sector_id as number,
-        name: meData?.userProfile?.team?.sector_name,
-      },
-      wedge: {
-        id: meData?.userProfile?.team?.wedge_id as number,
-        name: meData?.userProfile?.team?.wedge_name,
-      },
-    });
-  }, [meData]);
-
-  useEffect(() => {
-    fetchData(filters.sector?.id, filters.wedge?.id, filters.team?.id);
-  }, [filters]);
-
-  const fetchData = async (
-    sectorId?: number,
-    wedgeId?: number,
-    teamId?: number,
-  ) => {
-    setLoading(true);
-    try {
-      const response = await authApi.get("reports/house_status", {
-        params: {
-          sort: "name",
-          order: "asc",
-          "filter[sector_id]": sectorId,
-          "filter[wedge_id]": wedgeId,
-          "filter[team_id]": teamId,
-        },
-      });
-      setData(response.data);
-    } catch (e) {
-      console.log(e);
-    }
-    setLoading(false);
-  };
+  const { filters } = useBrigades();
 
   const onPressFilter = () => {
     router.push("filters-visit");
@@ -100,49 +64,30 @@ const VisitsReport = () => {
 
   return (
     <View>
-      {loading && (
-        <View className="flex flex-1 items-center justify-center mb-4">
-          <Loading />
-        </View>
-      )}
-      {!loading && (
-        <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
-          <View className="flex flex-row justify-between">
-            <Text type="title" className="mb-6">
-              {(meData?.userProfile?.team as Team)?.sector_name}
-            </Text>
-            <FilterButton
-              filters={countSetFilters(filters, ["wedge", "sector"])}
-              onPress={onPressFilter}
-            />
+      <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+        {loading && (
+          <View className="flex flex-1 items-center justify-center my-48">
+            <Loading />
           </View>
-          <Text className="text-neutral-600 mb-2">
-            {t("brigade.cards.numberVisits")}
-          </Text>
-          <View className="flex-row items-center justify-between mb-8">
-            <Text className="text-3xl font-semibold">
-              {data?.visitQuantity}
-            </Text>
-            <SimpleChip
-              border="1"
-              padding="small"
-              textColor="neutral-500"
-              borderColor="neutral-500"
-              ionIcon="arrow-up"
-              iconColor={Colors.light.neutral}
-              label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
-            />
-          </View>
-
-          <View>
-            <Text className="text-neutral-600 mb-2">
-              {t("brigade.cards.numberSites")}
-            </Text>
-            <View className="flex-row items-center justify-between">
-              <Text className="text-3xl font-semibold">
-                {data?.houseQuantity}
+        )}
+        {!loading && (
+          <>
+            <View className="flex flex-row justify-between">
+              <Text type="title" className="mb-6">
+                {(meData?.userProfile?.team as Team)?.sector_name}
               </Text>
-
+              <FilterButton
+                filters={countSetFilters(filters, ["wedge", "sector"])}
+                onPress={onPressFilter}
+              />
+            </View>
+            <Text className="text-neutral-600 mb-2">
+              {t("brigade.cards.numberVisits")}
+            </Text>
+            <View className="flex-row items-center justify-between mb-8">
+              <Text className="text-3xl font-semibold">
+                {data?.visitQuantity}
+              </Text>
               <SimpleChip
                 border="1"
                 padding="small"
@@ -150,29 +95,50 @@ const VisitsReport = () => {
                 borderColor="neutral-500"
                 ionIcon="arrow-up"
                 iconColor={Colors.light.neutral}
-                label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
               />
             </View>
-          </View>
-          <View className="flex flex-col mt-6">
-            <ProgressBar
-              label={t("brigade.sites.green")}
-              progress={data?.greenQuantity || 0}
-              color="primary"
-            />
-            <ProgressBar
-              label={t("brigade.sites.yellow")}
-              progress={data?.orangeQuantity || 0}
-              color="yellow-300"
-            />
-            <ProgressBar
-              label={t("brigade.sites.red")}
-              progress={data?.redQuantity || 0}
-              color="red-500"
-            />
-          </View>
-        </View>
-      )}
+
+            <View>
+              <Text className="text-neutral-600 mb-2">
+                {t("brigade.cards.numberSites")}
+              </Text>
+              <View className="flex-row items-center justify-between">
+                <Text className="text-3xl font-semibold">
+                  {data?.houseQuantity}
+                </Text>
+
+                <SimpleChip
+                  border="1"
+                  padding="small"
+                  textColor="neutral-500"
+                  borderColor="neutral-500"
+                  ionIcon="arrow-up"
+                  iconColor={Colors.light.neutral}
+                  label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                />
+              </View>
+            </View>
+            <View className="flex flex-col mt-6">
+              <ProgressBar
+                label={t("brigade.sites.green")}
+                progress={data?.greenQuantity || 0}
+                color="primary"
+              />
+              <ProgressBar
+                label={t("brigade.sites.yellow")}
+                progress={data?.orangeQuantity || 0}
+                color="yellow-300"
+              />
+              <ProgressBar
+                label={t("brigade.sites.red")}
+                progress={data?.redQuantity || 0}
+                color="red-500"
+              />
+            </View>
+          </>
+        )}
+      </View>
     </View>
   );
 };
@@ -187,6 +153,23 @@ export default function Visits() {
   const [team, setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { filters, setFilter } = useBrigades();
+  const [data, setData] = useState<HouseReport>();
+  const [loadingReports, setLoadingReports] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const { reload } = useLocalSearchParams();
+
+  useEffect(() => {
+    if (reload) {
+      (async () => {
+        await fetchData(
+          filters.sector?.id,
+          filters.wedge?.id,
+          filters.team?.id,
+        );
+      })();
+    }
+  }, [reload]);
 
   const orderedVisits = storedVisits.sort(
     (a, b) => new Date(b.visitedAt) - new Date(a.visitedAt),
@@ -221,6 +204,52 @@ export default function Visits() {
     { json_params: string },
     VisitData
   >("visits", { "Content-Type": "multipart/form-data" });
+
+  useEffect(() => {
+    setFilter({
+      sector: {
+        id: meData?.userProfile?.team?.sector_id as number,
+        name: meData?.userProfile?.team?.sector_name,
+      },
+      wedge: {
+        id: meData?.userProfile?.team?.wedge_id as number,
+        name: meData?.userProfile?.team?.wedge_name,
+      },
+    });
+  }, [meData]);
+
+  useEffect(() => {
+    fetchData(filters.sector?.id, filters.wedge?.id, filters.team?.id);
+  }, [filters]);
+
+  const fetchData = async (
+    sectorId?: number,
+    wedgeId?: number,
+    teamId?: number,
+  ) => {
+    setLoadingReports(true);
+    try {
+      const response = await authApi.get("reports/house_status", {
+        params: {
+          sort: "name",
+          order: "asc",
+          "filter[sector_id]": sectorId,
+          "filter[wedge_id]": wedgeId,
+          "filter[team_id]": teamId,
+        },
+      });
+      setData(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+    setLoadingReports(false);
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchData(filters.sector?.id, filters.wedge?.id, filters.team?.id);
+    setRefreshing(false);
+  };
 
   const synchronizeVisit = async (visit: any) => {
     let newVisit = {
@@ -282,7 +311,11 @@ export default function Visits() {
 
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <CheckTeam view="visit">
           <View className="flex flex-1 py-5 px-5 w-full">
             <View className="my-6 mb-8 p-8 rounded-2xl border border-neutral-200">
@@ -299,7 +332,7 @@ export default function Visits() {
               />
             </View>
 
-            <VisitsReport />
+            <VisitsReport loading={loadingReports} data={data} />
 
             <View className="my-4 p-8 rounded-2xl border border-neutral-200">
               <Text className="text-xl font-bold text-center mb-2">
