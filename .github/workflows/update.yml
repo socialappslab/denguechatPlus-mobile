@@ -41,5 +41,5 @@ jobs:
 
       - name: Publish update
         env:
-          EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.ROLLBAR_TOKEN }}
+          EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN }}
         run: eas build --platform android --profile development --non-interactive
