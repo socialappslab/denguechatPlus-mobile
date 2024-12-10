@@ -42,7 +42,7 @@ export default function Profile() {
 
   const [{ data: reportData, loading: loadingReport }, refetchReport] =
     useAxios<ReportData, unknown, ErrorResponse>({
-      url: `reports/house_status`,
+      url: `reports/house_status?sort=name&order=asc&filter[team_id]=${team?.id}`,
     });
 
   useEffect(() => {
