@@ -17,7 +17,8 @@
       "distribution": "internal",
       "autoIncrement": "true",
       "android": {
-        "image": "latest"
+        "image": "latest",
+        "buildType": "app-bundle"
       }
     },
     "preview": {
