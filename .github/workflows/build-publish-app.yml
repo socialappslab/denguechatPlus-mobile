@@ -12,15 +12,44 @@ jobs:
   # This workflow contains a single job called "deploy"
   deploy:
     # The type of runner that the job will run on
-    runs-on: carenexio-mobile-runner
+    runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Check for EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: yarn
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      # Runs a set of commands using the runners shell
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Check for EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN }}" ]; then
+            echo "You must provide an EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          f
       # Runs a set of commands using the runners shell
       - name: eas-build
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.ROLLBAR_TOKEN }}
+          EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN }}
         run: |
           bash .sh/eas-build-publish.sh
