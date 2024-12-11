@@ -12,6 +12,14 @@
         "image": "latest"
       }
     },
+    "internal_testing": {
+      "developmentClient": false,
+      "distribution": "internal",
+      "autoIncrement": "true",
+      "android": {
+        "image": "latest"
+      }
+    },
     "preview": {
       "distribution": "internal"
     },
