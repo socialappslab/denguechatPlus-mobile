@@ -12,7 +12,7 @@
         "image": "latest"
       }
     },
-    "internal_testing": {
+    "internal_test": {
       "developmentClient": false,
       "distribution": "internal",
       "autoIncrement": "true",
