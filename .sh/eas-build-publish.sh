@@ -8,4 +8,4 @@ fi
 
 
 yarn install
-eas build --platform all --profile $BUILD_PROFILE --non-interactive
+eas build --platform android --profile $BUILD_PROFILE --non-interactive
