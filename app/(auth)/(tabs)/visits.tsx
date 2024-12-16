@@ -59,7 +59,7 @@ const VisitsReport = ({
   const { filters } = useBrigades();
 
   const onPressFilter = () => {
-    router.push("filters-visit");
+    router.push("/filters-visit");
   };
 
   return (

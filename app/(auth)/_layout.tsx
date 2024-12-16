@@ -25,14 +25,16 @@ import { extractAxiosErrorData, getInitialsBase } from "@/util";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { authApi } from "@/config/axios";
 import Toast from "react-native-toast-message";
+import { useIsFocused } from "@react-navigation/native";
 
 const CustomDrawerContent = () => {
   const router = useRouter();
-  const { meData, logout } = useAuth();
+  const { meData, logout, reFetchMe } = useAuth();
   const { t } = useTranslation();
   const [openSettings, setOpenSettings] = useState(false);
   const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const isFocused = useIsFocused();
 
   const onPressDeleteAccount = () => {
     bottomSheetModalRef.current?.present();
@@ -56,6 +58,11 @@ const CustomDrawerContent = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (isFocused) reFetchMe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
 
   const snapPoints = useMemo(() => ["45%"], []);
   return (
