@@ -7,7 +7,7 @@ elif [[ $GITHUB_REF_NAME == *"v."* ]]; then
 fi
 
 # env
-if [ "$ENV_NAME" = "production" ]; then rm ../.env.development && mv ../.env.production ../.env ; fi
+rm .env.development && mv .env.production .env
 
 
 yarn install
