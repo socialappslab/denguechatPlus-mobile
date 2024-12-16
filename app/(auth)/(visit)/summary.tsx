@@ -1,4 +1,3 @@
-import SummaryImage from "@/assets/images/summary.svg";
 import { Button, ScrollView, View } from "@/components/themed";
 import VisitSummary from "@/components/VisitSummary";
 import { useAuth } from "@/context/AuthProvider";
@@ -13,6 +12,7 @@ import {
   orderStatus,
   prepareFormData,
 } from "@/util";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
@@ -127,9 +127,9 @@ export default function Summary() {
     <ScrollView>
       <View className="h-full p-6 pb-10 flex flex-col justify-between">
         <View className="flex flex-col justify-center items-center">
-          <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
-            <SummaryImage height="100%" width="100%" />
-          </View>
+          {/* <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden"> */}
+            {/* <Image source={require("@/assets/images/summary.png")} /> */}
+          {/* </View> */}
         </View>
         <VisitSummary
           date={formatDate(new Date().toString(), language) || ""}

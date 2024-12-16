@@ -17,7 +17,7 @@ const AddComment = () => {
   const { setVisitData, visitData } = useVisit();
   const [text, setText] = useState(visitData.notes);
 
-  const onNext = () => router.push("summary");
+  const onNext = () => router.push("/summary");
   const onBack = () => router.back();
 
   const onChangeText = (text: string) => {

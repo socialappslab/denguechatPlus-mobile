@@ -26,6 +26,7 @@ export default {
     plugins: [
       "expo-router",
       "expo-font",
+      "expo-asset",
       "expo-localization",
       [
         "./plugins/rollbar-config-plugin",
