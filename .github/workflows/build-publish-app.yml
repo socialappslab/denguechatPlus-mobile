@@ -51,5 +51,6 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN }}
+          ENV_NAME: "production"
         run: |
           bash .sh/eas-build-publish.sh
