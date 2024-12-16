@@ -9,6 +9,5 @@ fi
 # env
 rm .env.development && mv .env.production .env
 
-
 yarn install
 eas build --platform android --profile $BUILD_PROFILE --non-interactive

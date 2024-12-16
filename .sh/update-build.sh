@@ -1,5 +1,5 @@
 # env
-rm .env.production && mv .env.development .env && echo "arg: "$ENV_NAME
+rm .env.production && mv .env.development .env
 
 yarn install
 eas build --platform android --profile development --non-interactive
