@@ -34,7 +34,7 @@ export interface Member {
   rol: string;
 }
 
-export const TEAM_LEADER_ROLE = "team_leader";
+export const TEAM_LEADER_ROLE = "facilitador";
 
 export interface Team extends BaseObject {
   organization: Organization;

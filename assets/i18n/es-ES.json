@@ -248,6 +248,7 @@
         "red": "Sitios Rojos"
       },
       "teamLeader": "Facilitador",
+      "facilitador": "Facilitador",
       "cards": {
         "numberVisits": "Número de visitas",
         "numberSites": "Número de sitios",
