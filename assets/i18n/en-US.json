@@ -246,6 +246,7 @@
         "red": "Red Sites"
       },
       "teamLeader": "Facilitator",
+      "facilitador": "Facilitator",
       "cards": {
         "numberVisits": "Number of visits",
         "numberSites": "Number of sites",

@@ -246,6 +246,7 @@
         "red": "Locais Vermelhos"
       },
       "teamLeader": "Facilitador",
+      "facilitador": "Facilitador",
       "cards": {
         "numberVisits": "Número de visitas",
         "numberSites": "Número de locais",
