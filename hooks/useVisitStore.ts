@@ -1,5 +1,5 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
-import { VisitId } from "@/types";
+import { House, VisitId } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NetworkState } from "expo-network";
 import { create } from "zustand";
@@ -40,6 +40,8 @@ interface VisitStore {
   setNetworkState: (state: NetworkState) => void;
   cleanUpStoredVisit: (visit: any) => void;
   cleanUpVisits: () => void;
+  storedHouseList: House[];
+  saveHouseList: (houses: House[]) => void;
 }
 
 export const useVisitStore = create<VisitStore>()(
@@ -52,6 +54,7 @@ export const useVisitStore = create<VisitStore>()(
         visitMap: {},
         visitMetadata: {},
         selectedCase: "house",
+        storedHouseList: [],
         /**
          * All visits that were not published to the backed
          * will be save in this array as QuestionnaireState
@@ -98,6 +101,10 @@ export const useVisitStore = create<VisitStore>()(
             ++state.visitMetadata[state.visitId].inspectionIdx;
           }),
         setNetworkState: (networkState) => set((state) => ({ networkState })),
+        saveHouseList: (houses) =>
+          set((state) => {
+            state.storedHouseList = houses;
+          }),
         cleanUpStoredVisit: (visit) =>
           set((state) => {
             const index = state.storedVisits.findIndex(
