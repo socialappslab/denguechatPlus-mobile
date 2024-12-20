@@ -32,8 +32,9 @@ export default function SelectHouseScreen() {
   const router = useRouter();
 
   const { user } = useAuth();
-  const { setVisitData, questionnaire, language } = useVisit();
-  const { initialiseCurrentVisit } = useVisitStore();
+  const { setVisitData, questionnaire, language, isConnected } = useVisit();
+  const { initialiseCurrentVisit, storedHouseList, saveHouseList } =
+    useVisitStore();
 
   const updateHouse = async () => {
     const catchAll =
@@ -68,12 +69,18 @@ export default function SelectHouseScreen() {
   }, [isFocused]);
 
   useEffect(() => {
-    if (data) {
+    if (isConnected && data) {
       const deserializedData = deserialize<House>(data);
       if (!deserializedData || !Array.isArray(deserializedData)) return;
 
       setHouseOptions(deserializedData);
       setHouseSelected(undefined);
+
+      // always save the house list
+      saveHouseList(deserializedData);
+    }
+    if (!isConnected && storedHouseList) {
+      setHouseOptions(storedHouseList);
     }
   }, [data]);
 
