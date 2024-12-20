@@ -368,8 +368,8 @@
           "optionType": null,
           "statusColor": null,
           "image": {
-            "id": 126,
-            "url": "https://apisandbox.denguechatplus.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI2LCJwdXIiOiJibG9iX2lkIn19--c8751dc402faae218b31c1a87ac11376458631f3/llantas.jpg"
+            "id": 153,
+            "url": "https://apisandbox.denguechatplus.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTUzLCJwdXIiOiJibG9iX2lkIn19--4df4ad5f2b3efc747ec06adfeba27ee788e45d60/llantas.jpg"
           },
           "position": 1,
           "next": null,
@@ -783,17 +783,17 @@
       ]
     },
     {
-      "id": 2,
-      "question": "Visitemos la casa",
+      "id": 6,
+      "question": "Revisemos en la huerta",
       "typeField": "splash",
-      "description": "Lleguemos a la casa con mucho respeto.\n\nEs importante que las personas nos sientan como alguien que les llega a apoyar para prevenir el dengue.\n\nPidamos permiso para pasar.\n\nNo lleguemos como inspectores, o para juzgar al hogar.",
+      "description": "Vamos a buscar todos los recipientes que contienen agua y potencialmente son criaderos de zancudos.\n\nIniciamos la revisión de la vivienda por la derecha y finalizamos por la izquierda.",
       "notes": null,
-      "next": 3,
+      "next": 7,
       "resourceName": null,
       "resourceType": "attribute",
       "image": {
-        "id": 119,
-        "url": "https://i.ibb.co/3SjbLLw/visitemos-casa.jpg"
+        "id": 133,
+        "url": "https://apisandbox.denguechatplus.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTMzLCJwdXIiOiJibG9iX2lkIn19--2b8e53b81bad9732889a8d8dc36b2b97ff705b19/ilustraciones%20Gabriela%202%20(1)_page-0008.jpg"
       },
       "options": []
     },
@@ -861,21 +861,6 @@
           "disableOtherOptions": true
         }
       ]
-    },
-    {
-      "id": 6,
-      "question": "Revisemos en la huerta",
-      "typeField": "splash",
-      "description": "Vamos a buscar todos los recipientes que contienen agua y potencialmente son criaderos de zancudos.\n\nIniciamos la revisión de la vivienda por la derecha y finalizamos por la izquierda.",
-      "notes": null,
-      "next": 7,
-      "resourceName": null,
-      "resourceType": "attribute",
-      "image": {
-        "id": 120,
-        "url": "https://i.ibb.co/jfbh0Tz/enlahuerta.jpg"
-      },
-      "options": []
     },
     {
       "id": 16,
@@ -1023,8 +1008,8 @@
       "resourceName": null,
       "resourceType": "attribute",
       "image": {
-        "id": 121,
-        "url": "https://i.ibb.co/HXP6Bf5/casa.jpg"
+        "id": 134,
+        "url": "https://apisandbox.denguechatplus.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTM0LCJwdXIiOiJibG9iX2lkIn19--dba9baa92005553bfd9b57d284bb4d608f1780db/ilustraciones%20Gabriela%202%20(1)_page-0009.jpg"
       },
       "options": []
     },
@@ -1038,8 +1023,8 @@
       "resourceName": null,
       "resourceType": "attribute",
       "image": {
-        "id": 93,
-        "url": "https://i.ibb.co/8xPtwTB/acciones.jpg"
+        "id": 135,
+        "url": "https://apisandbox.denguechatplus.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTM1LCJwdXIiOiJibG9iX2lkIn19--ff66a6d955887c64f9516df0c5a938bbdce1aade/ilustraciones%20Gabriela%202%20(1)_page-0004.jpg"
       },
       "options": []
     },
@@ -1108,7 +1093,7 @@
           "optionType": "boolean",
           "statusColor": null,
           "image": null,
-          "position": 3,
+          "position": 4,
           "next": 8,
           "value": "0",
           "showInCase": "orchard",
@@ -1123,11 +1108,26 @@
           "optionType": "boolean",
           "statusColor": null,
           "image": null,
-          "position": 3,
+          "position": 5,
           "next": -1,
           "value": "0"
         }
       ]
+    },
+    {
+      "id": 2,
+      "question": "Visitemos la casa",
+      "typeField": "splash",
+      "description": "Lleguemos a la casa con mucho respeto.\n\nEs importante que las personas nos sientan como alguien que les llega a apoyar para prevenir el dengue.\n\nPidamos permiso para pasar.\n\nNo lleguemos como inspectores, o para juzgar al hogar.",
+      "notes": null,
+      "next": 3,
+      "resourceName": null,
+      "resourceType": "attribute",
+      "image": {
+        "id": 151,
+        "url": "https://apisandbox.denguechatplus.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTUxLCJwdXIiOiJibG9iX2lkIn19--8e733f0b17e923c1dac225574c9614daac75c1eb/ilustraciones%20Gabriela%202%20(1)_page-0006.jpg"
+      },
+      "options": []
     }
   ]
 }
