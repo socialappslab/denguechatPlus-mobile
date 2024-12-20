@@ -98,9 +98,10 @@ export default function SelectHouseScreen() {
 
     const house = houses[0];
 
-    const houseBlock = house.houseBlock ? ` - ${house.houseBlock.name}` : "";
-    const houseWedge = house.wedge ? ` - ${house.wedge.name}` : "";
-    return `${house.neighborhood?.name}${houseWedge}${houseBlock}`;
+    // const houseBlock = house.houseBlock ? ` - ${house.houseBlock.name}` : "";
+    // const houseWedge = house.wedge ? ` - ${house.wedge.name}` : "";
+    // return `${house.neighborhood?.name}${houseWedge}${houseBlock}`;
+    return `${house.neighborhood?.name}`;
   };
 
   const handleNewHouse = () => {
