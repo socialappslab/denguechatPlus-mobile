@@ -371,7 +371,7 @@ export default function Visits() {
 
         <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View>
         <ClosableBottomSheet
-          title={`Casa ${selectedVisit?.houseId || ""}`}
+          title={`Casa ${selectedVisit?.referenceCode || ""}`}
           snapPoints={snapPoints}
           bottomSheetModalRef={bottomSheetModalRef}
           onClose={() => setSuccess(false)}
@@ -389,10 +389,8 @@ export default function Visits() {
                     {!loading && (
                       <VisitSummary
                         date={`${formatDate(selectedVisit?.visitedAt || "", language)}`}
-                        sector={
-                          (meData?.userProfile?.team as Team)?.sector_name
-                        }
-                        house={`${selectedVisit?.house?.houseBlock?.name} Casa ${selectedVisit?.houseId}`}
+                        sector={meData?.userProfile?.neighborhood}
+                        house={`${selectedVisit?.house?.referenceCode}`}
                         color={selectedVisit?.statusColor}
                         greens={selectedVisit?.colorsAndQuantities?.GREEN}
                         yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
