@@ -16,6 +16,8 @@ import { authApi } from "@/config/axios";
 import { BaseObject } from "@/schema";
 import { useBrigades } from "@/hooks/useBrigades";
 import { AvatarBig } from "@/components/segments/AvatarBig";
+import Toast from "react-native-toast-message";
+import { extractAxiosErrorData } from "@/util";
 
 export default function ChangeBrigade() {
   const { t } = useTranslation();
@@ -56,9 +58,24 @@ export default function ChangeBrigade() {
       });
 
       router.back();
-      router.push("change-brigade-success");
+      router.push("/change-brigade-success");
     } catch (error) {
-      console.error("error change team", error);
+      console.log(error);
+      const errorData = extractAxiosErrorData(error);
+      // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
+      errorData?.errors?.forEach((error: any) => {
+        Toast.show({
+          type: "error",
+          text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
+        });
+        console.log(error);
+      });
+      if (!errorData?.errors || errorData?.errors.length === 0) {
+        Toast.show({
+          type: "error",
+          text1: t("login.error.invalidCredentials"),
+        });
+      }
     } finally {
       setLoading(false);
     }
