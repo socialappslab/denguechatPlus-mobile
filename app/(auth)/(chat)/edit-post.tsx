@@ -123,7 +123,7 @@ export default function EditPost() {
   }, [post, reset]);
 
   const onBack = () => {
-    router.replace("/(auth)/(tabs)");
+    router.push("/(auth)/(tabs)");
   };
 
   const onSubmitHandler: SubmitHandler<PostInputType> = async (values) => {

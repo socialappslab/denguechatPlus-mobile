@@ -69,7 +69,7 @@ export default function NewPost() {
   } = methods;
 
   const backBehavior = () => {
-    router.replace("/(auth)/(tabs)");
+    router.push("/(auth)/(tabs)");
   };
 
   useEffect(() => {
