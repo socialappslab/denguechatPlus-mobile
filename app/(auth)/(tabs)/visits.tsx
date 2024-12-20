@@ -349,9 +349,8 @@ export default function Visits() {
                     return (
                       <ListItem
                         title={
-                          visit.house
-                            ? `${t("visit.houses.house")} ${visit.houseId || idx + 5}`
-                            : "Casa 23"
+                          visit.house &&
+                          `${t("visit.houses.house")} ${visit?.house?.referenceCode}`
                         }
                         onPressElement={() => handlePressVisit(visit)}
                         filled={formatDate(visit.visitedAt, language)}
