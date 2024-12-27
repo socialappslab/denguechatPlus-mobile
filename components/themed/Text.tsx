@@ -23,6 +23,7 @@ export function Text(props: TextProps) {
     lightColor,
     darkColor,
     type = "default",
+    className,
     ...otherProps
   } = props;
 
@@ -32,7 +33,7 @@ export function Text(props: TextProps) {
     <DefaultText
       style={[{ color }, style]}
       {...otherProps}
-      className={classNameMap[type]}
+      className={`${classNameMap[type]} ${className}`}
     />
   );
 }
