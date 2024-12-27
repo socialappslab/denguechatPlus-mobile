@@ -73,7 +73,7 @@ const VisitsReport = ({
         {!loading && (
           <>
             <View className="flex flex-row justify-between">
-              <Text type="title" className="mb-6">
+              <Text type="title" className="mb-6 w-52">
                 {(meData?.userProfile?.team as Team)?.sector_name}
               </Text>
               <FilterButton
