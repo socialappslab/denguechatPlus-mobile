@@ -22,6 +22,7 @@ export const globalConfig: RetryConfig = {
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}/api/v1`,
   headers: {
     "Content-Type": "application/json",
+    "X-Device-Type": "mobile",
   },
 };
 
