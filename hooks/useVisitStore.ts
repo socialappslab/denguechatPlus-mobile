@@ -2,6 +2,7 @@ import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import { House, VisitId } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NetworkState } from "expo-network";
+import { setAutoFreeze } from "immer";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -87,6 +88,7 @@ export const useVisitStore = create<VisitStore>()(
          */
         finaliseCurrentVisit: (isConnected, data: any) =>
           set((state) => {
+            setAutoFreeze(false);
             // Store QuestionnaireState
             if (!isConnected)
               state.storedVisits = [...state.storedVisits, data];
