@@ -85,11 +85,11 @@ export default function Summary() {
     };
 
     try {
-      rollbar.log(JSON.stringify(sanitizedVisitData));
-
       // We only make the request if it's connected
-      if (isConnected)
+      if (isConnected) {
+        rollbar.log(JSON.stringify(sanitizedVisitData));
         await createVisit({ json_params: JSON.stringify(sanitizedVisitData) });
+      }
 
       Toast.show({
         type: "success",
@@ -107,7 +107,7 @@ export default function Summary() {
       console.log(error);
       const errorData = extractAxiosErrorData(error);
       // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
-      rollbar.error(sanitizedVisitData, errorData);
+      if (isConnected) rollbar.error(sanitizedVisitData, errorData);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
           type: "error",
@@ -128,7 +128,7 @@ export default function Summary() {
       <View className="h-full p-6 pb-10 flex flex-col justify-between">
         <View className="flex flex-col justify-center items-center">
           {/* <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden"> */}
-            {/* <Image source={require("@/assets/images/summary.png")} /> */}
+          {/* <Image source={require("@/assets/images/summary.png")} /> */}
           {/* </View> */}
         </View>
         <VisitSummary
