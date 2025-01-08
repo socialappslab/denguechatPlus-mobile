@@ -10,8 +10,7 @@ fi
 rm .env.development && mv .env.production .env
 
 # add rollbar
-echo \n >> .env
-echo EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN=$EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN >> .env
+echo "EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN=$EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN\n" >> .env
 
 yarn install
 eas build --platform android --profile $BUILD_PROFILE --non-interactive
