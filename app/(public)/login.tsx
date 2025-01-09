@@ -279,9 +279,7 @@ export default function Login() {
 
             <View className="mt-4 mb-6">
               <Text className="font-bold text-md color-primary">
-                <ExternalLink
-                  href={`${process.env.EXPO_PUBLIC_FORGOT_PASSWORD_URL}`}
-                >
+                <ExternalLink href="https://denguechatplus.org/reset-password">
                   {t("login.forgotPassword")}
                 </ExternalLink>
               </Text>
