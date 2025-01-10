@@ -29,7 +29,6 @@ function TabBarIcon(props: { name: TabsNames; color: string }) {
 }
 
 export default function TabLayout(props: ThemeProps) {
-  const colorScheme = useColorScheme();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { lightColor, darkColor } = props;
@@ -55,9 +54,9 @@ export default function TabLayout(props: ThemeProps) {
           position: "absolute",
           height: Platform.OS === "ios" ? 85 : 75,
           paddingBottom: Platform.OS === "ios" ? insets.bottom : 20,
-          backgroundColor: Colors[colorScheme ?? "light"].backgroundTabs,
+          backgroundColor: Colors["light"].backgroundTabs,
         },
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: Colors["light"].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),

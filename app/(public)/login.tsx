@@ -34,7 +34,6 @@ import { extractAxiosErrorData } from "@/util";
 
 export default function Login() {
   const { t } = useTranslation();
-  const colorScheme = useColorScheme();
   const { signInMutation, loading } = useSignIn();
 
   const [, setPhoneNumber] = useState("");
@@ -203,7 +202,7 @@ export default function Login() {
                         ref={phoneInput}
                         textStyle={{
                           height: 26,
-                          color: colorScheme === "dark" ? "white" : "black",
+                          color: "black",
                         }}
                         initialValue={value}
                         onChangePhoneNumber={(phoneNumber) => {
@@ -222,9 +221,7 @@ export default function Login() {
                     <CountryPicker
                       preferredCountries={["PE", "PY", "BR"]}
                       withAlphaFilter
-                      theme={
-                        colorScheme === "dark" ? DARK_THEME : DEFAULT_THEME
-                      }
+                      theme={DEFAULT_THEME}
                       countryCode={phoneCountryCode}
                       visible={showPhoneCountryPicker}
                       onSelect={handleCountrySelect}
