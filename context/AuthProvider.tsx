@@ -125,11 +125,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setToken(token);
     setAccessTokenToHeaders(token);
     setRefreshToken(refreshToken);
-    rollbar?.setPerson(
-      user.id,
-      `${user.firstName} ${user.lastName}`,
-      user.email || user.phone,
-    );
+    rollbar?.setPerson(user.id, user.username, user.email || user.phone);
     return true;
   };
 
