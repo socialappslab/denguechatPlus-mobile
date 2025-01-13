@@ -45,7 +45,7 @@ export const prepareFormData = (formData: FormState) => {
     if (answer.resourceName) {
       const resourceName = answer.resourceName;
       if (answer.resourceType === "relation")
-        inspections[index][resourceName] = answer.text || answer.resourceId;
+        inspections[index][resourceName] = answer.resourceId;
 
       if (answer.resourceType === "attribute") {
         inspections[index][resourceName] =
@@ -66,6 +66,14 @@ export const prepareFormData = (formData: FormState) => {
         inspections[index][resourceName] = !!answer.text
           ? parseInt(answer.text) + 1
           : 1;
+      }
+
+      if (resourceName === "container_protection_id" && answer.text) {
+        inspections[index]["other_protection"] = answer.text;
+      }
+
+      if (resourceName === "elimination_method_type_id" && answer.text) {
+        inspections[index]["other_elimination_method"] = answer.text;
       }
 
       if (resourceName === "photo_id") {

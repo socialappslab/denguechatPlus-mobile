@@ -1,29 +1,31 @@
 import React, { useRef, useState } from "react";
-import { TouchableOpacity, TextInput as RNTextInput } from "react-native";
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import Toast from "react-native-toast-message";
+import { TextInput as RNTextInput, TouchableOpacity } from "react-native";
 import CountryPicker, {
   CountryCode,
-  DARK_THEME,
   DEFAULT_THEME,
 } from "react-native-country-picker-modal";
 import PhoneInput from "react-native-phone-input";
-import {
-  useForm,
-  Controller,
-  SubmitHandler,
-  FormProvider,
-} from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import Toast from "react-native-toast-message";
 
-import { Text, View, TextInput } from "@/components/themed";
 import Logo from "@/assets/images/logo.svg";
-import { PasswordInput, SafeAreaView, Button } from "@/components/themed";
 import KeyboardAvoidingView from "@/components/control/KeyboardAvoidingView";
 import { ExternalLink } from "@/components/ExternalLink";
-import { useColorScheme } from "@/components/themed/useColorScheme";
 import {
-  createLoginSchema,
+  Button,
+  PasswordInput,
+  SafeAreaView,
+  Text,
+  TextInput,
+  View,
+} from "@/components/themed";
+import {
   LoginInputType,
   LoginRequestType,
   TYPE_LOGIN_REQUEST,
