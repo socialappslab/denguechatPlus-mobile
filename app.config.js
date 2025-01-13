@@ -22,6 +22,7 @@ export default {
     android: {
       package: "org.denguechatplus",
       versionCode: 1,
+      blockedPermissions: ["android.permission.READ_MEDIA_VIDEO"],
     },
     plugins: [
       "expo-router",
