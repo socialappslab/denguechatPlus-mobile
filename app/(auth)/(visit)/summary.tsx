@@ -55,8 +55,15 @@ export default function Summary() {
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
   const { inspections, answers } = prepareFormData(visitMap[visitId]);
 
-  const { mainStatusColor, colorsAndQuantities } =
+  // if there's only one answer, there was a not allowed - early exit
+  const notAllowed__EarlyExit = answers.length === 1;
+
+  let { mainStatusColor, colorsAndQuantities } =
     getColorsAndQuantities(inspections);
+  mainStatusColor = notAllowed__EarlyExit
+    ? StatusColor.INFECTED
+    : StatusColor.NO_INFECTED;
+
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
     VisitData
