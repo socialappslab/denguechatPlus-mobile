@@ -7,6 +7,7 @@ elif [[ $GITHUB_REF_NAME == *"v."* ]]; then
 fi
 
 # env
+touch .env
 rm .env.development && mv .env.production .env
 
 # add rollbar
