@@ -1,4 +1,5 @@
 # env
+touch .env
 rm .env.production && mv .env.development .env
 
 # add rollbar
