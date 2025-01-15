@@ -41,9 +41,13 @@ export default function Profile() {
     url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
   });
 
+  const teamId = team?.id;
+  const wedgeId = meData?.userProfile?.team?.wedge_id;
+  const sectorId = meData?.userProfile?.team?.sector_id;
+
   const [{ data: reportData, loading: loadingReport }, refetchReport] =
     useAxios<ReportData, unknown, ErrorResponse>({
-      url: `reports/house_status?sort=name&order=asc&filter[team_id]=${team?.id}`,
+      url: `reports/house_status?sort=name&order=asc&filter[team_id]=${teamId}&filter[wedge_id]=${wedgeId}&filter[sector_id]=${sectorId}`,
     });
 
   useEffect(() => {

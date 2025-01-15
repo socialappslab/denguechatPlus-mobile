@@ -57,7 +57,6 @@ export default function Summary() {
 
   // if there's only one answer, there was a not allowed - early exit
   const notAllowed__EarlyExit = answers.length === 1;
-  console.log(notAllowed__EarlyExit);
 
   let { mainStatusColor, colorsAndQuantities } =
     getColorsAndQuantities(inspections);
