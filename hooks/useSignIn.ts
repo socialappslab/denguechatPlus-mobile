@@ -36,7 +36,7 @@ export default function useSignIn(): IUseSignIn {
       login(
         loginRes.data.meta.jwt.res.access,
         loginRes.data.meta.jwt.res.refresh,
-        deserializedData,
+        { ...deserializedData, username: data.username },
       );
     } else {
       throw new Error("Couldn't deserialize user data");
