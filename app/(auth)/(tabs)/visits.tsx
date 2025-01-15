@@ -211,15 +211,11 @@ export default function Visits() {
         id: meData?.userProfile?.team?.sector_id as number,
         name: meData?.userProfile?.team?.sector_name,
       },
-      wedge: {
-        id: meData?.userProfile?.team?.wedge_id as number,
-        name: meData?.userProfile?.team?.wedge_name,
-      },
     });
   }, [meData]);
 
   useEffect(() => {
-    fetchData(filters.sector?.id, filters.wedge?.id, filters.team?.id);
+    fetchData(filters.sector?.id);
   }, [filters]);
 
   const fetchData = async (
