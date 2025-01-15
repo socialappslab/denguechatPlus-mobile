@@ -71,14 +71,20 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [meData, setMeData] = useState<IUser | null>(null);
   const [rollbar, setRollbar] = useState<Client | null>(null);
 
-  useEffect(() => {
+  const setRollbarClient = (person: {
+    id: string;
+    email?: string;
+    username?: string;
+  }) => {
     const client = new Client({
       accessToken: process.env.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN,
       captureUncaught: true,
       captureDeviceInfo: true,
+      payload: person,
     });
+    client.setPerson(person.id, undefined, person.email);
     setRollbar(client);
-  }, []);
+  };
 
   const [[loadingToken, token], setToken] = useStorageState(
     ACCESS_TOKEN_LOCAL_STORAGE_KEY,
@@ -125,7 +131,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setToken(token);
     setAccessTokenToHeaders(token);
     setRefreshToken(refreshToken);
-    rollbar?.setPerson(user.id, user.username, user.email || user.phone);
+    setRollbarClient({
+      id: user.id,
+      email: user.email || user.phone,
+      username: user.username,
+    });
     return true;
   };
 
