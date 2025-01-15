@@ -57,12 +57,13 @@ export default function Summary() {
 
   // if there's only one answer, there was a not allowed - early exit
   const notAllowed__EarlyExit = answers.length === 1;
+  console.log(notAllowed__EarlyExit);
 
   let { mainStatusColor, colorsAndQuantities } =
     getColorsAndQuantities(inspections);
   mainStatusColor = notAllowed__EarlyExit
     ? StatusColor.INFECTED
-    : StatusColor.NO_INFECTED;
+    : mainStatusColor;
 
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
