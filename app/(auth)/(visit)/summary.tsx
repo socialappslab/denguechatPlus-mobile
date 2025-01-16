@@ -80,7 +80,7 @@ export default function Summary() {
     const completeVisitData = {
       ...visitData,
       house: visitData.houseId ? undefined : visitData.house,
-      visitPermission: true,
+      visitPermission: notAllowed__EarlyExit ? false : true,
       host: user.firstName,
       visitedAt: new Date(),
       inspections,
@@ -93,10 +93,10 @@ export default function Summary() {
 
     try {
       // We only make the request if it's connected
-      if (isConnected) {
-        rollbar.log(JSON.stringify(sanitizedVisitData));
+      if (isConnected)
         await createVisit({ json_params: JSON.stringify(sanitizedVisitData) });
-      }
+      if (isConnected && rollbar)
+        rollbar.log(JSON.stringify(sanitizedVisitData));
 
       Toast.show({
         type: "success",
