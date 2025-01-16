@@ -5,7 +5,7 @@ export default {
     name: IS_DEV ? "DengueChatPlus (Dev)" : "DengueChatPlus",
     slug: "dengue-chat-plus",
     scheme: "org.denguechat.plus",
-    version: "1.0.0",
+    version: "1.1.1",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     userInterfaceStyle: "automatic",
