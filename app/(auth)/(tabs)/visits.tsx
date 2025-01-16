@@ -77,7 +77,7 @@ const VisitsReport = ({
                 {(meData?.userProfile?.team as Team)?.sector_name}
               </Text>
               <FilterButton
-                filters={countSetFilters(filters, ["wedge", "sector"])}
+                filters={countSetFilters(filters, ["wedge", "sector", "team"])}
                 onPress={onPressFilter}
               />
             </View>
