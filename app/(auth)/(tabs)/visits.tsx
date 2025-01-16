@@ -215,7 +215,7 @@ export default function Visits() {
   }, [meData]);
 
   useEffect(() => {
-    fetchData(filters.sector?.id);
+    fetchData(filters.sector?.id, filters?.wedge?.id, filters.team?.id);
   }, [filters]);
 
   const fetchData = async (
