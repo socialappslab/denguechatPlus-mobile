@@ -26,7 +26,7 @@ export default function FiltersBrigade() {
   };
 
   const onFilter = () => {
-    router.back();
+    router.push("/(auth)/(tabs)/visits");
   };
 
   const onClearFilters = () => {
