@@ -305,6 +305,9 @@ export default function Login() {
             </View>
           </FormProvider>
         </View>
+        <View className="flex items-center">
+          <Text className="opacity-30">v.1.1.1</Text>
+        </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
