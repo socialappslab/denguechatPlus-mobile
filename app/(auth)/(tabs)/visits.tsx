@@ -72,9 +72,15 @@ const VisitsReport = ({
         {!loading && (
           <>
             <View className="flex flex-row justify-between">
-              <Text type="title" className="mb-6 w-52">
-                {(meData?.userProfile?.team as Team)?.sector_name}
-              </Text>
+              <View className="flex">
+                <Text type="title" className="mb-0 w-52">
+                  {filters.sector?.name}
+                </Text>
+                <Text type="small" className="mb-6 w-52">
+                  {filters.team?.name}{" "}
+                  {filters.wedge?.name ? `- ${filters.wedge?.name}` : ""}
+                </Text>
+              </View>
               <FilterButton
                 filters={countSetFilters(filters, ["wedge", "sector", "team"])}
                 onPress={onPressFilter}
@@ -150,7 +156,7 @@ export default function Visits() {
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
   // const { user, meData, rollbar } = useAuth();
   const { meData } = useAuth();
-  const [setTeam] = useState<Team | null>(null);
+  const [team, setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const { filters, setFilter } = useBrigades();
