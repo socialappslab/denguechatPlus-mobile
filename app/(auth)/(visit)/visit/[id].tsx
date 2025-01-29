@@ -21,9 +21,12 @@ const isValid = (
   currentValue: FormStateOption | FormStateOption[],
   question?: Question,
 ): boolean => {
-  if (!question || !currentValue) return false;
-
+  if (!question) return false;
   const required = question.options?.filter((item) => item.required) || [];
+
+  // return true if the question isn't required
+  if (!question.required) return true;
+  if (!currentValue) return false;
 
   // Radio buttons
   if (!Array.isArray(currentValue)) {
@@ -141,7 +144,7 @@ export default function Visit() {
     const values = methods.getValues(answerId);
     const options = currentQuestion.options;
     const selectedOption = options?.find(
-      (option) => option.id === values.value,
+      (option) => option.id === values?.value,
     );
 
     if (selectedOption?.selectedCase) {
