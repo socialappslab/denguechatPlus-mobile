@@ -3,25 +3,25 @@ import { useTranslation } from "react-i18next";
 
 import { Button, ListItem, SafeAreaView, View } from "@/components/themed";
 
-import { useBrigades } from "@/hooks/useBrigades";
+import { useFilters } from "@/hooks/useFilters";
 import { Platform, StatusBar } from "react-native";
 
 export default function FiltersBrigade() {
   const { t } = useTranslation();
-  const { filters, clearState } = useBrigades();
+  const { filters, clearState } = useFilters();
 
   const router = useRouter();
 
   const onPressFilterSector = () => {
-    router.push("/filter-sector");
+    router.push("/filter-sector-visit");
   };
 
   const onPressFilterWedge = () => {
-    router.push("/filter-wedge");
+    router.push("/filter-wedge-visit");
   };
 
   const onPressFilterTeam = () => {
-    router.push("/filter-brigade");
+    router.push("/filter-brigade-visit");
   };
 
   const onFilter = () => {

@@ -13,11 +13,11 @@ export default function FiltersBrigade() {
   const router = useRouter();
 
   const onPressFilterSector = () => {
-    router.push("filter-sector");
+    router.push("/filter-sector");
   };
 
   const onPressFilterWedge = () => {
-    router.push("filter-wedge");
+    router.push("/filter-wedge");
   };
 
   const onFilter = () => {
