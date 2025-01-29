@@ -1,3 +1,6 @@
+// this view is a duplicate of filter-brigade
+// but it uses "useFilters" so we have different context in "Visits" and "Assign Brigades" views
+// this can be done in one context with a map, but for now we do it like this
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
