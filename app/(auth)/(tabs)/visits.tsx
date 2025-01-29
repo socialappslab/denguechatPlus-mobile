@@ -73,7 +73,7 @@ const VisitsReport = ({
           <>
             <View className="flex flex-row justify-between">
               <View className="flex">
-                <Text type="title" className="mb-0 w-52">
+                <Text type="title" className="mb-2 w-52">
                   {filters.sector?.name}
                 </Text>
                 <Text type="small" className="mb-6 w-52">
