@@ -7,12 +7,9 @@
     "development": {
       "developmentClient": false,
       "autoIncrement": "true",
+      "distribution": "internal",
       "android": {
-        "image": "latest",
-        "distribution": "internal"
-      },
-      "ios": {
-        "distribution": "store"
+        "image": "latest"
       }
     },
     "internal_test": {
