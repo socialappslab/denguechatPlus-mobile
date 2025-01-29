@@ -29,13 +29,13 @@ export default {
       "expo-font",
       "expo-asset",
       "expo-localization",
-      [
-        "./plugins/rollbar-config-plugin",
-        {
-          environment: "development",
-          rollbarPostToken: process.env.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN,
-        },
-      ],
+      // [
+      //   "./plugins/rollbar-config-plugin",
+      //   {
+      //     environment: "development",
+      //     rollbarPostToken: process.env.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN,
+      //   },
+      // ],
       [
         "expo-location",
         {
