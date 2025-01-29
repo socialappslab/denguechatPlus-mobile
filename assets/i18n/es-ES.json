@@ -206,7 +206,7 @@
         "site": "Sitio",
         "title": "Resumen de la visita",
         "description": "Estado del sitio al día de hoy",
-        "containerStatus": "Estado de los contenedores",
+        "containerStatus": "Estado de los recipientes/envases",
         "date": "Fecha",
         "statusColor": {
           "green": "Verde",
@@ -220,13 +220,13 @@
         "commentsAreOptional": "Los comentarios son opcionales"
       },
       "addContainer": {
-        "registerNewContainer": "Registrar otro contenedor?",
-        "registerYes": "Sí, registrar otro contenedor",
+        "registerNewContainer": "Registrar otro recipiente/envase?",
+        "registerYes": "Sí, registrar otro recipiente/envase",
         "registerNo": "No, no es necesario"
       },
       "containerPicture": {
-        "title": "Foto del contenedor",
-        "description": "Toma una fotografía del contenedor y regístrala",
+        "title": "Foto del recipiente/envase",
+        "description": "Toma una fotografía del recipiente/envase y regístrala",
         "takePhoto": "Tomar foto",
         "chooseFromGallery": "Elegir desde la galería"
       },
