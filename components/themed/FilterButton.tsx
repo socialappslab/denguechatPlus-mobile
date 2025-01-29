@@ -1,8 +1,8 @@
-import React from "react";
-import { TouchableOpacity, Text } from "react-native";
-import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import Filter from "@/assets/images/icons/filter.svg";
+import { ThemeProps } from "@/components/themed/useThemeColor";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { Text, TouchableOpacity } from "react-native";
 
 export type FilterButtonProps = ThemeProps &
   TouchableOpacity["props"] & {
