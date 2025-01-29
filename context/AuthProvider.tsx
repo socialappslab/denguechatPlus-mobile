@@ -55,7 +55,7 @@ export const AuthContext = createContext<AuthProviderType>({
   login: () => false,
   setUser: (user: IUser | null) => {},
   logout: () => {},
-  rollbar: null,
+  // rollbar: null,
 });
 
 export function useAuth() {
@@ -170,7 +170,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         reFetchMe,
-        rollbar,
+        // rollbar,
       }}
     >
       {children}
