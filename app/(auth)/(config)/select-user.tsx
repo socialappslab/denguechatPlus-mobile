@@ -137,11 +137,11 @@ export default function SelectUser() {
   const onPressElement = (user: IUser) => {
     console.log("onPressElement>>>> ", user);
     setSelection({ brigader: user });
-    router.push(`change-brigade`);
+    router.push(`/change-brigade`);
   };
 
   const onPressFilter = () => {
-    router.push(`filters-users`);
+    router.push(`/filters-users`);
   };
 
   const firstLoad = (team?: BaseObject) => {

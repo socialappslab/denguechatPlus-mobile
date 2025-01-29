@@ -85,7 +85,7 @@ const CustomDrawerContent = () => {
 
           <TouchableOpacity
             className="flex py-3 flex-row items-center"
-            onPress={() => router.push("my-community")}
+            onPress={() => router.push("/my-community")}
           >
             <MyCommunity />
             <Text className="font-semibold ml-3">
@@ -95,7 +95,7 @@ const CustomDrawerContent = () => {
 
           <TouchableOpacity
             className="flex py-3 flex-row items-center"
-            onPress={() => router.push("brigades")}
+            onPress={() => router.push("/brigades")}
           >
             <Brigades />
             <Text className="font-semibold ml-3"> {t("drawer.brigades")}</Text>
@@ -103,7 +103,7 @@ const CustomDrawerContent = () => {
           <ProtectedView hasPermission={["users-change_team"]}>
             <TouchableOpacity
               className="flex py-3 flex-row items-center"
-              onPress={() => router.push("select-user")}
+              onPress={() => router.push("/select-user")}
             >
               <AssignBrigade />
               <Text className="font-semibold ml-3">
