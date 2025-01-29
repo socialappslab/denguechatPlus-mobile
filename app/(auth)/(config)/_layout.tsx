@@ -152,6 +152,23 @@ export default function VisitLayout(props: ThemeProps) {
         }}
       />
       <Stack.Screen
+        name="filter-brigade-visit"
+        options={{
+          presentation: "modal",
+          headerShown: true,
+          headerShadowVisible: false,
+          title: t("config.brigades"),
+          headerLeft: () => (
+            <Ionicons
+              onPress={() => router.dismiss()}
+              name="close-sharp"
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
         name="filter-sector"
         options={{
           presentation: "modal",
@@ -169,7 +186,41 @@ export default function VisitLayout(props: ThemeProps) {
         }}
       />
       <Stack.Screen
+        name="filter-sector-visit"
+        options={{
+          presentation: "modal",
+          headerShown: true,
+          headerShadowVisible: false,
+          title: t("config.brigades"),
+          headerLeft: () => (
+            <Ionicons
+              onPress={() => router.dismiss()}
+              name="close-sharp"
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
         name="filter-wedge"
+        options={{
+          presentation: "modal",
+          headerShown: true,
+          headerShadowVisible: false,
+          title: t("config.wedges"),
+          headerLeft: () => (
+            <Ionicons
+              onPress={() => router.dismiss()}
+              name="close-sharp"
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="filter-wedge-visit"
         options={{
           presentation: "modal",
           headerShown: true,
