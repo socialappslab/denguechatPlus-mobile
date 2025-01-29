@@ -20,7 +20,7 @@ export const CheckTeam: React.FC<CheckTeamProps> = ({ view, children }) => {
   }
 
   return (
-    <View className="flex-1 flex-col items-center justify-center px-10">
+    <View className="flex-1 flex-col items-center justify-center px-10 min-h-screen -mt-24">
       <JoinTeam className="mb-4"></JoinTeam>
       <Text className="text-2xl font-bold mb-4">
         {t("brigade.joinBrigade.action")}
