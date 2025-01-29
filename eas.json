@@ -6,10 +6,13 @@
   "build": {
     "development": {
       "developmentClient": false,
-      "distribution": "internal",
       "autoIncrement": "true",
       "android": {
-        "image": "latest"
+        "image": "latest",
+        "distribution": "internal"
+      },
+      "ios": {
+        "distribution": "store"
       }
     },
     "internal_test": {
