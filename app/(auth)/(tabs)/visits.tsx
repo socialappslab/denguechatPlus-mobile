@@ -61,6 +61,10 @@ const VisitsReport = ({
     router.push("/filters-visit");
   };
 
+  const filterString = [filters?.team?.name, filters?.wedge?.name]
+    .filter((i) => i !== undefined)
+    .join(" - ");
+
   return (
     <View>
       <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
@@ -74,12 +78,14 @@ const VisitsReport = ({
             <View className="flex flex-row justify-between">
               <View className="flex">
                 <Text type="title" className="mb-2 w-52">
-                  {filters.sector?.name}
+                  {filters.sector?.name ||
+                    (meData?.userProfile?.team as Team)?.sector_name}
                 </Text>
-                <Text type="small" className="mb-6 w-52">
-                  {filters.team?.name}{" "}
-                  {filters.wedge?.name ? `- ${filters.wedge?.name}` : ""}
-                </Text>
+                {(filters.team?.name || filters.wedge?.name) && (
+                  <Text type="small" className="mb-6 w-52">
+                    {filterString}
+                  </Text>
+                )}
               </View>
               <FilterButton
                 filters={countSetFilters(filters, ["wedge", "sector", "team"])}
