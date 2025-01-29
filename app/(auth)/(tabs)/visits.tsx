@@ -16,15 +16,16 @@ import {
 } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import VisitSummary from "@/components/VisitSummary";
+import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
+import { useBrigades } from "@/hooks/useBrigades";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
 import { countSetFilters, extractAxiosErrorData, formatDate } from "@/util";
-import { normalizeVisitData } from "@/util/normalizeVisitData";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
@@ -32,8 +33,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, RefreshControl, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { Routes } from "../(visit)/_layout";
-import { useBrigades } from "@/hooks/useBrigades";
-import { authApi } from "@/config/axios";
 import { sanitizeInspections } from "../(visit)/sanitizeInspections";
 
 interface HouseReport {
@@ -149,8 +148,9 @@ export default function Visits() {
   const { storedVisits, cleanUpStoredVisit } = useVisitStore();
   const { language, isConnected } = useVisit();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
-  const { user, meData, rollbar } = useAuth();
-  const [team, setTeam] = useState<Team | null>(null);
+  // const { user, meData, rollbar } = useAuth();
+  const { meData } = useAuth();
+  const [setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const { filters, setFilter } = useBrigades();
@@ -266,7 +266,7 @@ export default function Visits() {
 
     try {
       setLoading(true);
-      rollbar.log(JSON.stringify(visitToSubmit));
+      // rollbar?.log(JSON.stringify(visitToSubmit));
       await createVisit({ json_params: JSON.stringify(visitToSubmit) });
       cleanUpStoredVisit(visitToSubmit);
       setSuccess(true);
@@ -278,7 +278,7 @@ export default function Visits() {
       setLoading(false);
     } catch (error) {
       const errorData = extractAxiosErrorData(error);
-      rollbar.error(visitToSubmit, errorData);
+      // rollbar?.error(visitToSubmit, errorData);
       Toast.show({
         type: "error",
         text1: t(["errorCodes.generic"]),

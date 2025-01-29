@@ -21,6 +21,11 @@
         "buildType": "app-bundle"
       }
     },
+    "test_flight": {
+      "developmentClient": false,
+      "distribution": "store",
+      "autoIncrement": "true"
+    },
     "preview": {
       "distribution": "internal"
     },

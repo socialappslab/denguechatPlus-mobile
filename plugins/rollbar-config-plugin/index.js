@@ -1,7 +1,9 @@
 const withRollbarAndroid = require("./withRollbarAndroid");
 
 const withRollbar = (config, options) => {
-  config = withRollbarAndroid(config, options);
+  if (!config.ios) {
+    config = withRollbarAndroid(config, options);
+  }
 
   return config;
 };

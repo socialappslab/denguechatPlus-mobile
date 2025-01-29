@@ -13,7 +13,8 @@ import {
 import { resetAuthApi, setAccessTokenToHeaders } from "@/config/axios";
 import useUser from "@/hooks/useUser";
 import { ErrorResponse } from "@/schema";
-import { Client } from "rollbar-react-native";
+// import { Client } from "rollbar-react-native";
+import { Platform } from "react-native";
 
 type AuthProviderType = {
   user: IUser | null;
@@ -26,7 +27,7 @@ type AuthProviderType = {
   login: (token: string, refreshToken: string, user: IUser) => boolean;
   logout: () => void;
   reFetchMe: () => void;
-  rollbar: Client;
+  // rollbar: Client | null;
 };
 
 function useProtectedRoute(user: IUser | null) {
@@ -69,22 +70,24 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [[, userFromLocalStorage], setUserLocalStorage] = useUser();
   const [user, setLoadedUser] = useState<IUser | null>(null);
   const [meData, setMeData] = useState<IUser | null>(null);
-  const [rollbar, setRollbar] = useState<Client | null>(null);
+  // const [rollbar, setRollbar] = useState<Client | null>(null);
 
-  const setRollbarClient = (person: {
-    id: string;
-    email?: string;
-    username?: string;
-  }) => {
-    const client = new Client({
-      accessToken: process.env.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN,
-      captureUncaught: true,
-      captureDeviceInfo: true,
-      payload: person,
-    });
-    client.setPerson(person.id, undefined, person.email);
-    setRollbar(client);
-  };
+  // const setRollbarClient = (person: {
+  //   id: string;
+  //   email?: string;
+  //   username?: string;
+  // }) => {
+  //   if (Platform.OS !== "ios") {
+  //     const client = new Client({
+  //       accessToken: process.env.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN,
+  //       captureUncaught: true,
+  //       captureDeviceInfo: true,
+  //       payload: person,
+  //     });
+  //     client.setPerson(person.id, undefined, person.email);
+  //     setRollbar(client);
+  //   }
+  // };
 
   const [[loadingToken, token], setToken] = useStorageState(
     ACCESS_TOKEN_LOCAL_STORAGE_KEY,
@@ -131,11 +134,13 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setToken(token);
     setAccessTokenToHeaders(token);
     setRefreshToken(refreshToken);
-    setRollbarClient({
-      id: user.id,
-      email: user.email || user.phone,
-      username: user.username,
-    });
+    // if (Platform.OS !== "ios") {
+    //   setRollbarClient({
+    //     id: user.id,
+    //     email: user.email || user.phone,
+    //     username: user.username,
+    //   });
+    // }
     return true;
   };
 
