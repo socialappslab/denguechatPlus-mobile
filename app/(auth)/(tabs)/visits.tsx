@@ -19,7 +19,6 @@ import VisitSummary from "@/components/VisitSummary";
 import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
-import { useBrigades } from "@/hooks/useBrigades";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
@@ -34,6 +33,7 @@ import { Platform, RefreshControl, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { Routes } from "../(visit)/_layout";
 import { sanitizeInspections } from "../(visit)/sanitizeInspections";
+import { useFilters } from "@/hooks/useFilters";
 
 interface HouseReport {
   greenQuantity: number;
@@ -55,7 +55,7 @@ const VisitsReport = ({
   const { meData } = useAuth();
   const { t } = useTranslation();
   const router = useRouter();
-  const { filters } = useBrigades();
+  const { filters } = useFilters();
 
   const onPressFilter = () => {
     router.push("/filters-visit");
@@ -165,7 +165,7 @@ export default function Visits() {
   const [team, setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const { filters, setFilter } = useBrigades();
+  const { filters, setFilter } = useFilters();
   const [data, setData] = useState<HouseReport>();
   const [loadingReports, setLoadingReports] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -224,7 +224,7 @@ export default function Visits() {
         name: meData?.userProfile?.team?.sector_name,
       },
     });
-  }, [meData]);
+  }, []);
 
   useEffect(() => {
     fetchData(filters.sector?.id, filters?.wedge?.id, filters.team?.id);

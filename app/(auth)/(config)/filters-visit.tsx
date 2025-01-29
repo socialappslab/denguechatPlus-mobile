@@ -1,11 +1,10 @@
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
-import { View, Button, SafeAreaView, ListItem } from "@/components/themed";
+import { Button, ListItem, SafeAreaView, View } from "@/components/themed";
 
-import { Platform, StatusBar } from "react-native";
 import { useBrigades } from "@/hooks/useBrigades";
-import { useEffect } from "react";
+import { Platform, StatusBar } from "react-native";
 
 export default function FiltersBrigade() {
   const { t } = useTranslation();
@@ -14,15 +13,15 @@ export default function FiltersBrigade() {
   const router = useRouter();
 
   const onPressFilterSector = () => {
-    router.push("filter-sector");
+    router.push("/filter-sector");
   };
 
   const onPressFilterWedge = () => {
-    router.push("filter-wedge");
+    router.push("/filter-wedge");
   };
 
   const onPressFilterTeam = () => {
-    router.push("filter-brigade");
+    router.push("/filter-brigade");
   };
 
   const onFilter = () => {

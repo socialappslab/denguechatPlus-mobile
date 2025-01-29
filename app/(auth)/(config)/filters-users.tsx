@@ -13,7 +13,7 @@ export default function FiltersUsers() {
   const router = useRouter();
 
   const onPressElement = () => {
-    router.push("filter-brigade");
+    router.push("/filter-brigade");
   };
 
   const onFilter = () => {

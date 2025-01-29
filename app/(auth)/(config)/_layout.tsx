@@ -43,6 +43,16 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.brigaderList"),
+          headerLeft: () => (
+            <Ionicons
+              onPress={() => {
+                while (router.canGoBack()) router.back();
+              }}
+              name="arrow-back"
+              size={24}
+              color={color}
+            />
+          ),
         }}
       />
       <Stack.Screen
@@ -77,6 +87,17 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.brigadeList"),
+          headerLeft: () => (
+            <Ionicons
+              onPress={() => {
+                console.log("fuck");
+                router.dismissAll();
+              }}
+              name="close-sharp"
+              size={24}
+              color={color}
+            />
+          ),
         }}
       />
       <Stack.Screen
@@ -88,7 +109,7 @@ export default function VisitLayout(props: ThemeProps) {
           title: t("config.filters"),
           headerLeft: () => (
             <Ionicons
-              onPress={() => router.back()}
+              onPress={() => router.dismiss()}
               name="close-sharp"
               size={24}
               color={color}
@@ -105,7 +126,7 @@ export default function VisitLayout(props: ThemeProps) {
           title: t("config.filters"),
           headerLeft: () => (
             <Ionicons
-              onPress={() => router.back()}
+              onPress={() => router.dismiss()}
               name="close-sharp"
               size={24}
               color={color}
@@ -122,7 +143,7 @@ export default function VisitLayout(props: ThemeProps) {
           title: t("config.brigades"),
           headerLeft: () => (
             <Ionicons
-              onPress={() => router.back()}
+              onPress={() => router.dismiss()}
               name="close-sharp"
               size={24}
               color={color}
@@ -139,7 +160,7 @@ export default function VisitLayout(props: ThemeProps) {
           title: t("config.brigades"),
           headerLeft: () => (
             <Ionicons
-              onPress={() => router.back()}
+              onPress={() => router.dismiss()}
               name="close-sharp"
               size={24}
               color={color}
@@ -156,7 +177,7 @@ export default function VisitLayout(props: ThemeProps) {
           title: t("config.wedges"),
           headerLeft: () => (
             <Ionicons
-              onPress={() => router.back()}
+              onPress={() => router.dismiss()}
               name="close-sharp"
               size={24}
               color={color}
@@ -167,13 +188,12 @@ export default function VisitLayout(props: ThemeProps) {
       <Stack.Screen
         name="filters-visit"
         options={{
-          presentation: "modal",
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.wedges"),
           headerLeft: () => (
             <Ionicons
-              onPress={() => router.back()}
+              onPress={() => router.push("/(auth)/(tabs)/visits")}
               name="close-sharp"
               size={24}
               color={color}
