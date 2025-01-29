@@ -24,6 +24,7 @@ export interface Question {
   notes?: string;
   next?: number;
   image?: Image;
+  required?: boolean;
 }
 
 export type ResourceType = "attribute" | "relation";
