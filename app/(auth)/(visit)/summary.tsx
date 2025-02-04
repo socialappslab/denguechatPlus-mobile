@@ -12,7 +12,6 @@ import {
   orderStatus,
   prepareFormData,
 } from "@/util";
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
@@ -53,7 +52,7 @@ export default function Summary() {
   const { user, rollbar } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
-  const { inspections, answers } = prepareFormData(visitMap[visitId]);
+  const { inspections, answers, visit } = prepareFormData(visitMap[visitId]);
 
   // if there's only one answer, there was a not allowed - early exit
   const notAllowed__EarlyExit = answers.length === 1;
@@ -81,7 +80,7 @@ export default function Summary() {
       ...visitData,
       house: visitData.houseId ? undefined : visitData.house,
       visitPermission: notAllowed__EarlyExit ? false : true,
-      host: user.firstName,
+      host: visit.host,
       visitedAt: new Date(),
       inspections,
       answers,
@@ -95,9 +94,8 @@ export default function Summary() {
       // We only make the request if it's connected
       if (isConnected)
         await createVisit({ json_params: JSON.stringify(sanitizedVisitData) });
-      // if (isConnected && rollbar)
-      //   rollbar.log(JSON.stringify(sanitizedVisitData));
-
+      if (isConnected && rollbar)
+        rollbar.log(JSON.stringify(sanitizedVisitData));
       Toast.show({
         type: "success",
         text1: t("success"),

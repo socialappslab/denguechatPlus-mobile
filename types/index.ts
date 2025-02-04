@@ -158,7 +158,7 @@ export type FormState = Record<QuestionId, ISelectableItem | ISelectableItem[]>;
 export type FormPayload = Answer[];
 
 interface VisitAttributes {
-  host: string;
+  host: string[];
   visitPermission: boolean;
   houseId: number;
   questionnaireId: string;

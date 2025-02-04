@@ -1,4 +1,4 @@
-import { FormState } from "@/types";
+import { FormState, VisitData } from "@/types";
 import { Answer, Inspection, StatusColor } from "@/types/prepareFormData";
 
 /**
@@ -11,6 +11,7 @@ export const prepareFormData = (formData: FormState) => {
   const questions = Object.keys(formData);
   let inspections: Inspection[] = [];
   let answers: Answer[] = [];
+  let visit: Partial<VisitData> = {};
 
   questions.forEach((question) => {
     const answer = formData[question];
@@ -26,6 +27,9 @@ export const prepareFormData = (formData: FormState) => {
       inspections[index][resourceName] = answer.map(
         (item) => item.text || (item.resourceId as string),
       );
+
+      if (resourceName === "host")
+        visit.host = answer.map((item) => item.label);
 
       const colors: StatusColor[] = answer
         .filter((item) => typeof item.statusColor === "string")
@@ -117,6 +121,7 @@ export const prepareFormData = (formData: FormState) => {
   const returnObject = {
     inspections,
     answers,
+    visit,
   };
   return returnObject;
 };
