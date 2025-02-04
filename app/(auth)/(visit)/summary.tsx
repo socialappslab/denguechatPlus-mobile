@@ -80,7 +80,7 @@ export default function Summary() {
       ...visitData,
       house: visitData.houseId ? undefined : visitData.house,
       visitPermission: notAllowed__EarlyExit ? false : true,
-      host: visit.host?.join(","),
+      host: visit.host,
       visitedAt: new Date(),
       inspections,
       answers,
