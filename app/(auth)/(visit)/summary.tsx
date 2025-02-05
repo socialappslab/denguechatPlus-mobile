@@ -16,6 +16,7 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 import { sanitizeInspections } from "./sanitizeInspections";
+import { Image } from "react-native";
 
 const getColorsAndQuantities = (inspections: Inspection[]) => {
   let color: StatusColor = StatusColor.NO_INFECTED;
@@ -132,9 +133,12 @@ export default function Summary() {
     <ScrollView>
       <View className="h-full p-6 pb-10 flex flex-col justify-between">
         <View className="flex flex-col justify-center items-center">
-          {/* <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden"> */}
-          {/* <Image source={require("@/assets/images/summary.png")} /> */}
-          {/* </View> */}
+          <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+            <Image
+              source={require("@/assets/images/summary.png")}
+              style={{ width: "100%", height: "100%", resizeMode: "contain" }}
+            />
+          </View>
         </View>
         <VisitSummary
           date={formatDate(new Date().toString(), language) || ""}
