@@ -8,6 +8,7 @@
       "developmentClient": false,
       "autoIncrement": "true",
       "distribution": "internal",
+      "environment": "development",
       "android": {
         "image": "latest"
       }
@@ -25,9 +26,6 @@
       "developmentClient": false,
       "distribution": "store",
       "autoIncrement": "true"
-    },
-    "preview": {
-      "distribution": "internal"
     },
     "production": {
       "autoIncrement": true,
