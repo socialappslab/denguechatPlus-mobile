@@ -89,6 +89,11 @@ export const prepareFormData = (formData: FormState) => {
       }
     }
 
+    // Check for location
+    if (answer.selectedCase) {
+      inspections[index]["location"] = answer.selectedCase;
+    }
+
     /**
      * All other questions are stored in answers
      */
