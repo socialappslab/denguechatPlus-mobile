@@ -37,7 +37,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       # Runs a set of commands using the runners shell
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --reset-cache
 
       - name: Check for EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN
         run: |
