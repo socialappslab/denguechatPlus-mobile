@@ -8,7 +8,12 @@ fi
 
 # env
 touch .env
-rm .env.development && mv .env.production .env
+
+if [[ $BUILD_PROFILE == "production" ]]; then
+    mv .env.production .env
+else
+    mv .env.development .env
+fi
 
 # add rollbar
 echo "\nEXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN=$EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN" >> .env
