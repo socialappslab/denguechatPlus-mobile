@@ -25,7 +25,8 @@
     "test_flight": {
       "developmentClient": false,
       "distribution": "store",
-      "autoIncrement": "true"
+      "autoIncrement": "true",
+      "environment": "production"
     },
     "production": {
       "autoIncrement": true,

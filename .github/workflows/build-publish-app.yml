@@ -40,16 +40,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Check for EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN
-        run: |
-          if [ -z "${{ secrets.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN }}" ]; then
-            echo "You must provide an EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
-            exit 1
-          fi
       # Runs a set of commands using the runners shell
       - name: eas-build
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN }}
         run: |
           bash .sh/eas-build-publish.sh
