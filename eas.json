@@ -20,7 +20,8 @@
       "android": {
         "image": "latest",
         "buildType": "app-bundle"
-      }
+      },
+      "environment": "preview"
     },
     "test_flight": {
       "developmentClient": false,
