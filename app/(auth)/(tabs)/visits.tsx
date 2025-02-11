@@ -262,9 +262,7 @@ export default function Visits() {
   const synchronizeVisit = async (visit: any) => {
     let newVisit = {
       ...visit,
-      host: "Tariki",
       house: visit.houseId ? undefined : visit.house,
-      notes: "",
       visitPermission: true,
     };
 
@@ -289,7 +287,7 @@ export default function Visits() {
       });
       setLoading(false);
     } catch (error) {
-      const errorData = extractAxiosErrorData(error);
+      // const errorData = extractAxiosErrorData(error);
       // rollbar?.error(visitToSubmit, errorData);
       Toast.show({
         type: "error",

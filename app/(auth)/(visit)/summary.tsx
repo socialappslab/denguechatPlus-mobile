@@ -50,7 +50,7 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 export default function Summary() {
   const router = useRouter();
   const { questionnaire, visitData, language, isConnected } = useVisit();
-  const { user, rollbar } = useAuth();
+  const { user } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
   const { inspections, answers, visit } = prepareFormData(visitMap[visitId]);
