@@ -95,8 +95,6 @@ export default function Summary() {
       // We only make the request if it's connected
       if (isConnected)
         await createVisit({ json_params: JSON.stringify(sanitizedVisitData) });
-      if (isConnected && rollbar)
-        rollbar.log(JSON.stringify(sanitizedVisitData));
       Toast.show({
         type: "success",
         text1: t("success"),
