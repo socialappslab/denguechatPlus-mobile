@@ -11,7 +11,7 @@ export const normalizeVisitData = (visit: VisitData) => {
   for (let inspection of visit.inspections) {
     const normalizedInspection: Inspection = {
       breeding_site_type_id: inspection.breeding_site_type_id,
-      container_protection_id: inspection.container_protection_id,
+      container_protection_ids: inspection.container_protection_ids,
       elimination_method_type_id: inspection.elimination_method_type_id,
       has_water: inspection.has_water,
       quantity_founded: inspection.quantity_founded,

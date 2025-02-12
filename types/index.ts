@@ -76,7 +76,7 @@ export interface Inspection {
   water_source_other?: string;
   was_chemically_treated: string;
   container_test_result?: string;
-  container_protection_id: number;
+  container_protection_ids: number[];
   other_protection?: string;
   type_content_id?: number[];
   quantity_founded: number;

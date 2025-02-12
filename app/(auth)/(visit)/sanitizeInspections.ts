@@ -8,7 +8,7 @@ export const sanitizeInspections = (
       const sanitizedInspection: Inspection = {
         has_water: i?.has_water,
         breeding_site_type_id: i?.breeding_site_type_id,
-        container_protection_id: i?.container_protection_id,
+        container_protection_ids: i?.container_protection_ids,
         elimination_method_type_id: i?.elimination_method_type_id,
         quantity_founded: i?.quantity_founded,
         was_chemically_treated: i?.was_chemically_treated,
