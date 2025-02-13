@@ -1,2 +1,2 @@
 yarn install
-eas build --platform all --profile development --non-interactive
+eas build --platform android --profile development --non-interactive
