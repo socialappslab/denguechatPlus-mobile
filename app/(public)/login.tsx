@@ -31,6 +31,7 @@ import {
   TYPE_LOGIN_REQUEST,
 } from "@/schema/auth";
 
+import * as Sentry from "@sentry/react-native";
 import useSignIn from "@/hooks/useSignIn";
 import { extractAxiosErrorData } from "@/util";
 
@@ -308,7 +309,13 @@ export default function Login() {
           </FormProvider>
         </View>
         <View className="flex items-center">
-          <Text className="opacity-30">v.1.1.2</Text>
+          <Button
+            title="v.1.1.2"
+            className="opacity-50 border-0 font-normal"
+            onPress={() => {
+              Sentry.captureException(new Error("First error"));
+            }}
+          ></Button>
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
