@@ -22,6 +22,14 @@ import useUser from "@/hooks/useUser";
 import { useVisitStore } from "@/hooks/useVisitStore";
 import { BrigadeProvider } from "@/context/BrigadeContext";
 import { FilterProvider } from "@/context/FilterContext";
+import * as Sentry from "@sentry/react-native";
+
+Sentry.init({
+  dsn: "https://1530b05d8bc80b91a3304733b4f40e15@o4508732723232768.ingest.us.sentry.io/4508732748529664",
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 export {
   // Catch any errors thrown by the Layout component.
