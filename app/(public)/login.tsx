@@ -310,7 +310,7 @@ export default function Login() {
         </View>
         <View className="flex items-center">
           <Button
-            title="v.1.1.2"
+            title="v.1.1.3"
             className="opacity-50 border-0 font-normal"
             onPress={() => {
               Sentry.captureException(new Error("First error"));
