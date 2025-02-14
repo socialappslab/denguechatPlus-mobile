@@ -2,7 +2,7 @@ import { SelectableItem, Text, View } from "@/components/themed";
 import { VisitCase } from "@/hooks/useVisitStore";
 import { InspectionQuestion, OptionType, ResourceType } from "@/types";
 import { Image } from "expo-image";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Control,
   Controller,
@@ -193,7 +193,7 @@ const QuestionnaireRenderer = ({
         </React.Fragment>
       );
     },
-    [name, getValues],
+    [name, getValues, currentValues, control, setValue, question.typeField],
   );
 
   return (
@@ -274,7 +274,7 @@ const ControlledCheckbox = ({
   const [itemsChecked, setItemsChecked] = useState<FormStateOption[]>([]);
   const isSelected =
     Array.isArray(itemsChecked) &&
-    itemsChecked.some((item: FormStateOption) => item.value === option.value);
+    currentValues.some((item: FormStateOption) => item.value === option.value);
 
   const onChange = (text: string, isText?: boolean) => {
     let values = getValues(name);
@@ -288,7 +288,7 @@ const ControlledCheckbox = ({
 
     if (indexFound > -1) {
       if (isText) {
-        const valuesToSave = values.map(item =>
+        const valuesToSave = values.map((item) =>
           item.value === option.value ? prepareOption({ option, text }) : item,
         );
         setValue(name, valuesToSave);
@@ -318,7 +318,7 @@ const ControlledCheckbox = ({
 
   const conditionalDisablingItem =
     Array.isArray(itemsChecked) &&
-    itemsChecked.find((item) => item.disableOtherOptions === true);
+    currentValues.find((item) => item.disableOtherOptions === true);
   const shouldDisable =
     !!conditionalDisablingItem &&
     option.value !== conditionalDisablingItem?.value;
