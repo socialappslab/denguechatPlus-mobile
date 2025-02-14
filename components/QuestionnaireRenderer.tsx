@@ -287,9 +287,14 @@ const ControlledCheckbox = ({
     );
 
     if (indexFound > -1) {
-      // we pass a flag to know if the change is only text related and avoid
-      // filtering the current option out
-      if (isText) return;
+      if (isText) {
+        const valuesToSave = values.map(item =>
+          item.value === option.value ? prepareOption({ option, text }) : item,
+        );
+        setValue(name, valuesToSave);
+        setItemsChecked(valuesToSave);
+        return;
+      }
       const valuesToSave = values.filter(
         (item: ISelectableItem) => item.value !== option.value,
       );

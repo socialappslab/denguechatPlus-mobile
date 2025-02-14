@@ -70,6 +70,7 @@ export interface Answer {
 export interface Inspection {
   breeding_site_type_id: number;
   elimination_method_type_id: number;
+  other_elimination_method: string;
   water_source_type_id?: number;
   code_reference?: string;
   has_water: boolean;
