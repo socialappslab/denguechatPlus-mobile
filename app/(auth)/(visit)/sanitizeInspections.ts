@@ -10,6 +10,7 @@ export const sanitizeInspections = (
         breeding_site_type_id: i?.breeding_site_type_id,
         container_protection_ids: i?.container_protection_ids,
         elimination_method_type_id: i?.elimination_method_type_id,
+        other_elimination_method: i?.other_elimination_method,
         quantity_founded: i?.quantity_founded,
         was_chemically_treated: i?.was_chemically_treated,
         code_reference: i?.code_reference,

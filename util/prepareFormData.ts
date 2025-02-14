@@ -28,6 +28,18 @@ export const prepareFormData = (formData: FormState) => {
         (item) => item.text || (item.resourceId as string),
       );
 
+      if (resourceName == "container_protection_ids") {
+        inspections[index][resourceName] = answer.map(
+          (item) => item.resourceId,
+        );
+        const textAreaOption = answer.find(
+          (item) => item.optionType === "textArea",
+        );
+        if (textAreaOption) {
+          inspections[index]["other_protection"] = textAreaOption.text;
+        }
+      }
+
       if (resourceName === "host")
         visit.host = answer.map((item) => item.label);
 
@@ -72,11 +84,7 @@ export const prepareFormData = (formData: FormState) => {
           : 1;
       }
 
-      if (resourceName === "container_protection_id" && answer.text) {
-        inspections[index]["other_protection"] = answer.text;
-      }
-
-      if (resourceName === "elimination_method_type_id" && answer.text) {
+      if (answer.resourceName === "elimination_method_type_id" && answer.text) {
         inspections[index]["other_elimination_method"] = answer.text;
       }
 
