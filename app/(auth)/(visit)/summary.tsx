@@ -147,23 +147,19 @@ export default function Summary() {
           reds={colorsAndQuantities.RED}
           color={mainStatusColor}
         />
-        <View className="flex flex-row gap-2">
-          <View className="flex-1">
-            <Button
-              title={t("editFromStart")}
-              onPress={() =>
-                router.push(`visit/${questionnaire?.initialQuestion}`)
-              }
-            />
-          </View>
-          <View className="flex-1">
-            <Button
-              primary
-              title={t("finalize")}
-              onPress={onFinalize}
-              disabled={loading}
-            />
-          </View>
+        <View className="gap-2">
+          <Button
+            primary
+            title={t("finalize")}
+            onPress={onFinalize}
+            disabled={loading}
+          />
+          <Button
+            title={t("editFromStart")}
+            onPress={() =>
+              router.push(`visit/${questionnaire?.initialQuestion}`)
+            }
+          />
         </View>
       </View>
     </ScrollView>
