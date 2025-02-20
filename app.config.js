@@ -18,6 +18,9 @@ export default {
       supportsTablet: true,
       bundleIdentifier: "org.denguechatplus",
       buildNumber: "1",
+      config: {
+        usesNonExemptEncryption: false,
+      },
     },
     android: {
       package: "org.denguechatplus",
