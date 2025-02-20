@@ -124,7 +124,8 @@
         "password": "Por favor, insira uma senha",
         "login": "Falha no login. Por favor, tente novamente.",
         "empty": "Por favor, insira seu e-mail e senha",
-        "invalidCredentials": "E-mail ou senha inválidos"
+        "invalidCredentials": "E-mail ou senha inválidos",
+        "noInternet": "É necessária uma conexão com a internet para efetuar login."
       },
       "searchCountry_placeholder": "Pesquisar país...",
       "username-tab": "Nome de Usuário",
