@@ -21,6 +21,13 @@ jobs:
             exit 1
           fi
 
+      - name: Check for EXPO_APPLE_APP_SPECIFIC_PASSWORD
+        run: |
+          if [ -z "${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}" ]; then
+            echo "You must provide an EXPO_APPLE_APP_SPECIFIC_PASSWORD secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
