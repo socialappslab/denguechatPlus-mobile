@@ -124,7 +124,8 @@
         "password": "Please enter a password",
         "login": "Login failed. Please try again.",
         "empty": "Please enter your email and password",
-        "invalidCredentials": "Invalid email or password"
+        "invalidCredentials": "Invalid email or password",
+        "noInternet": "Internet connection is required to log in."
       },
       "searchCountry_placeholder": "Search country...",
       "username-tab": "Username",

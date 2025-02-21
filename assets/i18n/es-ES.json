@@ -126,7 +126,8 @@
         "password": "Por favor ingrese una contraseña válida",
         "login": "Algo falló. Por favor intente de nuevo.",
         "empty": "Por favor llene todos los campos",
-        "invalidCredentials": "Credenciales inválidas"
+        "invalidCredentials": "Credenciales inválidas",
+        "noInternet": "Se requiere conexión a internet para loguearse."
       },
       "searchCountry_placeholder": "Buscar país...",
       "username-tab": "Nombre de usuario",

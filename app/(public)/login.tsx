@@ -8,6 +8,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { TextInput as RNTextInput, TouchableOpacity } from "react-native";
 import CountryPicker, {
+  Country,
   CountryCode,
   DEFAULT_THEME,
 } from "react-native-country-picker-modal";
@@ -34,10 +35,12 @@ import {
 import * as Sentry from "@sentry/react-native";
 import useSignIn from "@/hooks/useSignIn";
 import { extractAxiosErrorData } from "@/util";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 export default function Login() {
   const { t } = useTranslation();
   const { signInMutation, loading } = useSignIn();
+  const { isConnected } = useNetInfo();
 
   const [, setPhoneNumber] = useState("");
 
@@ -57,10 +60,10 @@ export default function Login() {
     handleSubmit,
     setError,
     setValue,
-    formState: { errors, isValid },
+    formState: { errors },
   } = methods;
 
-  const handleCountrySelect = (country: any) => {
+  const handleCountrySelect = (country: Country) => {
     setPhoneCountryCode(country.cca2);
     const newPhoneNumber = `+${country.callingCode[0]}`;
     setPhoneNumber(newPhoneNumber);
@@ -74,6 +77,14 @@ export default function Login() {
 
   const onSubmitHandler: SubmitHandler<LoginInputType> = async (values) => {
     try {
+      if (!isConnected) {
+        Toast.show({
+          type: "error",
+          text1: t("login.error.noInternet"),
+        });
+        return;
+      }
+
       let payload: LoginRequestType;
 
       if (activeTab === "username") {
