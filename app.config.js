@@ -20,25 +20,24 @@ export default {
       buildNumber: "1",
       config: {
         usesNonExemptEncryption: false,
+        googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS,
       },
     },
     android: {
       package: "org.denguechatplus",
       versionCode: 1,
       blockedPermissions: ["android.permission.READ_MEDIA_VIDEO"],
+      config: {
+        googleMaps: {
+          apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID,
+        },
+      },
     },
     plugins: [
       "expo-router",
       "expo-font",
       "expo-asset",
       "expo-localization",
-      // [
-      //   "./plugins/rollbar-config-plugin",
-      //   {
-      //     environment: "development",
-      //     rollbarPostToken: process.env.EXPO_PUBLIC_CLIENT_ITEM_ACCESS_TOKEN,
-      //   },
-      // ],
       [
         "expo-location",
         {
