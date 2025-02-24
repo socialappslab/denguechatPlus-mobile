@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Platform } from "react-native";
 import useAxios from "axios-hooks";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useTranslation } from "react-i18next";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
@@ -118,6 +118,7 @@ const AddLocation = () => {
       {isConnected && !Boolean(error) && (
         <MapView
           ref={mapRef}
+          provider={PROVIDER_GOOGLE}
           className="flex-1"
           initialRegion={{
             latitude: -3.738474,
