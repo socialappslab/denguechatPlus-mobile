@@ -97,10 +97,6 @@ export default function NewHouse() {
     router.back();
   };
 
-  const handleLocation = () => {
-    router.push(`add-location`);
-  };
-
   return (
     <SafeAreaView>
       <View className="flex flex-1 py-5 px-5 h-full">
@@ -195,7 +191,9 @@ export default function NewHouse() {
               label={
                 visitData?.house?.address ?? t("visit.newHouse.addLocation")
               }
-              onPressElement={handleLocation}
+              onPressElement={() => {
+                router.push("/add-location");
+              }}
             />
           </View>
 

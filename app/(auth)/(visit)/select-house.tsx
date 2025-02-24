@@ -104,10 +104,6 @@ export default function SelectHouseScreen() {
     return `${house.neighborhood?.name}`;
   };
 
-  const handleNewHouse = () => {
-    router.push("new-house");
-  };
-
   return (
     <SafeAreaView>
       <View className="flex flex-1 py-5 px-5">
@@ -159,7 +155,7 @@ export default function SelectHouseScreen() {
             </View>
           )}
 
-          {/* <View className="my-6 p-8 rounded-2xl border border-neutral-200">
+          <View className="my-6 p-8 rounded-2xl border border-neutral-200">
             <Text className="text-xl font-bold text-center mb-2">
               {t("visit.houses.noHouses")}
             </Text>
@@ -167,11 +163,13 @@ export default function SelectHouseScreen() {
               {t("visit.houses.noHousesMessage")}
             </Text>
             <Button
-              onPress={handleNewHouse}
+              onPress={() => {
+                router.push("/new-house");
+              }}
               title={t("visit.houses.registerNewHouse")}
               className="bg-green-400 border-green-400"
             />
-          </View> */}
+          </View>
         </ScrollView>
         <View className="pt-5">
           <Button
