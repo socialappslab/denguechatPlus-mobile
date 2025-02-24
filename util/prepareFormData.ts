@@ -68,6 +68,10 @@ export const prepareFormData = (formData: FormState) => {
           answer.text || answer.bool || answer.label;
       }
 
+      if (answer?.selectedCase) {
+        inspections[index]["location"] = answer.selectedCase;
+      }
+
       if (answer.statusColor) {
         if (Array.isArray(inspections[index].statusColors)) {
           (inspections[index].statusColors as string[]).push(
