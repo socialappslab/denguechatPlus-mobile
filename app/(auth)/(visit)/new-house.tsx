@@ -91,8 +91,8 @@ export default function NewHouse() {
     const code = getValues("siteNumber");
 
     Alert.alert(
-      t("visit.newHouse.confirmSiteCodeTitle"),
-      t("visit.newHouse.confirmSiteCodeDescription", { code }),
+      t("visit.newHouse.confirmSiteNumberTitle"),
+      t("visit.newHouse.confirmSiteNumberDescription", { code }),
       [
         {
           text: "Cancel",

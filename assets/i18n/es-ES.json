@@ -200,8 +200,8 @@
         "confirmLocation": "Confirmar ubicación",
         "noConnection": "No tienes conexión",
         "noMapConnection": "No podemos cargar el mapa porque no tienes conexión a internet.",
-        "confirmSiteCodeTitle": "Confirmar código de sitio",
-        "confirmSiteCodeDescription": "Confirme con su facilitador de brigada que el sitio que va a visitar corresponde al código del sitio {{code}}",
+        "confirmSiteNumberTitle": "Confirmar código de sitio",
+        "confirmSiteNumberDescription": "Confirme con su facilitador de brigada que el sitio que va a visitar corresponde al código del sitio {{code}}",
         "validation": {
           "siteCodeRegexError": "Este campo solo puede contener letras mayúsculas y números"
         }
