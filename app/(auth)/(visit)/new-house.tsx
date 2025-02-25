@@ -1,16 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
-import {
-  useForm,
-  Controller,
-  SubmitHandler,
-  FormProvider,
-} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { BaseObject, createHouseSchema, HouseInputType, Team } from "@/schema";
+import { BaseObject, Team } from "@/schema";
 import { useAuth } from "@/context/AuthProvider";
 import {
   Text,
@@ -25,8 +20,11 @@ import { getLanguageCode } from "@/util";
 import { Button } from "@/components/themed";
 import { useVisit } from "@/hooks/useVisit";
 import { RESOURCE_SPECIAL_PLACE } from "@/constants/Keys";
+import { Alert } from "react-native";
+import { z } from "zod";
 
 const ID_CASA = -1;
+const ALPHANUMERIC_REGEX = /^[A-Z0-9]+$/;
 
 export default function NewHouse() {
   const { t } = useTranslation();
@@ -44,27 +42,70 @@ export default function NewHouse() {
   const [siteOptions, setSiteOptions] = useState<BaseObject[]>([]);
   const [itemSelectedId, setItemSelectedId] = useState<number>(ID_CASA);
 
-  const methods = useForm<HouseInputType>({
-    resolver: zodResolver(createHouseSchema()),
+  const schema = useMemo(
+    () =>
+      z.object({
+        siteNumber: z
+          .string()
+          .min(1, t("validation.required"))
+          .regex(
+            ALPHANUMERIC_REGEX,
+            t("visit.newHouse.validation.siteCodeRegexError"),
+          ),
+      }),
+    [t],
+  );
+
+  type SchemaInput = z.input<typeof schema>;
+  type SchemaOutput = z.output<typeof schema>;
+
+  const methods = useForm<SchemaInput, unknown, SchemaOutput>({
+    mode: "onChange",
+    resolver: zodResolver(schema),
+    defaultValues: {
+      siteNumber: "",
+    },
   });
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
+    getValues,
   } = methods;
 
-  const onSubmitHandler: SubmitHandler<HouseInputType> = async (values) => {
+  const onSubmitHandler = handleSubmit(async (values) => {
     setVisitData({
       houseId: undefined,
       house: {
         ...visitData?.house,
         houseBlockId: (meData?.userProfile?.houseBlock as BaseObject)?.id,
-        referenceCode: String(values.number),
+        referenceCode: String(values.siteNumber),
         specialPlaceId: itemSelectedId !== ID_CASA ? itemSelectedId : undefined,
       },
     });
     router.push(`visit/${questionnaire?.initialQuestion}`);
+  });
+
+  const handleOnSubmit = () => {
+    const code = getValues("siteNumber");
+
+    Alert.alert(
+      t("visit.newHouse.confirmSiteCodeTitle"),
+      t("visit.newHouse.confirmSiteCodeDescription", { code }),
+      [
+        {
+          text: "Cancel",
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => onSubmitHandler(),
+        },
+      ],
+      { cancelable: true },
+    );
   };
 
   const resources = getResourceByName(RESOURCE_SPECIAL_PLACE);
@@ -82,7 +123,7 @@ export default function NewHouse() {
       resources?.forEach((resource) =>
         sites.push({
           id: resource.id,
-          //@ts-ignore
+          //@ts-expect-error
           name: resource[`name_${lang}`],
         }),
       );
@@ -149,38 +190,33 @@ export default function NewHouse() {
             />
           </View>
 
-          <FormProvider {...methods}>
-            <View className="mb-4">
-              <Text className="font-medium text-sm mb-2">
-                {t("visit.newHouse.houseNumber")}
-              </Text>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    hasError={!!errors.number}
-                    placeholder={t("visit.newHouse.houseNumberPlaceholder")}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value !== undefined ? String(value) : ""}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    keyboardType="numeric"
-                    blurOnSubmit={false}
-                  />
-                )}
-                name="number"
-              />
-              {errors?.number?.message && (
-                <Text className="font-normal text-red-500 text-xs mb-2 mt-1">
-                  {errors.number.message}
-                </Text>
+          <View className="mb-4">
+            <Text className="font-medium text-sm mb-2">
+              {t("visit.newHouse.houseNumber")}
+            </Text>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  hasError={!!errors.siteNumber}
+                  placeholder={t("visit.newHouse.houseNumberPlaceholder")}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={String(value)}
+                  autoCapitalize="characters"
+                />
               )}
-              <Text className="font-normal text-xs mb-2 mt-1">
-                {t("visit.newHouse.requiredFields")}
+              name="siteNumber"
+            />
+            {errors.siteNumber?.message && (
+              <Text className="font-normal text-red-500 text-xs mb-2 mt-1">
+                {errors.siteNumber.message}
               </Text>
-            </View>
-          </FormProvider>
+            )}
+            <Text className="font-normal text-xs mb-2 mt-1">
+              {t("visit.newHouse.requiredFields")}
+            </Text>
+          </View>
 
           <View className="mb-8">
             <Text className="text-xl font-semibold mb-2">
@@ -222,7 +258,9 @@ export default function NewHouse() {
               primary
               disabled={!isValid || !visitData?.house?.address}
               title={t("next")}
-              onPress={handleSubmit(onSubmitHandler)}
+              onPress={() => {
+                handleOnSubmit();
+              }}
             />
           </View>
         </View>

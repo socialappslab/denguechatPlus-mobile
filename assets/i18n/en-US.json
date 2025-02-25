@@ -199,7 +199,12 @@
         "addressPlaceholder": "Enter the site address",
         "confirmLocation": "Confirm location",
         "noConnection": "You have no connection",
-        "noMapConnection": "We cannot load the map because you have no internet connection."
+        "noMapConnection": "We cannot load the map because you have no internet connection.",
+        "confirmSiteCodeTitle": "Confirm site code",
+        "confirmSiteCodeDescription": "Confirm with your brigade facilitator that the site you are about to visit corresponds to site code {{code}}",
+        "validation": {
+          "siteCodeRegexError": "Field must only contain upper case letters and numbers"
+        }
       },
       "summary": {
         "siteStatus": "Status of the site",
