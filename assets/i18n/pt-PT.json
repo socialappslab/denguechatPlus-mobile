@@ -132,7 +132,6 @@
       "phone-tab": "Telefone"
     },
     "validation": {
-      "invalidNumber": "Deve ser um número",
       "required": "Campo obrigatório",
       "requiredField": {
         "email": "E-mail é obrigatório",
@@ -198,7 +197,12 @@
         "addressPlaceholder": "Digite o endereço do site",
         "confirmLocation": "Confirmar localização",
         "noConnection": "Você não tem conexão",
-        "noMapConnection": "Não podemos carregar o mapa porque você não tem conexão com a internet."
+        "noMapConnection": "Não podemos carregar o mapa porque você não tem conexão com a internet.",
+        "confirmSiteNumberTitle": "Confirmar código do site",
+        "confirmSiteNumberDescription": "Confirme com seu facilitador de brigada que o site que você vai visitar corresponde ao código do site {{code}}",
+        "validation": {
+          "siteCodeRegexError": "Este campo só pode conter letras maiúsculas e números."
+        }
       },
       "summary": {
         "siteStatus": "Status do local",

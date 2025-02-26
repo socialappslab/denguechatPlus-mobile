@@ -134,7 +134,6 @@
       "phone-tab": "Teléfono"
     },
     "validation": {
-      "invalidNumber": "Must be a number",
       "required": "Este campo es requerido",
       "requiredField": {
         "email": "El correo electrónico es requerido",
@@ -200,7 +199,12 @@
         "addressPlaceholder": "Escribe la dirección del sitio",
         "confirmLocation": "Confirmar ubicación",
         "noConnection": "No tienes conexión",
-        "noMapConnection": "No podemos cargar el mapa porque no tienes conexión a internet."
+        "noMapConnection": "No podemos cargar el mapa porque no tienes conexión a internet.",
+        "confirmSiteNumberTitle": "Confirmar código de sitio",
+        "confirmSiteNumberDescription": "Confirme con su facilitador de brigada que el sitio que va a visitar corresponde al código del sitio {{code}}",
+        "validation": {
+          "siteCodeRegexError": "Este campo solo puede contener letras mayúsculas y números"
+        }
       },
       "summary": {
         "siteStatus": "Estado del sitio",

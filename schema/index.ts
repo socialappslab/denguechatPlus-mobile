@@ -1,4 +1,4 @@
-import { TypeOf, object, z } from "zod";
+import { TypeOf, z } from "zod";
 import i18nInstance from "@/config/i18n";
 
 export const t = (key: string, args?: { [key: string]: string | number }) =>
@@ -58,20 +58,8 @@ export interface Team extends BaseObject {
   };
 }
 
-export const createHouseSchema = () => {
-  return object({
-    number: z.coerce.number({
-      required_error: t("validation.required"),
-      invalid_type_error: t("validation.invalidNumber"),
-    }),
-  });
-};
-
-const houseSchema = createHouseSchema();
-export type HouseInputType = TypeOf<typeof houseSchema>;
-
 export const createPostSchema = () => {
-  return object({
+  return z.object({
     content: z
       .string()
       .min(1, { message: t("validation.contentPostLengthMin") })
@@ -85,7 +73,7 @@ export type PostInputType = TypeOf<typeof postSchema>;
 export type PostVisibility = "public" | "team";
 
 export const createCommentSchema = () => {
-  return object({
+  return z.object({
     content: z
       .string()
       .min(1, { message: t("validation.contentCommentLengthMin") })
