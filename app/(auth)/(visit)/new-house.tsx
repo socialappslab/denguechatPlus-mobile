@@ -95,12 +95,12 @@ export default function NewHouse() {
       t("visit.newHouse.confirmSiteNumberDescription", { code }),
       [
         {
-          text: "Cancel",
+          text: t("chat.actions.cancel"),
           onPress: () => {},
           style: "cancel",
         },
         {
-          text: "OK",
+          text: t("yes"),
           onPress: () => onSubmitHandler(),
         },
       ],
