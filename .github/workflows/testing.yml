@@ -49,4 +49,4 @@ jobs:
       - name: Publish update
         run: |
           yarn install
-          eas build --platform ios --profile test_flight --non-interactive --auto-submit
+          eas build --platform all --profile test_flight --non-interactive --auto-submit

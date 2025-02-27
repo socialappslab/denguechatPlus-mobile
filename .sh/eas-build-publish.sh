@@ -7,4 +7,4 @@ elif [[ $GITHUB_REF_NAME == *"v."* ]]; then
 fi
 
 yarn install
-eas build --platform android --profile $BUILD_PROFILE --non-interactive
+eas build --platform all --profile $BUILD_PROFILE --non-interactive --auto-submit
