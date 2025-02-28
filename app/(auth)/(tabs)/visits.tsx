@@ -160,7 +160,6 @@ export default function Visits() {
   const { storedVisits, cleanUpStoredVisit } = useVisitStore();
   const { language, isConnected } = useVisit();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
-  // const { user, meData, rollbar } = useAuth();
   const { meData } = useAuth();
   const [team, setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(false);
@@ -276,7 +275,6 @@ export default function Visits() {
 
     try {
       setLoading(true);
-      // rollbar?.log(JSON.stringify(visitToSubmit));
       await createVisit({ json_params: JSON.stringify(visitToSubmit) });
       cleanUpStoredVisit(visitToSubmit);
       setSuccess(true);
@@ -287,8 +285,6 @@ export default function Visits() {
       });
       setLoading(false);
     } catch (error) {
-      // const errorData = extractAxiosErrorData(error);
-      // rollbar?.error(visitToSubmit, errorData);
       Toast.show({
         type: "error",
         text1: t(["errorCodes.generic"]),
