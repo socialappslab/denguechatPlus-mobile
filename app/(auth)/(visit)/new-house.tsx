@@ -22,13 +22,15 @@ import { useVisit } from "@/hooks/useVisit";
 import { RESOURCE_SPECIAL_PLACE } from "@/constants/Keys";
 import { Alert } from "react-native";
 import { z } from "zod";
+import { useVisitStore } from "@/hooks/useVisitStore";
+import { VisitId } from "@/types";
 
 const ID_CASA = -1;
 const ALPHANUMERIC_REGEX = /^[A-Z0-9]+$/;
 
 export default function NewHouse() {
   const { t } = useTranslation();
-  const { meData } = useAuth();
+  const { user, meData } = useAuth();
 
   const {
     setVisitData,
@@ -37,6 +39,7 @@ export default function NewHouse() {
     language,
     visitData,
   } = useVisit();
+  const { initialiseCurrentVisit } = useVisitStore();
   const router = useRouter();
 
   const [siteOptions, setSiteOptions] = useState<BaseObject[]>([]);
@@ -75,16 +78,29 @@ export default function NewHouse() {
   } = methods;
 
   const onSubmitHandler = handleSubmit(async (values) => {
+    if (!user?.id || !questionnaire?.initialQuestion) return;
+
+    const visitId = `${user.id}-${visitData.house?.id}` as VisitId;
+
+    // Set the VisitId
+    initialiseCurrentVisit(visitId, questionnaire.initialQuestion.toString());
+
+    // We set the relevant meta
     setVisitData({
       houseId: undefined,
+      questionnaireId: questionnaire.id,
+      teamId: user.teamId,
       house: {
-        ...visitData?.house,
+        ...visitData.house,
         houseBlockId: (meData?.userProfile?.houseBlock as BaseObject)?.id,
         referenceCode: String(values.siteNumber),
         specialPlaceId: itemSelectedId !== ID_CASA ? itemSelectedId : undefined,
       },
     });
-    router.push(`visit/${questionnaire?.initialQuestion}`);
+    router.push({
+      pathname: "/visit/[id]",
+      params: { id: questionnaire.initialQuestion },
+    });
   });
 
   const handleOnSubmit = () => {
