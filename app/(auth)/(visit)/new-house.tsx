@@ -88,6 +88,8 @@ export default function NewHouse() {
     // We set the relevant meta
     setVisitData({
       houseId: undefined,
+      questionnaireId: questionnaire.id,
+      teamId: user.teamId,
       house: {
         ...visitData.house,
         houseBlockId: (meData?.userProfile?.houseBlock as BaseObject)?.id,
