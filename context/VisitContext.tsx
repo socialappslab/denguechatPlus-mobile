@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import NetInfo from "@react-native-community/netinfo";
+import { useNetInfo } from "@react-native-community/netinfo";
 import useAxios from "axios-hooks";
 import * as SecureStore from "expo-secure-store";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
@@ -15,14 +15,7 @@ import {
 import { useAuth } from "@/context/AuthProvider";
 import { useStorageState } from "@/hooks/useStorageState";
 import { ErrorResponse } from "@/schema";
-import {
-  Questionnaire,
-  Resource,
-  ResourceData,
-  VisitData,
-  VisitMap,
-} from "@/types";
-import questionnaireJson from "./questionnaire.json";
+import { Questionnaire, Resource, ResourceData, VisitData } from "@/types";
 
 interface VisitContextType {
   questionnaire?: Questionnaire;
@@ -43,9 +36,9 @@ const VisitContext = createContext<VisitContextType | undefined>(undefined);
  */
 
 const VisitProvider = ({ children }: { children: ReactNode }) => {
+  const { isInternetReachable } = useNetInfo();
   const [[_, language]] = useStorageState(LANGUAGE_LOCAL_STORAGE_KEY);
   const { meData } = useAuth();
-  const [connected, setConnected] = useState<boolean>(true);
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
     host: "",
@@ -166,17 +159,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      console.log("Is connected to internet?", state.isInternetReachable);
-      setConnected(state.isInternetReachable ?? false);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
   const getResourceByName = (
     resourceName: string,
   ): ResourceData[] | undefined => {
@@ -205,7 +187,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
         getResourceByName,
         cleanStore,
         language: language ?? "es",
-        isConnected: connected,
+        isConnected: !!isInternetReachable,
       }}
     >
       {children}
