@@ -27,7 +27,7 @@
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.0.2",
     "@sentry/react-native": "^6.7.0",
-    "axios": "^1.7.2",
+    "axios": "1.7.8",
     "axios-auth-refresh": "^3.3.6",
     "axios-hooks": "^5.0.2",
     "expo": "~51.0.39",
