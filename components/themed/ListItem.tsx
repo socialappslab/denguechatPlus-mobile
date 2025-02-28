@@ -1,6 +1,7 @@
 import { TouchableOpacity } from "react-native";
-import { ThemeProps } from "@/components/themed/useThemeColor";
-import { Text, View } from "@/components/themed";
+import { ThemeProps } from "./useThemeColor";
+import { Text } from "./Text";
+import { View } from "./View";
 
 import ArrowForward from "@/assets/images/icons/arrow-forward.svg";
 

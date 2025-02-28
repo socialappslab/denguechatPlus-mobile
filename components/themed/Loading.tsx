@@ -1,6 +1,7 @@
 import { ActivityIndicator, View as DefaultView } from "react-native";
-import { ThemeProps } from "@/components/themed/useThemeColor";
-import { View } from "@/components/themed";
+import { ThemeProps } from "./useThemeColor";
+import { View } from "./View";
+
 import Colors from "@/constants/Colors";
 
 export type LoadingProps = ThemeProps &

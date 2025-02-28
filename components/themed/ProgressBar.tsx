@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text } from "@/components/themed";
+import { View } from "./View";
+import { Text } from "./Text";
 
 export interface ProgressBarProps {
   label: string;

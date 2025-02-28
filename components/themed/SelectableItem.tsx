@@ -2,8 +2,8 @@
 // from expo-checkbox
 
 import CheckboxIcon from "@/assets/images/checkbox.svg";
-import { Text } from "@/components/themed/Text";
-import { View } from "@/components/themed/View";
+import { Text } from "./Text";
+import { View } from "./View";
 import { SelectableItemProps } from "@/types/SelectableItemProps";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 
-import { ThemeProps } from "@/components/themed/useThemeColor";
-import { View, Text } from "@/components/themed";
+import { ThemeProps } from "./useThemeColor";
+import { View } from "./View";
+import { Text } from "./Text";
 import Colors from "@/constants/Colors";
 
 export type SimpleChipProps = ThemeProps & {

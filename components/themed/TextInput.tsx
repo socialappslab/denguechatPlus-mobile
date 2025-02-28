@@ -4,9 +4,10 @@ import { useRef } from "react";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
+import { ThemeProps, useThemeColor } from "./useThemeColor";
 import { FontFamily } from "@/constants/Styles";
-import { IconMaterial, View } from "@/components/themed";
+import { IconMaterial } from "./IconMaterial";
+import { View } from "./View";
 import Clear from "@/assets/images/icons/clear.svg";
 
 export type TextInputProps = ThemeProps &
