@@ -61,7 +61,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   ] = useAxios<ExistingDocumentObject, unknown, ErrorResponse>(
     {
       // We need to support en-US es-ES etc in the backend
-      // for now whe're manually grabbing the first part
+      // for now we're manually grabbing the first part
       url: `questionnaires/current?language=${language?.split("-")[0]}`,
     },
     { manual: true },

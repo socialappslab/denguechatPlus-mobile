@@ -57,16 +57,6 @@ export interface Image {
   url: string;
 }
 
-// <Visit types>
-export interface Answer {
-  questionId: number;
-  answer: {
-    optionId: number;
-    value: boolean | string;
-    text?: string;
-  }[];
-}
-
 export interface Inspection {
   breeding_site_type_id: number;
   elimination_method_type_id: number;
@@ -156,7 +146,6 @@ export interface House {
 
 type QuestionId = string;
 export type FormState = Record<QuestionId, ISelectableItem | ISelectableItem[]>;
-export type FormPayload = Answer[];
 
 interface VisitAttributes {
   host: string[];
@@ -171,9 +160,6 @@ interface VisitAttributes {
   photoUri?: string;
   inspections: Inspection[];
 }
-export interface VisitPayload extends VisitAttributes {
-  answers: FormPayload;
-}
 
 export interface VisitData extends VisitAttributes {
   answers: FormState;
@@ -186,7 +172,6 @@ type UserId = number;
 type HouseId = number;
 
 export type VisitId = `${UserId}-${HouseId}`;
-export type VisitMap = Record<VisitId, FormState>;
 
 export interface ResourceData {
   id: number;
@@ -194,14 +179,6 @@ export interface ResourceData {
   updated_at: string;
   breeding_site_type_id?: number;
   photo_url?: string;
-}
-
-export interface ResourceDataWithTranslations {
-  id: number;
-  name_en: string;
-  name_es: string;
-  name_pt: string;
-  updated_at: string;
 }
 
 export interface Resource {
