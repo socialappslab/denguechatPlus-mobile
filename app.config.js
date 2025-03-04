@@ -77,7 +77,7 @@ export default {
       url: "https://u.expo.dev/213aa26c-f57b-4b2e-84f6-fa87fd86adbc",
     },
     runtimeVersion: {
-      policy: "appVersion",
+      policy: "fingerprint",
     },
     owner: "dengue-chat-plus",
   },
