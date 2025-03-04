@@ -18,7 +18,7 @@ export default {
       buildNumber: "1",
       config: {
         usesNonExemptEncryption: false,
-        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
+        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS ?? "",
       },
     },
     android: {
@@ -27,7 +27,7 @@ export default {
       blockedPermissions: ["android.permission.READ_MEDIA_VIDEO"],
       config: {
         googleMaps: {
-          apiKey: process.env.GOOGLE_MAPS_API_KEY_ANDROID,
+          apiKey: process.env.GOOGLE_MAPS_API_KEY_ANDROID ?? "",
         },
       },
     },
