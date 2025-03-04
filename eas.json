@@ -5,33 +5,34 @@
   },
   "build": {
     "development": {
-      "developmentClient": false,
-      "autoIncrement": "true",
+      "autoIncrement": true,
       "distribution": "internal",
       "environment": "development",
       "android": {
         "image": "latest"
-      }
+      },
+      "channel": "development"
     },
     "internal_test": {
-      "developmentClient": false,
       "distribution": "internal",
-      "autoIncrement": "true",
+      "autoIncrement": true,
       "android": {
         "image": "latest",
         "buildType": "app-bundle"
       },
-      "environment": "preview"
+      "environment": "preview",
+      "channel": "internal_test"
     },
     "test_flight": {
-      "developmentClient": false,
       "distribution": "store",
-      "autoIncrement": "true",
-      "environment": "production"
+      "autoIncrement": true,
+      "environment": "production",
+      "channel": "test_flight"
     },
     "production": {
       "autoIncrement": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "production"
     }
   },
   "submit": {
