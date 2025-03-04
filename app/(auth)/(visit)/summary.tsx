@@ -110,8 +110,6 @@ export default function Summary() {
     } catch (error) {
       console.log(error);
       const errorData = extractAxiosErrorData(error);
-      // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
-      // if (isConnected) rollbar.error(sanitizedVisitData, errorData);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
           type: "error",

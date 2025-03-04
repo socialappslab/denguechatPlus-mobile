@@ -1,9 +1,10 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
-import { Text, View } from "@/components/themed";
+import { Text } from "./Text";
+import { View } from "./View";
 import CheckGreen from "@/assets/images/icons/check-green.svg";
-import { ThemeProps } from "@/components/themed/useThemeColor";
+import { ThemeProps } from "./useThemeColor";
 
 export type SimpleSelectableItemProps = ThemeProps &
   TouchableOpacity["props"] & {
