@@ -5028,10 +5028,10 @@ expo-image-manipulator@~12.0.5:
   dependencies:
     expo-image-loader "~4.7.0"
 
-expo-image-picker@~15.0.7:
-  version "15.0.7"
-  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-15.0.7.tgz#eb25abfdb03cb940f0418add3d9814439526b025"
-  integrity sha512-u8qiPZNfDb+ap6PJ8pq2iTO7JKX+ikAUQ0K0c7gXGliKLxoXgDdDmXxz9/6QdICTshJBJlBvI0MwY5NWu7A/uw==
+expo-image-picker@~15.1.0:
+  version "15.1.0"
+  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-15.1.0.tgz#df64cdf58ed024db0da765ece13fa0333a4ad92c"
+  integrity sha512-6cE10S7d0qG7+pcHtsYukRKuFL44ssOM0/v+5JIBzRwxpIgGA6qokr8PxasFEpxOA9NpN0gwry33jmq1qLXJTg==
   dependencies:
     expo-image-loader "~4.7.0"
 
@@ -5153,10 +5153,10 @@ expo-updates-interface@~0.16.2:
   resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-0.16.2.tgz#ad1ac2ca8ee5a8cc84052ea3c18a11da64da569b"
   integrity sha512-929XBU70q5ELxkKADj1xL0UIm3HvhYhNAOZv5DSk7rrKvLo7QDdPyl+JVnwZm9LrkNbH4wuE2rLoKu1KMgZ+9A==
 
-expo-updates@~0.25.27:
-  version "0.25.27"
-  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.25.27.tgz#4aff889fea2aa221d8341a902646288f84c48b9e"
-  integrity sha512-1hyYZqBEXcAiEuSRPJ6dINTndGlWi6/bwlyYGjSnyoYfu/vzZQrJ+XA8JUP4EvJ3b0g8a0UOIjlDJ9ke9kMcfg==
+expo-updates@~0.25.28:
+  version "0.25.28"
+  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.25.28.tgz#37ab65f67798c7080e724a2ad91e763f1941d2ae"
+  integrity sha512-NTI1r7wvXel36qCzKwCjCJ9HExBo6GX9wkA9WzaNsysmg+eEd5BCmcaxvQGZUQkfDocEfI78N5vRBSuMi0iS1w==
   dependencies:
     "@expo/code-signing-certificates" "0.0.5"
     "@expo/config" "~9.0.0-beta.0"
