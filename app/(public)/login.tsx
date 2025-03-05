@@ -141,7 +141,6 @@ export default function Login() {
           <View className="flex flex-col items-center mb-2">
             <Logo className="mb-4"></Logo>
             <Text className="text-3xl font-semibold mb-2">DengueChatPlus</Text>
-            <Text className="mb-2">EAS Update works!</Text>
           </View>
           <FormProvider {...methods}>
             <View className="flex-row border-b border-neutral-300 mb-4">
