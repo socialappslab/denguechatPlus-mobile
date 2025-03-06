@@ -17,6 +17,7 @@ import {
 } from "@/constants/Keys";
 import { extractAxiosErrorData } from "@/util";
 import { Alert, Linking, Platform } from "react-native";
+import i18n from "./i18n";
 
 interface RetryConfig extends AxiosRequestConfig {
   retry: number;
@@ -66,14 +67,13 @@ export const setHeaderFromLocalStorage = async () => {
 
 function setupUpgradeRequiredInterceptor(axiosInstance: AxiosInstance) {
   axiosInstance.interceptors.response.use(undefined, (error: AxiosError) => {
-    console.error({ error });
     if (
       error instanceof AxiosError &&
-      error.status === HttpStatusCode.UpgradeRequired
+      error.status === HttpStatusCode.Unauthorized
     ) {
       Alert.alert(
-        "Update available",
-        "You must update your app",
+        i18n.t("errorCodes.mustUpdateAppTitle"),
+        i18n.t("errorCodes.mustUpdateAppDescription"),
         [
           {
             onPress: async () => {
@@ -93,7 +93,7 @@ function setupUpgradeRequiredInterceptor(axiosInstance: AxiosInstance) {
                   return;
               }
             },
-            text: "Update",
+            text: i18n.t("update"),
           },
         ],
         { cancelable: false },

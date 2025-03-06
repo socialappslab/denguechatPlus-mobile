@@ -15,6 +15,7 @@
     "placeholder": "Escribe aquí...",
     "quantity": "Cantidad",
     "ilustrationOrIcon": "Ilustración o ícono",
+    "update": "Actualizar",
     "config": {
       "search": "Buscar",
       "noResults": "No hay resultados para tu búsqueda",
@@ -273,7 +274,9 @@
       "46": "Credenciales inválidas",
       "51": "La cuenta no está activa",
       "55": "La cuenta fue bloqueada temporalmente. Se produjeron varios intentos fallidos de inicio de sesión. Vuelve a intentarlo más tarde.",
-      "generic": "Algo falló. Por favor intente de nuevo."
+      "generic": "Algo falló. Por favor intente de nuevo.",
+      "mustUpdateAppTitle": "Nueva actualización",
+      "mustUpdateAppDescription": "Debe actualizar la aplicación para continuar usando DengueChatPlus"
     }
   }
 }
