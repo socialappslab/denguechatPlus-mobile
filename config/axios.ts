@@ -65,12 +65,21 @@ export const setHeaderFromLocalStorage = async () => {
   setAccessTokenToHeaders(token);
 };
 
+/**
+ * Variable to avoid showing the alert multiple times due to multiple requests
+ * responding with 426 status code. Sadly it cannot be colocated in the
+ * interceptor itself because it's recreated on each request.
+ */
+let isAlertAlreadyOpen = false;
 function setupUpgradeRequiredInterceptor(axiosInstance: AxiosInstance) {
-  axiosInstance.interceptors.response.use(undefined, (error: AxiosError) => {
+  axiosInstance.interceptors.response.use(undefined, (error) => {
     if (
       error instanceof AxiosError &&
-      error.status === HttpStatusCode.UpgradeRequired
+      error.status === HttpStatusCode.UpgradeRequired &&
+      !isAlertAlreadyOpen
     ) {
+      isAlertAlreadyOpen = true;
+
       Alert.alert(
         i18n.t("errorCodes.mustUpdateAppTitle"),
         i18n.t("errorCodes.mustUpdateAppDescription"),
@@ -90,8 +99,10 @@ function setupUpgradeRequiredInterceptor(axiosInstance: AxiosInstance) {
                   break;
                 default:
                   console.error("Platform not supported");
-                  return;
+                  break;
               }
+
+              isAlertAlreadyOpen = false;
             },
             text: i18n.t("update"),
           },
@@ -99,6 +110,7 @@ function setupUpgradeRequiredInterceptor(axiosInstance: AxiosInstance) {
         { cancelable: false },
       );
     }
+
     return Promise.reject(error);
   });
 }
