@@ -15,6 +15,7 @@
     "placeholder": "Write here...",
     "quantity": "Quantity",
     "ilustrationOrIcon": "Ilustration or icon",
+    "update": "Update",
     "config": {
       "search": "Search",
       "noResults": "No results for your search",
@@ -272,7 +273,9 @@
       "generic": "Something went wrong. Please try again.",
       "46": "Invalid credentials",
       "51": "Account is not active",
-      "55": "The account was temporarily locked. Multiple failed login attempts occurred. Try again later."
+      "55": "The account was temporarily locked. Multiple failed login attempts occurred. Try again later.",
+      "mustUpdateAppTitle": "New update",
+      "mustUpdateAppDescription": "You must update the application to continue using DengueChatPlus."
     }
   }
 }
