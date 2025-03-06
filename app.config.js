@@ -36,6 +36,7 @@ export default {
       "expo-font",
       "expo-asset",
       "expo-localization",
+      "expo-secure-store",
       [
         "expo-location",
         {
