@@ -24,7 +24,7 @@ import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
-import { countSetFilters, extractAxiosErrorData, formatDate } from "@/util";
+import { countSetFilters, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
@@ -32,7 +32,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, RefreshControl, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { Routes } from "../(visit)/_layout";
-import { sanitizeInspections } from "../(visit)/sanitizeInspections";
+import { sanitizeInspections } from "@/util/sanitizeInspections";
 import { useFilters } from "@/hooks/useFilters";
 
 interface HouseReport {
