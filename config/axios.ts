@@ -1,15 +1,22 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  HttpStatusCode,
+} from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { configure, makeUseAxios } from "axios-hooks";
 import * as SecureStore from "expo-secure-store";
+import * as Application from "expo-application";
 import { router } from "expo-router";
 
 import {
   ACCESS_TOKEN_LOCAL_STORAGE_KEY,
   REFRESH_TOKEN_LOCAL_STORAGE_KEY,
   USER_LOCAL_STORAGE_KEY,
-} from "../constants/Keys";
-import { extractAxiosErrorData } from "../util";
+} from "@/constants/Keys";
+import { extractAxiosErrorData } from "@/util";
+import { Alert, Linking, Platform } from "react-native";
 
 interface RetryConfig extends AxiosRequestConfig {
   retry: number;
@@ -23,6 +30,8 @@ export const globalConfig: RetryConfig = {
   headers: {
     "Content-Type": "application/json",
     "X-Device-Type": "mobile",
+    "X-Client-Device": "mobile",
+    "X-App-Version": Application.nativeApplicationVersion,
   },
 };
 
@@ -43,7 +52,7 @@ export const resetAuthApi = () => {
     delete globalConfig.headers["X-Authorization"];
   }
   delete authApi.defaults.headers["X-Authorization"];
-  removeUser();
+  void removeUser();
 };
 
 export const setAccessTokenToHeaders = (accessToken: string | null) => {
@@ -54,6 +63,45 @@ export const setHeaderFromLocalStorage = async () => {
   const token = await SecureStore.getItemAsync(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
   setAccessTokenToHeaders(token);
 };
+
+function setupUpgradeRequiredInterceptor(axiosInstance: AxiosInstance) {
+  axiosInstance.interceptors.response.use(undefined, (error: AxiosError) => {
+    console.error({ error });
+    if (
+      error instanceof AxiosError &&
+      error.status === HttpStatusCode.UpgradeRequired
+    ) {
+      Alert.alert(
+        "Update available",
+        "You must update your app",
+        [
+          {
+            onPress: async () => {
+              switch (Platform.OS) {
+                case "android":
+                  await Linking.openURL(
+                    "https://play.google.com/store/apps/details?id=org.denguechatplus",
+                  );
+                  break;
+                case "ios":
+                  await Linking.openURL(
+                    "https://apps.apple.com/us/app/denguechatplus/id6741427309",
+                  );
+                  break;
+                default:
+                  console.error("Platform not supported");
+                  return;
+              }
+            },
+            text: "Update",
+          },
+        ],
+        { cancelable: false },
+      );
+    }
+    return Promise.reject(error);
+  });
+}
 
 authApi.interceptors.response.use(
   (response) => response,
@@ -165,3 +213,6 @@ createAuthRefreshInterceptor(authApi, refreshAuthLogic, {
 });
 
 configure({ axios: authApi, cache: false });
+
+setupUpgradeRequiredInterceptor(authApi);
+setupUpgradeRequiredInterceptor(publicApi);
