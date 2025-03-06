@@ -33,6 +33,7 @@ import {
 } from "@/schema/auth";
 
 import * as Sentry from "@sentry/react-native";
+import * as Application from "expo-application";
 import useSignIn from "@/hooks/useSignIn";
 import { extractAxiosErrorData } from "@/util";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -321,7 +322,7 @@ export default function Login() {
         </View>
         <View className="flex items-center">
           <Button
-            title="v.1.1.3"
+            title={`v${Application.nativeApplicationVersion}`}
             className="opacity-50 border-0 font-normal"
             onPress={() => {
               Sentry.captureException(new Error("First error"));
