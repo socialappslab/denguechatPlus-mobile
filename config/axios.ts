@@ -69,7 +69,7 @@ function setupUpgradeRequiredInterceptor(axiosInstance: AxiosInstance) {
   axiosInstance.interceptors.response.use(undefined, (error: AxiosError) => {
     if (
       error instanceof AxiosError &&
-      error.status === HttpStatusCode.Unauthorized
+      error.status === HttpStatusCode.UpgradeRequired
     ) {
       Alert.alert(
         i18n.t("errorCodes.mustUpdateAppTitle"),
