@@ -32,7 +32,7 @@
     "axios-auth-refresh": "^3.3.6",
     "axios-hooks": "^5.0.2",
     "expo": "^52.0.37",
-    "expo-application": "~5.9.1",
+    "expo-application": "~6.0.2",
     "expo-asset": "~11.0.4",
     "expo-camera": "~16.0.17",
     "expo-dev-client": "~5.0.12",
