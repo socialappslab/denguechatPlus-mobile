@@ -74,44 +74,9 @@ const CustomDrawerContent = () => {
           <Logo className="mr-2"></Logo>
           <Text className="text-lg font-semibold">DengueChatPlus</Text>
         </View>
-        <View className="flex flex-1 flex-col px-2">
-          <TouchableOpacity
-            className="flex py-3 flex-row items-center"
-            onPress={() => router.push("my-city")}
-          >
-            <MyCity />
-            <Text className="font-semibold ml-3">{t("drawer.myCity")}</Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            className="flex py-3 flex-row items-center"
-            onPress={() => router.push("/my-community")}
-          >
-            <MyCommunity />
-            <Text className="font-semibold ml-3">
-              {t("drawer.myCommunity")}
-            </Text>
-          </TouchableOpacity>
+        <View className="flex-grow"></View>
 
-          <TouchableOpacity
-            className="flex py-3 flex-row items-center"
-            onPress={() => router.push("/brigades")}
-          >
-            <Brigades />
-            <Text className="font-semibold ml-3"> {t("drawer.brigades")}</Text>
-          </TouchableOpacity>
-          <ProtectedView hasPermission={["users-change_team"]}>
-            <TouchableOpacity
-              className="flex py-3 flex-row items-center"
-              onPress={() => router.push("/select-user")}
-            >
-              <AssignBrigade />
-              <Text className="font-semibold ml-3">
-                {t("drawer.assignBrigade")}
-              </Text>
-            </TouchableOpacity>
-          </ProtectedView>
-        </View>
         <View className="flex justify-end">
           {openSettings && (
             <TouchableOpacity
