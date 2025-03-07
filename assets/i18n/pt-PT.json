@@ -49,7 +49,7 @@
       "successDescription": "agora pertence a"
     },
     "chat": {
-      "empty": "Sem publicações",
+      "empty": "Sem blogs",
       "sharePlaceholder": "Compartilhe com os outros...",
       "visibility": {
         "title": "Quem pode ver?",
@@ -73,18 +73,18 @@
         "post": "Publicar",
         "edit": "Editar",
         "save": "Salvar",
-        "editPost": "Editar Publicação",
-        "deletePost": "Excluir Publicação",
+        "editPost": "Editar Blog",
+        "deletePost": "Excluir Blog",
         "deleteComment": "Excluir comentário",
         "deleteDraft": "Descartar rascunho"
       },
       "deleteDraftMessage": "Tem certeza de que deseja descartar este rascunho? Esta ação não pode ser desfeita.",
-      "deletePosttMessage": "Tem certeza de que deseja excluir esta publicação? Esta ação não pode ser desfeita.",
-      "createPost": "Criar publicação",
-      "postSendSuccess": "Publicação enviada",
+      "deletePosttMessage": "Tem certeza de que deseja excluir este blog? Esta ação não pode ser desfeita.",
+      "createPost": "Criar blog",
+      "postSendSuccess": "Blog enviado",
       "commentDeleted": "Comentário excluído",
-      "postDeleted": "Publicação excluída",
-      "postUpdated": "Publicação atualizada",
+      "postDeleted": "Blog excluído",
+      "postUpdated": "Blog atualizado",
       "draftDescarted": "Rascunho descartado"
     },
     "tabs": {
@@ -148,8 +148,8 @@
       "passwordLength": "A senha deve ter pelo menos {{length}} caracteres",
       "usernameLength": "O nome de usuário deve ter pelo menos {{length}} caracteres",
       "phoneLength": "O número de telefone é muito curto",
-      "contentPostLengthMin": "O texto da publicação não pode estar vazio",
-      "contentPostLengthMax": "O texto da publicação é muito grande",
+      "contentPostLengthMin": "O texto do blog não pode estar vazio",
+      "contentPostLengthMax": "O texto do blog é muito grande",
       "contentCommentLengthMin": "O texto do comentário não pode estar vazio",
       "contentCommentLengthMax": "O texto do comentário é muito grande"
     },
