@@ -49,7 +49,7 @@
       "successDescription": "ahora pertenece a"
     },
     "chat": {
-      "empty": "No hay publicaciones",
+      "empty": "No hay blogs",
       "sharePlaceholder": "Comparte con los demás...",
       "visibility": {
         "title": "¿Quién puede ver?",
@@ -73,18 +73,18 @@
         "post": "Publicar",
         "edit": "Editar",
         "save": "Guardar",
-        "editPost": "Editar Publicación",
-        "deletePost": "Borrar Publicación",
+        "editPost": "Editar Blog",
+        "deletePost": "Borrar Blog",
         "deleteComment": "Borrar comentario",
         "deleteDraft": "Descartar borrador"
       },
       "deleteDraftMessage": "¿Estás seguro de que quieres descartar este borrador? Esta acción no puede deshacerse.",
-      "deletePosttMessage": "¿Estás seguro de que quieres borrar esta publicación? Esta acción no puede deshacerse.",
-      "createPost": "Crear publicación",
-      "postSendSuccess": "Publicación enviada",
+      "deletePosttMessage": "¿Estás seguro de que quieres borrar este blog? Esta acción no puede deshacerse.",
+      "createPost": "Crear blog",
+      "postSendSuccess": "Blog enviado",
       "commentDeleted": "Comentario borrado",
-      "postDeleted": "Publicación borrada",
-      "postUpdated": "Publicación actualizada",
+      "postDeleted": "Blog borrado",
+      "postUpdated": "Blog actualizado",
       "draftDescarted": "Borrador descartado"
     },
     "tabs": {
@@ -150,8 +150,8 @@
       "passwordLength": "La contraseña debe tener al menos {{length}} caracteres",
       "usernameLength": "El nombre de usuario debe tener al menos {{length}} caracteres",
       "phoneLength": "El teléfono es muy corto",
-      "contentPostLengthMin": "El texto de la publicación no puede estar vacío",
-      "contentPostLengthMax": "El texto de la publicación es demasiado largo",
+      "contentPostLengthMin": "El texto del blog no puede estar vacío",
+      "contentPostLengthMax": "El texto del blog es demasiado largo",
       "contentCommentLengthMin": "El texto del comentario no puede estar vacío",
       "contentCommentLengthMax": "El texto del comentario es demasiado largo"
     },
