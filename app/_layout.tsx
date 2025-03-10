@@ -10,7 +10,6 @@ import Toast from "react-native-toast-message";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-// import { useZustandDevtool } from "@/util/zustandDevTool";
 
 import AuthProvider, { useAuth } from "@/context/AuthProvider";
 import { LANGUAGE_LOCAL_STORAGE_KEY } from "@/constants/Keys";
@@ -23,6 +22,7 @@ import { useVisitStore } from "@/hooks/useVisitStore";
 import { BrigadeProvider } from "@/context/BrigadeContext";
 import { FilterProvider } from "@/context/FilterContext";
 import * as Sentry from "@sentry/react-native";
+import { StatusBar } from "expo-status-bar";
 
 Sentry.init({
   dsn: "https://1530b05d8bc80b91a3304733b4f40e15@o4508732723232768.ingest.us.sentry.io/4508732748529664",
@@ -127,6 +127,7 @@ function RootLayoutNav() {
   };
   return (
     <>
+      <StatusBar style="dark" />
       <StoreState {...state} />
       <AuthProvider>
         <BrigadeProvider>
