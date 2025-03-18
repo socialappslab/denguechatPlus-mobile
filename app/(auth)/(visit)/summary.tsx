@@ -6,12 +6,7 @@ import { useVisit } from "@/hooks/useVisit";
 import { useVisitStore } from "@/hooks/useVisitStore";
 import { VisitData } from "@/types";
 import { Inspection, StatusColor } from "@/types/prepareFormData";
-import {
-  extractAxiosErrorData,
-  formatDate,
-  orderStatus,
-  prepareFormData,
-} from "@/util";
+import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
@@ -19,7 +14,6 @@ import { sanitizeInspections } from "./sanitizeInspections";
 import { Image } from "react-native";
 
 const getColorsAndQuantities = (inspections: Inspection[]) => {
-  let color: StatusColor = StatusColor.NO_INFECTED;
   const colorsAndQuantities: Record<StatusColor, number> = {
     RED: 0,
     YELLOW: 0,
@@ -33,18 +27,20 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
     colorsAndQuantities[inspection.statusColor as StatusColor] += quantity;
   }
 
-  // Ordering
-  const colors = Object.keys(colorsAndQuantities);
-  const unorderedColors: StatusColor[] = [];
+  const optionWithHighestWeight = inspections
+    .map((inspection) => Object.values(inspection))
+    .flat(2)
+    .filter((item) => !!item?.statusColor && !!item?.weightedPoints)
+    .reduce(
+      (previous, current) =>
+        previous.weightedPoints > current.weightedPoints ? previous : current,
+      [],
+    );
 
-  for (const key of colors) {
-    if (colorsAndQuantities[key as StatusColor] >= 1) {
-      unorderedColors.push(key as StatusColor);
-    }
-  }
-  color = orderStatus(unorderedColors);
-
-  return { colorsAndQuantities, mainStatusColor: color };
+  return {
+    colorsAndQuantities,
+    mainStatusColor: optionWithHighestWeight.statusColor,
+  };
 };
 
 export default function Summary() {
@@ -53,14 +49,17 @@ export default function Summary() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
-  const { inspections, answers, visit } = prepareFormData(visitMap[visitId]);
 
-  // if there's only one answer, there was a not allowed - early exit
-  const notAllowed__EarlyExit = answers.length === 1;
+  const currentVisit = visitMap[visitId];
 
+  const { inspections, answers, visit } = prepareFormData(currentVisit);
   let { mainStatusColor, colorsAndQuantities } =
     getColorsAndQuantities(inspections);
-  mainStatusColor = notAllowed__EarlyExit
+
+  // if there's only one answer, there was a not allowed - early exit
+  const visitWasNotAllowedOrWasEarlyExit = answers.length === 1;
+
+  mainStatusColor = visitWasNotAllowedOrWasEarlyExit
     ? StatusColor.INFECTED
     : mainStatusColor;
 
@@ -77,17 +76,14 @@ export default function Summary() {
         text1: t("generic"),
       });
     }
-    const completeVisitData = {
+
+    const sanitizedVisitData = {
       ...visitData,
       house: visitData.houseId ? undefined : visitData.house,
-      visitPermission: notAllowed__EarlyExit ? false : true,
+      visitPermission: !visitWasNotAllowedOrWasEarlyExit,
       host: visit.host,
       visitedAt: new Date(),
-      inspections,
       answers,
-    };
-    const sanitizedVisitData = {
-      ...completeVisitData,
       inspections: sanitizeInspections(inspections),
     };
 
@@ -99,7 +95,7 @@ export default function Summary() {
         type: "success",
         text1: t("success"),
       });
-      router.push("final");
+      router.push("/final");
       // Cleanup, if it's not connected we send house details
       finaliseCurrentVisit(isConnected, {
         ...sanitizedVisitData,
@@ -155,7 +151,12 @@ export default function Summary() {
           <Button
             title={t("editFromStart")}
             onPress={() =>
-              router.push(`visit/${questionnaire?.initialQuestion}`)
+              router.push({
+                pathname: "/visit/[id]",
+                params: {
+                  id: questionnaire?.initialQuestion,
+                },
+              })
             }
           />
         </View>

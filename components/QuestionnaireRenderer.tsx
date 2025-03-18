@@ -2,7 +2,7 @@ import { SelectableItem, Text, View } from "@/components/themed";
 import { VisitCase } from "@/hooks/useVisitStore";
 import { InspectionQuestion, OptionType, ResourceType } from "@/types";
 import { Image } from "expo-image";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Control,
   Controller,
@@ -38,6 +38,7 @@ export interface ISelectableItem {
   disableOtherOptions?: boolean;
   bool?: boolean;
   selectedCase?: VisitCase;
+  weightedPoints: number | null;
 }
 
 /** Utils */
@@ -62,6 +63,7 @@ const formatOptionsForSelectableItems = ({
         disableOtherOptions,
         value,
         selectedCase,
+        weightedPoints,
       }) => ({
         position: id,
         value: id,
@@ -78,6 +80,7 @@ const formatOptionsForSelectableItems = ({
         disableOtherOptions,
         bool: optionType === "boolean" ? !!parseInt(value!) : undefined,
         selectedCase,
+        weightedPoints,
       }),
     )
     .sort((a, b) => a.position - b.position) || [];
@@ -96,6 +99,7 @@ export interface FormStateOption {
   label?: string;
   bool?: boolean;
   selectedCase?: VisitCase;
+  weightedPoints?: number | null;
 }
 
 const prepareOption = ({
@@ -111,6 +115,7 @@ const prepareOption = ({
     label,
     bool,
     selectedCase,
+    weightedPoints,
   },
   text,
   inspectionIdx,
@@ -133,6 +138,7 @@ const prepareOption = ({
     label,
     bool,
     selectedCase,
+    weightedPoints,
   };
 };
 

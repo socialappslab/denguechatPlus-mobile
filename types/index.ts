@@ -50,6 +50,7 @@ export interface Option {
   disableOtherOptions?: boolean;
   selectedCase?: VisitCase;
   showInCase?: VisitCase;
+  weightedPoints: number | null;
 }
 
 export interface Image {
