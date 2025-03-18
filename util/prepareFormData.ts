@@ -28,16 +28,27 @@ export const prepareFormData = (formData: FormState) => {
         (item) => item.text || (item.resourceId as string),
       );
 
-      if (resourceName == "container_protection_ids") {
-        inspections[index][resourceName] = answer.map(
-          (item) => item.resourceId,
-        );
+      if (resourceName === "container_protection_ids") {
+        inspections[index][resourceName] = answer.map((item) => ({
+          id: item.resourceId,
+          statusColor: item.statusColor,
+          weightedPoints: item.weightedPoints,
+        }));
+
         const textAreaOption = answer.find(
           (item) => item.optionType === "textArea",
         );
         if (textAreaOption) {
           inspections[index]["other_protection"] = textAreaOption.text;
         }
+      }
+
+      if (resourceName === "type_content_id") {
+        inspections[index]["type_content_id"] = answer.map((item) => ({
+          id: item.resourceId,
+          statusColor: item.statusColor,
+          weightedPoints: item.weightedPoints,
+        }));
       }
 
       if (resourceName === "host")
@@ -64,11 +75,14 @@ export const prepareFormData = (formData: FormState) => {
         inspections[index][resourceName] = answer.resourceId;
 
       if (answer.resourceType === "attribute") {
-        inspections[index][resourceName] =
-          answer.text || answer.bool || answer.label;
+        inspections[index][resourceName] = {
+          value: answer.text || answer.bool || answer.label,
+          statusColor: answer.statusColor,
+          weightedPoints: answer.weightedPoints,
+        };
       }
 
-      if (answer?.selectedCase) {
+      if (answer.selectedCase) {
         inspections[index]["location"] = answer.selectedCase;
       }
 

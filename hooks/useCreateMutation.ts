@@ -7,7 +7,7 @@ import { ErrorResponse } from "@/schema";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 
-type IUseCreate<P> = {
+type IUseCreate<P, S> = {
   createMutation: (payload: P) => Promise<S>;
   loading: boolean;
 };
@@ -15,7 +15,7 @@ type IUseCreate<P> = {
 export default function useCreateMutation<P, S>(
   endpoint: string,
   headers?: Record<string, string>,
-): IUseCreate<P> {
+): IUseCreate<P, S> {
   const [{ loading }, create] = useAxios<
     ExistingDocumentObject,
     P,
