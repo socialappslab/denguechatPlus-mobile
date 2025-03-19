@@ -14,32 +14,48 @@ import { sanitizeInspections } from "./sanitizeInspections";
 import { Image } from "react-native";
 
 const getColorsAndQuantities = (inspections: Inspection[]) => {
+  const highestWeightInEachContainer = inspections
+    .map((inspection) => Object.values(inspection))
+    .map((valuesArray) =>
+      valuesArray
+        .flat()
+        .filter((item) => !!item?.statusColor && !!item?.weightedPoints)
+        .reduce(
+          (previous, current) =>
+            previous.weightedPoints > current.weightedPoints
+              ? previous
+              : current,
+          [],
+        ),
+    );
+
   const colorsAndQuantities: Record<StatusColor, number> = {
     RED: 0,
     YELLOW: 0,
     GREEN: 0,
   };
-  for (const inspection of inspections) {
+
+  for (const [index, inspection] of inspections.entries()) {
     const quantity =
       (!Array.isArray(inspection.quantity_founded) &&
         parseInt(inspection.quantity_founded as string)) ||
       0;
-    colorsAndQuantities[inspection.statusColor as StatusColor] += quantity;
+
+    colorsAndQuantities[
+      highestWeightInEachContainer[index].statusColor as StatusColor
+    ] += quantity;
   }
 
-  const optionWithHighestWeight = inspections
-    .map((inspection) => Object.values(inspection))
-    .flat(2)
-    .filter((item) => !!item?.statusColor && !!item?.weightedPoints)
-    .reduce(
-      (previous, current) =>
-        previous.weightedPoints > current.weightedPoints ? previous : current,
-      [],
-    );
+  const colorOrder = Object.values(StatusColor);
+  const worstStatusColorBetweenContainers =
+    highestWeightInEachContainer.sort(
+      (a, b) =>
+        colorOrder.indexOf(a.statusColor) - colorOrder.indexOf(b.statusColor),
+    )[0]?.statusColor ?? StatusColor.NO_INFECTED;
 
   return {
     colorsAndQuantities,
-    mainStatusColor: optionWithHighestWeight.statusColor,
+    mainStatusColor: worstStatusColorBetweenContainers,
   };
 };
 
