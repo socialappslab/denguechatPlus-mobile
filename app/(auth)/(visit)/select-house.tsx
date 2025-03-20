@@ -31,7 +31,7 @@ export default function SelectHouseScreen() {
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
-  const { user } = useAuth();
+  const { user, meData } = useAuth();
   const { setVisitData, questionnaire, language, isConnected } = useVisit();
   const { initialiseCurrentVisit, storedHouseList, saveHouseList } =
     useVisitStore();
@@ -53,7 +53,12 @@ export default function SelectHouseScreen() {
       questionnaireId: questionnaire.id,
       teamId: user.teamId,
     });
-    router.push(`visit/${questionnaire?.initialQuestion}`);
+    router.push({
+      pathname: "/visit/[id]",
+      params: {
+        id: questionnaire.initialQuestion,
+      },
+    });
   };
 
   const [{ data, loading, error }, refetch] = useAxios(
@@ -92,15 +97,9 @@ export default function SelectHouseScreen() {
   };
 
   const renderTitle = (houses: House[]) => {
-    if (houses.length === 0) {
-      return "";
-    }
-
+    if (houses.length === 0) return "";
     const house = houses[0];
-
-    // const houseBlock = house.houseBlock ? ` - ${house.houseBlock.name}` : "";
-    // const houseWedge = house.wedge ? ` - ${house.wedge.name}` : "";
-    // return `${house.neighborhood?.name}${houseWedge}${houseBlock}`;
+    // TODO: check the neighborhood type, I think we will always have a neighborhood.
     return `${house.neighborhood?.name}`;
   };
 
@@ -132,9 +131,16 @@ export default function SelectHouseScreen() {
             <Text className="text-xl font-bold mb-2">
               {t("visit.houses.optionsTitle")}
             </Text>
-            <Text className="text-md font-normal mb-4">
+
+            <Text className="text-md font-normal mb-2">
               {renderTitle(houseOptions)}
             </Text>
+
+            {meData?.userProfile?.houseBlock?.name && (
+              <Text className="text-md font-normal mb-4">
+                Frente a Frente: {meData.userProfile.houseBlock.name}
+              </Text>
+            )}
           </View>
         )}
 

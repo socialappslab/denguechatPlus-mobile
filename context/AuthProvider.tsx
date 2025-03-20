@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useContext } from "react";
 import { router, useSegments } from "expo-router";
 import useAxios from "axios-hooks";
@@ -84,9 +90,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     { manual: true },
   );
 
-  const reFetchMe = () => {
+  const reFetchMe = useCallback(() => {
     featchMe();
-  };
+  }, [featchMe]);
 
   useEffect(() => {
     // console.log("userFromLocalStorage>>>", userFromLocalStorage);
