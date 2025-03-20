@@ -2,7 +2,7 @@ import { useIsFocused } from "@react-navigation/native";
 import useAxios from "axios-hooks";
 import { useRouter } from "expo-router";
 import { deserialize } from "jsonapi-fractal";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SelectableItem } from "@/components/themed";
@@ -61,10 +61,8 @@ export default function SelectHouseScreen() {
     });
   };
 
-  const [{ data, loading, error }, refetch] = useAxios(
-    {
-      url: `/houses/list_to_visit?filter[reference_code]=${searchText}`,
-    },
+  const [{ data, loading }, refetch] = useAxios(
+    { url: `/houses/list_to_visit` },
     { manual: true },
   );
 
@@ -103,6 +101,18 @@ export default function SelectHouseScreen() {
     return `${house.neighborhood?.name}`;
   };
 
+  const filteredHouses = useMemo(() => {
+    if (!searchText.length) {
+      return houseOptions;
+    }
+
+    const filtered = houseOptions.filter((house) =>
+      house.referenceCode.toUpperCase().includes(searchText.toUpperCase()),
+    );
+
+    return filtered;
+  }, [houseOptions, searchText]);
+
   return (
     <SafeAreaView>
       <View className="flex flex-1 py-5 px-5">
@@ -116,6 +126,7 @@ export default function SelectHouseScreen() {
             className="flex-1 ml-2"
             value={searchText}
             onChangeText={(value) => setSearchText(value)}
+            onClear={() => setSearchText("")}
             style={{ borderWidth: 0 }}
           />
         </View>
@@ -145,9 +156,9 @@ export default function SelectHouseScreen() {
         )}
 
         <ScrollView className="pb-4" showsVerticalScrollIndicator={false}>
-          {!loading && houseOptions.length > 0 && (
+          {!loading && filteredHouses.length > 0 && (
             <View className="my-1">
-              {houseOptions.map((house) => (
+              {filteredHouses.map((house) => (
                 <SelectableItem
                   key={house.id}
                   checked={house.id === houseSelected?.id}
