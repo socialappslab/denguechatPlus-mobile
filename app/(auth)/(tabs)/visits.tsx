@@ -347,18 +347,18 @@ export default function Visits() {
                       storedVisits: storedVisits.length,
                     })}
                   </Text>
-                  {orderedVisits.map((visit, idx) => {
-                    return (
-                      <ListItem
-                        title={
-                          visit.house &&
-                          `${t("visit.houses.house")} ${visit?.house?.referenceCode}`
-                        }
-                        onPressElement={() => handlePressVisit(visit)}
-                        filled={formatDate(visit.visitedAt, language)}
-                      />
-                    );
-                  })}
+                  {orderedVisits.map((visit, idx) => (
+                    <ListItem
+                      key={idx}
+                      testID="offlineVisit"
+                      title={
+                        visit.house &&
+                        `${t("visit.houses.house")} ${visit?.house?.referenceCode}`
+                      }
+                      onPressElement={() => handlePressVisit(visit)}
+                      filled={formatDate(visit.visitedAt, language)}
+                    />
+                  ))}
                 </>
               )}
               {!hasVisits && (
