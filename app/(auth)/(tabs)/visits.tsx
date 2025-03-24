@@ -390,7 +390,7 @@ export default function Visits() {
                     {!loading && (
                       <VisitSummary
                         date={`${formatDate(selectedVisit?.visitedAt || "", language)}`}
-                        sector={meData?.userProfile?.neighborhood}
+                        sector={team?.sector?.name}
                         house={`${selectedVisit?.house?.referenceCode}`}
                         color={selectedVisit?.statusColor}
                         greens={selectedVisit?.colorsAndQuantities?.GREEN}
