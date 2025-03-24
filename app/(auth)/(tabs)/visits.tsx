@@ -24,12 +24,12 @@ import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
-import { countSetFilters, extractAxiosErrorData, formatDate } from "@/util";
+import { countSetFilters, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Platform, RefreshControl, StyleSheet } from "react-native";
+import { Platform, RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
 import { Routes } from "../(visit)/_layout";
 import { sanitizeInspections } from "../(visit)/sanitizeInspections";
@@ -154,6 +154,18 @@ const VisitsReport = ({
   );
 };
 
+const SuccessSummary = () => {
+  const { t } = useTranslation();
+
+  return (
+    <View className="flex flex-col justify-center items-center flex-1">
+      <Text type="title" className="text-center">
+        {t("visit.synchronizedVisit")}
+      </Text>
+    </View>
+  );
+};
+
 export default function Visits() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -186,7 +198,7 @@ export default function Visits() {
     (a, b) => new Date(b.visitedAt) - new Date(a.visitedAt),
   );
 
-  const [{ data: teamData, loading: loadingTeam }, refetchTeam] = useAxios<
+  const [{ data: teamData }, refetchTeam] = useAxios<
     ExistingDocumentObject,
     unknown,
     ErrorResponse
@@ -196,13 +208,11 @@ export default function Visits() {
 
   useEffect(() => {
     if (meData) refetchTeam();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [meData]);
+  }, [meData, refetchTeam]);
 
   useEffect(() => {
     if (!teamData) return;
     const deserializedData = deserialize<Team>(teamData);
-    // console.log("deserializedData TEAM>>>>>>>>>>", deserializedData);
     if (deserializedData && !Array.isArray(deserializedData)) {
       setTeam(deserializedData);
     }
@@ -223,7 +233,7 @@ export default function Visits() {
         name: meData?.userProfile?.team?.sector_name,
       },
     });
-  }, []);
+  }, [meData]);
 
   useEffect(() => {
     fetchData(filters.sector?.id, filters?.wedge?.id, filters.team?.id);
@@ -247,7 +257,7 @@ export default function Visits() {
       });
       setData(response.data);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
     setLoadingReports(false);
   };
@@ -290,7 +300,7 @@ export default function Visits() {
         text1: t(["errorCodes.generic"]),
       });
       setLoading(false);
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -300,16 +310,6 @@ export default function Visits() {
   };
 
   const snapPoints = useMemo(() => ["90%"], []);
-
-  const SuccessSummary = () => {
-    return (
-      <View className="flex flex-col justify-center items-center flex-1">
-        <Text type="title" className="text-center">
-          {t("visit.synchronizedVisit")}
-        </Text>
-      </View>
-    );
-  };
 
   return (
     <SafeAreaView>
@@ -427,5 +427,3 @@ export default function Visits() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({ circle: { backgroundColor: "#FC0606" } });
