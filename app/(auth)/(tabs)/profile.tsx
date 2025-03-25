@@ -85,7 +85,7 @@ export default function Profile() {
               >
                 <View className="mb-2">
                   <Text className="text-xl font-bold mb-2">{team?.name}</Text>
-                  <Text className="font-normal mb-4">
+                  <Text className="font-normal mb-2">
                     {team?.sector?.name} - {team?.wedge?.name}
                   </Text>
                   {meData?.userProfile?.houseBlock?.name && (
