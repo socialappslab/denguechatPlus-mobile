@@ -138,6 +138,7 @@
       "title": "Crear una cuenta",
       "firstName": "Nombre",
       "lastName": "Apellido",
+      "email": "Correo electrónico",
       "confirmPassword": "Confirmar contraseña",
       "city": "Ciudad",
       "neighborhood": "Barrio",

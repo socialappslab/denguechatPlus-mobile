@@ -440,7 +440,7 @@ export default function Register() {
               inputRef={emailRef}
               control={control}
               name="email"
-              label={t("login.email")}
+              label={t("register.email")}
               inputMode="email"
               returnKeyType="next"
               onSubmitEditing={() => {

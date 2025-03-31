@@ -136,6 +136,7 @@
       "title": "Create an account",
       "firstName": "First name",
       "lastName": "Last name",
+      "email": "Email",
       "confirmPassword": "Confirm password",
       "city": "City",
       "neighborhood": "Neighborhood",
