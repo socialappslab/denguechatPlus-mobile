@@ -513,6 +513,7 @@ export default function Register() {
             onPress={() => {
               onSubmitHandler();
             }}
+            disabled={createAccount.isPending}
           />
         </View>
       </ScrollView>
