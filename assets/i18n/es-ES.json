@@ -1,6 +1,7 @@
 {
   "translation": {
     "yes": "Sí",
+    "done": "Hecho",
     "no": "No",
     "back": "Atrás",
     "next": "Siguiente",
@@ -16,6 +17,7 @@
     "quantity": "Cantidad",
     "ilustrationOrIcon": "Ilustración o ícono",
     "update": "Actualizar",
+    "selectOption": "Selecciona una opción...",
     "config": {
       "search": "Buscar",
       "noResults": "No hay resultados para tu búsqueda",

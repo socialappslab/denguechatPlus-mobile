@@ -6,6 +6,7 @@ import {
 } from "react-hook-form";
 import { Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   label?: string;
@@ -39,6 +40,7 @@ export function PickerInput<T extends FieldValues>({
     control,
     disabled,
   });
+  const { t } = useTranslation();
 
   return (
     <View>
@@ -53,6 +55,7 @@ export function PickerInput<T extends FieldValues>({
         onValueChange={(value) => {
           field.onChange(value);
         }}
+        placeholder={{ label: t("selectOption"), value: null }}
         value={field.value}
         disabled={disabled}
         style={{
@@ -86,6 +89,7 @@ export function PickerInput<T extends FieldValues>({
             color="#e7e5e4"
           />
         )}
+        doneText={t("done")}
       />
 
       {error?.message && (
