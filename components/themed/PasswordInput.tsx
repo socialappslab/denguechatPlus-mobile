@@ -26,7 +26,7 @@ export function PasswordInput(props: TextInputProps) {
 
   return (
     <View
-      className={`${hasError ? "border-red-500" : "border-neutral-200"} border rounded-lg flex flex-row items-center h-11 p-2`}
+      className={`${hasError ? "border-red-500" : "border-neutral-200"} border rounded-lg flex flex-row items-center h-11 p-2 bg-white`}
     >
       <DefaultTextInput
         ref={inputRef}
@@ -40,6 +40,8 @@ export function PasswordInput(props: TextInputProps) {
           style,
         ]}
         className="flex-grow flex-1 border-0"
+        autoCapitalize="none"
+        autoCorrect={false}
         {...otherProps}
       />
       <Pressable onPress={onChangeVisibility} className="-mr-px">

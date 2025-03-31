@@ -37,6 +37,7 @@ import * as Application from "expo-application";
 import useSignIn from "@/hooks/useSignIn";
 import { extractAxiosErrorData } from "@/util";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { Link } from "expo-router";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -105,7 +106,6 @@ export default function Login() {
       await signInMutation(payload);
     } catch (error) {
       const errorData = extractAxiosErrorData(error);
-      // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
           type: "error",
@@ -274,8 +274,6 @@ export default function Login() {
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    autoCapitalize="none"
-                    autoCorrect={false}
                     onSubmitEditing={() => refPassword.current?.blur()}
                   />
                 )}
@@ -309,14 +307,11 @@ export default function Login() {
 
             <View className="flex flex-row items-center justify-center mt-4 mb-2">
               <Text className="mr-1">{t("login.registerMessage")}</Text>
-              <ExternalLink
-                className="items-center justify-center"
-                href={`${process.env.EXPO_PUBLIC_REGISTER_URL}`}
-              >
+              <Link href="/register">
                 <Text className="font-bold text-md color-primary">
                   {t("login.register")}
                 </Text>
-              </ExternalLink>
+              </Link>
             </View>
           </FormProvider>
         </View>
