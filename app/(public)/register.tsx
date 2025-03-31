@@ -84,10 +84,8 @@ function useValidationSchema() {
             .string()
             .trim()
             .min(4, t("validation.usernameLength", { length: 4 })),
-          phone: z.object({
-            number: z.string().min(1, t("validation.required")),
-            country: z.string().min(1, t("validation.required")),
-          }),
+          phone: z.string().min(1, t("validation.required")),
+          country: z.string().min(1, t("validation.required")),
           email: z.string().trim().email().optional().or(z.literal("")),
           password: z
             .string()
@@ -206,9 +204,10 @@ export default function Register() {
     formState: { errors },
     handleSubmit,
     setError,
+    setValue,
     watch,
   } = useForm<SchemaInput, unknown, SchemaOutput>({
-    mode: "onChange",
+    mode: "onBlur",
     resolver: zodResolver<SchemaInput>(schema),
     defaultValues: {
       city: null,
@@ -264,14 +263,14 @@ export default function Register() {
   const onSubmitHandler = handleSubmit(async (data) => {
     try {
       const payload = {
-        phone: data.phone.number,
+        phone: data.phone,
         password: data.password,
         username: data.username,
         userProfile: {
           firstName: data.firstName,
           lastName: data.lastName,
           email: data.email,
-          country: data.phone.country.toUpperCase(),
+          country: data.country.toUpperCase(),
           organizationId: Number(data.organization),
           cityId: Number(data.city),
           neighborhoodId: Number(data.neighborhood),
@@ -290,8 +289,8 @@ export default function Register() {
           setError(error.field, {
             type: "manual",
             message: t(
-              `errorCodes:${String(error?.error_code)}` ||
-                "errorCodes:genericField",
+              `errorCodes.${String(error?.error_code)}` ||
+                "errorCodes.genericField",
               {
                 field: watch(error.field),
               },
@@ -300,7 +299,7 @@ export default function Register() {
         } else {
           Toast.show({
             type: "error",
-            text1: t(`errorCodes:${error?.error_code || "generic"}`),
+            text1: t(`errorCodes.${error?.error_code || "generic"}`),
           });
         }
       });
@@ -308,7 +307,7 @@ export default function Register() {
       if (!errorData?.errors || errorData?.errors.length === 0) {
         Toast.show({
           type: "error",
-          text1: t("errorCodes:generic"),
+          text1: t("errorCodes.generic"),
         });
       }
     }
@@ -394,7 +393,8 @@ export default function Register() {
                         color: "black",
                       }}
                       onChangePhoneNumber={(number, country) => {
-                        field.onChange({ number, country });
+                        field.onChange(number);
+                        setValue("country", country);
                       }}
                       initialCountry={DEFAULT_COUNTRY_CODE.toLowerCase()}
                       onPressFlag={() => setShowPhoneCountryPicker(true)}
@@ -409,6 +409,12 @@ export default function Register() {
                       }}
                     />
                   </View>
+
+                  {errors.phone?.message && (
+                    <Text className="text-red-500 text-xs mt-1">
+                      {t(errors.phone.message)}
+                    </Text>
+                  )}
 
                   <CountryPicker
                     preferredCountries={["PE", "PY", "BR"]}

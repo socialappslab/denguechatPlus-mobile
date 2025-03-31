@@ -286,6 +286,7 @@
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",
+      "genericField": "Verify the field",
       "46": "Invalid credentials",
       "48": "The user '{{field}}' is already in use",
       "49": "The phone '{{field}}' is already in use",

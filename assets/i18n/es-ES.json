@@ -293,6 +293,7 @@
       "51": "La cuenta no está activa",
       "55": "La cuenta fue bloqueada temporalmente. Se produjeron varios intentos fallidos de inicio de sesión. Vuelve a intentarlo más tarde.",
       "generic": "Algo falló. Por favor intente de nuevo.",
+      "genericField": "Verifica el campo",
       "mustUpdateAppTitle": "Nueva actualización",
       "mustUpdateAppDescription": "Debe actualizar la aplicación para continuar usando DengueChatPlus"
     }
