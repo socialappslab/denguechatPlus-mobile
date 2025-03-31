@@ -132,6 +132,20 @@
       "username-tab": "Username",
       "phone-tab": "Phone"
     },
+    "register": {
+      "title": "Create an account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "confirmPassword": "Confirm password",
+      "city": "City",
+      "neighborhood": "Neighborhood",
+      "organization": "Organization",
+      "signUp": "Sign up"
+    },
+    "registerSuccess": {
+      "success": "We are verifying your account",
+      "successDescription": "Your account is being verified and will be active in the next few days."
+    },
     "validation": {
       "invalidNumber": "Must be a number",
       "required": "Field is required",
@@ -144,7 +158,7 @@
         "phone": "Phone is required",
         "number": "Number is required"
       },
-      "notMatch": "Password does not match",
+      "notMatch": "Passwords do not match",
       "invalidEmail": "Invalid email",
       "passwordLength": "Password must be at least {{length}} characters",
       "usernameLength": "Username must be at least {{length}} characters",
@@ -272,6 +286,9 @@
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",
       "46": "Invalid credentials",
+      "48": "The user '{{field}}' is already in use",
+      "49": "The phone '{{field}}' is already in use",
+      "50": "The email '{{field}}' is already in use",
       "51": "Account is not active",
       "55": "The account was temporarily locked. Multiple failed login attempts occurred. Try again later.",
       "mustUpdateAppTitle": "New update",

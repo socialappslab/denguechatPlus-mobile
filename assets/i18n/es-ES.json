@@ -134,6 +134,20 @@
       "username-tab": "Nombre de usuario",
       "phone-tab": "Teléfono"
     },
+    "register": {
+      "title": "Crear una cuenta",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "confirmPassword": "Confirmar contraseña",
+      "city": "Ciudad",
+      "neighborhood": "Barrio",
+      "organization": "Organización",
+      "signUp": "Registrarse"
+    },
+    "registerSuccess": {
+      "success": "Estamos verificando tu cuenta",
+      "successDescription": "Tu cuenta está siendo verificada y estará activa en los próximos días."
+    },
     "validation": {
       "required": "Este campo es requerido",
       "requiredField": {
@@ -272,6 +286,9 @@
     },
     "errorCodes": {
       "46": "Credenciales inválidas",
+      "48": "El usuario '{{field}}' ya está en uso",
+      "49": "El teléfono '{{field}}' ya está en uso",
+      "50": "El correo electrónico '{{field}}' ya está en uso",
       "51": "La cuenta no está activa",
       "55": "La cuenta fue bloqueada temporalmente. Se produjeron varios intentos fallidos de inicio de sesión. Vuelve a intentarlo más tarde.",
       "generic": "Algo falló. Por favor intente de nuevo.",

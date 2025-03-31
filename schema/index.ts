@@ -12,10 +12,23 @@ export type ErrorResponse = {
   }[];
 };
 
+export type ApiResponseCollection<T> = {
+  data: T[];
+  meta: {
+    total: number;
+  };
+  links: {
+    self: number;
+    last: number;
+  };
+};
+
 export type BaseObject = {
   id: number;
   name: string;
 };
+
+export interface Wedge extends BaseObject {}
 
 export interface BaseWithStatus extends BaseObject {
   status: boolean;
