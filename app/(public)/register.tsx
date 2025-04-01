@@ -501,7 +501,7 @@ export default function Register() {
               control={control}
               name="neighborhood"
               options={neighborhoodOptions}
-              label={t("register.neighborhood")}
+              label={t("register.sector")}
               required
               disabled={!city}
             />

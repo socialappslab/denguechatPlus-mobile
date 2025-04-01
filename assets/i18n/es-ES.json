@@ -144,7 +144,7 @@
       "confirmPassword": "Confirmar contraseña",
       "passwordHelperText": "Escribe una contraseña en minúsculas de al menos 6 caracteres y que sea fácil de recordar.",
       "city": "Ciudad",
-      "neighborhood": "Barrio",
+      "sector": "Sector",
       "organization": "Organización",
       "signUp": "Registrarse"
     },
