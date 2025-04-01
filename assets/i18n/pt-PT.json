@@ -140,6 +140,7 @@
       "lastName": "Sobrenome",
       "email": "E-mail",
       "confirmPassword": "Confirmar senha",
+      "passwordHelperText": "Escreva uma senha em letras minúsculas com pelo menos 6 caracteres e que seja fácil de lembrar.",
       "city": "Cidade",
       "neighborhood": "Bairro",
       "organization": "Organização",

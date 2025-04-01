@@ -140,6 +140,7 @@
       "lastName": "Last name",
       "email": "Email",
       "confirmPassword": "Confirm password",
+      "passwordHelperText": "Write a lowercase password that is at least 6 characters long and easy to remember.",
       "city": "City",
       "neighborhood": "Neighborhood",
       "organization": "Organization",

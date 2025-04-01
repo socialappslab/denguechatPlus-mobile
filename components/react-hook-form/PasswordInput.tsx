@@ -11,7 +11,7 @@ import {
 import { Text, View } from "react-native";
 
 type Props<T extends FieldValues> = UseControllerProps<T> &
-  TextInputProps & { label?: string; required?: boolean };
+  TextInputProps & { label?: string; required?: boolean; helperText?: string };
 
 export function PasswordInput<T extends FieldValues>({
   name,
@@ -23,6 +23,7 @@ export function PasswordInput<T extends FieldValues>({
 
   label,
   required,
+  helperText,
 
   ...props
 }: Props<T>) {
@@ -53,7 +54,11 @@ export function PasswordInput<T extends FieldValues>({
         {...props}
       />
 
-      {error?.message && (
+      {helperText && !error && (
+        <Text className="text-gray-500 text-xs mt-1">{helperText}</Text>
+      )}
+
+      {error && (
         <Text className="text-red-500 text-xs mt-1">{error.message}</Text>
       )}
     </View>

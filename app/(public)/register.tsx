@@ -469,6 +469,7 @@ export default function Register() {
               }}
               blurOnSubmit={false}
               required
+              helperText={t("register.passwordHelperText")}
             />
           </View>
 
