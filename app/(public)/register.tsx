@@ -201,7 +201,7 @@ export default function Register() {
   const schema = useValidationSchema();
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     setError,
     setValue,
@@ -325,6 +325,9 @@ export default function Register() {
         </View>
 
         <View className="space-y-4 mt-6">
+          <Text className="font-normal text-xs">
+            {t("visit.newHouse.requiredFields")}
+          </Text>
           {/* TODO: Cannot use `space-y-4` directly and must wrap in a View
             first. Fix that in the component itself. */}
           <View>
@@ -520,7 +523,7 @@ export default function Register() {
             onPress={() => {
               onSubmitHandler();
             }}
-            disabled={createAccount.isPending}
+            disabled={!isValid || createAccount.isPending}
           />
         </View>
       </ScrollView>

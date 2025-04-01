@@ -55,6 +55,11 @@ export function PickerInput<T extends FieldValues>({
         onValueChange={(value) => {
           field.onChange(value);
         }}
+        pickerProps={{
+          onBlur: () => {
+            field.onBlur();
+          },
+        }}
         placeholder={{ label: t("selectOption"), value: null }}
         value={field.value}
         disabled={disabled}
