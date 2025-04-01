@@ -25,9 +25,10 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
             previous.weightedPoints > current.weightedPoints
               ? previous
               : current,
-          [],
+          {},
         ),
-    );
+    )
+    .filter((valuesArray) => Object.keys(valuesArray).length > 0);
 
   const colorsAndQuantities: Record<StatusColor, number> = {
     RED: 0,
@@ -40,6 +41,10 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
       (!Array.isArray(inspection.quantity_founded) &&
         parseInt(inspection.quantity_founded as string)) ||
       0;
+
+    if (!highestWeightInEachContainer[index]?.statusColor) {
+      continue;
+    }
 
     colorsAndQuantities[
       highestWeightInEachContainer[index].statusColor as StatusColor
