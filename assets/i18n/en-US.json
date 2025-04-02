@@ -1,6 +1,7 @@
 {
   "translation": {
     "yes": "Yes",
+    "done": "Done",
     "no": "No",
     "back": "Back",
     "next": "Next",
@@ -16,6 +17,7 @@
     "quantity": "Quantity",
     "ilustrationOrIcon": "Ilustration or icon",
     "update": "Update",
+    "selectOption": "Select an option...",
     "config": {
       "search": "Search",
       "noResults": "No results for your search",
@@ -49,7 +51,7 @@
       "successDescription": "now belongs to"
     },
     "chat": {
-      "empty": "No posts",
+      "empty": "No blogs",
       "sharePlaceholder": "Share with others...",
       "visibility": {
         "title": "Who can see?",
@@ -73,18 +75,18 @@
         "post": "Post",
         "edit": "Edit",
         "save": "Save",
-        "editPost": "Edit Post",
-        "deletePost": "Delete Post",
+        "editPost": "Edit Blog",
+        "deletePost": "Delete Blog",
         "deleteComment": "Delete comment",
         "deleteDraft": "Discard draft"
       },
       "deleteDraftMessage": "Are you sure you want to discard this draft? This action cannot be undone.",
-      "deletePosttMessage": "Are you sure you want to delete this post? This action cannot be undone.",
-      "createPost": "Create post",
-      "postSendSuccess": "Post sent",
+      "deletePosttMessage": "Are you sure you want to delete this blog? This action cannot be undone.",
+      "createPost": "Create blog",
+      "postSendSuccess": "Blog sent",
       "commentDeleted": "Comment deleted",
-      "postDeleted": "Post deleted",
-      "postUpdated": "Post updated",
+      "postDeleted": "Blog deleted",
+      "postUpdated": "Blog updated",
       "draftDescarted": "Draft discarded"
     },
     "tabs": {
@@ -132,6 +134,22 @@
       "username-tab": "Username",
       "phone-tab": "Phone"
     },
+    "register": {
+      "title": "Create Account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "confirmPassword": "Confirm password",
+      "passwordHelperText": "Write a lowercase password that is at least 6 characters long and easy to remember.",
+      "city": "City",
+      "sector": "Sector",
+      "organization": "Organization",
+      "signUp": "Sign up"
+    },
+    "registerSuccess": {
+      "success": "We are verifying your account",
+      "successDescription": "Your account is being verified and will be active in the next few days."
+    },
     "validation": {
       "invalidNumber": "Must be a number",
       "required": "Field is required",
@@ -144,13 +162,13 @@
         "phone": "Phone is required",
         "number": "Number is required"
       },
-      "notMatch": "Password does not match",
+      "notMatch": "Passwords do not match",
       "invalidEmail": "Invalid email",
       "passwordLength": "Password must be at least {{length}} characters",
       "usernameLength": "Username must be at least {{length}} characters",
       "phoneLength": "Phone is too short",
-      "contentPostLengthMin": "The post text cannot be empty",
-      "contentPostLengthMax": "Post text is too large",
+      "contentPostLengthMin": "The blog text cannot be empty",
+      "contentPostLengthMax": "Blog text is too large",
       "contentCommentLengthMin": "Comment text cannot be empty",
       "contentCommentLengthMax": "Comment text is too large"
     },
@@ -271,7 +289,11 @@
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",
+      "genericField": "Verify the field",
       "46": "Invalid credentials",
+      "48": "The user '{{field}}' is already in use",
+      "49": "The phone '{{field}}' is already in use",
+      "50": "The email '{{field}}' is already in use",
       "51": "Account is not active",
       "55": "The account was temporarily locked. Multiple failed login attempts occurred. Try again later.",
       "mustUpdateAppTitle": "New update",

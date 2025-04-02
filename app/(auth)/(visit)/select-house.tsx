@@ -2,7 +2,7 @@ import { useIsFocused } from "@react-navigation/native";
 import useAxios from "axios-hooks";
 import { useRouter } from "expo-router";
 import { deserialize } from "jsonapi-fractal";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SelectableItem } from "@/components/themed";
@@ -31,7 +31,7 @@ export default function SelectHouseScreen() {
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
-  const { user } = useAuth();
+  const { user, meData } = useAuth();
   const { setVisitData, questionnaire, language, isConnected } = useVisit();
   const { initialiseCurrentVisit, storedHouseList, saveHouseList } =
     useVisitStore();
@@ -53,13 +53,16 @@ export default function SelectHouseScreen() {
       questionnaireId: questionnaire.id,
       teamId: user.teamId,
     });
-    router.push(`visit/${questionnaire?.initialQuestion}`);
+    router.push({
+      pathname: "/visit/[id]",
+      params: {
+        id: questionnaire.initialQuestion,
+      },
+    });
   };
 
-  const [{ data, loading, error }, refetch] = useAxios(
-    {
-      url: `/houses/list_to_visit?filter[reference_code]=${searchText}`,
-    },
+  const [{ data, loading }, refetch] = useAxios(
+    { url: `/houses/list_to_visit` },
     { manual: true },
   );
 
@@ -92,17 +95,23 @@ export default function SelectHouseScreen() {
   };
 
   const renderTitle = (houses: House[]) => {
-    if (houses.length === 0) {
-      return "";
-    }
-
+    if (houses.length === 0) return "";
     const house = houses[0];
-
-    // const houseBlock = house.houseBlock ? ` - ${house.houseBlock.name}` : "";
-    // const houseWedge = house.wedge ? ` - ${house.wedge.name}` : "";
-    // return `${house.neighborhood?.name}${houseWedge}${houseBlock}`;
+    // TODO: check the neighborhood type, I think we will always have a neighborhood.
     return `${house.neighborhood?.name}`;
   };
+
+  const filteredHouses = useMemo(() => {
+    if (!searchText.length) {
+      return houseOptions;
+    }
+
+    const filtered = houseOptions.filter((house) =>
+      house.referenceCode.toUpperCase().includes(searchText.toUpperCase()),
+    );
+
+    return filtered;
+  }, [houseOptions, searchText]);
 
   return (
     <SafeAreaView>
@@ -117,6 +126,7 @@ export default function SelectHouseScreen() {
             className="flex-1 ml-2"
             value={searchText}
             onChangeText={(value) => setSearchText(value)}
+            onClear={() => setSearchText("")}
             style={{ borderWidth: 0 }}
           />
         </View>
@@ -132,17 +142,25 @@ export default function SelectHouseScreen() {
             <Text className="text-xl font-bold mb-2">
               {t("visit.houses.optionsTitle")}
             </Text>
-            <Text className="text-md font-normal mb-4">
+
+            <Text className="text-md font-normal mb-2">
               {renderTitle(houseOptions)}
             </Text>
+
+            {meData?.userProfile?.houseBlock?.name && (
+              <Text className="text-md font-normal mb-4">
+                Frente a Frente: {meData.userProfile.houseBlock.name}
+              </Text>
+            )}
           </View>
         )}
 
         <ScrollView className="pb-4" showsVerticalScrollIndicator={false}>
-          {!loading && houseOptions.length > 0 && (
+          {!loading && filteredHouses.length > 0 && (
             <View className="my-1">
-              {houseOptions.map((house) => (
+              {filteredHouses.map((house) => (
                 <SelectableItem
+                  testID="houseItem"
                   key={house.id}
                   checked={house.id === houseSelected?.id}
                   onValueChange={() => {

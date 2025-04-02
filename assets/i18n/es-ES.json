@@ -1,6 +1,7 @@
 {
   "translation": {
     "yes": "Sí",
+    "done": "Hecho",
     "no": "No",
     "back": "Atrás",
     "next": "Siguiente",
@@ -16,6 +17,7 @@
     "quantity": "Cantidad",
     "ilustrationOrIcon": "Ilustración o ícono",
     "update": "Actualizar",
+    "selectOption": "Selecciona una opción...",
     "config": {
       "search": "Buscar",
       "noResults": "No hay resultados para tu búsqueda",
@@ -49,7 +51,7 @@
       "successDescription": "ahora pertenece a"
     },
     "chat": {
-      "empty": "No hay publicaciones",
+      "empty": "No hay blogs",
       "sharePlaceholder": "Comparte con los demás...",
       "visibility": {
         "title": "¿Quién puede ver?",
@@ -73,18 +75,18 @@
         "post": "Publicar",
         "edit": "Editar",
         "save": "Guardar",
-        "editPost": "Editar Publicación",
-        "deletePost": "Borrar Publicación",
+        "editPost": "Editar Blog",
+        "deletePost": "Borrar Blog",
         "deleteComment": "Borrar comentario",
         "deleteDraft": "Descartar borrador"
       },
       "deleteDraftMessage": "¿Estás seguro de que quieres descartar este borrador? Esta acción no puede deshacerse.",
-      "deletePosttMessage": "¿Estás seguro de que quieres borrar esta publicación? Esta acción no puede deshacerse.",
-      "createPost": "Crear publicación",
-      "postSendSuccess": "Publicación enviada",
+      "deletePosttMessage": "¿Estás seguro de que quieres borrar este blog? Esta acción no puede deshacerse.",
+      "createPost": "Crear blog",
+      "postSendSuccess": "Blog enviado",
       "commentDeleted": "Comentario borrado",
-      "postDeleted": "Publicación borrada",
-      "postUpdated": "Publicación actualizada",
+      "postDeleted": "Blog borrado",
+      "postUpdated": "Blog actualizado",
       "draftDescarted": "Borrador descartado"
     },
     "tabs": {
@@ -134,6 +136,22 @@
       "username-tab": "Nombre de usuario",
       "phone-tab": "Teléfono"
     },
+    "register": {
+      "title": "Crear Cuenta",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo electrónico",
+      "confirmPassword": "Confirmar contraseña",
+      "passwordHelperText": "Escribe una contraseña en minúsculas de al menos 6 caracteres y que sea fácil de recordar.",
+      "city": "Ciudad",
+      "sector": "Sector",
+      "organization": "Organización",
+      "signUp": "Registrarse"
+    },
+    "registerSuccess": {
+      "success": "Estamos verificando tu cuenta",
+      "successDescription": "Tu cuenta está siendo verificada y estará activa en los próximos días."
+    },
     "validation": {
       "required": "Este campo es requerido",
       "requiredField": {
@@ -150,8 +168,8 @@
       "passwordLength": "La contraseña debe tener al menos {{length}} caracteres",
       "usernameLength": "El nombre de usuario debe tener al menos {{length}} caracteres",
       "phoneLength": "El teléfono es muy corto",
-      "contentPostLengthMin": "El texto de la publicación no puede estar vacío",
-      "contentPostLengthMax": "El texto de la publicación es demasiado largo",
+      "contentPostLengthMin": "El texto del blog no puede estar vacío",
+      "contentPostLengthMax": "El texto del blog es demasiado largo",
       "contentCommentLengthMin": "El texto del comentario no puede estar vacío",
       "contentCommentLengthMax": "El texto del comentario es demasiado largo"
     },
@@ -272,9 +290,13 @@
     },
     "errorCodes": {
       "46": "Credenciales inválidas",
+      "48": "El usuario '{{field}}' ya está en uso",
+      "49": "El teléfono '{{field}}' ya está en uso",
+      "50": "El correo electrónico '{{field}}' ya está en uso",
       "51": "La cuenta no está activa",
       "55": "La cuenta fue bloqueada temporalmente. Se produjeron varios intentos fallidos de inicio de sesión. Vuelve a intentarlo más tarde.",
       "generic": "Algo falló. Por favor intente de nuevo.",
+      "genericField": "Verifica el campo",
       "mustUpdateAppTitle": "Nueva actualización",
       "mustUpdateAppDescription": "Debe actualizar la aplicación para continuar usando DengueChatPlus"
     }

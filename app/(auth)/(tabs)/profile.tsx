@@ -30,8 +30,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (isFocused) reFetchMe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
+  }, [isFocused, reFetchMe]);
 
   const [{ data: teamData, loading: loadingTeam }, refetchTeam] = useAxios<
     ExistingDocumentObject,
@@ -52,13 +51,11 @@ export default function Profile() {
 
   useEffect(() => {
     if (meData) refetchTeam();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [meData]);
+  }, [meData, refetchTeam]);
 
   useEffect(() => {
     if (!teamData) return;
     const deserializedData = deserialize<Team>(teamData);
-    // console.log("deserializedData TEAM>>>>>>>>>>", deserializedData);
     if (deserializedData && !Array.isArray(deserializedData)) {
       setTeam(deserializedData);
     }
@@ -88,9 +85,14 @@ export default function Profile() {
               >
                 <View className="mb-2">
                   <Text className="text-xl font-bold mb-2">{team?.name}</Text>
-                  <Text className="font-normal mb-4">
+                  <Text className="font-normal mb-2">
                     {team?.sector?.name} - {team?.wedge?.name}
                   </Text>
+                  {meData?.userProfile?.houseBlock?.name && (
+                    <Text className="font-normal mb-4">
+                      Frente a Frente: {meData.userProfile.houseBlock.name}
+                    </Text>
+                  )}
                 </View>
                 <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
                   <Text className="text-neutral-600 mb-2">

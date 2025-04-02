@@ -12,28 +12,27 @@ import Clear from "@/assets/images/icons/clear.svg";
 
 export type TextInputProps = ThemeProps &
   DefaultTextInput["props"] & {
-    inputRef?: React.RefObject<DefaultTextInput>;
+    inputRef?: React.Ref<DefaultTextInput>;
     search?: boolean;
     onClear?: () => void;
     isSheet?: boolean;
     iconMaterial?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
   };
 
-export function TextInput(props: TextInputProps) {
-  const {
-    style,
-    readOnly,
-    lightColor,
-    darkColor,
-    hasError,
-    search,
-    inputRef,
-    value,
-    isSheet,
-    iconMaterial,
-    onClear,
-    ...otherProps
-  } = props;
+export function TextInput({
+  style,
+  readOnly,
+  lightColor,
+  darkColor,
+  hasError,
+  search,
+  inputRef,
+  value,
+  isSheet,
+  iconMaterial,
+  onClear,
+  ...otherProps
+}: TextInputProps) {
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "background",

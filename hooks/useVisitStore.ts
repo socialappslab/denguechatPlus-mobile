@@ -1,7 +1,6 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import { House, VisitId } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NetworkState } from "expo-network";
 import { setAutoFreeze } from "immer";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
@@ -37,8 +36,6 @@ interface VisitStore {
   increaseCurrentVisitInspection: () => void;
   initialiseCurrentVisit: (visitId: VisitId, questionId: QuestionId) => void;
   finaliseCurrentVisit: (isConnected: boolean, data: any) => void;
-  networkState?: NetworkState;
-  setNetworkState: (state: NetworkState) => void;
   cleanUpStoredVisit: (visit: any) => void;
   cleanUpVisits: () => void;
   storedHouseList: House[];
@@ -102,7 +99,6 @@ export const useVisitStore = create<VisitStore>()(
           set((state: VisitStore) => {
             ++state.visitMetadata[state.visitId].inspectionIdx;
           }),
-        setNetworkState: (networkState) => set((state) => ({ networkState })),
         saveHouseList: (houses) =>
           set((state) => {
             state.storedHouseList = houses;

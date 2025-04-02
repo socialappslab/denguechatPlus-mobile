@@ -23,6 +23,7 @@ import { useVisitStore } from "@/hooks/useVisitStore";
 import { BrigadeProvider } from "@/context/BrigadeContext";
 import { FilterProvider } from "@/context/FilterContext";
 import * as Sentry from "@sentry/react-native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 Sentry.init({
   dsn: "https://1530b05d8bc80b91a3304733b4f40e15@o4508732723232768.ingest.us.sentry.io/4508732748529664",
@@ -125,8 +126,11 @@ function RootLayoutNav() {
   const StoreState: React.FC<any> = (props) => {
     return null;
   };
+
+  const queryClient = new QueryClient();
+
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <StoreState {...state} />
       <AuthProvider>
         <BrigadeProvider>
@@ -134,12 +138,16 @@ function RootLayoutNav() {
             <ThemeProvider value={DefaultTheme}>
               <Stack>
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                {/* <Stack.Screen
-              name="(auth)/(tabs)"
-              options={{ headerShown: false, headerShadowVisible: false }}
-            /> */}
                 <Stack.Screen
                   name="(public)/login"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="(public)/register"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="(public)/register-success"
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
@@ -157,6 +165,6 @@ function RootLayoutNav() {
           </FilterProvider>
         </BrigadeProvider>
       </AuthProvider>
-    </>
+    </QueryClientProvider>
   );
 }

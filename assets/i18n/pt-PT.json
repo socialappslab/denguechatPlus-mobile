@@ -1,6 +1,7 @@
 {
   "translation": {
     "yes": "Sim",
+    "done": "Feito",
     "no": "Não",
     "back": "Voltar",
     "next": "Próximo",
@@ -16,6 +17,7 @@
     "quantity": "Quantidade",
     "ilustrationOrIcon": "Ilustração ou ícone",
     "update": "Atualizar",
+    "selectOption": "Selecione uma opção...",
     "config": {
       "search": "Buscar",
       "noResults": "Não há resultados para sua busca",
@@ -49,7 +51,7 @@
       "successDescription": "agora pertence a"
     },
     "chat": {
-      "empty": "Sem publicações",
+      "empty": "Sem blogs",
       "sharePlaceholder": "Compartilhe com os outros...",
       "visibility": {
         "title": "Quem pode ver?",
@@ -73,18 +75,18 @@
         "post": "Publicar",
         "edit": "Editar",
         "save": "Salvar",
-        "editPost": "Editar Publicação",
-        "deletePost": "Excluir Publicação",
+        "editPost": "Editar Blog",
+        "deletePost": "Excluir Blog",
         "deleteComment": "Excluir comentário",
         "deleteDraft": "Descartar rascunho"
       },
       "deleteDraftMessage": "Tem certeza de que deseja descartar este rascunho? Esta ação não pode ser desfeita.",
-      "deletePosttMessage": "Tem certeza de que deseja excluir esta publicação? Esta ação não pode ser desfeita.",
-      "createPost": "Criar publicação",
-      "postSendSuccess": "Publicação enviada",
+      "deletePosttMessage": "Tem certeza de que deseja excluir este blog? Esta ação não pode ser desfeita.",
+      "createPost": "Criar blog",
+      "postSendSuccess": "Blog enviado",
       "commentDeleted": "Comentário excluído",
-      "postDeleted": "Publicação excluída",
-      "postUpdated": "Publicação atualizada",
+      "postDeleted": "Blog excluído",
+      "postUpdated": "Blog atualizado",
       "draftDescarted": "Rascunho descartado"
     },
     "tabs": {
@@ -132,6 +134,22 @@
       "username-tab": "Nome de Usuário",
       "phone-tab": "Telefone"
     },
+    "register": {
+      "title": "Criar Conta",
+      "firstName": "Nome",
+      "lastName": "Sobrenome",
+      "email": "E-mail",
+      "confirmPassword": "Confirmar senha",
+      "passwordHelperText": "Escreva uma senha em letras minúsculas com pelo menos 6 caracteres e que seja fácil de lembrar.",
+      "city": "Cidade",
+      "sector": "Setor",
+      "organization": "Organização",
+      "signUp": "Registrar"
+    },
+    "registerSuccess": {
+      "success": "Estamos verificando sua conta",
+      "successDescription": "Sua conta está sendo verificada e estará ativa em alguns dias."
+    },
     "validation": {
       "required": "Campo obrigatório",
       "requiredField": {
@@ -148,8 +166,8 @@
       "passwordLength": "A senha deve ter pelo menos {{length}} caracteres",
       "usernameLength": "O nome de usuário deve ter pelo menos {{length}} caracteres",
       "phoneLength": "O número de telefone é muito curto",
-      "contentPostLengthMin": "O texto da publicação não pode estar vazio",
-      "contentPostLengthMax": "O texto da publicação é muito grande",
+      "contentPostLengthMin": "O texto do blog não pode estar vazio",
+      "contentPostLengthMax": "O texto do blog é muito grande",
       "contentCommentLengthMin": "O texto do comentário não pode estar vazio",
       "contentCommentLengthMax": "O texto do comentário é muito grande"
     },
@@ -270,9 +288,13 @@
     },
     "errorCodes": {
       "46": "Credenciais inválidas",
+      "48": "O usuário '{{field}}' já está em uso",
+      "49": "O telefone '{{field}}' já está em uso",
+      "50": "O e-mail '{{field}}' já está em uso",
       "51": "Conta não está ativa",
       "55": "A conta foi temporariamente bloqueada. Várias tentativas de login falharam. Tente novamente mais tarde.",
       "generic": "Algo deu errado. Por favor, tente novamente.",
+      "genericField": "Verifique o campo",
       "mustUpdateAppTitle": "Nova atualização",
       "mustUpdateAppDescription": "Você deve atualizar o aplicativo para continuar usando o DengueChatPlus"
     }
