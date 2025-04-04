@@ -1,14 +1,44 @@
 import FinalIllustration from "@/assets/images/final.svg";
 import { Button, Text, View } from "@/components/themed";
-import { useVisit } from "@/hooks/useVisit";
+import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { useRef } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { useVisitStore } from "@/hooks/useVisitStore";
+
+function useTarikiStatusModal() {
+  const storedHouseList = useVisitStore((state) => state.storedHouseList);
+  const visitId = useVisitStore((state) => state.visitId);
+
+  const modalRef = useRef<BottomSheetModal>(null);
+
+  const houseId = Number(visitId.split("-")[1]);
+  const currentHouse = storedHouseList.find((house) => house.id === houseId);
+
+  if (!currentHouse) throw new Error("House not found");
+
+  // NOTE: add the house color status as part of the condition (send as a
+  // param)
+  // TODO: make sure this is dynamic with Raul
+  const shouldShowModal = currentHouse.consecutiveGreenStatus >= 3;
+
+  if (shouldShowModal) {
+    modalRef.current?.present();
+  }
+
+  return modalRef;
+}
 
 export default function Summary() {
-  const { t } = useTranslation();
-  const { isConnected } = useVisit();
   const router = useRouter();
-  const prefix = isConnected ? "online" : "offline";
+
+  const { t } = useTranslation();
+  const { isInternetReachable } = useNetInfo();
+  const tarikiStatusModalRef = useTarikiStatusModal();
+
+  const prefix = isInternetReachable ? "online" : "offline";
 
   return (
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between items-center">
@@ -41,6 +71,38 @@ export default function Summary() {
           />
         </View>
       </View>
+
+      <ClosableBottomSheet
+        bottomSheetModalRef={tarikiStatusModalRef}
+        title="¡Nuevo sitio Tariki!"
+        snapPoints={["50%"]}
+      >
+        <View className="flex-1 p-4">
+          <View className="border border-gray-100 p-8 rounded-xl items-center">
+            <View className="rounded-full border-[16px] border-primary aspect-square p-6 items-center justify-center">
+              <Text className="text-3xl font-bold">100</Text>
+              <Text className="">Puntos</Text>
+            </View>
+
+            <Text className="text-center font-bold text-2xl mt-4">
+              Este sitio ahora es Tariki
+            </Text>
+            <Text className="text-center mt-2 text-gray-800">
+              100 puntos fueron asignados a ti y a tu brigada. ¡Excelente
+              trabajo!
+            </Text>
+          </View>
+
+          <Button
+            primary
+            title={"Aceptar puntos"}
+            onPress={() => {
+              tarikiStatusModalRef.current?.close();
+            }}
+            className="mt-4"
+          />
+        </View>
+      </ClosableBottomSheet>
     </View>
   );
 }

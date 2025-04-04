@@ -127,6 +127,7 @@ export interface House {
   address: string | null;
   latitude: number;
   longitude: number;
+  consecutiveGreenStatus: number;
   notes?: string | null;
   status?: string | null;
   containerCount?: number | null;
