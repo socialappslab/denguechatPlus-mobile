@@ -272,7 +272,6 @@ export default function Visits() {
     let newVisit = {
       ...visit,
       house: visit.houseId ? undefined : visit.house,
-      visitPermission: true,
     };
 
     const visitToSubmit = {
