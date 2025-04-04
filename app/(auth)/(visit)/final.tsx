@@ -1,16 +1,18 @@
 import FinalIllustration from "@/assets/images/final.svg";
 import { Button, Text, View } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useVisitStore } from "@/hooks/useVisitStore";
+import { StatusColor } from "@/types";
 
 function useTarikiStatusModal() {
   const storedHouseList = useVisitStore((state) => state.storedHouseList);
   const visitId = useVisitStore((state) => state.visitId);
+  const { houseColor } = useLocalSearchParams();
 
   const modalRef = useRef<BottomSheetModal>(null);
 
@@ -19,10 +21,10 @@ function useTarikiStatusModal() {
 
   if (!currentHouse) throw new Error("House not found");
 
-  // NOTE: add the house color status as part of the condition (send as a
-  // param)
   // TODO: make sure this is dynamic with Raul
-  const shouldShowModal = currentHouse.consecutiveGreenStatus >= 3;
+  const shouldShowModal =
+    currentHouse.consecutiveGreenStatus >= 3 &&
+    houseColor === StatusColor.NO_INFECTED;
 
   if (shouldShowModal) {
     modalRef.current?.present();
