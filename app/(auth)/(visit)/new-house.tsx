@@ -19,11 +19,11 @@ import {
 import { getLanguageCode } from "@/util";
 import { Button } from "@/components/themed";
 import { useVisit } from "@/hooks/useVisit";
-import { RESOURCE_SPECIAL_PLACE } from "@/constants/Keys";
 import { Alert } from "react-native";
 import { z } from "zod";
 import { useVisitStore } from "@/hooks/useVisitStore";
-import { VisitId } from "@/types";
+import { ResourceName, VisitId } from "@/types";
+import { useResourceData } from "@/hooks/useResourceData";
 
 const ID_CASA = -1;
 const ALPHANUMERIC_REGEX = /^[A-Z0-9]+$/;
@@ -32,15 +32,10 @@ export default function NewHouse() {
   const { t } = useTranslation();
   const { user, meData } = useAuth();
 
-  const {
-    setVisitData,
-    getResourceByName,
-    questionnaire,
-    language,
-    visitData,
-  } = useVisit();
+  const { setVisitData, questionnaire, language, visitData } = useVisit();
   const { initialiseCurrentVisit } = useVisitStore();
   const router = useRouter();
+  const resourceData = useResourceData(ResourceName.SpecialPlaces);
 
   const [siteOptions, setSiteOptions] = useState<BaseObject[]>([]);
   const [itemSelectedId, setItemSelectedId] = useState<number>(ID_CASA);
@@ -124,8 +119,6 @@ export default function NewHouse() {
     );
   };
 
-  const resources = getResourceByName(RESOURCE_SPECIAL_PLACE);
-
   useEffect(() => {
     const lang = getLanguageCode(language);
     const sites: BaseObject[] = [
@@ -135,20 +128,16 @@ export default function NewHouse() {
       },
     ];
 
-    try {
-      resources?.forEach((resource) =>
-        sites.push({
-          id: resource.id,
-          //@ts-expect-error
-          name: resource[`name_${lang}`],
-        }),
-      );
-    } catch (error) {
-      console.log("error sites params>>>", error);
-    }
+    resourceData.forEach((resource) =>
+      sites.push({
+        id: resource.id,
+        // @ts-expect-error lang is string but we expect 'es' | 'en' | 'pt'
+        name: resource[`name_${lang}`],
+      }),
+    );
 
     setSiteOptions(sites);
-  }, [resources, language, t]);
+  }, [resourceData, language, t]);
 
   const onBack = () => {
     router.back();

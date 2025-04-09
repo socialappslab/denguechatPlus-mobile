@@ -175,20 +175,107 @@ type HouseId = number;
 
 export type VisitId = `${UserId}-${HouseId}`;
 
-export interface ResourceData {
+interface ResourceDataCommon {
   id: number;
-  name: string;
   updated_at: string;
-  breeding_site_type_id?: number;
-  photo_url?: string;
 }
 
-export interface Resource {
+interface ResourceDataBreedingSiteType extends ResourceDataCommon {
+  container_type: "permanent" | "non-permanent";
+  name: string;
+}
+
+interface ResourceDataEliminationMethodType extends ResourceDataCommon {
+  name_en: string;
+  name_es: string;
+  name_pt: string;
+}
+
+interface ResourceDataWaterSourceType extends ResourceDataCommon {
+  name: string;
+}
+
+interface ResourceDataSpecialPlace extends ResourceDataCommon {
+  name_en: string;
+  name_es: string;
+  name_pt: string;
+}
+
+interface ResourceDataAppConfigParam extends ResourceDataCommon {
+  name: string;
+  description: string;
+  param_source: string;
+  param_type: "integer";
+  value: string;
+}
+
+interface ResourceCommon {
   id: number;
   version: number;
-  resourceName: string;
-  resourceData: ResourceData[];
 }
+
+export enum ResourceName {
+  BreedingSiteTypes = "breeding_site_types",
+  EliminationMethodTypes = "elimination_method_types",
+  WaterSourceTypes = "water_source_types",
+  SpecialPlaces = "special_places",
+  AppConfigParam = "AppConfigParam",
+}
+
+interface ResourceBreedingSiteTypes extends ResourceCommon {
+  resourceName: ResourceName.BreedingSiteTypes;
+  resourceData: ResourceDataBreedingSiteType[];
+}
+
+interface ResourceEliminationMethodTypes extends ResourceCommon {
+  resourceName: ResourceName.EliminationMethodTypes;
+  resourceData: ResourceDataEliminationMethodType[];
+}
+
+interface ResourceWaterSourceTypes extends ResourceCommon {
+  resourceName: ResourceName.WaterSourceTypes;
+  resourceData: ResourceDataWaterSourceType[];
+}
+
+interface ResourceSpecialPlaces extends ResourceCommon {
+  resourceName: ResourceName.SpecialPlaces;
+  resourceData: ResourceDataSpecialPlace[];
+}
+
+interface ResourceAppConfigParam extends ResourceCommon {
+  resourceName: ResourceName.AppConfigParam;
+  resourceData: [
+    {
+      name: "green_house_points_user_account";
+      description: string;
+      param_source: "TarikiPoint";
+      param_type: "integer";
+      value: string;
+    },
+    {
+      name: "green_house_points_team";
+      description: string;
+      param_source: "TarikiPoint";
+      param_type: "integer";
+      value: string;
+    },
+    {
+      name: "consecutive_green_statuses_for_tariki_house";
+      description: string;
+      param_source: "TarikiPoint";
+      param_type: "integer";
+      value: string;
+    },
+  ];
+}
+
+export type Resources = [
+  ResourceBreedingSiteTypes,
+  ResourceEliminationMethodTypes,
+  ResourceWaterSourceTypes,
+  ResourceSpecialPlaces,
+  ResourceAppConfigParam,
+];
 
 export interface Comment {
   id: number;

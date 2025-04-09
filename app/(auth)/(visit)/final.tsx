@@ -7,11 +7,20 @@ import { useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useVisitStore } from "@/hooks/useVisitStore";
-import { StatusColor } from "@/types";
+import { ResourceName, StatusColor } from "@/types";
+import { useResourceData } from "@/hooks/useResourceData";
 
 function useTarikiStatusModal() {
   const storedHouseList = useVisitStore((state) => state.storedHouseList);
   const visitId = useVisitStore((state) => state.visitId);
+  const [consecutiveGreenVisitsForTarikiStatus] = useResourceData(
+    ResourceName.AppConfigParam,
+  );
+
+  // NOTE: `n - 1` here, the current visit is the `n`th.
+  const consecutiveGreenVisitsForTarikiStatusValue =
+    Number(consecutiveGreenVisitsForTarikiStatus.value) - 1;
+
   const { houseColor } = useLocalSearchParams();
 
   const modalRef = useRef<BottomSheetModal>(null);
@@ -23,7 +32,8 @@ function useTarikiStatusModal() {
 
   // TODO: make sure this is dynamic with Raul
   const shouldShowModal =
-    currentHouse.consecutiveGreenStatus >= 3 &&
+    currentHouse.consecutiveGreenStatus >=
+      consecutiveGreenVisitsForTarikiStatusValue &&
     houseColor === StatusColor.NO_INFECTED;
 
   if (shouldShowModal) {
@@ -41,6 +51,10 @@ export default function Summary() {
   const tarikiStatusModalRef = useTarikiStatusModal();
 
   const prefix = isInternetReachable ? "online" : "offline";
+
+  const [, brigadistPoints, brigadePoints] = useResourceData(
+    ResourceName.AppConfigParam,
+  );
 
   return (
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between items-center">
@@ -82,7 +96,9 @@ export default function Summary() {
         <View className="flex-1 p-4">
           <View className="border border-gray-100 p-8 rounded-xl items-center">
             <View className="rounded-full border-[16px] border-primary aspect-square p-6 items-center justify-center">
-              <Text className="text-3xl font-bold">100</Text>
+              <Text className="text-3xl font-bold">
+                {brigadistPoints.value}
+              </Text>
               <Text className="">Puntos</Text>
             </View>
 
@@ -90,8 +106,8 @@ export default function Summary() {
               Este sitio ahora es Tariki
             </Text>
             <Text className="text-center mt-2 text-gray-800">
-              100 puntos fueron asignados a ti y a tu brigada. ¡Excelente
-              trabajo!
+              {brigadistPoints.value} puntos fueron asignados a ti y{" "}
+              {brigadePoints.value} puntos a tu brigada. ¡Excelente trabajo!
             </Text>
           </View>
 
