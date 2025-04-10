@@ -261,6 +261,13 @@
         },
         "online": {
           "greetings": "Los datos de la visita han sido guardados."
+        },
+        "tarikiStatusModal": {
+          "title": "¡Nuevo sitio Tariki!",
+          "points": "Puntos",
+          "subtitle": "Este sitio ahora es Tariki",
+          "description": "{{brigadistPoints}} puntos fueron asignados a ti y {{brigadePoints}} puntos a tu brigada. ¡Excelente trabajo!",
+          "button": "Aceptar puntos"
         }
       },
       "synchronizedVisit": "Visita sincronizada"

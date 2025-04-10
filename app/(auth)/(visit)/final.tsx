@@ -90,7 +90,7 @@ export default function Summary() {
 
       <ClosableBottomSheet
         bottomSheetModalRef={tarikiStatusModalRef}
-        title="¡Nuevo sitio Tariki!"
+        title={t("visit.final.tarikiStatusModal.title")}
         snapPoints={["50%"]}
       >
         <View className="flex-1 p-4">
@@ -99,21 +99,25 @@ export default function Summary() {
               <Text className="text-3xl font-bold">
                 {brigadistPoints.value}
               </Text>
-              <Text className="">Puntos</Text>
+              <Text className="">
+                {t("visit.final.tarikiStatusModal.points")}
+              </Text>
             </View>
 
             <Text className="text-center font-bold text-2xl mt-4">
-              Este sitio ahora es Tariki
+              {t("visit.final.tarikiStatusModal.title")}
             </Text>
             <Text className="text-center mt-2 text-gray-800">
-              {brigadistPoints.value} puntos fueron asignados a ti y{" "}
-              {brigadePoints.value} puntos a tu brigada. ¡Excelente trabajo!
+              {t("visit.final.tarikiStatusModal.description", {
+                brigadistPoints: brigadistPoints.value,
+                brigadePoints: brigadePoints.value,
+              })}
             </Text>
           </View>
 
           <Button
             primary
-            title={"Aceptar puntos"}
+            title={t("visit.final.tarikiStatusModal.button")}
             onPress={() => {
               tarikiStatusModalRef.current?.close();
             }}

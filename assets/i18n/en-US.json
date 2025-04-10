@@ -261,6 +261,13 @@
         },
         "online": {
           "greetings": "The visit data has been saved."
+        },
+        "tarikiStatusModal": {
+          "title": "New Tariki site!",
+          "points": "Points",
+          "subtitle": "This is now a Tariki site",
+          "description": "{{brigadistPoints}} points were assigned to you and {{brigadePoints}} points to your brigade. Excelent work!",
+          "button": "Accept points"
         }
       }
     },
