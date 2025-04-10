@@ -87,11 +87,16 @@ export default function SelectHouseScreen() {
     }
   }, [data]);
 
-  const renderHouse = (house: House) => {
-    const lastVisit = house.lastVisit
-      ? `(${formatDate(house.lastVisit, language, t("visit.houses.notVisited"))})`
-      : "";
-    return `${house.specialPlace ? house.specialPlace.name : t("visit.houses.house")} ${house.referenceCode} ${lastVisit}`;
+  const renderHouseLabel = (house: House) => {
+    return (
+      house.specialPlace?.name ??
+      `${t("visit.houses.house")} ${house.referenceCode}`
+    );
+  };
+  const renderHouseDescription = (house: House) => {
+    return house.lastVisit
+      ? `Last visit: ${formatDate(house.lastVisit, language, t("visit.houses.notVisited"))}`
+      : undefined;
   };
 
   const renderTitle = (houses: House[]) => {
@@ -166,7 +171,8 @@ export default function SelectHouseScreen() {
                   onValueChange={() => {
                     setHouseSelected(house);
                   }}
-                  label={renderHouse(house)}
+                  label={renderHouseLabel(house)}
+                  description={renderHouseDescription(house)}
                   chip={house.specialPlace && t("visit.houses.specialPlace")}
                 />
               ))}
