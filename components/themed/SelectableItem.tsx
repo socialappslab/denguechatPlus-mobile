@@ -24,6 +24,7 @@ import { TextInput } from "./TextInput";
 
 export function SelectableItem({
   color,
+  description,
   disabled,
   onChange,
   onValueChange,
@@ -38,7 +39,7 @@ export function SelectableItem({
   type = "radio",
   defaultText,
   ...other
-}: SelectableItemProps) {
+}: SelectableItemProps & { description?: string }) {
   const [text, setText] = useState(defaultText);
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -86,7 +87,7 @@ export function SelectableItem({
             )}
           </View>
         )}
-        <View className="flex flex-row bg-transparent text-wrap">
+        <View className="flex flex-row items-center bg-transparent text-wrap">
           <Pressable
             className="mr-2"
             {...other}
@@ -109,10 +110,17 @@ export function SelectableItem({
           >
             {checked && checkedView}
           </Pressable>
-          <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow pr-6">
-            {label}
-            {required && "*"}
-          </Text>
+          <View>
+            {label && (
+              <Text className="text-sky-400 font-medium text-sm flex-grow pr-6">
+                {label}
+                {required && "*"}
+              </Text>
+            )}
+            {description && (
+              <Text className="text-sky-400 text-xs">{description}</Text>
+            )}
+          </View>
         </View>
       </View>
       {checked && optionType === "textArea" && (
