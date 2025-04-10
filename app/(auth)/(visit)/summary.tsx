@@ -174,17 +174,6 @@ export default function Summary() {
             onPress={onFinalize}
             disabled={loading}
           />
-          <Button
-            title={t("editFromStart")}
-            onPress={() =>
-              router.push({
-                pathname: "/visit/[id]",
-                params: {
-                  id: questionnaire?.initialQuestion,
-                },
-              })
-            }
-          />
         </View>
       </View>
     </ScrollView>
