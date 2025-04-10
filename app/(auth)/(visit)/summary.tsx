@@ -116,7 +116,12 @@ export default function Summary() {
         type: "success",
         text1: t("success"),
       });
-      router.push("/final");
+      router.push({
+        pathname: "/final",
+        params: {
+          houseColor: mainStatusColor,
+        },
+      });
       // Cleanup, if it's not connected we send house details
       finaliseCurrentVisit(isConnected, {
         ...sanitizedVisitData,

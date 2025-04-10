@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   BottomSheetModal,
   BottomSheetBackdrop,
@@ -46,9 +46,9 @@ export function ClosableBottomSheet(props: ClosableBottomSheetProps) {
     "text",
   );
 
-  const handleKeyboardHide = () => {
+  const handleKeyboardHide = useCallback(() => {
     bottomSheetModalRef.current?.snapToIndex(0); // Return to the original snap point
-  };
+  }, [bottomSheetModalRef]);
 
   const snapPoints = useMemo(() => ["30%"], []);
 
@@ -73,7 +73,7 @@ export function ClosableBottomSheet(props: ClosableBottomSheetProps) {
     return () => {
       keyboardDidHideListener.remove();
     };
-  }, []);
+  }, [handleKeyboardHide]);
 
   const handleClosePress = () => {
     bottomSheetModalRef.current?.close();
