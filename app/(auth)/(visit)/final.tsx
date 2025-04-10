@@ -9,6 +9,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { useVisitStore } from "@/hooks/useVisitStore";
 import { ResourceName, StatusColor } from "@/types";
 import { useResourceData } from "@/hooks/useResourceData";
+import ConfettiImage from "@/assets/images/confetti.svg";
 
 function useTarikiStatusModal() {
   const storedHouseList = useVisitStore((state) => state.storedHouseList);
@@ -94,7 +95,9 @@ export default function Summary() {
         snapPoints={["50%"]}
       >
         <View className="flex-1 p-4">
-          <View className="border border-gray-100 p-8 rounded-xl items-center">
+          <View className="border border-gray-100 p-8 rounded-xl items-center relative overflow-hidden">
+            <ConfettiImage className="absolute inset-0 opacity-80" />
+
             <View className="rounded-full border-[16px] border-primary aspect-square p-6 items-center justify-center">
               <Text className="text-3xl font-bold">
                 {brigadistPoints.value}
