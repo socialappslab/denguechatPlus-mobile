@@ -1,6 +1,3 @@
-// Copyright © 2024 650 Industries.
-// from expo-checkbox
-
 import CheckboxIcon from "@/assets/images/checkbox.svg";
 import { Text } from "./Text";
 import { View } from "./View";
@@ -16,11 +13,6 @@ import {
 import { Image } from "expo-image";
 import { SimpleChip } from "./SimpleChip";
 import { TextInput } from "./TextInput";
-
-// image fallback
-// <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
-//   <Text className="text-center text">Imagen</Text>
-// </View>
 
 export function SelectableItem({
   color,
@@ -110,9 +102,9 @@ export function SelectableItem({
           >
             {checked && checkedView}
           </Pressable>
-          <View>
+          <View className="bg-transparent">
             {label && (
-              <Text className="text-sky-400 font-medium text-sm flex-grow pr-6">
+              <Text className="text-sky-400 font-medium text-sm flex-grow">
                 {label}
                 {required && "*"}
               </Text>
