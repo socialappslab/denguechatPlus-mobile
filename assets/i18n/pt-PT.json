@@ -193,7 +193,8 @@
         "search": "Pesquisar um local",
         "optionsTitle": "Escolha um local",
         "noHouses": "Não encontra o local?",
-        "noHousesMessage": "Registre um novo local aqui."
+        "noHousesMessage": "Registre um novo local aqui.",
+        "lastVisit": "Última visita"
       },
       "newHouse": {
         "title": "Registrar novo site",

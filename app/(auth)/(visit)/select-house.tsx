@@ -95,7 +95,7 @@ export default function SelectHouseScreen() {
   };
   const renderHouseDescription = (house: House) => {
     return house.lastVisit
-      ? `Last visit: ${formatDate(house.lastVisit, language, t("visit.houses.notVisited"))}`
+      ? `${t("visit.houses.lastVisit")}: ${formatDate(house.lastVisit, language, t("visit.houses.notVisited"))}`
       : undefined;
   };
 
