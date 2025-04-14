@@ -42,7 +42,7 @@ function useProtectedRoute(user: IUser | null) {
     if (!user && inAuthGroup) {
       router.replace("/login");
     } else if (user && !inAuthGroup) {
-      router.replace("/(auth)/(tabs)/visits");
+      router.replace("/(auth)/(tabs)");
     }
   }, [user, segments]);
 }

@@ -67,8 +67,10 @@ export default function TabLayout(props: ThemeProps) {
       <Tabs.Screen
         name="index"
         options={{
-          title: t("tabs.chat"),
-          tabBarIcon: ({ color }) => <TabBarIcon name="chat" color={color} />,
+          title: t("tabs.profile"),
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="profile" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -79,12 +81,10 @@ export default function TabLayout(props: ThemeProps) {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="chat"
         options={{
-          title: t("tabs.profile"),
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="profile" color={color} />
-          ),
+          title: t("tabs.chat"),
+          tabBarIcon: ({ color }) => <TabBarIcon name="chat" color={color} />,
         }}
       />
     </Tabs>
