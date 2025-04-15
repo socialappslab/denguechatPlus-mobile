@@ -104,7 +104,7 @@ export function SelectableItem({
           </Pressable>
           <View className="bg-transparent">
             {label && (
-              <Text className="text-sky-400 font-medium text-sm flex-grow">
+              <Text className="text-sky-400 font-medium text-sm flex-grow pr-6">
                 {label}
                 {required && "*"}
               </Text>
