@@ -3,7 +3,7 @@ import { Button, Text, View } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useVisitStore } from "@/hooks/useVisitStore";
@@ -14,7 +14,7 @@ import ConfettiImage from "@/assets/images/confetti.svg";
 function useTarikiStatusModal() {
   const storedHouseList = useVisitStore((state) => state.storedHouseList);
   const visitId = useVisitStore((state) => state.visitId);
-  const [consecutiveGreenVisitsForTarikiStatus] = useResourceData(
+  const [, , consecutiveGreenVisitsForTarikiStatus] = useResourceData(
     ResourceName.AppConfigParam,
   );
 
@@ -31,20 +31,21 @@ function useTarikiStatusModal() {
 
   if (!currentHouse) throw new Error("House not found");
 
-  // TODO: make sure this is dynamic with Raul
   const shouldShowModal =
     currentHouse.consecutiveGreenStatus >=
       consecutiveGreenVisitsForTarikiStatusValue &&
     houseColor === StatusColor.NO_INFECTED;
 
-  if (shouldShowModal) {
-    modalRef.current?.present();
-  }
+  useEffect(() => {
+    if (shouldShowModal) {
+      modalRef.current?.present();
+    }
+  }, [shouldShowModal]);
 
   return modalRef;
 }
 
-export default function Summary() {
+export default function Final() {
   const router = useRouter();
 
   const { t } = useTranslation();
@@ -56,6 +57,8 @@ export default function Summary() {
   const [, brigadistPoints, brigadePoints] = useResourceData(
     ResourceName.AppConfigParam,
   );
+
+  const snapPoints = useMemo(() => ["50%"], []);
 
   return (
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between items-center">
@@ -92,7 +95,7 @@ export default function Summary() {
       <ClosableBottomSheet
         bottomSheetModalRef={tarikiStatusModalRef}
         title={t("visit.final.tarikiStatusModal.title")}
-        snapPoints={["50%"]}
+        snapPoints={snapPoints}
       >
         <View className="flex-1 p-4">
           <View className="border border-gray-100 p-8 rounded-xl items-center relative overflow-hidden">

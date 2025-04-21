@@ -201,14 +201,6 @@ interface ResourceDataSpecialPlace extends ResourceDataCommon {
   name_pt: string;
 }
 
-interface ResourceDataAppConfigParam extends ResourceDataCommon {
-  name: string;
-  description: string;
-  param_source: string;
-  param_type: "integer";
-  value: string;
-}
-
 interface ResourceCommon {
   id: number;
   version: number;
