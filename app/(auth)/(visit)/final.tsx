@@ -14,9 +14,15 @@ import ConfettiImage from "@/assets/images/confetti.svg";
 function useTarikiStatusModal() {
   const storedHouseList = useVisitStore((state) => state.storedHouseList);
   const visitId = useVisitStore((state) => state.visitId);
-  const [, , consecutiveGreenVisitsForTarikiStatus] = useResourceData(
-    ResourceName.AppConfigParam,
-  );
+  const resourceData = useResourceData(ResourceName.AppConfigParam);
+
+  const consecutiveGreenVisitsForTarikiStatus = useMemo(
+    () =>
+      resourceData.find(
+        (item) => item.name === "consecutive_green_statuses_for_tariki_house",
+      ),
+    [resourceData],
+  )!;
 
   // NOTE: `n - 1` here, the current visit is the `n`th.
   const consecutiveGreenVisitsForTarikiStatusValue =
@@ -54,8 +60,18 @@ export default function Final() {
 
   const prefix = isInternetReachable ? "online" : "offline";
 
-  const [brigadistPoints, brigadePoints] = useResourceData(
-    ResourceName.AppConfigParam,
+  const resourceData = useResourceData(ResourceName.AppConfigParam);
+
+  const brigadistPoints = useMemo(
+    () =>
+      resourceData.find(
+        (item) => item.name === "green_house_points_user_account",
+      )!,
+    [resourceData],
+  );
+  const brigadePoints = useMemo(
+    () => resourceData.find((item) => item.name === "green_house_points_team")!,
+    [resourceData],
   );
 
   const snapPoints = useMemo(() => [460], []);
