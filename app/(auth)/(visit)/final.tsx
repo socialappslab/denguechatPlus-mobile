@@ -54,11 +54,11 @@ export default function Final() {
 
   const prefix = isInternetReachable ? "online" : "offline";
 
-  const [, brigadistPoints, brigadePoints] = useResourceData(
+  const [brigadistPoints, brigadePoints] = useResourceData(
     ResourceName.AppConfigParam,
   );
 
-  const snapPoints = useMemo(() => ["50%"], []);
+  const snapPoints = useMemo(() => [440], []);
 
   return (
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between items-center">
