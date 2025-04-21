@@ -58,7 +58,7 @@ export default function Final() {
     ResourceName.AppConfigParam,
   );
 
-  const snapPoints = useMemo(() => [440], []);
+  const snapPoints = useMemo(() => [460], []);
 
   return (
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between items-center">
