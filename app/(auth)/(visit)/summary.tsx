@@ -148,34 +148,39 @@ export default function Summary() {
   };
 
   return (
-    <ScrollView>
-      <View className="h-full p-6 pb-10 flex flex-col justify-between">
-        <View className="flex flex-col justify-center items-center">
-          <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
-            <Image
-              source={require("@/assets/images/summary.png")}
-              style={{ width: "100%", height: "100%", resizeMode: "contain" }}
-            />
+    <View className="h-full">
+      <ScrollView
+        className="flex-grow"
+        contentContainerStyle={{ paddingBottom: 0 }}
+      >
+        <View className="p-6">
+          <View className="flex flex-col justify-center items-center">
+            <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+              <Image
+                source={require("@/assets/images/summary.png")}
+                style={{ width: "100%", height: "100%", resizeMode: "contain" }}
+              />
+            </View>
           </View>
-        </View>
-        <VisitSummary
-          date={formatDate(new Date().toString(), language) || ""}
-          house={visitData.house?.referenceCode}
-          sector={user?.neighborhoodName}
-          greens={colorsAndQuantities.GREEN}
-          yellows={colorsAndQuantities.YELLOW}
-          reds={colorsAndQuantities.RED}
-          color={mainStatusColor}
-        />
-        <View className="gap-2">
-          <Button
-            primary
-            title={t("finalize")}
-            onPress={onFinalize}
-            disabled={loading}
+          <VisitSummary
+            date={formatDate(new Date().toString(), language) || ""}
+            house={visitData.house?.referenceCode}
+            sector={user?.neighborhoodName}
+            greens={colorsAndQuantities.GREEN}
+            yellows={colorsAndQuantities.YELLOW}
+            reds={colorsAndQuantities.RED}
+            color={mainStatusColor}
           />
         </View>
+      </ScrollView>
+      <View className="py-2 px-8 border-t border-neutral-200">
+        <Button
+          primary
+          title={t("finalize")}
+          onPress={onFinalize}
+          disabled={loading}
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 }
