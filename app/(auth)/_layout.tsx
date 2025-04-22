@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Platform, TouchableOpacity } from "react-native";
+import { Platform, Pressable, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import {
   BottomSheetModal,
@@ -23,6 +23,8 @@ import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { authApi } from "@/config/axios";
 import Toast from "react-native-toast-message";
 import { useIsFocused } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
 
 const CustomDrawerContent = () => {
   const router = useRouter();
@@ -73,16 +75,28 @@ const CustomDrawerContent = () => {
         </View>
         <View className="flex-grow px-2">
           <ProtectedView hasPermission={["users-change_team"]}>
-            <TouchableOpacity
-              className="flex py-3 flex-row items-center"
+            <Pressable
+              className="py-3 flex-row items-center"
               onPress={() => router.push("/select-user")}
             >
               <AssignBrigade />
               <Text className="font-semibold ml-3">
                 {t("drawer.assignBrigade")}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </ProtectedView>
+
+          <Pressable
+            className="py-3 flex-row items-center"
+            onPress={async () => {
+              await Linking.openURL(
+                "https://scribehow.com/page/Guia_de_Usuario__Id5Pqg7PTqeXHAqDhYyRWw",
+              );
+            }}
+          >
+            <MaterialIcons name="help" size={24} color="#56534E" />
+            <Text className="font-semibold ml-3">{t("drawer.userGuide")}</Text>
+          </Pressable>
         </View>
         <View className="flex justify-end">
           {openSettings && (
