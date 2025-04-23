@@ -125,8 +125,9 @@ export default function Summary() {
       // Cleanup, if it's not connected we send house details
       finaliseCurrentVisit(isConnected, {
         ...sanitizedVisitData,
+        // NOTE: This is stuff we need to show in the modal before syncing an
+        // offline visit
         house: visitData.house,
-        // NOTE: Saving the colors because we need to show them before syncing
         statusColor: mainStatusColor,
         colorsAndQuantities,
       });

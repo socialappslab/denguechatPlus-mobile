@@ -269,23 +269,19 @@ export default function Visits() {
   };
 
   const synchronizeVisit = async (visit: any) => {
-    let newVisit = {
-      ...visit,
-      house: visit.houseId ? undefined : visit.house,
-    };
+    // NOTE: copying the visit since we're going to mutate a reference
+    const newVisit = { ...visit, house: { ...visit.house } };
 
-    const visitToSubmit = {
-      ...newVisit,
-      inspections: sanitizeInspections(newVisit.inspections),
-    };
-
-    delete visitToSubmit.statusColor;
-    delete visitToSubmit.colorsAndQuantities;
+    // NOTE: remove stuff that we don't need to send to the backend and
+    // was added in the summary page to show the site and colors in the modal
+    if (visit.houseId) delete newVisit.house;
+    delete newVisit.statusColor;
+    delete newVisit.colorsAndQuantities;
 
     try {
       setLoading(true);
-      await createVisit({ json_params: JSON.stringify(visitToSubmit) });
-      cleanUpStoredVisit(visitToSubmit);
+      await createVisit({ json_params: JSON.stringify(newVisit) });
+      cleanUpStoredVisit(newVisit);
       setSuccess(true);
       bottomSheetModalRef.current?.close();
       Toast.show({
