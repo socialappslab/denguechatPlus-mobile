@@ -72,7 +72,6 @@ export interface Inspection {
   other_protection?: string;
   type_content_id?: number[];
   quantity_founded: number;
-  // tracking_type_required?: string;
   visited_at?: string;
   photo_id?: string;
   site_type?: string;

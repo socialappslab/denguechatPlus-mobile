@@ -126,6 +126,7 @@ export default function Summary() {
       finaliseCurrentVisit(isConnected, {
         ...sanitizedVisitData,
         house: visitData.house,
+        // NOTE: Saving the colors because we need to show them before syncing
         statusColor: mainStatusColor,
         colorsAndQuantities,
       });

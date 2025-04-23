@@ -6,7 +6,9 @@ export const sanitizeInspections = (
   return inspections
     .map((i) => {
       const sanitizedInspection: Inspection = {
-        has_water: i?.has_water?.value,
+        // NOTE: The fallback here is for offline sync, the sanitization runs
+        // again and `i?.has_water?.value` is no longer available in that format
+        has_water: i?.has_water?.value ?? i?.has_water,
         breeding_site_type_id: i?.breeding_site_type_id,
         container_protection_ids: i?.container_protection_ids?.map(
           (item) => item.id,
