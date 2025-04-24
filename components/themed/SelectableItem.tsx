@@ -1,6 +1,3 @@
-// Copyright © 2024 650 Industries.
-// from expo-checkbox
-
 import CheckboxIcon from "@/assets/images/checkbox.svg";
 import { Text } from "./Text";
 import { View } from "./View";
@@ -17,13 +14,9 @@ import { Image } from "expo-image";
 import { SimpleChip } from "./SimpleChip";
 import { TextInput } from "./TextInput";
 
-// image fallback
-// <View className="bg-green-300 h-52 flex-grow mb-4 rounded-xl border-green-300 flex items-center justify-center">
-//   <Text className="text-center text">Imagen</Text>
-// </View>
-
 export function SelectableItem({
   color,
+  description,
   disabled,
   onChange,
   onValueChange,
@@ -38,7 +31,7 @@ export function SelectableItem({
   type = "radio",
   defaultText,
   ...other
-}: SelectableItemProps) {
+}: SelectableItemProps & { description?: string }) {
   const [text, setText] = useState(defaultText);
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -86,7 +79,7 @@ export function SelectableItem({
             )}
           </View>
         )}
-        <View className="flex flex-row bg-transparent text-wrap">
+        <View className="flex flex-row items-center bg-transparent text-wrap">
           <Pressable
             className="mr-2"
             {...other}
@@ -109,10 +102,17 @@ export function SelectableItem({
           >
             {checked && checkedView}
           </Pressable>
-          <Text className="text-sky-400 font-medium text-sm/[17px] flex-grow pr-6">
-            {label}
-            {required && "*"}
-          </Text>
+          <View className="bg-transparent">
+            {label && (
+              <Text className="text-sky-400 font-medium text-sm flex-grow pr-6">
+                {label}
+                {required && "*"}
+              </Text>
+            )}
+            {description && (
+              <Text className="text-sky-400 text-xs">{description}</Text>
+            )}
+          </View>
         </View>
       </View>
       {checked && optionType === "textArea" && (

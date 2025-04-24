@@ -1,14 +1,80 @@
 import FinalIllustration from "@/assets/images/final.svg";
 import { Button, Text, View } from "@/components/themed";
-import { useVisit } from "@/hooks/useVisit";
-import { useRouter } from "expo-router";
+import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { useEffect, useMemo, useRef } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { useVisitStore } from "@/hooks/useVisitStore";
+import { ResourceName, StatusColor } from "@/types";
+import { useResourceData } from "@/hooks/useResourceData";
+import ConfettiImage from "@/assets/images/confetti.svg";
 
-export default function Summary() {
-  const { t } = useTranslation();
-  const { isConnected } = useVisit();
+function useTarikiStatusModal() {
+  const storedHouseList = useVisitStore((state) => state.storedHouseList);
+  const visitId = useVisitStore((state) => state.visitId);
+  const resourceData = useResourceData(ResourceName.AppConfigParam);
+
+  const consecutiveGreenVisitsForTarikiStatus = useMemo(
+    () =>
+      resourceData.find(
+        (item) => item.name === "consecutive_green_statuses_for_tariki_house",
+      ),
+    [resourceData],
+  )!;
+
+  // NOTE: `n - 1` here, the current visit is the `n`th.
+  const consecutiveGreenVisitsForTarikiStatusValue =
+    Number(consecutiveGreenVisitsForTarikiStatus.value) - 1;
+
+  const { houseColor } = useLocalSearchParams();
+
+  const modalRef = useRef<BottomSheetModal>(null);
+
+  const houseId = Number(visitId.split("-")[1]);
+  const currentHouse = storedHouseList.find((house) => house.id === houseId);
+
+  if (!currentHouse) throw new Error("House not found");
+
+  const shouldShowModal =
+    currentHouse.consecutiveGreenStatus >=
+      consecutiveGreenVisitsForTarikiStatusValue &&
+    houseColor === StatusColor.NO_INFECTED;
+
+  useEffect(() => {
+    if (shouldShowModal) {
+      modalRef.current?.present();
+    }
+  }, [shouldShowModal]);
+
+  return modalRef;
+}
+
+export default function Final() {
   const router = useRouter();
-  const prefix = isConnected ? "online" : "offline";
+
+  const { t } = useTranslation();
+  const { isInternetReachable } = useNetInfo();
+  const tarikiStatusModalRef = useTarikiStatusModal();
+
+  const prefix = isInternetReachable ? "online" : "offline";
+
+  const resourceData = useResourceData(ResourceName.AppConfigParam);
+
+  const brigadistPoints = useMemo(
+    () =>
+      resourceData.find(
+        (item) => item.name === "green_house_points_user_account",
+      )!,
+    [resourceData],
+  );
+  const brigadePoints = useMemo(
+    () => resourceData.find((item) => item.name === "green_house_points_team")!,
+    [resourceData],
+  );
+
+  const snapPoints = useMemo(() => [460], []);
 
   return (
     <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between items-center">
@@ -41,6 +107,46 @@ export default function Summary() {
           />
         </View>
       </View>
+
+      <ClosableBottomSheet
+        bottomSheetModalRef={tarikiStatusModalRef}
+        title={t("visit.final.tarikiStatusModal.title")}
+        snapPoints={snapPoints}
+      >
+        <View className="flex-1 p-4">
+          <View className="border border-gray-100 p-8 rounded-xl items-center relative overflow-hidden">
+            <ConfettiImage className="absolute inset-0 opacity-80" />
+
+            <View className="rounded-full border-[16px] border-primary aspect-square p-6 items-center justify-center">
+              <Text className="text-3xl font-bold">
+                {brigadistPoints.value}
+              </Text>
+              <Text className="">
+                {t("visit.final.tarikiStatusModal.points")}
+              </Text>
+            </View>
+
+            <Text className="text-center font-bold text-2xl mt-4">
+              {t("visit.final.tarikiStatusModal.title")}
+            </Text>
+            <Text className="text-center mt-2 text-gray-800">
+              {t("visit.final.tarikiStatusModal.description", {
+                brigadistPoints: brigadistPoints.value,
+                brigadePoints: brigadePoints.value,
+              })}
+            </Text>
+          </View>
+
+          <Button
+            primary
+            title={t("visit.final.tarikiStatusModal.button")}
+            onPress={() => {
+              tarikiStatusModalRef.current?.close();
+            }}
+            className="mt-4"
+          />
+        </View>
+      </ClosableBottomSheet>
     </View>
   );
 }

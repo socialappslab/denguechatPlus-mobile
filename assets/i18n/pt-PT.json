@@ -11,7 +11,6 @@
     "retry": "Tentar novamente",
     "textChatsTab": "Navegue até a aba de perfil para sair.",
     "backToHome": "Ir para a página inicial",
-    "editFromStart": "Editar do início",
     "finalize": "Finalizar",
     "placeholder": "Escreva aqui...",
     "quantity": "Quantidade",
@@ -100,6 +99,7 @@
       "myCommunity": "Minha Comunidade",
       "brigades": "Brigadas",
       "assignBrigade": "Atribuir Brigada",
+      "userGuide": "Guia do Usuário",
       "settings": "Configuração"
     },
     "profile": {
@@ -194,7 +194,8 @@
         "search": "Pesquisar um local",
         "optionsTitle": "Escolha um local",
         "noHouses": "Não encontra o local?",
-        "noHousesMessage": "Registre um novo local aqui."
+        "noHousesMessage": "Registre um novo local aqui.",
+        "lastVisit": "Última visita"
       },
       "newHouse": {
         "title": "Registrar novo site",
@@ -259,6 +260,13 @@
         },
         "online": {
           "greetings": "Os dados da visita foram salvos."
+        },
+        "tarikiStatusModal": {
+          "title": "Novo site Tariki!",
+          "points": "Pontos",
+          "subtitle": "Este lugar agora é Tariki",
+          "description": "{{brigadistPoints}} pontos foram atribuídos a você e {{brigadePoints}} pontos à sua brigada. Ótimo trabalho!",
+          "button": "Aceitar pontos"
         }
       },
       "synchronizedVisit": "Visita sincronizada"

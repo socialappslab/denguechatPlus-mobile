@@ -14,7 +14,7 @@ import MoreHorizontal from "@/components/icons/MoreHorizontal";
 
 export type PostItemProps = ThemeProps &
   TouchableOpacity["props"] & {
-    onPressElement: () => void;
+    onPressElement?: () => void;
     onPressLike: (id: number) => void;
     onPressComments: () => void;
     onPressOptions: () => void;

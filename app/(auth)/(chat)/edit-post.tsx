@@ -123,7 +123,7 @@ export default function EditPost() {
   }, [post, reset]);
 
   const onBack = () => {
-    router.push("/(auth)/(tabs)");
+    router.push("/(auth)/(tabs)/chat");
   };
 
   const onSubmitHandler: SubmitHandler<PostInputType> = async (values) => {

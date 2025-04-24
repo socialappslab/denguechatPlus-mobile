@@ -76,7 +76,7 @@ export const prepareFormData = (formData: FormState) => {
 
       if (answer.resourceType === "attribute") {
         inspections[index][resourceName] = {
-          value: answer.text || answer.bool || answer.label,
+          value: answer.text ?? answer.bool ?? answer.label,
           statusColor: answer.statusColor,
           weightedPoints: answer.weightedPoints,
         };

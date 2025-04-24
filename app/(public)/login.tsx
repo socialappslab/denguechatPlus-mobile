@@ -46,7 +46,7 @@ export default function Login() {
 
   const [, setPhoneNumber] = useState("");
 
-  const [activeTab, setActiveTab] = useState<TYPE_LOGIN_REQUEST>("username");
+  const [activeTab, setActiveTab] = useState<TYPE_LOGIN_REQUEST>("phone");
 
   const [phoneCountryCode, setPhoneCountryCode] = useState<CountryCode>("PE");
   const [showPhoneCountryPicker, setShowPhoneCountryPicker] = useState(false);
@@ -146,16 +146,6 @@ export default function Login() {
           <FormProvider {...methods}>
             <View className="flex-row border-b border-neutral-300 mb-4">
               <TouchableOpacity
-                onPress={() => setActiveTab("username")}
-                className={`flex-1 items-center py-2 ${activeTab === "username" ? "border-b-4 border-primary" : ""}`}
-              >
-                <Text
-                  className={`text-sm font-semibold ${activeTab === "username" ? "text-primary" : "text-neutral-500"}`}
-                >
-                  {t("login.username-tab")}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
                 onPress={() => setActiveTab("phone")}
                 className={`flex-1 items-center py-2 ${activeTab === "phone" ? "border-b-4 border-primary" : ""}`}
               >
@@ -163,6 +153,16 @@ export default function Login() {
                   className={`text-sm font-semibold ${activeTab === "phone" ? "text-primary" : "text-neutral-500"}`}
                 >
                   {t("login.phone-tab")}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setActiveTab("username")}
+                className={`flex-1 items-center py-2 ${activeTab === "username" ? "border-b-4 border-primary" : ""}`}
+              >
+                <Text
+                  className={`text-sm font-semibold ${activeTab === "username" ? "text-primary" : "text-neutral-500"}`}
+                >
+                  {t("login.username-tab")}
                 </Text>
               </TouchableOpacity>
             </View>

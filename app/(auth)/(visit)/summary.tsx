@@ -116,10 +116,17 @@ export default function Summary() {
         type: "success",
         text1: t("success"),
       });
-      router.push("/final");
+      router.push({
+        pathname: "/final",
+        params: {
+          houseColor: mainStatusColor,
+        },
+      });
       // Cleanup, if it's not connected we send house details
       finaliseCurrentVisit(isConnected, {
         ...sanitizedVisitData,
+        // NOTE: This is stuff we need to show in the modal before syncing an
+        // offline visit
         house: visitData.house,
         statusColor: mainStatusColor,
         colorsAndQuantities,
@@ -143,45 +150,39 @@ export default function Summary() {
   };
 
   return (
-    <ScrollView>
-      <View className="h-full p-6 pb-10 flex flex-col justify-between">
-        <View className="flex flex-col justify-center items-center">
-          <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
-            <Image
-              source={require("@/assets/images/summary.png")}
-              style={{ width: "100%", height: "100%", resizeMode: "contain" }}
-            />
+    <View className="h-full">
+      <ScrollView
+        className="flex-grow"
+        contentContainerStyle={{ paddingBottom: 0 }}
+      >
+        <View className="p-6">
+          <View className="flex flex-col justify-center items-center">
+            <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+              <Image
+                source={require("@/assets/images/summary.png")}
+                style={{ width: "100%", height: "100%", resizeMode: "contain" }}
+              />
+            </View>
           </View>
+          <VisitSummary
+            date={formatDate(new Date().toString(), language) || ""}
+            house={visitData.house?.referenceCode}
+            sector={user?.neighborhoodName}
+            greens={colorsAndQuantities.GREEN}
+            yellows={colorsAndQuantities.YELLOW}
+            reds={colorsAndQuantities.RED}
+            color={mainStatusColor}
+          />
         </View>
-        <VisitSummary
-          date={formatDate(new Date().toString(), language) || ""}
-          house={visitData.house?.referenceCode}
-          sector={user?.neighborhoodName}
-          greens={colorsAndQuantities.GREEN}
-          yellows={colorsAndQuantities.YELLOW}
-          reds={colorsAndQuantities.RED}
-          color={mainStatusColor}
+      </ScrollView>
+      <View className="py-2 px-8 border-t border-neutral-200">
+        <Button
+          primary
+          title={t("finalize")}
+          onPress={onFinalize}
+          disabled={loading}
         />
-        <View className="gap-2">
-          <Button
-            primary
-            title={t("finalize")}
-            onPress={onFinalize}
-            disabled={loading}
-          />
-          <Button
-            title={t("editFromStart")}
-            onPress={() =>
-              router.push({
-                pathname: "/visit/[id]",
-                params: {
-                  id: questionnaire?.initialQuestion,
-                },
-              })
-            }
-          />
-        </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }

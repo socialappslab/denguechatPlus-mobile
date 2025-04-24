@@ -15,16 +15,15 @@ import {
 import { useAuth } from "@/context/AuthProvider";
 import { useStorageState } from "@/hooks/useStorageState";
 import { ErrorResponse } from "@/schema";
-import { Questionnaire, Resource, ResourceData, VisitData } from "@/types";
+import { Questionnaire, Resources, VisitData } from "@/types";
 
 interface VisitContextType {
   questionnaire?: Questionnaire;
   isLoadingQuestionnaire: boolean;
   visitData: VisitData;
-  resources: Resource[];
+  resources: Resources;
   setVisitData: (data: Partial<VisitData>) => Promise<void>;
   cleanStore: () => Promise<void>;
-  getResourceByName: (resourceName: string) => ResourceData[] | undefined;
   language: string | null;
   isConnected: boolean;
 }
@@ -53,7 +52,11 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
-  const [resources, setResources] = useState<Resource[]>([]);
+  // @ts-expect-error `resources` is a tuple with some objects that we expect
+  // from our backend and it will be use throughout the life of our app, we
+  // should make sure that resources always comes in the shape that the types
+  // say, or throw, because is guaranteed the app will crash at some point
+  const [resources, setResources] = useState<Resources>([]);
 
   const [
     { data: questionnaireData, loading: isLoadingQuestionnaire },
@@ -68,7 +71,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const [{ data: paramsData, loading: isLoadingParams }, featchParams] =
-    useAxios<Resource[], unknown, ErrorResponse>(
+    useAxios<Resources, unknown, ErrorResponse>(
       {
         url: `get_last_params`,
       },
@@ -159,15 +162,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const getResourceByName = (
-    resourceName: string,
-  ): ResourceData[] | undefined => {
-    const resource = resources.find(
-      (resource) => resource.resourceName === resourceName,
-    );
-    return resource?.resourceData;
-  };
-
   const cleanStore = async () => {
     SecureStore.setItemAsync(
       CURRENT_VISIT_LOCAL_STORAGE_KEY,
@@ -184,7 +178,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
         resources,
         isLoadingQuestionnaire: isLoadingQuestionnaire || isLoadingParams,
         setVisitData,
-        getResourceByName,
         cleanStore,
         language: language ?? "es",
         isConnected: !!isInternetReachable,

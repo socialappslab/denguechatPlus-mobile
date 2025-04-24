@@ -10,7 +10,6 @@ import Toast from "react-native-toast-message";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-// import { useZustandDevtool } from "@/util/zustandDevTool";
 
 import AuthProvider, { useAuth } from "@/context/AuthProvider";
 import { LANGUAGE_LOCAL_STORAGE_KEY } from "@/constants/Keys";
@@ -26,10 +25,9 @@ import * as Sentry from "@sentry/react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 Sentry.init({
-  dsn: "https://1530b05d8bc80b91a3304733b4f40e15@o4508732723232768.ingest.us.sentry.io/4508732748529664",
-
-  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-  // spotlight: __DEV__,
+  dsn: __DEV__
+    ? undefined
+    : "https://1530b05d8bc80b91a3304733b4f40e15@o4508732723232768.ingest.us.sentry.io/4508732748529664",
 });
 
 export {
@@ -50,7 +48,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   // Our language (locale) to use
-  const [[_, language], setLanguageLocalStorage] = useStorageState(
+  const [[, language], setLanguageLocalStorage] = useStorageState(
     LANGUAGE_LOCAL_STORAGE_KEY,
   );
   const { setUser } = useAuth();
@@ -85,7 +83,7 @@ export default function RootLayout() {
     };
 
     getSystemLanguageAndSet();
-  }, []);
+  }, [setLanguageLocalStorage]);
 
   useEffect(() => {
     if (!loadingUser) {
