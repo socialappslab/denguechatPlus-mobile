@@ -3,7 +3,7 @@ export default {
     name: "DengueChatPlus",
     slug: "dengue-chat-plus",
     scheme: "org.denguechat.plus",
-    version: "1.3.0",
+    version: "1.3.1",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     userInterfaceStyle: "automatic",
