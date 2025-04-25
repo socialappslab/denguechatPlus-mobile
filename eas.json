@@ -27,7 +27,10 @@
       "distribution": "store",
       "autoIncrement": true,
       "environment": "production",
-      "channel": "test_flight"
+      "channel": "test_flight",
+      "ios": {
+        "image": "macos-sequoia-15.3-xcode-16.2"
+      }
     },
     "production": {
       "autoIncrement": true,
