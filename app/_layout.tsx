@@ -23,6 +23,7 @@ import { BrigadeProvider } from "@/context/BrigadeContext";
 import { FilterProvider } from "@/context/FilterContext";
 import * as Sentry from "@sentry/react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { StatusBar } from "expo-status-bar";
 
 Sentry.init({
   dsn: __DEV__
@@ -129,6 +130,7 @@ function RootLayoutNav() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <StatusBar style="dark" />
       <StoreState {...state} />
       <AuthProvider>
         <BrigadeProvider>
