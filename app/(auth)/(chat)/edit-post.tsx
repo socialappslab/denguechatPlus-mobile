@@ -20,7 +20,7 @@ import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import useAxios from "axios-hooks";
 
 import {
-  createPostSchema,
+  postSchema,
   ErrorResponse,
   PostInputType,
   PostVisibility,
@@ -93,7 +93,7 @@ export default function EditPost() {
   }, [data]);
 
   const methods = useForm<PostInputType>({
-    resolver: zodResolver(createPostSchema()),
+    resolver: zodResolver(postSchema),
     mode: "onChange",
     defaultValues: { content: "" },
   });
