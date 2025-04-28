@@ -1,22 +1,21 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { ThemeProps } from "./useThemeColor";
 import { Text } from "./Text";
 import { View } from "./View";
 
 import ArrowForward from "@/assets/images/icons/arrow-forward.svg";
 
-export type ListItemProps = ThemeProps &
-  TouchableOpacity["props"] & {
-    size?: number | "small" | "large";
-    onPressElement: () => void;
-    initials?: string;
-    title?: string;
-    filled?: string;
-    emptyString?: string;
-    disabled?: boolean;
-    square?: boolean;
-    className?: string;
-  };
+interface ListItemProps extends ThemeProps, TouchableOpacityProps {
+  size?: number | "small" | "large";
+  onPressElement: () => void;
+  initials?: string;
+  title?: string;
+  filled?: string;
+  emptyString?: string;
+  disabled?: boolean;
+  square?: boolean;
+  className?: string;
+}
 
 export function ListItem(props: ListItemProps) {
   const {
@@ -37,7 +36,7 @@ export function ListItem(props: ListItemProps) {
     >
       {initials && (
         <View
-          className={`flex items-center justify-center w-12 h-12 
+          className={`flex items-center justify-center w-12 h-12
          ${square ? "rounded-md" : "rounded-full"}  bg-green-400 mr-3`}
         >
           <Text className="font-bold text-sm text-green-700">{initials}</Text>

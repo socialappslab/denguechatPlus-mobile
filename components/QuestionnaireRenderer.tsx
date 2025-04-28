@@ -294,7 +294,7 @@ const ControlledCheckbox = ({
 
     if (indexFound > -1) {
       if (isText) {
-        const valuesToSave = values.map((item) =>
+        const valuesToSave = values.map((item: any) =>
           item.value === option.value ? prepareOption({ option, text }) : item,
         );
         setValue(name, valuesToSave);

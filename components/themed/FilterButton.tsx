@@ -2,12 +2,11 @@ import Filter from "@/assets/images/icons/filter.svg";
 import { ThemeProps } from "@/components/themed/useThemeColor";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 
-export type FilterButtonProps = ThemeProps &
-  TouchableOpacity["props"] & {
-    filters: number;
-  };
+interface FilterButtonProps extends ThemeProps, TouchableOpacityProps {
+  filters: number;
+}
 
 export function FilterButton(props: FilterButtonProps) {
   const { style, filters, disabled, lightColor, darkColor, ...otherProps } =
