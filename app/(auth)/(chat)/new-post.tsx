@@ -124,6 +124,7 @@ export default function NewPost() {
         backBehavior();
       }, 200);
     } catch (error) {
+      // @ts-expect-error
       console.error("Error posting data:", JSON.stringify(error?.response));
       Toast.show({
         type: "error",

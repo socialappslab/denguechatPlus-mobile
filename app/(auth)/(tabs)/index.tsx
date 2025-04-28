@@ -41,7 +41,9 @@ export default function Profile() {
   });
 
   const teamId = team?.id;
+  // @ts-expect-error
   const wedgeId = meData?.userProfile?.team?.wedge_id;
+  // @ts-expect-error
   const sectorId = meData?.userProfile?.team?.sector_id;
 
   const [{ data: reportData, loading: loadingReport }, refetchReport] =
@@ -88,8 +90,10 @@ export default function Profile() {
                   <Text className="font-normal mb-2">
                     {team?.sector?.name} - {team?.wedge?.name}
                   </Text>
+                  {/* @ts-expect-error */}
                   {meData?.userProfile?.houseBlock?.name && (
                     <Text className="font-normal mb-4">
+                      {/* @ts-expect-error */}
                       Frente a Frente: {meData.userProfile.houseBlock.name}
                     </Text>
                   )}

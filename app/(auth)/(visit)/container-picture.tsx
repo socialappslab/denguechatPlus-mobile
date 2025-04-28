@@ -89,7 +89,8 @@ export default function ContainerPicture() {
   }
 
   const onBack = () => router.back();
-  const onNext = () => router.push(`${Routes.Visit}/${next}`);
+  const onNext = () =>
+    router.push({ pathname: "/visit/[id]", params: { id: next } });
 
   return (
     <SafeAreaView>

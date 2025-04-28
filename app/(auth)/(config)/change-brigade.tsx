@@ -33,11 +33,11 @@ export default function ChangeBrigade() {
   };
 
   const onPressSelectBrigade = () => {
-    router.push("select-brigade");
+    router.push("/select-brigade");
   };
 
   const onPressSelectHouseBlock = () => {
-    router.push("select-house-block");
+    router.push("/select-house-block");
   };
 
   const onChangeBrigade = async () => {

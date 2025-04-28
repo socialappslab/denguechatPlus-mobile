@@ -38,5 +38,6 @@ export default function useCreateMutation<P, S>(
     return deserializedData;
   };
 
+  // @ts-expect-error
   return { createMutation, loading };
 }

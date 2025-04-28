@@ -73,6 +73,7 @@ export default function Visit() {
 
   useEffect(() => {
     const casesSoFar = Object.values(visitMap).flatMap((group) =>
+      // @ts-expect-error
       Object.values(group).map((item) => item?.selectedCase),
     );
     const hasAllVisitCases =

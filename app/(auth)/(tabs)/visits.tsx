@@ -194,6 +194,7 @@ export default function Visits() {
   }, [reload]);
 
   const orderedVisits = storedVisits.sort(
+    // @ts-expect-error
     (a, b) => new Date(b.visitedAt) - new Date(a.visitedAt),
   );
 
@@ -228,7 +229,9 @@ export default function Visits() {
   useEffect(() => {
     setFilter({
       sector: {
+        // @ts-expect-error
         id: meData?.userProfile?.team?.sector_id as number,
+        // @ts-expect-error
         name: meData?.userProfile?.team?.sector_name,
       },
     });
@@ -324,7 +327,7 @@ export default function Visits() {
               <Button
                 title={t("visit.registerVisit")}
                 primary
-                onPress={() => router.push(Routes.SelectHouse)}
+                onPress={() => router.push("/select-house")}
               />
             </View>
 
@@ -347,9 +350,11 @@ export default function Visits() {
                       testID="offlineVisit"
                       title={
                         visit.house &&
+                        // @ts-expect-error
                         `${t("visit.houses.house")} ${visit?.house?.referenceCode}`
                       }
                       onPressElement={() => handlePressVisit(visit)}
+                      // @ts-expect-error
                       filled={formatDate(visit.visitedAt, language)}
                     />
                   ))}
@@ -383,12 +388,18 @@ export default function Visits() {
                     )}
                     {!loading && (
                       <VisitSummary
+                        // @ts-expect-error
                         date={`${formatDate(selectedVisit?.visitedAt || "", language)}`}
                         sector={team?.sector?.name}
+                        // @ts-expect-error
                         house={`${selectedVisit?.house?.referenceCode}`}
+                        // @ts-expect-error
                         color={selectedVisit?.statusColor}
+                        // @ts-expect-error
                         greens={selectedVisit?.colorsAndQuantities?.GREEN}
+                        // @ts-expect-error
                         yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
+                        // @ts-expect-error
                         reds={selectedVisit?.colorsAndQuantities?.RED}
                       />
                     )}

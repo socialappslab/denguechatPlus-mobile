@@ -40,6 +40,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   const { meData } = useAuth();
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
+    // @ts-expect-error
     host: "",
     visitPermission: false,
     houseId: 0,

@@ -87,7 +87,7 @@ export default function SelectBrigade() {
               new Set(updatedList.map((item) => item.id)),
             )
               .map((id) => updatedList.find((item) => item.id === id))
-              .filter((item) => item !== undefined);
+              .filter((item): item is Team => item !== undefined);
 
             return uniqueList;
           });
@@ -152,7 +152,7 @@ export default function SelectBrigade() {
   };
 
   const onPressFilter = () => {
-    router.push(`filters-brigade`);
+    router.push("/filters-brigade");
   };
 
   const firstLoad = () => {

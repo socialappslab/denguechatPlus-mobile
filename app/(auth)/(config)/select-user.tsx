@@ -81,7 +81,7 @@ export default function SelectUser() {
               new Set(updatedList.map((item) => item.id)),
             )
               .map((id) => updatedList.find((item) => item.id === id))
-              .filter((item) => item !== undefined);
+              .filter((item): item is IUser => item !== undefined);
 
             return uniqueList;
           });
