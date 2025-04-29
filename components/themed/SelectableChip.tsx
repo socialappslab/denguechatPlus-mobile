@@ -1,17 +1,16 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 
 import { Text, View } from "@/components/themed";
 import { ThemeProps } from "@/components/themed/useThemeColor";
 import CheckGreenSimple from "@/components/icons/CheckGreenSimple";
 
-export type SimpleSelectableChipProps = ThemeProps &
-  TouchableOpacity["props"] & {
-    label: string;
-    checked: boolean;
-    onPressElement: () => void;
-    disabled?: boolean;
-  };
+interface SimpleSelectableChipProps extends ThemeProps, TouchableOpacityProps {
+  label: string;
+  checked: boolean;
+  onPressElement: () => void;
+  disabled?: boolean;
+}
 
 export function SimpleSelectableChip({
   label,

@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { ThemeProps } from "./useThemeColor";
 import { IconMaterial } from "./IconMaterial";
 import { Text } from "./Text";
@@ -6,13 +6,12 @@ import { View } from "./View";
 
 import Marker from "@/assets/images/icons/marker.svg";
 
-export type LocationButtonProps = ThemeProps &
-  TouchableOpacity["props"] & {
-    onPressElement: () => void;
-    initials?: string;
-    label?: string;
-    disabled?: boolean;
-  };
+interface LocationButtonProps extends ThemeProps, TouchableOpacityProps {
+  onPressElement: () => void;
+  initials?: string;
+  label?: string;
+  disabled?: boolean;
+}
 
 export function LocationButton(props: LocationButtonProps) {
   const { onPressElement, label, disabled } = props;

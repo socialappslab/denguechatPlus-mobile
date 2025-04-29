@@ -1,16 +1,12 @@
 import { ThemeProps } from "@/components/themed/useThemeColor";
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 
-interface BaseButtonProps {
+interface ButtonProps extends ThemeProps, TouchableOpacityProps {
   title: string;
   primary?: boolean;
   textClassName?: string;
 }
-
-export type ButtonProps = ThemeProps &
-  BaseButtonProps &
-  TouchableOpacity["props"];
 
 export function Button(props: ButtonProps) {
   const {

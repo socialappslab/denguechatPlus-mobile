@@ -30,7 +30,7 @@ export default function BrigaderList() {
 
   const onEnd = () => {
     clearState();
-    router.push("/(auth)/(tabs)");
+    router.dismissAll();
   };
 
   return (

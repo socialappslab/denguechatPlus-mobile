@@ -29,7 +29,7 @@ export default function VisitLayout(props: ThemeProps) {
         headerTintColor: color,
         headerLeft: () => (
           <Ionicons
-            onPress={() => router.back()}
+            onPress={() => router.dismiss()}
             name="arrow-back"
             size={24}
             color={color}
@@ -87,17 +87,6 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.brigadeList"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => {
-                console.log("fuck");
-                router.dismissAll();
-              }}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
         }}
       />
       <Stack.Screen

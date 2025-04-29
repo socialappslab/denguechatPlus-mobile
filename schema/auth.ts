@@ -1,39 +1,36 @@
-import { TypeOf, object, string, z } from "zod";
+import { z } from "zod";
 import { BaseObject, t, Team } from "@/schema";
 
-const passwordSchema = () =>
-  string()
-    .min(1, t("validation.requiredField.password"))
-    .min(8, t("validation.passwordLength", { length: 8 }));
+const passwordSchema = z
+  .string()
+  .min(1, t("validation.requiredField.password"))
+  .min(8, t("validation.passwordLength", { length: 8 }));
 
-export const userNameSchema = () =>
-  string()
-    .min(1, t("validation.requiredField.username"))
-    .min(4, t("validation.usernameLength", { length: 4 }));
+export const userNameSchema = z
+  .string()
+  .min(1, t("validation.requiredField.username"))
+  .min(4, t("validation.usernameLength", { length: 4 }));
 
-export const phoneSchema = () =>
-  string()
-    .min(1, t("validation.requiredField.phone"))
-    .min(8, t("validation.phoneLength"));
+export const phoneSchema = z
+  .string()
+  .min(1, t("validation.requiredField.phone"))
+  .min(8, t("validation.phoneLength"));
 
 export const TYPE_LOGIN = ["username", "phone"] as const;
 
-export const createLoginSchema = () => {
-  return object({
-    username: z
-      .union([userNameSchema(), z.string().length(0, "")])
-      .optional()
-      .transform((e) => (e === "" ? undefined : e)),
-    phone: z
-      .union([phoneSchema(), z.string().length(0, "")])
-      .optional()
-      .transform((e) => (e === "" ? undefined : e)),
-    password: passwordSchema(),
-  });
-};
+export const loginSchema = z.object({
+  username: z
+    .union([userNameSchema, z.string().length(0, "")])
+    .optional()
+    .transform((e) => (e === "" ? undefined : e)),
+  phone: z
+    .union([phoneSchema, z.string().length(0, "")])
+    .optional()
+    .transform((e) => (e === "" ? undefined : e)),
+  password: passwordSchema,
+});
 
-const loginSchema = createLoginSchema();
-export type LoginInputType = TypeOf<typeof loginSchema>;
+export type LoginInputType = z.infer<typeof loginSchema>;
 
 export type TYPE_LOGIN_REQUEST = (typeof TYPE_LOGIN)[number];
 
@@ -90,23 +87,6 @@ export interface IUser extends UserProfile {
   userProfile?: UserProfile;
 }
 
-export interface UserAccount {
-  phone?: string;
-  password: string;
-  username?: string;
-  email?: string;
-  userProfile: UserProfile;
-}
-
-export interface UserUpdate {
-  status?: UserStatusType;
-  password?: string;
-  username?: string;
-  phone?: string;
-  userProfileAttributes?: UserProfile;
-  roleIds?: number[];
-}
-
 export interface ILoginResponse {
   meta: {
     jwt: {
@@ -120,7 +100,3 @@ export interface ILoginResponse {
     };
   };
 }
-
-export type ChangeStatus = {
-  status: UserStatusType;
-};

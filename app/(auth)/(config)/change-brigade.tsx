@@ -33,42 +33,32 @@ export default function ChangeBrigade() {
   };
 
   const onPressSelectBrigade = () => {
-    router.push("select-brigade");
+    router.push("/select-brigade");
   };
 
   const onPressSelectHouseBlock = () => {
-    router.push("select-house-block");
+    router.push("/select-house-block");
   };
 
   const onChangeBrigade = async () => {
     setLoading(true);
     try {
-      console.log(
-        "payload>>>> ",
-        JSON.stringify({
-          teamId: selection?.newBrigade?.id,
-          houseBlockId: selection?.newHouseBlock?.id,
-          userId: user?.id,
-        }),
-      );
       await authApi.put(`/users/change_team`, {
         teamId: selection?.newBrigade?.id,
         houseBlockId: selection?.newHouseBlock?.id,
         userId: user?.id,
       });
 
-      router.back();
       router.push("/change-brigade-success");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       const errorData = extractAxiosErrorData(error);
-      // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
           type: "error",
           text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
         });
-        console.log(error);
+        console.error(error);
       });
       if (!errorData?.errors || errorData?.errors.length === 0) {
         Toast.show({

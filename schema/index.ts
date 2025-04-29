@@ -71,28 +71,20 @@ export interface Team extends BaseObject {
   };
 }
 
-export const createPostSchema = () => {
-  return z.object({
-    content: z
-      .string()
-      .min(1, { message: t("validation.contentPostLengthMin") })
-      .max(280, { message: t("validation.contentPostLengthMax") }),
-  });
-};
-
-const postSchema = createPostSchema();
+export const postSchema = z.object({
+  content: z
+    .string()
+    .min(1, { message: t("validation.contentPostLengthMin") })
+    .max(280, { message: t("validation.contentPostLengthMax") }),
+});
 export type PostInputType = TypeOf<typeof postSchema>;
 
 export type PostVisibility = "public" | "team";
 
-export const createCommentSchema = () => {
-  return z.object({
-    content: z
-      .string()
-      .min(1, { message: t("validation.contentCommentLengthMin") })
-      .max(280, { message: t("validation.contentCommentLengthMax") }),
-  });
-};
-
-const commentSchema = createCommentSchema();
-export type CommentInputType = TypeOf<typeof commentSchema>;
+export const commentSchema = z.object({
+  content: z
+    .string()
+    .min(1, { message: t("validation.contentCommentLengthMin") })
+    .max(280, { message: t("validation.contentCommentLengthMax") }),
+});
+export type CommentInputType = z.infer<typeof commentSchema>;

@@ -108,7 +108,7 @@ export default function Chat() {
             new Set(deserializedData.map((item) => item.id)),
           )
             .map((id) => deserializedData.find((item) => item.id === id))
-            .filter((item) => item !== undefined);
+            .filter((item): item is Post => item !== undefined);
 
           setState((prevState) => {
             const newState = { ...prevState };
@@ -134,7 +134,7 @@ export default function Chat() {
               new Set(updatedList.map((item) => item.id)),
             )
               .map((id) => updatedList.find((item) => item.id === id))
-              .filter((item) => item !== undefined);
+              .filter((item): item is Post => item !== undefined);
 
             setState((prevState) => {
               const newState = { ...prevState };

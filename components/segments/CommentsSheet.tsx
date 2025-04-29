@@ -35,7 +35,7 @@ import Toast from "react-native-toast-message";
 
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { Loading, SimpleTextInput, Text, View } from "@/components/themed";
-import { createCommentSchema, ErrorResponse, CommentInputType } from "@/schema";
+import { commentSchema, ErrorResponse, CommentInputType } from "@/schema";
 import { Post } from "@/types";
 import CloseCircle from "@/assets/images/icons/close-circle.svg";
 import CommentItem from "@/components/segments/CommentItem";
@@ -103,7 +103,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   );
 
   const methods = useForm<CommentInputType>({
-    resolver: zodResolver(createCommentSchema()),
+    resolver: zodResolver(commentSchema),
     mode: "onChange",
     defaultValues: { content: "" },
   });
@@ -165,6 +165,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         scrollViewRef.current?.scrollToEnd();
       }, 1000);
     } catch (error) {
+      // @ts-expect-error
       console.error("Error posting data:", JSON.stringify(error?.response));
       Toast.show({
         type: "error",

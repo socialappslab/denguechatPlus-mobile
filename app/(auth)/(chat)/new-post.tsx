@@ -17,12 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
-import {
-  createPostSchema,
-  PostInputType,
-  PostVisibility,
-  Team,
-} from "@/schema";
+import { postSchema, PostInputType, PostVisibility, Team } from "@/schema";
 import { useAuth } from "@/context/AuthProvider";
 import {
   Text,
@@ -56,7 +51,7 @@ export default function NewPost() {
   const [numberOfLines, setNumberOfLines] = useState(2);
 
   const methods = useForm<PostInputType>({
-    resolver: zodResolver(createPostSchema()),
+    resolver: zodResolver(postSchema),
     mode: "onChange",
     defaultValues: { content: "" },
   });
@@ -129,6 +124,7 @@ export default function NewPost() {
         backBehavior();
       }, 200);
     } catch (error) {
+      // @ts-expect-error
       console.error("Error posting data:", JSON.stringify(error?.response));
       Toast.show({
         type: "error",

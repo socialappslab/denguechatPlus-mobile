@@ -1,16 +1,15 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 
 import { ThemeProps } from "@/components/themed/useThemeColor";
 import { Text } from "@/components/themed/Text";
 import { IconMaterial } from "@/components/themed/IconMaterial";
 
-export type SelectorButtonProps = ThemeProps &
-  TouchableOpacity["props"] & {
-    iconMaterial?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
-    label?: string;
-    onPressElement?: () => void;
-  };
+interface SelectorButtonProps extends ThemeProps, TouchableOpacityProps {
+  iconMaterial?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
+  label?: string;
+  onPressElement?: () => void;
+}
 
 export function SelectorButton(props: SelectorButtonProps) {
   const { iconMaterial, label, onPressElement, ...other } = props;

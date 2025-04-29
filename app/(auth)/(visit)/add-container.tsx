@@ -10,7 +10,6 @@ import { useVisitStore } from "@/hooks/useVisitStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Routes } from "./_layout";
 
 enum Selection {
   Yes,
@@ -24,11 +23,11 @@ const AddContainer = () => {
   const { increaseCurrentVisitInspection } = useVisitStore();
 
   const onNext = () => {
-    if (selected === Selection.No) return router.push(Routes.AddComment);
+    if (selected === Selection.No) return router.push("/add-comment");
 
     // If yes increase inspectionIdx
     if (selected === Selection.Yes) increaseCurrentVisitInspection();
-    return router.push("visit/10");
+    return router.push({ pathname: "/visit/[id]", params: { id: 10 } });
   };
 
   const onBack = () => router.back();

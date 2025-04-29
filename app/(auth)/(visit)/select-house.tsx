@@ -152,8 +152,10 @@ export default function SelectHouseScreen() {
               {renderTitle(houseOptions)}
             </Text>
 
+            {/* @ts-expect-error */}
             {meData?.userProfile?.houseBlock?.name && (
               <Text className="text-md font-normal mb-4">
+                {/* @ts-expect-error */}
                 Frente a Frente: {meData.userProfile.houseBlock.name}
               </Text>
             )}
