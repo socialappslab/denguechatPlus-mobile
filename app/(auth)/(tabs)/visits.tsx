@@ -31,7 +31,6 @@ import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
-import { Routes } from "../(visit)/_layout";
 import { useFilters } from "@/hooks/useFilters";
 
 interface HouseReport {

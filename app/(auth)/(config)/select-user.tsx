@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { deserialize } from "jsonapi-fractal";
@@ -64,13 +64,6 @@ export default function SelectUser() {
         const deserializedData = deserialize<IUser>(data);
         if (!deserializedData || !Array.isArray(deserializedData)) return;
 
-        // console.log(
-        //   `rows of PAGE ${page} with TEXT "${query}" and TEAM ID ${teamId} >>>>`,
-        //   deserializedData.map(
-        //     (user, index) => `${user.id}-${user.firstName}-${user.lastName}\n`,
-        //   ),
-        // );
-
         if (page === 1) {
           setDataList(deserializedData);
         } else {
@@ -87,7 +80,6 @@ export default function SelectUser() {
           });
         }
 
-        // console.log("data.links>>>", data.links);
         setHasMore(data.links?.self !== data.links?.last);
       }
     } catch (err) {
@@ -98,7 +90,7 @@ export default function SelectUser() {
     }
   };
 
-  const debouncedFetchData = useCallback(debounce(fetchData, 200), []);
+  const debouncedFetchData = debounce(fetchData, 200);
 
   useEffect(() => {
     return () => {
@@ -107,7 +99,6 @@ export default function SelectUser() {
   }, [debouncedFetchData]);
 
   const handleSearch = async (query: string) => {
-    // console.log("handleSearch>>>> ", query);
     setSearchText(query);
     setCurrentPage(1);
     setHasMore(true);
@@ -119,7 +110,6 @@ export default function SelectUser() {
     if (!loadingMore && hasMore) {
       setLoadingMore(true);
       const nextPage = currentPage + 1;
-      console.log("loadMoreData>>>> ", nextPage);
       setCurrentPage(nextPage);
       fetchData(nextPage, searchText, filters?.team?.id);
     }
@@ -135,7 +125,6 @@ export default function SelectUser() {
   };
 
   const onPressElement = (user: IUser) => {
-    console.log("onPressElement>>>> ", user);
     setSelection({ brigader: user });
     router.push(`/change-brigade`);
   };
@@ -156,7 +145,6 @@ export default function SelectUser() {
     if (isFocused) {
       firstLoad(filters?.team);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, filters]);
 
   const renderItem: ListRenderItem<IUser> = ({ item: user }) => {

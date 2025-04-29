@@ -41,7 +41,7 @@ export default function SelectBrigade() {
   const [hasMore, setHasMore] = useState(true);
 
   const router = useRouter();
-  const { filters, selection, setSelection } = useBrigades();
+  const { filters, setSelection } = useBrigades();
 
   const fetchData = async (
     page: number,
@@ -49,7 +49,6 @@ export default function SelectBrigade() {
     sectorId?: number,
     wedgeId?: number,
   ) => {
-    // console.log("fetchData>>>> ", page, query, sectorId, wedgeId);
     setError("");
     try {
       const response = await authApi.get("teams", {
@@ -70,13 +69,6 @@ export default function SelectBrigade() {
         const deserializedData = deserialize<Team>(data);
         if (!deserializedData || !Array.isArray(deserializedData)) return;
 
-        // console.log(
-        //   `rows of PAGE ${page} with TEXT "${query}" and TEAM ID ${wedgeId} >>>>`,
-        //   deserializedData.map(
-        //     (user, index) => `${user.id}-${user.firstName}-${user.lastName}\n`,
-        //   ),
-        // );
-
         if (page === 1) {
           setDataList(deserializedData);
         } else {
@@ -93,7 +85,6 @@ export default function SelectBrigade() {
           });
         }
 
-        // console.log("data.links>>>", data.links);
         setHasMore(data.links?.self !== data.links?.last);
       }
     } catch (err) {
@@ -104,7 +95,7 @@ export default function SelectBrigade() {
     }
   };
 
-  const debouncedFetchData = useCallback(debounce(fetchData, 200), []);
+  const debouncedFetchData = debounce(fetchData, 200);
 
   useEffect(() => {
     return () => {
@@ -146,7 +137,6 @@ export default function SelectBrigade() {
   };
 
   const onPressElement = (team: Team) => {
-    console.log("onPressElement>>>> ", team);
     setSelection({ newBrigade: team, newHouseBlock: undefined });
     router.back();
   };
@@ -175,10 +165,6 @@ export default function SelectBrigade() {
       <ListItem
         key={String(team.id)}
         square
-        // disabled={
-        //   Number(team.id) ===
-        //   Number((selection?.brigader?.team as BaseObject)?.id)
-        // }
         title={`${team?.name}`}
         initials={getInitialsBase(String(team.name), "")}
         onPressElement={() => onPressElement(team)}
