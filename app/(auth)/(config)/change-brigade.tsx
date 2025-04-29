@@ -49,7 +49,6 @@ export default function ChangeBrigade() {
         userId: user?.id,
       });
 
-      router.back();
       router.push("/change-brigade-success");
     } catch (error) {
       console.error(error);
