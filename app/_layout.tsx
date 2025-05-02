@@ -158,7 +158,7 @@ function RootLayoutNav() {
               <Toast
                 position="top"
                 topOffset={110}
-                visibilityTime={2000}
+                visibilityTime={6000}
                 config={toastConfig}
               />
             </ThemeProvider>
