@@ -128,7 +128,10 @@
         "login": "Login failed. Please try again.",
         "empty": "Please enter your email and password",
         "invalidCredentials": "Invalid email or password",
-        "noInternet": "Internet connection is required to log in."
+        "noInternet": "Internet connection is required to log in.",
+        "suggestFirstLastName": "Invalid credentials. Try with your first and last name as username.",
+        "suggestFirstLastNameBirthdate": "Invalid credentials. Try with your first name, last name and birthdate as username.",
+        "suggestFirstLastNameYearMonth": "Invalid credentials. Try with your first name, last name, year and month of birth as username. Example: juanperez199004"
       },
       "searchCountry_placeholder": "Search country...",
       "username-tab": "Username",
