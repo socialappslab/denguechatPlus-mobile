@@ -57,6 +57,8 @@ export default function Login() {
 
   const refPassword = useRef<RNTextInput>(null);
 
+  const authErrorCount = useRef(0);
+
   const {
     control,
     handleSubmit,
@@ -104,34 +106,63 @@ export default function Login() {
       }
 
       await signInMutation(payload);
+      authErrorCount.current = 0;
     } catch (error) {
+      setError("username", { type: "manual" });
+      setError("phone", { type: "manual" });
+      setError("password", { type: "manual" });
+
       const errorData = extractAxiosErrorData(error);
-      errorData?.errors?.forEach((error: any) => {
+
+      if (!errorData) {
         Toast.show({
           type: "error",
-          text1: t(`errorCodes.${error.error_code || "generic"}`),
+          text1: t("errorCodes.generic"),
         });
-      });
+        return;
+      }
 
-      if (!errorData?.errors || errorData?.errors.length === 0) {
+      if (!errorData.errors.length) {
         Toast.show({
           type: "error",
           text1: t("login.error.invalidCredentials"),
         });
       }
 
-      setError("username", {
-        type: "manual",
-        message: "",
-      });
-      setError("phone", {
-        type: "manual",
-        message: "",
-      });
-      setError("password", {
-        type: "manual",
-        message: "",
-      });
+      for (let error of errorData.errors) {
+        if (error.error_code === 46 && authErrorCount.current <= 3) {
+          authErrorCount.current += 1;
+
+          if (authErrorCount.current === 1) {
+            Toast.show({
+              type: "error",
+              text1: t("login.error.suggestFirstLastName"),
+            });
+            return;
+          }
+
+          if (authErrorCount.current === 2) {
+            Toast.show({
+              type: "error",
+              text1: t("login.error.suggestFirstLastNameBirthdate"),
+            });
+            return;
+          }
+
+          if (authErrorCount.current === 3) {
+            Toast.show({
+              type: "error",
+              text1: t("login.error.suggestFirstLastNameYearMonth"),
+            });
+            return;
+          }
+        }
+
+        Toast.show({
+          type: "error",
+          text1: t(`errorCodes.${error.error_code ?? "generic"}`),
+        });
+      }
     }
   };
 
@@ -274,7 +305,7 @@ export default function Login() {
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    onSubmitEditing={() => refPassword.current?.blur()}
+                    onSubmitEditing={handleSubmit(onSubmitHandler)}
                   />
                 )}
                 name="password"
@@ -290,7 +321,7 @@ export default function Login() {
             <View className="mt-4 mb-6">
               <Text className="font-bold text-md color-primary">
                 <ExternalLink
-                  href={`${process.env.EXPO_PUBLIC_FORGOT_PASSWORD_URL}`}
+                  href={process.env.EXPO_PUBLIC_FORGOT_PASSWORD_URL!}
                 >
                   {t("login.forgotPassword")}
                 </ExternalLink>
