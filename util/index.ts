@@ -14,15 +14,13 @@ export * from "./prepareFormData";
 // Function to extract error information from an Axios error
 export function extractAxiosErrorData(error: unknown): ErrorResponse | null {
   if (error !== null && typeof error === "object") {
-    if ("isAxiosError" in error && (error as AxiosError).isAxiosError) {
-      const axiosError = error as AxiosError;
+    if (error instanceof AxiosError) {
       if (
-        axiosError.response &&
-        axiosError.response.data &&
-        typeof axiosError.response.data === "object" &&
-        "errors" in axiosError.response.data
+        error.response?.data &&
+        typeof error.response.data === "object" &&
+        "errors" in error.response.data
       ) {
-        return axiosError.response.data as ErrorResponse;
+        return error.response.data as ErrorResponse;
       }
       return null;
     }
