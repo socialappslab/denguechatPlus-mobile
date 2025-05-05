@@ -130,7 +130,7 @@
         "invalidCredentials": "Invalid email or password",
         "noInternet": "Internet connection is required to log in.",
         "suggestFirstLastName": "Invalid credentials. Try with your first and last name as username.",
-        "suggestFirstLastNameBirthdate": "Invalid credentials. Try with your first name, last name and birthdate as username.",
+        "suggestFirstLastNameYear": "Invalid credentials. Try with your first name, last name and year of birth as username.",
         "suggestFirstLastNameYearMonth": "Invalid credentials. Try with your first name, last name, year and month of birth as username. Example: juanperez199004"
       },
       "searchCountry_placeholder": "Search country...",

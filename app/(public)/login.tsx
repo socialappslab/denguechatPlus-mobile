@@ -144,7 +144,7 @@ export default function Login() {
           if (authErrorCount.current === 2) {
             Toast.show({
               type: "error",
-              text1: t("login.error.suggestFirstLastNameBirthdate"),
+              text1: t("login.error.suggestFirstLastNameYear"),
             });
             return;
           }
