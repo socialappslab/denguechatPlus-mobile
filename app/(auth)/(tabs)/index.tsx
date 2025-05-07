@@ -18,14 +18,31 @@ import {
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
-import { ReportData } from "@/types";
+import { AccumulatedPoints, ReportData } from "@/types";
 import { getInitials } from "@/util";
 import { RefreshControl } from "react-native-gesture-handler";
+import { useQuery } from "@tanstack/react-query";
+import { authApi } from "@/config/axios";
+
+function useBrigadePointsQuery(teamId: number | null) {
+  return useQuery({
+    enabled: !!teamId,
+    queryKey: ["brigadePoints", teamId!],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        "filter[team_id]": teamId!.toString(),
+      });
+      return (await authApi.get(`/points/accumulated_points?${params}`))
+        .data as AccumulatedPoints;
+    },
+  });
+}
 
 export default function Profile() {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
   const { meData, reFetchMe } = useAuth();
+
   const [team, setTeam] = useState<Team | null>(null);
 
   useEffect(() => {
@@ -45,6 +62,8 @@ export default function Profile() {
   const wedgeId = meData?.userProfile?.team?.wedge_id;
   // @ts-expect-error
   const sectorId = meData?.userProfile?.team?.sector_id;
+
+  const brigadePoints = useBrigadePointsQuery(teamId ?? null);
 
   const [{ data: reportData, loading: loadingReport }, refetchReport] =
     useAxios<ReportData, unknown, ErrorResponse>({
@@ -75,16 +94,13 @@ export default function Profile() {
       >
         <CheckTeam view="profile">
           <View className="flex flex-1">
-            {loadingTeam && (
+            {loadingTeam && brigadePoints.isLoading && (
               <View className="flex flex-1 items-center justify-center">
                 <Loading />
               </View>
             )}
-            {!loadingTeam && (
-              <ScrollView
-                className="py-5 px-5"
-                showsVerticalScrollIndicator={false}
-              >
+            {!loadingTeam && !brigadePoints.isLoading && (
+              <ScrollView className="p-5" showsVerticalScrollIndicator={false}>
                 <View className="mb-2">
                   <Text className="text-xl font-bold mb-2">{team?.name}</Text>
                   <Text className="font-normal mb-2">
@@ -98,6 +114,7 @@ export default function Profile() {
                     </Text>
                   )}
                 </View>
+
                 <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
                   <Text className="text-neutral-600 mb-2">
                     {t("brigade.cards.numberVisits")}
@@ -126,6 +143,17 @@ export default function Profile() {
 
                 <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
                   <Text className="text-neutral-600 mb-2">
+                    {t("brigadistProfile.pointsOf")}{" "}
+                    {brigadePoints.data?.data?.attributes.name}
+                  </Text>
+
+                  <Text className="text-3xl font-semibold">
+                    {brigadePoints.data?.data?.attributes.totalPoints ?? 0}
+                  </Text>
+                </View>
+
+                <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+                  <Text className="text-neutral-600 mb-2">
                     {t("brigade.cards.numberSites")}
                   </Text>
                   <View className="flex-row items-center justify-between">
@@ -149,21 +177,22 @@ export default function Profile() {
                       />
                     )}
                   </View>
+
                   <View className="flex flex-col mt-6">
                     <ProgressBar
                       label={t("brigade.sites.green")}
                       progress={reportData?.greenQuantity ?? 0}
-                      color="verde-600"
+                      colorClassName="bg-verde-600"
                     />
                     <ProgressBar
                       label={t("brigade.sites.yellow")}
                       progress={reportData?.orangeQuantity ?? 0}
-                      color="yellow-400"
+                      colorClassName="bg-yellow-400"
                     />
                     <ProgressBar
                       label={t("brigade.sites.red")}
                       progress={reportData?.redQuantity ?? 0}
-                      color="red-600"
+                      colorClassName="bg-red-600"
                     />
                   </View>
                 </View>

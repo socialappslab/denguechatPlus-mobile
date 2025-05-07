@@ -91,8 +91,9 @@
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
-      "profile": "My Brigade",
-      "visit": "Visits"
+      "myBrigade": "My Brigade",
+      "visit": "Visits",
+      "profile": "Profile"
     },
     "drawer": {
       "myCity": "My City",
@@ -302,6 +303,11 @@
         },
         "action": "Join a brigade"
       }
+    },
+    "brigadistProfile": {
+      "pointsOf": "Points of",
+      "myPoints": "My points",
+      "myContributionInPoints": "My contribution in points to the brigade"
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",

@@ -5,26 +5,13 @@ import { DrawerToggleButton } from "@react-navigation/drawer";
 
 import Colors from "@/constants/Colors";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import Bubble from "@/assets/images/icons/bubble.svg";
-import House from "@/assets/images/icons/house.svg";
-import Brigade from "@/assets/images/icons/brigade.svg";
+import BubbleIcon from "@/assets/images/icons/bubble.svg";
+import HouseIcon from "@/assets/images/icons/house.svg";
+import BrigadeIcon from "@/assets/images/icons/brigade.svg";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-type TabsNames = "chat" | "homes" | "profile";
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: { name: TabsNames; color: string }) {
-  switch (props.name) {
-    case "chat":
-      return <Bubble color={props.color} />;
-    case "homes":
-      return <House color={props.color} />;
-    case "profile":
-      return <Brigade color={props.color} />;
-  }
-}
 
 export default function TabLayout(props: ThemeProps) {
   const { t } = useTranslation();
@@ -67,24 +54,35 @@ export default function TabLayout(props: ThemeProps) {
       <Tabs.Screen
         name="index"
         options={{
-          title: t("tabs.profile"),
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="profile" color={color} />
-          ),
+          title: t("tabs.myBrigade"),
+          tabBarIcon: (props) => <BrigadeIcon color={props.color} />,
         }}
       />
       <Tabs.Screen
         name="visits"
         options={{
           title: t("tabs.visit"),
-          tabBarIcon: ({ color }) => <TabBarIcon name="homes" color={color} />,
+          tabBarIcon: (props) => <HouseIcon color={props.color} />,
         }}
       />
       <Tabs.Screen
         name="chat"
         options={{
           title: t("tabs.chat"),
-          tabBarIcon: ({ color }) => <TabBarIcon name="chat" color={color} />,
+          tabBarIcon: (props) => <BubbleIcon color={props.color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: t("tabs.profile"),
+          tabBarIcon: (props) => (
+            <MaterialIcons
+              name="person-outline"
+              size={24}
+              color={props.color}
+            />
+          ),
         }}
       />
     </Tabs>

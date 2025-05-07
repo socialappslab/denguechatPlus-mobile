@@ -311,7 +311,7 @@ export interface Post {
   visibility: PostVisibility;
 }
 
-export type ReportData = {
+export interface ReportData {
   houseQuantity: number;
   visitQuantity: number;
   greenQuantity: number;
@@ -320,4 +320,17 @@ export type ReportData = {
   visitPercent: number;
   siteVariationPercentage: number;
   visitVariationPercentage: number;
-};
+}
+
+export interface AccumulatedPoints {
+  data: {
+    id: number;
+    type: "accumulatedPoints";
+    attributes: {
+      totalPoints: number;
+      name: string;
+    };
+    // TODO: remove the `null` when the backend fixes data being T | null, it
+    // just needs to be T
+  } | null;
+}
