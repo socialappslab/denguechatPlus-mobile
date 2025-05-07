@@ -132,17 +132,17 @@ const VisitsReport = ({
               <ProgressBar
                 label={t("brigade.sites.green")}
                 progress={data?.greenQuantity || 0}
-                color="primary"
+                colorClassName="bg-primary"
               />
               <ProgressBar
                 label={t("brigade.sites.yellow")}
                 progress={data?.orangeQuantity || 0}
-                color="yellow-300"
+                colorClassName="bg-yellow-300"
               />
               <ProgressBar
                 label={t("brigade.sites.red")}
                 progress={data?.redQuantity || 0}
-                color="red-500"
+                colorClassName="bg-red-500"
               />
             </View>
           </>
