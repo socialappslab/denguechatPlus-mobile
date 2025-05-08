@@ -130,7 +130,11 @@ export default function Login() {
       }
 
       for (let error of errorData.errors) {
-        if (error.error_code === 46 && authErrorCount.current <= 3) {
+        if (
+          activeTab === "username" &&
+          error.error_code === 46 &&
+          authErrorCount.current <= 3
+        ) {
           authErrorCount.current += 1;
 
           if (authErrorCount.current === 1) {
