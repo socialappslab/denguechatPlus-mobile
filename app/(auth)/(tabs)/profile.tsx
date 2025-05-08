@@ -10,6 +10,7 @@ import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import { AccumulatedPoints } from "@/types";
+import { calculatePercentage } from "@/util";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -95,13 +96,15 @@ const Profile = () => {
 
   const brigadistPointsPercentage = useMemo(() => {
     if (!brigadistPoints.data || !brigadePoints.data) return 0;
-    return Math.round(
+
+    const percentage = calculatePercentage(
       // @ts-expect-error remove ! when the backend fixes data being T | null
-      (brigadistPoints.data.data.attributes.totalPoints /
-        // @ts-expect-error remove ! when the backend fixes data being T | null
-        brigadePoints.data.data.attributes.totalPoints) *
-        100,
+      brigadistPoints.data.data.attributes.totalPoints,
+      // @ts-expect-error remove ! when the backend fixes data being T | null
+      brigadePoints.data.data.attributes.totalPoints,
     );
+
+    return Math.round(percentage);
   }, [brigadistPoints, brigadePoints]);
 
   async function handleRefresh() {

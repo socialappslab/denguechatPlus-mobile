@@ -24,7 +24,7 @@ import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
-import { countSetFilters, formatDate } from "@/util";
+import { calculatePercentage, countSetFilters, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
@@ -62,6 +62,21 @@ const VisitsReport = ({
   const filterString = [filters?.team?.name, filters?.wedge?.name]
     .filter((i) => i !== undefined)
     .join(" - ");
+
+  // NOTE: maybe we can generalize this in the future, we have the same thing at `(tabs)/visits.tsx`
+  const colorPercentages = useMemo(() => {
+    if (!data) return [0, 0, 0];
+
+    const { redQuantity, orangeQuantity, greenQuantity } = data;
+
+    const total = redQuantity + orangeQuantity + greenQuantity;
+
+    const red = Math.floor(calculatePercentage(redQuantity, total));
+    const orange = Math.floor(calculatePercentage(orangeQuantity, total));
+    const green = Math.floor(calculatePercentage(greenQuantity, total));
+
+    return [green, orange, red];
+  }, [data]);
 
   return (
     <View>
@@ -131,17 +146,17 @@ const VisitsReport = ({
             <View className="flex flex-col mt-6">
               <ProgressBar
                 label={t("brigade.sites.green")}
-                progress={data?.greenQuantity || 0}
+                progress={colorPercentages[0]}
                 colorClassName="bg-primary"
               />
               <ProgressBar
                 label={t("brigade.sites.yellow")}
-                progress={data?.orangeQuantity || 0}
+                progress={colorPercentages[1]}
                 colorClassName="bg-yellow-300"
               />
               <ProgressBar
                 label={t("brigade.sites.red")}
-                progress={data?.redQuantity || 0}
+                progress={colorPercentages[2]}
                 colorClassName="bg-red-500"
               />
             </View>
@@ -369,6 +384,7 @@ export default function Visits() {
         </CheckTeam>
 
         <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View>
+
         <ClosableBottomSheet
           title={`Casa ${selectedVisit?.referenceCode || ""}`}
           snapPoints={snapPoints}

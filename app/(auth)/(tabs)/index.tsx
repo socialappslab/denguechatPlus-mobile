@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
@@ -19,7 +19,7 @@ import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
 import { AccumulatedPoints, ReportData } from "@/types";
-import { getInitials } from "@/util";
+import { calculatePercentage, getInitials } from "@/util";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { authApi } from "@/config/axios";
@@ -81,6 +81,21 @@ export default function Profile() {
       setTeam(deserializedData);
     }
   }, [teamData]);
+
+  // NOTE: maybe we can generalize this in the future, we have the same thing at `(tabs)/visits.tsx`
+  const colorPercentages = useMemo(() => {
+    if (!reportData) return [0, 0, 0];
+
+    const { redQuantity, orangeQuantity, greenQuantity } = reportData;
+
+    const total = redQuantity + orangeQuantity + greenQuantity;
+
+    const red = Math.floor(calculatePercentage(redQuantity, total));
+    const orange = Math.floor(calculatePercentage(orangeQuantity, total));
+    const green = Math.floor(calculatePercentage(greenQuantity, total));
+
+    return [green, orange, red];
+  }, [reportData]);
 
   return (
     <SafeAreaView>
@@ -181,17 +196,17 @@ export default function Profile() {
                   <View className="flex flex-col mt-6">
                     <ProgressBar
                       label={t("brigade.sites.green")}
-                      progress={reportData?.greenQuantity ?? 0}
+                      progress={colorPercentages[0]}
                       colorClassName="bg-verde-600"
                     />
                     <ProgressBar
                       label={t("brigade.sites.yellow")}
-                      progress={reportData?.orangeQuantity ?? 0}
+                      progress={colorPercentages[1]}
                       colorClassName="bg-yellow-400"
                     />
                     <ProgressBar
                       label={t("brigade.sites.red")}
-                      progress={reportData?.redQuantity ?? 0}
+                      progress={colorPercentages[2]}
                       colorClassName="bg-red-600"
                     />
                   </View>

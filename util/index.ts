@@ -115,3 +115,7 @@ export const getLanguageCode = (language: string | null): string => {
   if (!language) return "es";
   return language.split("-")[0];
 };
+
+export function calculatePercentage(value: number, total: number): number {
+  return (value * 100) / total;
+}
