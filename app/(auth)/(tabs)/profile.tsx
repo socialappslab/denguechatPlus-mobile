@@ -10,7 +10,7 @@ import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import { AccumulatedPoints } from "@/types";
-import { calculatePercentage } from "@/util";
+import { calculatePercentage, getInitialsBase } from "@/util";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -92,7 +92,10 @@ const Profile = () => {
   const brigadePoints = useBrigadePointsQuery(teamId ?? null);
 
   const isLoading =
-    report.isLoading || brigadistPoints.isLoading || brigadePoints.isLoading;
+    !meData ||
+    report.isLoading ||
+    brigadistPoints.isLoading ||
+    brigadePoints.isLoading;
 
   const brigadistPointsPercentage = useMemo(() => {
     if (!brigadistPoints.data || !brigadePoints.data) return 0;
@@ -130,7 +133,28 @@ const Profile = () => {
           />
         }
       >
-        <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+        <View className="items-center">
+          <View className="flex items-center justify-center w-24 h-24 rounded-full bg-green-300 mr-3">
+            <Text className="font-bold text-3xl text-green-700">
+              {getInitialsBase(
+                // @ts-expect-error type of meData is not correct
+                meData?.userProfile.firstName,
+                // @ts-expect-error type of meData is not correct
+                meData?.userProfile.lastName,
+              )}
+            </Text>
+          </View>
+
+          <Text className="text-2xl font-bold mt-4">
+            {meData?.userProfile?.firstName} {meData?.userProfile?.lastName}
+          </Text>
+          <Text className="text-base text-gray-800">
+            {/* @ts-expect-error type of meData is not correct */}
+            {meData?.userProfile?.team?.name}
+          </Text>
+        </View>
+
+        <View className="p-4 mb-4 border border-neutral-200 rounded-lg mt-6">
           <Text className="text-neutral-600 mb-2">
             {t("brigade.cards.numberVisits")}
           </Text>
