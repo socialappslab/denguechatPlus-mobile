@@ -202,97 +202,99 @@ export default function Login() {
               </TouchableOpacity>
             </View>
 
-            <View
-              style={{ display: activeTab === "username" ? "flex" : "none" }}
-            >
-              <Text className="font-medium text-sm mb-2">
-                {t("login.username")}
-              </Text>
-
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    hasError={!!errors.username}
-                    placeholder={t("login.username_placeholder")}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    autoCapitalize="none"
-                    textContentType="username"
-                    autoCorrect={false}
-                    returnKeyType="next"
-                    onSubmitEditing={() => refPassword.current?.focus()}
-                    blurOnSubmit={false}
-                  />
-                )}
-                name="username"
-              />
-              {errors?.username?.message && (
-                <Text className="font-normal text-red-500 text-xs mb-2 mt-1">
-                  {errors.username.message}
+            {activeTab === "username" && (
+              <View>
+                <Text className="font-medium text-sm mb-2">
+                  {t("login.username")}
                 </Text>
-              )}
-            </View>
 
-            <View style={{ display: activeTab === "phone" ? "flex" : "none" }}>
-              <Text className="font-medium text-sm mb-2">
-                {t("login.phone")}
-              </Text>
-
-              <Controller
-                control={control}
-                name="phone"
-                render={({ field: { onBlur, value } }) => (
-                  <>
-                    <View
-                      className={`${!!errors.phone ? "border-red-500" : "border-neutral-200"} border p-2 rounded-md`}
-                    >
-                      <PhoneInput
-                        ref={phoneInput}
-                        textStyle={{
-                          height: 26,
-                          color: "black",
-                        }}
-                        initialValue={value}
-                        onChangePhoneNumber={(phoneNumber) => {
-                          setPhoneNumber(phoneNumber);
-                          setValue("phone", phoneNumber);
-                        }}
-                        initialCountry={phoneCountryCode.toLowerCase()}
-                        onPressFlag={() => setShowPhoneCountryPicker(true)}
-                        textProps={{
-                          onBlur,
-                          placeholder: t("login.phone_placeholder"),
-                        }}
-                      />
-                    </View>
-
-                    <CountryPicker
-                      preferredCountries={["PE", "PY", "BR"]}
-                      withAlphaFilter
-                      theme={DEFAULT_THEME}
-                      countryCode={phoneCountryCode}
-                      visible={showPhoneCountryPicker}
-                      onSelect={handleCountrySelect}
-                      filterProps={{
-                        placeholder: t("login.searchCountry_placeholder"),
-                        autoFocus: true,
-                      }}
-                      onClose={() => setShowPhoneCountryPicker(false)}
-                      withFlagButton={false}
-                      withFilter
-                      withEmoji={false}
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      hasError={!!errors.username}
+                      placeholder={t("login.username_placeholder")}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      autoCapitalize="none"
+                      textContentType="username"
+                      autoCorrect={false}
+                      returnKeyType="next"
+                      onSubmitEditing={() => refPassword.current?.focus()}
+                      blurOnSubmit={false}
                     />
-                  </>
+                  )}
+                  name="username"
+                />
+                {errors?.username?.message && (
+                  <Text className="font-normal text-red-500 text-xs mb-2 mt-1">
+                    {errors.username.message}
+                  </Text>
                 )}
-              />
-              {errors?.phone?.message && (
-                <Text className="font-normal text-red-500 text-xs mb-2 mt-1">
-                  {errors.phone.message}
+              </View>
+            )}
+
+            {activeTab === "phone" && (
+              <View>
+                <Text className="font-medium text-sm mb-2">
+                  {t("login.phone")}
                 </Text>
-              )}
-            </View>
+
+                <Controller
+                  control={control}
+                  name="phone"
+                  render={({ field: { onBlur, value } }) => (
+                    <>
+                      <View
+                        className={`${!!errors.phone ? "border-red-500" : "border-neutral-200"} border p-2 rounded-md`}
+                      >
+                        <PhoneInput
+                          ref={phoneInput}
+                          textStyle={{
+                            height: 26,
+                            color: "black",
+                          }}
+                          initialValue={value}
+                          onChangePhoneNumber={(phoneNumber) => {
+                            setPhoneNumber(phoneNumber);
+                            setValue("phone", phoneNumber);
+                          }}
+                          initialCountry={phoneCountryCode.toLowerCase()}
+                          onPressFlag={() => setShowPhoneCountryPicker(true)}
+                          textProps={{
+                            onBlur,
+                            placeholder: t("login.phone_placeholder"),
+                          }}
+                        />
+                      </View>
+
+                      <CountryPicker
+                        preferredCountries={["PE", "PY", "BR"]}
+                        withAlphaFilter
+                        theme={DEFAULT_THEME}
+                        countryCode={phoneCountryCode}
+                        visible={showPhoneCountryPicker}
+                        onSelect={handleCountrySelect}
+                        filterProps={{
+                          placeholder: t("login.searchCountry_placeholder"),
+                          autoFocus: true,
+                        }}
+                        onClose={() => setShowPhoneCountryPicker(false)}
+                        withFlagButton={false}
+                        withFilter
+                        withEmoji={false}
+                      />
+                    </>
+                  )}
+                />
+                {errors?.phone?.message && (
+                  <Text className="font-normal text-red-500 text-xs mb-2 mt-1">
+                    {errors.phone.message}
+                  </Text>
+                )}
+              </View>
+            )}
 
             <View className="mb-4 mt-2">
               <Text className="font-medium text-sm mb-2">
