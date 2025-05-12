@@ -98,12 +98,11 @@ const Profile = () => {
     brigadePoints.isLoading;
 
   const brigadistPointsPercentage = useMemo(() => {
-    if (!brigadistPoints.data || !brigadePoints.data) return 0;
+    // TODO: remove the extra `?.data` when the backend fixes data being T | null
+    if (!brigadistPoints.data?.data || !brigadePoints.data?.data) return 0;
 
     const percentage = calculatePercentage(
-      // @ts-expect-error remove ! when the backend fixes data being T | null
       brigadistPoints.data.data.attributes.totalPoints,
-      // @ts-expect-error remove ! when the backend fixes data being T | null
       brigadePoints.data.data.attributes.totalPoints,
     );
 
