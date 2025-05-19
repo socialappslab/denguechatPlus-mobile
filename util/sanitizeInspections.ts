@@ -26,7 +26,7 @@ export const sanitizeInspections = (
         type_content_id: i?.type_content_id?.map((item) => item.id),
         visited_at: i?.visited_at,
         water_source_other: i?.water_source_other,
-        water_source_type_id: i?.water_source_type_id,
+        water_source_type_ids: i?.water_source_type_ids,
       };
       // sanitize
       // @ts-expect-error
