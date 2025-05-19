@@ -304,14 +304,14 @@ export default function Visits() {
         type: "success",
         text1: t("success"),
       });
-      setLoading(false);
     } catch (error) {
       Toast.show({
         type: "error",
         text1: t(["errorCodes.generic"]),
       });
-      setLoading(false);
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
