@@ -4,7 +4,6 @@ import { Platform } from "react-native";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 
 import Colors from "@/constants/Colors";
-import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import BubbleIcon from "@/assets/images/icons/bubble.svg";
 import HouseIcon from "@/assets/images/icons/house.svg";
 import BrigadeIcon from "@/assets/images/icons/brigade.svg";
@@ -42,9 +41,6 @@ export default function TabLayout(props: ThemeProps) {
           backgroundColor: Colors["light"].backgroundTabs,
         },
         tabBarActiveTintColor: Colors["light"].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
         tabBarLabelStyle: {
           fontFamily: "Inter-Bold",
         },
