@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "@/components/themed";
-import { useVisitStore } from "@/hooks/useVisitStore";
+import { useStore } from "@/hooks/useStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ const AddContainer = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [selected, setSelected] = useState<Selection | undefined>();
-  const { increaseCurrentVisitInspection } = useVisitStore();
+  const { increaseCurrentVisitInspection } = useStore();
 
   const onNext = () => {
     if (selected === Selection.No) return router.push("/add-comment");

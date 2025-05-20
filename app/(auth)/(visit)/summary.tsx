@@ -3,7 +3,7 @@ import VisitSummary from "@/components/VisitSummary";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
-import { useVisitStore } from "@/hooks/useVisitStore";
+import { useStore } from "@/hooks/useStore";
 import { VisitData } from "@/types";
 import { Inspection, StatusColor } from "@/types/prepareFormData";
 import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
@@ -69,7 +69,7 @@ export default function Summary() {
   const { questionnaire, visitData, language, isConnected } = useVisit();
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
+  const { visitMap, visitId, finaliseCurrentVisit } = useStore();
 
   const currentVisit = visitMap[visitId];
 

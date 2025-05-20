@@ -1,5 +1,5 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
-import { VisitCase } from "@/hooks/useVisitStore";
+import { VisitCase } from "@/hooks/useStore";
 import { PostVisibility } from "@/schema";
 export * from "./prepareFormData";
 

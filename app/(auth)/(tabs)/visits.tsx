@@ -21,7 +21,7 @@ import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
-import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
+import { QuestionnaireState, useStore } from "@/hooks/useStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
 import { calculatePercentage, countSetFilters, formatDate } from "@/util";
@@ -182,7 +182,7 @@ const SuccessSummary = () => {
 export default function Visits() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { storedVisits, cleanUpStoredVisit } = useVisitStore();
+  const { storedVisits, cleanUpStoredVisit } = useStore();
   const { language, isConnected } = useVisit();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
   const { meData } = useAuth();

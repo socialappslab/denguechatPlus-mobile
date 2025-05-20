@@ -19,7 +19,7 @@ import {
   View,
 } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
-import { useVisitStore } from "@/hooks/useVisitStore";
+import { useStore } from "@/hooks/useStore";
 import { formatDate } from "@/util";
 
 export default function SelectHouseScreen() {
@@ -33,8 +33,7 @@ export default function SelectHouseScreen() {
 
   const { user, meData } = useAuth();
   const { setVisitData, questionnaire, language, isConnected } = useVisit();
-  const { initialiseCurrentVisit, storedHouseList, saveHouseList } =
-    useVisitStore();
+  const { initialiseCurrentVisit, storedHouseList, saveHouseList } = useStore();
 
   const updateHouse = async () => {
     const catchAll =
