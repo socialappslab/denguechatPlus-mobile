@@ -1,29 +1,24 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { useState } from "react";
 import * as Localization from "expo-localization";
-import { LogBox } from "react-native";
 import Toast from "react-native-toast-message";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import AuthProvider, { useAuth } from "@/context/AuthProvider";
+import { useAuth } from "@/context/AuthProvider";
 import { LANGUAGE_LOCAL_STORAGE_KEY } from "@/constants/Keys";
 import { useStorageState } from "@/hooks/useStorageState";
 import { setHeaderFromLocalStorage } from "@/config/axios";
 import { initI18n } from "@/config/i18n";
 import { toastConfig } from "@/config/toast";
 import useUser from "@/hooks/useUser";
-import { useVisitStore } from "@/hooks/useVisitStore";
-import { BrigadeProvider } from "@/context/BrigadeContext";
-import { FilterProvider } from "@/context/FilterContext";
 import * as Sentry from "@sentry/react-native";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
+import { Providers } from "@/components/Providers";
 
 Sentry.init({
   dsn: __DEV__
@@ -118,50 +113,37 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const state = useVisitStore();
-  const StoreState: React.FC<any> = (props) => {
-    return null;
-  };
-
-  const queryClient = new QueryClient();
-
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <StatusBar style="dark" />
-      <StoreState {...state} />
-      <AuthProvider>
-        <BrigadeProvider>
-          <FilterProvider>
-            <ThemeProvider value={DefaultTheme}>
-              <Stack>
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="(public)/login"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(public)/register"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(public)/register-success"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(public)/logout"
-                  options={{ headerShown: false }}
-                />
-              </Stack>
-              <Toast
-                position="top"
-                topOffset={110}
-                visibilityTime={6000}
-                config={toastConfig}
-              />
-            </ThemeProvider>
-          </FilterProvider>
-        </BrigadeProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+
+      <Providers>
+        <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(public)/login"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(public)/register"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(public)/register-success"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(public)/logout"
+            options={{ headerShown: false }}
+          />
+        </Stack>
+        <Toast
+          position="top"
+          topOffset={110}
+          visibilityTime={6000}
+          config={toastConfig}
+        />
+      </Providers>
+    </>
   );
 }
