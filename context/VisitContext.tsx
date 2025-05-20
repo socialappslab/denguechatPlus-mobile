@@ -36,7 +36,7 @@ const VisitContext = createContext<VisitContextType | undefined>(undefined);
 
 const VisitProvider = ({ children }: { children: ReactNode }) => {
   const { isInternetReachable } = useNetInfo();
-  const [[_, language]] = useStorageState(LANGUAGE_LOCAL_STORAGE_KEY);
+  const [[, language]] = useStorageState(LANGUAGE_LOCAL_STORAGE_KEY);
   const { meData } = useAuth();
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
@@ -80,7 +80,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     );
 
   useEffect(() => {
-    // console.log("meData>>>>>>", meData);
     if (!meData) {
       return;
     }
@@ -91,10 +90,9 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!questionnaireData) {
-      console.log("no questionary data>>>>>>");
-
       return;
     }
+
     const deserializedQuestionnaire = deserialize<Questionnaire>(
       questionnaireData,
     ) as Questionnaire;
@@ -110,7 +108,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!paramsData) {
-      console.log("no paramsData>>>>>>");
       return;
     }
     setResources(paramsData);

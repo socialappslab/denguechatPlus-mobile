@@ -68,14 +68,9 @@ export default function RootLayout() {
   }, [language, loadedLanguage]);
 
   useEffect(() => {
-    const getSystemLanguageAndSet = async () => {
-      // Get the device's current system locale from expo-localization
-      const phoneLocale =
-        Localization.getLocales()?.[0]?.languageTag ?? "en-US";
-      setLanguageLocalStorage(phoneLocale);
-    };
-
-    getSystemLanguageAndSet();
+    // Get the device's current system locale from expo-localization
+    const phoneLocale = Localization.getLocales()?.[0]?.languageTag ?? "en-US";
+    setLanguageLocalStorage(phoneLocale);
   }, [setLanguageLocalStorage]);
 
   useEffect(() => {
