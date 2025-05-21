@@ -81,12 +81,12 @@ const VisitsReport = ({
   return (
     <View>
       <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
-        {loading && (
+        {loading && !data && (
           <View className="flex flex-1 items-center justify-center my-48">
             <Loading />
           </View>
         )}
-        {!loading && (
+        {!loading && data && (
           <>
             <View className="flex flex-row justify-between">
               <View className="flex">
@@ -110,16 +110,18 @@ const VisitsReport = ({
             </Text>
             <View className="flex-row items-center justify-between mb-8">
               <Text className="text-3xl font-semibold">
-                {data?.visitQuantity}
+                {data.visitQuantity}
               </Text>
               <SimpleChip
                 border="1"
                 padding="small"
                 textColor="neutral-500"
                 borderColor="neutral-500"
-                ionIcon="arrow-up"
+                ionIcon={
+                  data.visitVariationPercentage > 0 ? "arrow-up" : "arrow-down"
+                }
                 iconColor={Colors.light.neutral}
-                label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                label={`${data.visitVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
               />
             </View>
 
@@ -129,7 +131,7 @@ const VisitsReport = ({
               </Text>
               <View className="flex-row items-center justify-between">
                 <Text className="text-3xl font-semibold">
-                  {data?.houseQuantity}
+                  {data.houseQuantity}
                 </Text>
 
                 <SimpleChip
@@ -137,9 +139,11 @@ const VisitsReport = ({
                   padding="small"
                   textColor="neutral-500"
                   borderColor="neutral-500"
-                  ionIcon="arrow-up"
+                  ionIcon={
+                    data.siteVariationPercentage > 0 ? "arrow-up" : "arrow-down"
+                  }
                   iconColor={Colors.light.neutral}
-                  label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                  label={`${data.siteVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
                 />
               </View>
             </View>
