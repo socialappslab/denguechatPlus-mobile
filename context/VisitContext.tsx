@@ -9,13 +9,12 @@ import {
   CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
   CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
   CURRENT_VISIT_LOCAL_STORAGE_KEY,
-  LANGUAGE_LOCAL_STORAGE_KEY,
   VISIT_MAP_LOCAL_STORAGE_KEY,
 } from "@/constants/Keys";
 import { useAuth } from "@/context/AuthProvider";
-import { useStorageState } from "@/hooks/useStorageState";
 import { ErrorResponse } from "@/schema";
 import { Questionnaire, Resources, VisitData } from "@/types";
+import { useTranslation } from "react-i18next";
 
 interface VisitContextType {
   questionnaire?: Questionnaire;
@@ -35,8 +34,8 @@ const VisitContext = createContext<VisitContextType | undefined>(undefined);
  */
 
 const VisitProvider = ({ children }: { children: ReactNode }) => {
+  const { i18n } = useTranslation();
   const { isInternetReachable } = useNetInfo();
-  const [[, language]] = useStorageState(LANGUAGE_LOCAL_STORAGE_KEY);
   const { meData } = useAuth();
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
@@ -54,7 +53,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
 
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
   // @ts-expect-error `resources` is a tuple with some objects that we expect
-  // from our backend and it will be use throughout the life of our app, we
+  // from our backend and it will be used throughout the life of our app, we
   // should make sure that resources always comes in the shape that the types
   // say, or throw, because is guaranteed the app will crash at some point
   const [resources, setResources] = useState<Resources>([]);
@@ -66,7 +65,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     {
       // We need to support en-US es-ES etc in the backend
       // for now we're manually grabbing the first part
-      url: `questionnaires/current?language=${language?.split("-")[0]}`,
+      url: `questionnaires/current?language=${i18n.language}`,
     },
     { manual: true },
   );
@@ -102,8 +101,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       initialQuestion: deserializedQuestionnaire.initialQuestion,
       questions: [...deserializedQuestionnaire.questions],
     });
-
-    // console.log("deserializedQuestionnaire>>", deserializedQuestionnaire);
   }, [questionnaireData]);
 
   useEffect(() => {
@@ -177,7 +174,8 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
         isLoadingQuestionnaire: isLoadingQuestionnaire || isLoadingParams,
         setVisitData,
         cleanStore,
-        language: language ?? "es",
+        // TODO: this is not necessary, just access this through i18n
+        language: i18n.language,
         isConnected: !!isInternetReachable,
       }}
     >

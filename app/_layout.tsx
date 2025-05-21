@@ -2,7 +2,6 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { useState } from "react";
-import * as Localization from "expo-localization";
 import Toast from "react-native-toast-message";
 
 import * as SplashScreen from "expo-splash-screen";
@@ -10,15 +9,15 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useAuth } from "@/context/AuthProvider";
-import { LANGUAGE_LOCAL_STORAGE_KEY } from "@/constants/Keys";
-import { useStorageState } from "@/hooks/useStorageState";
 import { setHeaderFromLocalStorage } from "@/config/axios";
-import { initI18n } from "@/config/i18n";
+import "@/config/i18n";
 import { toastConfig } from "@/config/toast";
 import useUser from "@/hooks/useUser";
 import * as Sentry from "@sentry/react-native";
 import { StatusBar } from "expo-status-bar";
 import { Providers } from "@/components/Providers";
+import { useTranslation } from "react-i18next";
+import { useLocales } from "expo-localization";
 
 Sentry.init({
   dsn: __DEV__
@@ -40,14 +39,11 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  // Our language (locale) to use
-  const [[, language], setLanguageLocalStorage] = useStorageState(
-    LANGUAGE_LOCAL_STORAGE_KEY,
-  );
+  const { i18n } = useTranslation();
   const { setUser } = useAuth();
 
-  // State to track if we've initialized i18n
-  const [loadedLanguage, setLoadedLanguage] = useState(false);
+  const locales = useLocales();
+
   const [loadedToken, setLoadedToken] = useState(false);
   const [loadedUser, setLoadedUser] = useState(false);
   const [[loadingUser, user]] = useUser();
@@ -61,17 +57,11 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // We either don't have a language, or we've already initialized
-    if (!language || loadedLanguage) return;
-    initI18n(language);
-    setLoadedLanguage(true);
-  }, [language, loadedLanguage]);
-
-  useEffect(() => {
-    // Get the device's current system locale from expo-localization
-    const phoneLocale = Localization.getLocales()?.[0]?.languageTag ?? "en-US";
-    setLanguageLocalStorage(phoneLocale);
-  }, [setLanguageLocalStorage]);
+    const currentDeviceLocale = locales[0].languageCode;
+    // NOTE: Do nothing if deviceLanguage is null, we will rely on the fallback language
+    if (!currentDeviceLocale) return;
+    i18n.changeLanguage(currentDeviceLocale);
+  }, [locales, i18n]);
 
   useEffect(() => {
     if (!loadingUser) {
@@ -95,10 +85,10 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loadedFonts && loadedUser && loadedToken && loadedLanguage) {
+    if (loadedFonts && loadedUser && loadedToken) {
       SplashScreen.hideAsync();
     }
-  }, [loadedFonts, loadedUser, loadedToken, loadedLanguage]);
+  }, [loadedFonts, loadedUser, loadedToken]);
 
   if (!loadedFonts) {
     return null;
