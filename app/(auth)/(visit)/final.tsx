@@ -99,10 +99,7 @@ export default function Final() {
             primary
             title={t("backToHome")}
             onPress={() => {
-              router.push({
-                pathname: "/(auth)/(tabs)/visits",
-                params: { reload: Date.now() },
-              });
+              router.dismissAll();
             }}
           />
         </View>
