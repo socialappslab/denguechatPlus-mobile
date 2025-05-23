@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
@@ -45,10 +45,6 @@ export default function Profile() {
 
   const [team, setTeam] = useState<Team | null>(null);
 
-  useEffect(() => {
-    if (isFocused) reFetchMe();
-  }, [isFocused, reFetchMe]);
-
   const [{ data: teamData, loading: loadingTeam }, refetchTeam] = useAxios<
     ExistingDocumentObject,
     unknown,
@@ -71,8 +67,12 @@ export default function Profile() {
     });
 
   useEffect(() => {
-    if (meData) refetchTeam();
-  }, [meData, refetchTeam]);
+    if (isFocused) reFetchMe();
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (teamId && wedgeId && sectorId) void refetchReport();
+  }, [teamId, wedgeId, sectorId, refetchReport]);
 
   useEffect(() => {
     if (!teamData) return;
@@ -81,6 +81,26 @@ export default function Profile() {
       setTeam(deserializedData);
     }
   }, [teamData]);
+
+  useEffect(() => {
+    if (teamId) void brigadePoints.refetch();
+  }, [teamId, brigadePoints]);
+
+  const refetchAll = useCallback(async () => {
+    if (isFocused) reFetchMe();
+    if (teamId && wedgeId && sectorId) await refetchReport();
+    if (meData) await refetchTeam();
+    if (teamId) await brigadePoints.refetch();
+  }, [
+    isFocused,
+    teamId,
+    wedgeId,
+    sectorId,
+    refetchReport,
+    refetchTeam,
+    teamId,
+    brigadePoints,
+  ]);
 
   // NOTE: maybe we can generalize this in the future, we have the same thing at `(tabs)/visits.tsx`
   const colorPercentages = useMemo(() => {
@@ -101,10 +121,7 @@ export default function Profile() {
     <SafeAreaView>
       <ScrollView
         refreshControl={
-          <RefreshControl
-            refreshing={loadingReport}
-            onRefresh={refetchReport}
-          />
+          <RefreshControl refreshing={loadingReport} onRefresh={refetchAll} />
         }
       >
         <CheckTeam view="profile">
