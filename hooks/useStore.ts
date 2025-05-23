@@ -40,7 +40,7 @@ interface Actions {
   increaseCurrentVisitInspection: () => void;
   initialiseCurrentVisit: (visitId: VisitId, questionId: QuestionId) => void;
   saveHouseList: (houses: House[]) => void;
-  setCurrentVisitData: (questionId: Question, data: AnswerState) => void;
+  setCurrentVisitData: (question: Question, data: AnswerState) => void;
   setSelectedCase: (visitCase: VisitCase) => void;
 }
 
