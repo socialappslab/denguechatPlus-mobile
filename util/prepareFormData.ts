@@ -21,6 +21,7 @@ export const prepareFormData = (formData: FormState) => {
 
     if (Array.isArray(answer)) {
       const [first] = answer;
+      if (!first) return;
       const resourceName = first.resourceName as string;
       if (!resourceName) return;
 

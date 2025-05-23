@@ -157,7 +157,7 @@ export default function Visit() {
     }
 
     // Persist values
-    if (values) setCurrentVisitData(questionId, values);
+    if (values) setCurrentVisitData(currentQuestion, values);
 
     // Branches
     if (resourceName === PhotoId && values.bool) {
