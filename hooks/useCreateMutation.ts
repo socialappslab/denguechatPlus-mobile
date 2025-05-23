@@ -32,10 +32,7 @@ export default function useCreateMutation<P, S>(
   const createMutation = async (data: P) => {
     const createRes = await create({ data });
 
-    const deserializedData = deserialize<S>(createRes.data);
-    // eslint-disable-next-line no-console
-    console.log("deserializedData update", deserializedData);
-    return deserializedData;
+    return deserialize<S>(createRes.data);
   };
 
   // @ts-expect-error

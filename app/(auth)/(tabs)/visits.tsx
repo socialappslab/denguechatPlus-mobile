@@ -379,9 +379,7 @@ export default function Visits() {
                 </>
               )}
               {!hasVisits && (
-                <>
-                  <Text className="text-center">{t("visit.list.done")}</Text>
-                </>
+                <Text className="text-center">{t("visit.list.done")}</Text>
               )}
             </View>
           </View>
