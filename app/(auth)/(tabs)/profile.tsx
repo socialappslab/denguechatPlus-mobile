@@ -9,6 +9,7 @@ import {
 import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { AccumulatedPoints } from "@/types";
 import { calculatePercentage, getInitialsBase } from "@/util";
 import { useQuery } from "@tanstack/react-query";
@@ -27,7 +28,7 @@ function useReportQuery({
 }) {
   return useQuery({
     enabled: !!teamId && !!wedgeId && !!sectorId,
-    queryKey: ["report", { teamId, wedgeId, sectorId }],
+    queryKey: ["profile", "report", { teamId, wedgeId, sectorId }],
     queryFn: async () => {
       const params = new URLSearchParams({
         sort: "name",
@@ -44,7 +45,7 @@ function useReportQuery({
 function useBrigadistPointsQuery(userId: number | null) {
   return useQuery({
     enabled: !!userId,
-    queryKey: ["brigadistPoints", userId!],
+    queryKey: ["profile", "brigadistPoints", userId!],
     queryFn: async () => {
       const params = new URLSearchParams({
         "filter[user_account_id]": userId!.toString(),
@@ -58,7 +59,7 @@ function useBrigadistPointsQuery(userId: number | null) {
 function useBrigadePointsQuery(teamId: number | null) {
   return useQuery({
     enabled: !!teamId,
-    queryKey: ["brigadePoints", teamId!],
+    queryKey: ["profile", "brigadePoints", teamId!],
     queryFn: async () => {
       const params = new URLSearchParams({
         "filter[team_id]": teamId!.toString(),
@@ -88,8 +89,13 @@ const Profile = () => {
   );
 
   const report = useReportQuery(reportParams);
+  useRefreshOnFocus(report.refetch);
+
   const brigadistPoints = useBrigadistPointsQuery(userId ?? null);
+  useRefreshOnFocus(brigadistPoints.refetch);
+
   const brigadePoints = useBrigadePointsQuery(teamId ?? null);
+  useRefreshOnFocus(brigadePoints.refetch);
 
   const isLoading =
     !meData ||
