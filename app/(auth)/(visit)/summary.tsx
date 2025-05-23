@@ -135,8 +135,10 @@ export default function Summary() {
         ...sanitizedVisitData,
         // NOTE: This is stuff we need to show in the modal before syncing an
         // offline visit
+        // @ts-expect-error the type is wrong
         house: visitData.house,
         statusColor: mainStatusColor,
+        // @ts-expect-error the type is wrong
         colorsAndQuantities,
       });
     } catch (error) {
