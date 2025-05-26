@@ -3,15 +3,17 @@ import VisitSummary from "@/components/VisitSummary";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
-import { useVisitStore } from "@/hooks/useVisitStore";
+import { useStore } from "@/hooks/useStore";
 import { VisitData } from "@/types";
 import { Inspection, StatusColor } from "@/types/prepareFormData";
 import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
-import { sanitizeInspections } from "./sanitizeInspections";
+import { sanitizeInspections } from "@/util/sanitizeInspections";
 import { Image } from "react-native";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { VISITS_LOG } from "@/util/logger";
 
 const getColorsAndQuantities = (inspections: Inspection[]) => {
   const highestWeightInEachContainer = inspections
@@ -66,10 +68,11 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, language, isConnected } = useVisit();
+  const { questionnaire, visitData, language } = useVisit();
+  const { isInternetReachable } = useNetInfo();
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { visitMap, visitId, finaliseCurrentVisit } = useVisitStore();
+  const { visitMap, visitId, finaliseCurrentVisit } = useStore();
 
   const currentVisit = visitMap[visitId];
 
@@ -105,13 +108,18 @@ export default function Summary() {
       host: visit.host,
       visitedAt: new Date(),
       answers,
+      // @ts-expect-error
       inspections: sanitizeInspections(inspections),
     };
 
+    VISITS_LOG.debug("Payload prepared for the server", sanitizedVisitData);
+
     try {
       // We only make the request if it's connected
-      if (isConnected)
+      if (isInternetReachable) {
         await createVisit({ json_params: JSON.stringify(sanitizedVisitData) });
+        VISITS_LOG.info("Visit sent to the server successfully");
+      }
       Toast.show({
         type: "success",
         text1: t("success"),
@@ -123,12 +131,14 @@ export default function Summary() {
         },
       });
       // Cleanup, if it's not connected we send house details
-      finaliseCurrentVisit(isConnected, {
+      finaliseCurrentVisit(!!isInternetReachable, {
         ...sanitizedVisitData,
         // NOTE: This is stuff we need to show in the modal before syncing an
         // offline visit
+        // @ts-expect-error the type is wrong
         house: visitData.house,
         statusColor: mainStatusColor,
+        // @ts-expect-error the type is wrong
         colorsAndQuantities,
       });
     } catch (error) {

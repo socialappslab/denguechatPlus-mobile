@@ -1,4 +1,8 @@
-import { TouchableOpacity, Pressable } from "react-native";
+import {
+  TouchableOpacity,
+  Pressable,
+  TouchableOpacityProps,
+} from "react-native";
 import { ThemeProps } from "./useThemeColor";
 import { Text } from "./Text";
 import { View } from "./View";
@@ -12,18 +16,17 @@ import Comment from "@/components/icons/Comment";
 import { useVisit } from "@/hooks/useVisit";
 import MoreHorizontal from "@/components/icons/MoreHorizontal";
 
-export type PostItemProps = ThemeProps &
-  TouchableOpacity["props"] & {
-    onPressElement?: () => void;
-    onPressLike: (id: number) => void;
-    onPressComments: () => void;
-    onPressOptions: () => void;
-    post: Post;
-    commentsCount: number;
-    likedByUser: boolean;
-    likesCount: number;
-    loadingLike: boolean;
-  };
+interface PostItemProps extends ThemeProps, TouchableOpacityProps {
+  onPressElement?: () => void;
+  onPressLike: (id: number) => void;
+  onPressComments: () => void;
+  onPressOptions: () => void;
+  post: Post;
+  commentsCount: number;
+  likedByUser: boolean;
+  likesCount: number;
+  loadingLike: boolean;
+}
 
 export function PostItem(props: PostItemProps) {
   const {

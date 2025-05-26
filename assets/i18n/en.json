@@ -91,8 +91,9 @@
     "tabs": {
       "chat": "Chat",
       "homes": "Homes",
-      "profile": "My Brigade",
-      "visit": "Visits"
+      "myBrigade": "My Brigade",
+      "visit": "Visits",
+      "profile": "Profile"
     },
     "drawer": {
       "myCity": "My City",
@@ -128,7 +129,10 @@
         "login": "Login failed. Please try again.",
         "empty": "Please enter your email and password",
         "invalidCredentials": "Invalid email or password",
-        "noInternet": "Internet connection is required to log in."
+        "noInternet": "Internet connection is required to log in.",
+        "suggestFirstLastName": "Invalid credentials. Try with your first and last name as username. Example: juanperez",
+        "suggestFirstLastNameYear": "Invalid credentials. Try with your first name, last name and year of birth as username. Example: juanperez1990",
+        "suggestFirstLastNameYearMonth": "Invalid credentials. Try with your first name, last name, year and month of birth as username. Example: juanperez199004"
       },
       "searchCountry_placeholder": "Search country...",
       "username-tab": "Username",
@@ -144,7 +148,12 @@
       "city": "City",
       "sector": "Sector",
       "organization": "Organization",
-      "signUp": "Sign up"
+      "signUp": "Sign up",
+      "error": {
+        "suggestFirstLastName": "The user '{{field}}' is already in use. Try with using your first and last name. Example: juanperez",
+        "suggestFirstLastNameYear": "The user '{{field}}' is already in use. Try with using your first name, last name and year of birth. Example: juanperez1990",
+        "suggestFirstLastNameYearMonth": "The user '{{field}}' is already in use. Try with using your first name, last name, year and month of birth. Example: juanperez199004"
+      }
     },
     "registerSuccess": {
       "success": "We are verifying your account",
@@ -294,6 +303,11 @@
         },
         "action": "Join a brigade"
       }
+    },
+    "brigadistProfile": {
+      "pointsOf": "Points of",
+      "myPoints": "My points",
+      "myContributionInPoints": "My contribution in points to the brigade"
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",

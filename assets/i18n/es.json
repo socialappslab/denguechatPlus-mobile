@@ -91,8 +91,9 @@
     "tabs": {
       "chat": "Chat",
       "homes": "Casas",
-      "profile": "Mi Brigada",
-      "visit": "Visitas"
+      "myBrigade": "Mi Brigada",
+      "visit": "Visitas",
+      "profile": "Perfil"
     },
     "drawer": {
       "myCity": "Mi Ciudad",
@@ -130,7 +131,10 @@
         "login": "Algo falló. Por favor intente de nuevo.",
         "empty": "Por favor llene todos los campos",
         "invalidCredentials": "Credenciales inválidas",
-        "noInternet": "Se requiere conexión a internet para loguearse."
+        "noInternet": "Se requiere conexión a internet para loguearse.",
+        "suggestFirstLastName": "Credenciales inválidas. Intente con su primer nombre y primer apellido como nombre de usuario. Ejemplo: juanperez",
+        "suggestFirstLastNameYear": "Credenciales inválidas. Intente con su primer nombre, primer apellido y año de nacimiento como nombre de usuario. Ejemplo: juanperez1990",
+        "suggestFirstLastNameYearMonth": "Credenciales inválidas. Intente con su primer nombre, primer apellido, año y mes de nacimiento como nombre de usuario. Ejemplo: juanperez199004"
       },
       "searchCountry_placeholder": "Buscar país...",
       "username-tab": "Nombre de usuario",
@@ -146,7 +150,12 @@
       "city": "Ciudad",
       "sector": "Sector",
       "organization": "Organización",
-      "signUp": "Registrarse"
+      "signUp": "Registrarse",
+      "error": {
+        "suggestFirstLastName": "El usuario '{{field}}' ya está en uso. Intente usar su primer nombre y primer apellido. Ejemplo: juanperez",
+        "suggestFirstLastNameYear": "El usuario '{{field}}' ya está en uso. Intente usar su primer nombre, primer apellido y año de nacimiento. Ejemplo: juanperez1990",
+        "suggestFirstLastNameYearMonth": "El usuario '{{field}}' ya está en uso. Intente usar su primer nombre, primer apellido, año y mes de nacimiento. Ejemplo: juanperez199004"
+      }
     },
     "registerSuccess": {
       "success": "Estamos verificando tu cuenta",
@@ -295,6 +304,11 @@
         },
         "action": "Únete a una brigada"
       }
+    },
+    "brigadistProfile": {
+      "pointsOf": "Puntos de",
+      "myPoints": "Mis puntos",
+      "myContributionInPoints": "Mi contribución en puntos a la brigada"
     },
     "errorCodes": {
       "46": "Credenciales inválidas",

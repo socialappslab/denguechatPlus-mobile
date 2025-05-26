@@ -8,7 +8,7 @@ import { InspectionQuestion, Question } from "@/types";
 import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AnswerState, useVisitStore } from "@/hooks/useVisitStore";
+import { AnswerState, useStore } from "@/hooks/useStore";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -64,7 +64,7 @@ export default function Visit() {
     setSelectedCase,
     selectedCase,
     increaseCurrentVisitInspection,
-  } = useVisitStore();
+  } = useStore();
   const questionId = id.toString();
   const methods = useForm({});
   const [currentQuestion, setCurrentQuestion] = useState<
@@ -73,6 +73,7 @@ export default function Visit() {
 
   useEffect(() => {
     const casesSoFar = Object.values(visitMap).flatMap((group) =>
+      // @ts-expect-error
       Object.values(group).map((item) => item?.selectedCase),
     );
     const hasAllVisitCases =
@@ -156,7 +157,7 @@ export default function Visit() {
     }
 
     // Persist values
-    if (values) setCurrentVisitData(questionId, values);
+    if (values) setCurrentVisitData(currentQuestion, values);
 
     // Branches
     if (resourceName === PhotoId && values.bool) {

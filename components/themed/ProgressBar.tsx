@@ -5,29 +5,29 @@ import { Text } from "./Text";
 export interface ProgressBarProps {
   label: string;
   progress: number;
-  color: string;
+  colorClassName: string;
 }
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({
+export const ProgressBar = ({
   label,
   progress,
-  color,
-}) => {
+  colorClassName,
+}: ProgressBarProps) => {
   return (
     <View className="flex items-start mb-4">
       <Text className="text-gray-800 font-medium mr-4 mb-2">{label}</Text>
       <View className="flex-row items-center">
         <View className="relative w-11/12 rounded-full h-2">
           <View
-            className={`absolute top-0 left-0 h-full rounded-full bg-${color} opacity-30`}
+            className={`absolute top-0 left-0 h-full rounded-full ${colorClassName} opacity-30`}
             style={{ width: `100%` }}
           ></View>
           <View
-            className={`absolute top-0 left-0 h-full rounded-full bg-${color}`}
+            className={`absolute top-0 left-0 h-full rounded-full ${colorClassName}`}
             style={{ width: `${progress}%` }}
           ></View>
         </View>
-        <Text className="text-gray-800 font-medium ml-4">{progress}</Text>
+        <Text className="text-gray-800 font-medium ml-2">{progress}%</Text>
       </View>
     </View>
   );

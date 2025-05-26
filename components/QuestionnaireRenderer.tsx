@@ -1,5 +1,5 @@
 import { SelectableItem, Text, View } from "@/components/themed";
-import { VisitCase } from "@/hooks/useVisitStore";
+import { VisitCase } from "@/hooks/useStore";
 import { InspectionQuestion, OptionType, ResourceType } from "@/types";
 import { Image } from "expo-image";
 import React, { useCallback, useState } from "react";
@@ -294,7 +294,7 @@ const ControlledCheckbox = ({
 
     if (indexFound > -1) {
       if (isText) {
-        const valuesToSave = values.map((item) =>
+        const valuesToSave = values.map((item: any) =>
           item.value === option.value ? prepareOption({ option, text }) : item,
         );
         setValue(name, valuesToSave);

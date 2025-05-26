@@ -3,15 +3,9 @@ export default {
     name: "DengueChatPlus",
     slug: "dengue-chat-plus",
     scheme: "org.denguechat.plus",
-    version: "1.3.1",
+    version: "1.4.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
-    userInterfaceStyle: "automatic",
-    splash: {
-      image: "./assets/images/splash.png",
-      resizeMode: "contain",
-      backgroundColor: "#067507",
-    },
     ios: {
       supportsTablet: true,
       bundleIdentifier: "org.denguechatplus",
@@ -36,6 +30,15 @@ export default {
       "expo-font",
       "expo-asset",
       "expo-localization",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          backgroundColor: "#067507",
+          image: "./assets/images/splash-icon.png",
+          imageWidth: 190,
+        },
+      ],
       [
         "expo-location",
         {

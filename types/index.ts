@@ -1,5 +1,5 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
-import { VisitCase } from "@/hooks/useVisitStore";
+import { VisitCase } from "@/hooks/useStore";
 import { PostVisibility } from "@/schema";
 export * from "./prepareFormData";
 
@@ -62,7 +62,7 @@ export interface Inspection {
   breeding_site_type_id: number;
   elimination_method_type_id: number;
   other_elimination_method: string;
-  water_source_type_id?: number;
+  water_source_type_ids?: number[];
   code_reference?: string;
   has_water: boolean;
   water_source_other?: string;
@@ -311,7 +311,7 @@ export interface Post {
   visibility: PostVisibility;
 }
 
-export type ReportData = {
+export interface ReportData {
   houseQuantity: number;
   visitQuantity: number;
   greenQuantity: number;
@@ -320,4 +320,17 @@ export type ReportData = {
   visitPercent: number;
   siteVariationPercentage: number;
   visitVariationPercentage: number;
-};
+}
+
+export interface AccumulatedPoints {
+  data: {
+    id: number;
+    type: "accumulatedPoints";
+    attributes: {
+      totalPoints: number;
+      name: string;
+    };
+    // TODO: remove the `null` when the backend fixes data being T | null, it
+    // just needs to be T
+  } | null;
+}

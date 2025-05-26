@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  createContext,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { useContext } from "react";
 import { router, useSegments } from "expo-router";
 import useAxios from "axios-hooks";
@@ -79,7 +73,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [[loadingRefreshToken, refreshToken], setRefreshToken] =
     useStorageState(REFRESH_TOKEN_LOCAL_STORAGE_KEY);
 
-  const [{ data: dataMe, error }, featchMe] = useAxios<
+  const [{ data: dataMe, error }, fetchMe] = useAxios<
     ExistingDocumentObject,
     unknown,
     ErrorResponse
@@ -90,26 +84,19 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     { manual: true },
   );
 
-  const reFetchMe = useCallback(() => {
-    featchMe();
-  }, [featchMe]);
-
   useEffect(() => {
-    // console.log("userFromLocalStorage>>>", userFromLocalStorage);
     if (!userFromLocalStorage) return;
     setLoadedUser(userFromLocalStorage);
   }, [userFromLocalStorage]);
 
   useEffect(() => {
     console.log("error>>>", error);
-    // console.log("dataMe>>>", dataMe);
     if (!dataMe) return;
     const deserializedData = deserialize<IUser>(dataMe, {
       changeCase: CaseType.camelCase,
     }) as IUser;
 
     setMeData(deserializedData);
-    // console.log("deserialized USER ME>>", deserializedData);
   }, [dataMe, error]);
 
   const login = (token: string, refreshToken: string, user: IUser) => {
@@ -146,7 +133,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         setUser,
         login,
         logout,
-        reFetchMe,
+        reFetchMe: fetchMe,
       }}
     >
       {children}

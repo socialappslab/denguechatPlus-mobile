@@ -21,7 +21,7 @@ import { Button } from "@/components/themed";
 import { useVisit } from "@/hooks/useVisit";
 import { Alert } from "react-native";
 import { z } from "zod";
-import { useVisitStore } from "@/hooks/useVisitStore";
+import { useStore } from "@/hooks/useStore";
 import { ResourceName, VisitId } from "@/types";
 import { useResourceData } from "@/hooks/useResourceData";
 
@@ -33,7 +33,7 @@ export default function NewHouse() {
   const { user, meData } = useAuth();
 
   const { setVisitData, questionnaire, language, visitData } = useVisit();
-  const { initialiseCurrentVisit } = useVisitStore();
+  const { initialiseCurrentVisit } = useStore();
   const router = useRouter();
   const resourceData = useResourceData(ResourceName.SpecialPlaces);
 

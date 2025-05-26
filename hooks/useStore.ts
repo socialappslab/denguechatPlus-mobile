@@ -1,9 +1,10 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
-import { House, VisitId } from "@/types";
+import { House, Question, VisitId } from "@/types";
+import { VISITS_LOG } from "@/util/logger";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setAutoFreeze } from "immer";
 import { create } from "zustand";
-import { createJSONStorage, devtools, persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 type QuestionId = string;
@@ -20,32 +21,35 @@ export type VisitMap = Record<VisitId, QuestionnaireState>;
 export type VisitMetaMap = Record<VisitId, VisitMetadata>;
 export type VisitCase = "house" | "orchard";
 
-interface VisitStore {
-  // Set only once in select-house
-  visitId: VisitId;
+interface State {
   answerId: AnswerId;
-  visitMap: VisitMap;
   selectedCase: VisitCase;
-  setSelectedCase: (visitCase: VisitCase) => void;
-  visitMetadata: VisitMetaMap;
+  storedHouseList: House[];
   storedVisits: QuestionnaireState[];
-  setCurrentVisitData: (
-    questionId: QuestionId,
-    data: ISelectableItem | ISelectableItem[],
+  visitId: VisitId;
+  visitMap: VisitMap;
+  visitMetadata: VisitMetaMap;
+}
+
+interface Actions {
+  cleanUpStoredVisit: (visit: any) => void;
+  finaliseCurrentVisit: (
+    isConnected: boolean,
+    data: QuestionnaireState,
   ) => void;
   increaseCurrentVisitInspection: () => void;
   initialiseCurrentVisit: (visitId: VisitId, questionId: QuestionId) => void;
-  finaliseCurrentVisit: (isConnected: boolean, data: any) => void;
-  cleanUpStoredVisit: (visit: any) => void;
-  cleanUpVisits: () => void;
-  storedHouseList: House[];
   saveHouseList: (houses: House[]) => void;
+  setCurrentVisitData: (question: Question, data: AnswerState) => void;
+  setSelectedCase: (visitCase: VisitCase) => void;
 }
 
-export const useVisitStore = create<VisitStore>()(
+type Store = State & Actions;
+
+export const useStore = create<Store>()(
   immer(
     persist(
-      devtools((set) => ({
+      (set) => ({
         // Always set in "Select House", dumb value
         visitId: "" as VisitId,
         answerId: "" as AnswerId,
@@ -65,7 +69,7 @@ export const useVisitStore = create<VisitStore>()(
          * @param visitId generates visitId based on houseId and userId
          * @param questionId init questionId
          */
-        initialiseCurrentVisit: (visitId: VisitId, questionId: QuestionId) =>
+        initialiseCurrentVisit: (visitId, questionId) =>
           set(() => {
             const inspectionIdx = 0;
             return {
@@ -83,12 +87,13 @@ export const useVisitStore = create<VisitStore>()(
          * To be called when a visit is finalised
          * this will save offline visits and clean the current store
          */
-        finaliseCurrentVisit: (isConnected, data: any) =>
+        finaliseCurrentVisit: (isConnected, data) =>
           set((state) => {
             setAutoFreeze(false);
-            // Store QuestionnaireState
-            if (!isConnected)
+            if (!isConnected) {
               state.storedVisits = [...state.storedVisits, data];
+              VISITS_LOG.info("Visit stored locally successfully");
+            }
             // Cleanup
             state.visitMap[state.visitId] = {};
           }),
@@ -96,7 +101,7 @@ export const useVisitStore = create<VisitStore>()(
          * To be called when a visit has more than one container
          */
         increaseCurrentVisitInspection: () =>
-          set((state: VisitStore) => {
+          set((state: Store) => {
             ++state.visitMetadata[state.visitId].inspectionIdx;
           }),
         saveHouseList: (houses) =>
@@ -110,24 +115,24 @@ export const useVisitStore = create<VisitStore>()(
             );
             state.storedVisits.splice(index, 1);
           }),
-        setSelectedCase: (selectedCase: VisitCase) =>
-          set(() => ({ selectedCase })),
-        cleanUpVisits: () =>
-          set((state) => {
-            state.storedVisits = [];
-          }),
+        setSelectedCase: (selectedCase) => set(() => ({ selectedCase })),
         /**
          * To be called on each saved
-         * @param questionId the current question being rendered
+         * @param question the current question being rendered
          * @param data the answers saved by the form
          */
-        setCurrentVisitData: (questionId: QuestionId, data: AnswerState) =>
-          set((state: VisitStore) => {
+        setCurrentVisitData: (question, data) => {
+          VISITS_LOG.debug(
+            `Setting data for question "${question.question}" (id: ${question.id})`,
+            data,
+          );
+          return set((state: Store) => {
             state.answerId =
-              `${questionId}-${state.visitMetadata[state.visitId].inspectionIdx}` as AnswerId;
+              `${question.id}-${state.visitMetadata[state.visitId].inspectionIdx}` as AnswerId;
             state.visitMap[state.visitId][state.answerId] = data;
-          }),
-      })),
+          });
+        },
+      }),
       { name: "visit-store", storage: createJSONStorage(() => AsyncStorage) },
     ),
   ),

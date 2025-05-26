@@ -6,14 +6,14 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { useVisitStore } from "@/hooks/useVisitStore";
+import { useStore } from "@/hooks/useStore";
 import { ResourceName, StatusColor } from "@/types";
 import { useResourceData } from "@/hooks/useResourceData";
 import ConfettiImage from "@/assets/images/confetti.svg";
 
 function useTarikiStatusModal() {
-  const storedHouseList = useVisitStore((state) => state.storedHouseList);
-  const visitId = useVisitStore((state) => state.visitId);
+  const storedHouseList = useStore((state) => state.storedHouseList);
+  const visitId = useStore((state) => state.visitId);
   const resourceData = useResourceData(ResourceName.AppConfigParam);
 
   const consecutiveGreenVisitsForTarikiStatus = useMemo(
@@ -99,10 +99,7 @@ export default function Final() {
             primary
             title={t("backToHome")}
             onPress={() => {
-              router.push({
-                pathname: "/(auth)/(tabs)/visits",
-                params: { reload: Date.now() },
-              });
+              router.dismissAll();
             }}
           />
         </View>

@@ -1,19 +1,18 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { ThemeProps } from "@/components/themed/useThemeColor";
 import { Text, View } from "@/components/themed";
 
 import Delete from "@/components/icons/Delete";
 import Edit from "@/components/icons/Edit";
 
-export type ActionItemProps = ThemeProps &
-  TouchableOpacity["props"] & {
-    size?: number | "small" | "large";
-    onPressElement: () => void;
-    title: string;
-    disabled?: boolean;
-    type?: "edit" | "delete" | "copy";
-    className?: string;
-  };
+interface ActionItemProps extends ThemeProps, TouchableOpacityProps {
+  size?: number | "small" | "large";
+  onPressElement: () => void;
+  title: string;
+  disabled?: boolean;
+  type?: "edit" | "delete" | "copy";
+  className?: string;
+}
 
 export function ActionItem(props: ActionItemProps) {
   const { onPressElement, title, type, className, disabled } = props;

@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { ThemeProps } from "@/components/themed/useThemeColor";
 import { Text, View } from "@/components/themed";
 import { Image } from "expo-image";
@@ -10,18 +10,17 @@ import Like from "@/components/icons/Like";
 import Delete from "@/components/icons/Delete";
 import { useVisit } from "@/hooks/useVisit";
 
-export type CommnetItemProps = ThemeProps &
-  TouchableOpacity["props"] & {
-    onPressLike: (id: number) => void;
-    onPressDelete: (id: number) => void;
-    canDelete?: boolean;
-    comment: Comment;
-    likesCount: number;
-    likedByMe: boolean;
-    loadingLike: boolean;
-  };
+interface CommentItemProps extends ThemeProps, TouchableOpacityProps {
+  onPressLike: (id: number) => void;
+  onPressDelete: (id: number) => void;
+  canDelete?: boolean;
+  comment: Comment;
+  likesCount: number;
+  likedByMe: boolean;
+  loadingLike: boolean;
+}
 
-export default function CommnetItem(props: CommnetItemProps) {
+export default function CommentItem(props: CommentItemProps) {
   const {
     onPressLike,
     onPressDelete,

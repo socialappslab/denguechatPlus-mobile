@@ -21,18 +21,16 @@ import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
-import { QuestionnaireState, useVisitStore } from "@/hooks/useVisitStore";
+import { QuestionnaireState, useStore } from "@/hooks/useStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
-import { countSetFilters, formatDate } from "@/util";
+import { calculatePercentage, countSetFilters, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
-import { Routes } from "../(visit)/_layout";
-import { sanitizeInspections } from "../(visit)/sanitizeInspections";
 import { useFilters } from "@/hooks/useFilters";
 
 interface HouseReport {
@@ -65,15 +63,30 @@ const VisitsReport = ({
     .filter((i) => i !== undefined)
     .join(" - ");
 
+  // NOTE: maybe we can generalize this in the future, we have the same thing at `(tabs)/visits.tsx`
+  const colorPercentages = useMemo(() => {
+    if (!data) return [0, 0, 0];
+
+    const { redQuantity, orangeQuantity, greenQuantity } = data;
+
+    const total = redQuantity + orangeQuantity + greenQuantity;
+
+    const red = Math.floor(calculatePercentage(redQuantity, total));
+    const orange = Math.floor(calculatePercentage(orangeQuantity, total));
+    const green = Math.floor(calculatePercentage(greenQuantity, total));
+
+    return [green, orange, red];
+  }, [data]);
+
   return (
     <View>
       <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
-        {loading && (
+        {loading && !data && (
           <View className="flex flex-1 items-center justify-center my-48">
             <Loading />
           </View>
         )}
-        {!loading && (
+        {!loading && data && (
           <>
             <View className="flex flex-row justify-between">
               <View className="flex">
@@ -97,16 +110,18 @@ const VisitsReport = ({
             </Text>
             <View className="flex-row items-center justify-between mb-8">
               <Text className="text-3xl font-semibold">
-                {data?.visitQuantity}
+                {data.visitQuantity}
               </Text>
               <SimpleChip
                 border="1"
                 padding="small"
                 textColor="neutral-500"
                 borderColor="neutral-500"
-                ionIcon="arrow-up"
+                ionIcon={
+                  data.visitVariationPercentage > 0 ? "arrow-up" : "arrow-down"
+                }
                 iconColor={Colors.light.neutral}
-                label={`${data?.visitVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                label={`${data.visitVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
               />
             </View>
 
@@ -116,7 +131,7 @@ const VisitsReport = ({
               </Text>
               <View className="flex-row items-center justify-between">
                 <Text className="text-3xl font-semibold">
-                  {data?.houseQuantity}
+                  {data.houseQuantity}
                 </Text>
 
                 <SimpleChip
@@ -124,27 +139,29 @@ const VisitsReport = ({
                   padding="small"
                   textColor="neutral-500"
                   borderColor="neutral-500"
-                  ionIcon="arrow-up"
+                  ionIcon={
+                    data.siteVariationPercentage > 0 ? "arrow-up" : "arrow-down"
+                  }
                   iconColor={Colors.light.neutral}
-                  label={`${data?.siteVariationPercentage} ${t("brigade.cards.numberThisWeek")}`}
+                  label={`${data.siteVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
                 />
               </View>
             </View>
             <View className="flex flex-col mt-6">
               <ProgressBar
                 label={t("brigade.sites.green")}
-                progress={data?.greenQuantity || 0}
-                color="primary"
+                progress={colorPercentages[0]}
+                colorClassName="bg-primary"
               />
               <ProgressBar
                 label={t("brigade.sites.yellow")}
-                progress={data?.orangeQuantity || 0}
-                color="yellow-300"
+                progress={colorPercentages[1]}
+                colorClassName="bg-yellow-300"
               />
               <ProgressBar
                 label={t("brigade.sites.red")}
-                progress={data?.redQuantity || 0}
-                color="red-500"
+                progress={colorPercentages[2]}
+                colorClassName="bg-red-500"
               />
             </View>
           </>
@@ -169,7 +186,7 @@ const SuccessSummary = () => {
 export default function Visits() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { storedVisits, cleanUpStoredVisit } = useVisitStore();
+  const { storedVisits, cleanUpStoredVisit } = useStore();
   const { language, isConnected } = useVisit();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
   const { meData } = useAuth();
@@ -195,6 +212,7 @@ export default function Visits() {
   }, [reload]);
 
   const orderedVisits = storedVisits.sort(
+    // @ts-expect-error
     (a, b) => new Date(b.visitedAt) - new Date(a.visitedAt),
   );
 
@@ -229,7 +247,9 @@ export default function Visits() {
   useEffect(() => {
     setFilter({
       sector: {
+        // @ts-expect-error
         id: meData?.userProfile?.team?.sector_id as number,
+        // @ts-expect-error
         name: meData?.userProfile?.team?.sector_name,
       },
     });
@@ -288,14 +308,14 @@ export default function Visits() {
         type: "success",
         text1: t("success"),
       });
-      setLoading(false);
     } catch (error) {
       Toast.show({
         type: "error",
         text1: t(["errorCodes.generic"]),
       });
-      setLoading(false);
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -325,7 +345,7 @@ export default function Visits() {
               <Button
                 title={t("visit.registerVisit")}
                 primary
-                onPress={() => router.push(Routes.SelectHouse)}
+                onPress={() => router.push("/select-house")}
               />
             </View>
 
@@ -348,24 +368,25 @@ export default function Visits() {
                       testID="offlineVisit"
                       title={
                         visit.house &&
+                        // @ts-expect-error
                         `${t("visit.houses.house")} ${visit?.house?.referenceCode}`
                       }
                       onPressElement={() => handlePressVisit(visit)}
+                      // @ts-expect-error
                       filled={formatDate(visit.visitedAt, language)}
                     />
                   ))}
                 </>
               )}
               {!hasVisits && (
-                <>
-                  <Text className="text-center">{t("visit.list.done")}</Text>
-                </>
+                <Text className="text-center">{t("visit.list.done")}</Text>
               )}
             </View>
           </View>
         </CheckTeam>
 
         <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View>
+
         <ClosableBottomSheet
           title={`Casa ${selectedVisit?.referenceCode || ""}`}
           snapPoints={snapPoints}
@@ -384,12 +405,18 @@ export default function Visits() {
                     )}
                     {!loading && (
                       <VisitSummary
+                        // @ts-expect-error
                         date={`${formatDate(selectedVisit?.visitedAt || "", language)}`}
                         sector={team?.sector?.name}
+                        // @ts-expect-error
                         house={`${selectedVisit?.house?.referenceCode}`}
+                        // @ts-expect-error
                         color={selectedVisit?.statusColor}
+                        // @ts-expect-error
                         greens={selectedVisit?.colorsAndQuantities?.GREEN}
+                        // @ts-expect-error
                         yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
+                        // @ts-expect-error
                         reds={selectedVisit?.colorsAndQuantities?.RED}
                       />
                     )}

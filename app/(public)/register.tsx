@@ -202,6 +202,7 @@ export default function Register() {
   const {
     control,
     formState: { errors, isValid },
+    getValues,
     handleSubmit,
     setError,
     setValue,
@@ -260,6 +261,8 @@ export default function Register() {
   const passwordRef = useRef<RNTextInput>(null);
   const passwordConfirmRef = useRef<RNTextInput>(null);
 
+  const usernameErrorCounter = useRef(0);
+
   const onSubmitHandler = handleSubmit(async (data) => {
     try {
       const payload = {
@@ -284,32 +287,70 @@ export default function Register() {
     } catch (error) {
       const errorData = extractAxiosErrorData(error);
 
-      errorData?.errors?.forEach((error: any) => {
-        if (error?.field && watch(error.field)) {
-          setError(error.field, {
-            type: "manual",
-            message: t(
-              `errorCodes.${String(error?.error_code)}` ||
-                "errorCodes.genericField",
-              {
-                field: watch(error.field),
-              },
-            ),
-          });
-        } else {
-          Toast.show({
-            type: "error",
-            text1: t(`errorCodes.${error?.error_code || "generic"}`),
-          });
-        }
-      });
-
-      if (!errorData?.errors || errorData?.errors.length === 0) {
+      if (!errorData || !errorData.errors || errorData.errors.length === 0) {
         Toast.show({
           type: "error",
           text1: t("errorCodes.generic"),
         });
+        return;
       }
+
+      errorData.errors.forEach((error) => {
+        // @ts-expect-error `error.field` is string but it expects an union
+        const fieldValue = getValues(error.field);
+
+        if (error.field && fieldValue) {
+          if (error.error_code === 48 && usernameErrorCounter.current <= 3) {
+            usernameErrorCounter.current += 1;
+
+            if (usernameErrorCounter.current === 1) {
+              // @ts-expect-error `error.field` is string but it expects an union
+              setError(error.field, {
+                type: "manual",
+                message: t("register.error.suggestFirstLastName", {
+                  field: fieldValue,
+                }),
+              });
+              return;
+            }
+
+            if (usernameErrorCounter.current === 2) {
+              // @ts-expect-error `error.field` is string but it expects an union
+              setError(error.field, {
+                type: "manual",
+                message: t("register.error.suggestFirstLastNameYear", {
+                  field: fieldValue,
+                }),
+              });
+              return;
+            }
+
+            if (usernameErrorCounter.current === 3) {
+              // @ts-expect-error `error.field` is string but it expects an union
+              setError(error.field, {
+                type: "manual",
+                message: t("register.error.suggestFirstLastNameYearMonth", {
+                  field: fieldValue,
+                }),
+              });
+              return;
+            }
+          }
+
+          // @ts-expect-error `error.field` is string but it expects an union
+          setError(error.field, {
+            type: "manual",
+            message: t(`errorCodes.${error.error_code ?? "genericField"}`, {
+              field: fieldValue,
+            }),
+          });
+        } else {
+          Toast.show({
+            type: "error",
+            text1: t(`errorCodes.${error.error_code ?? "generic"}`),
+          });
+        }
+      });
     }
   });
 

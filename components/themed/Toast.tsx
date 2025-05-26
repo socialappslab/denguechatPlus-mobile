@@ -19,26 +19,19 @@ const Toast: React.FC<ToastConfigParams<any>> = ({ type, text1, text2 }) => {
       backgroundColor = "#FFEF89";
       break;
     default:
-      backgroundColor = "#323232"; // Default color
+      backgroundColor = "#323232";
   }
 
   return (
-    <View
-      className="flex flex-row items-center"
-      style={[styles.container, { backgroundColor }]}
-    >
-      {type === "success" && (
-        <View className="mr-2 bg-transparent">
-          <CheckGreen />
-        </View>
-      )}
-      {type === "error" && (
-        <View className="mr-2 bg-transparent">
-          <ErrorRed />
-        </View>
-      )}
-      <Text style={styles.text1}>{text1}</Text>
-      {text2 && <Text style={styles.text2}>{text2}</Text>}
+    <View style={[styles.container, { backgroundColor }]}>
+      <View className="mr-2 bg-transparent">
+        {type === "success" && <CheckGreen />}
+        {type === "error" && <ErrorRed />}
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.text1}>{text1}</Text>
+        {text2 && <Text style={styles.text2}>{text2}</Text>}
+      </View>
     </View>
   );
 };
@@ -49,20 +42,19 @@ const styles = StyleSheet.create<{
   text2: TextStyle;
 }>({
   container: {
-    paddingVertical: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 8,
     width: "90%",
-    alignSelf: "center",
   },
   text1: {
     color: "#292524",
-    textAlign: "center",
     fontFamily: FontFamily.medium,
   },
   text2: {
     color: "#44403C",
-    textAlign: "center",
     fontSize: 12,
     fontFamily: FontFamily.regular,
   },
