@@ -1,9 +1,6 @@
 import { AxiosError } from "axios";
 
 import moment from "moment";
-import "moment/locale/es"; // Import Spanish locale
-import "moment/locale/en-gb"; // Import English locale
-import "moment/locale/pt"; // Import Portuguese locale
 
 import { ErrorResponse } from "@/schema";
 import { FilterData } from "@/context/BrigadeContext";
