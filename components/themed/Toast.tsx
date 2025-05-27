@@ -1,46 +1,43 @@
 import React from "react";
-import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
-import { ToastConfigParams } from "react-native-toast-message";
+import { View, Text, StyleSheet } from "react-native";
 
 import { FontFamily } from "@/constants/Styles";
 import CheckGreen from "@/assets/images/icons/check-green-circle.svg";
 import ErrorRed from "@/assets/images/icons/error-red-circle.svg";
+import { ToastProps } from "@/config/toast";
 
-const Toast: React.FC<ToastConfigParams<any>> = ({ type, text1, text2 }) => {
-  let backgroundColor: string;
-  switch (type) {
-    case "success":
-      backgroundColor = "#EEFFED";
-      break;
-    case "error":
-      backgroundColor = "#FFC1C1";
-      break;
-    case "warning":
-      backgroundColor = "#FFEF89";
-      break;
-    default:
-      backgroundColor = "#323232";
+export default function Toast({ type, text1, text2, props }: ToastProps) {
+  function getBackgroundColor(type: string) {
+    switch (type) {
+      case "success":
+        return "#EEFFED";
+      case "error":
+        return "#FFC1C1";
+      case "warning":
+        return "#FFEF89";
+      default:
+        return "#323232";
+    }
   }
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View
+      style={[styles.container, { backgroundColor: getBackgroundColor(type) }]}
+    >
       <View className="mr-2 bg-transparent">
         {type === "success" && <CheckGreen />}
         {type === "error" && <ErrorRed />}
       </View>
       <View style={{ flex: 1 }}>
-        <Text style={styles.text1}>{text1}</Text>
+        {text1 && <Text style={styles.text1}>{text1}</Text>}
         {text2 && <Text style={styles.text2}>{text2}</Text>}
+        {props.textNode}
       </View>
     </View>
   );
-};
+}
 
-const styles = StyleSheet.create<{
-  container: ViewStyle;
-  text1: TextStyle;
-  text2: TextStyle;
-}>({
+const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
@@ -59,5 +56,3 @@ const styles = StyleSheet.create<{
     fontFamily: FontFamily.regular,
   },
 });
-
-export default Toast;

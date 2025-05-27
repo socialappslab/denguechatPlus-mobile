@@ -130,9 +130,9 @@
         "empty": "Please enter your email and password",
         "invalidCredentials": "Invalid email or password",
         "noInternet": "Internet connection is required to log in.",
-        "suggestFirstLastName": "Invalid credentials. Try with your first and last name as username. Example: juanperez",
-        "suggestFirstLastNameYear": "Invalid credentials. Try with your first name, last name and year of birth as username. Example: juanperez1990",
-        "suggestFirstLastNameYearMonth": "Invalid credentials. Try with your first name, last name, year and month of birth as username. Example: juanperez199004"
+        "suggestFirstLastName": "Invalid credentials. Try with your first and last name as username. <strong>Example: juanperez</strong>",
+        "suggestFirstLastNameYear": "Invalid credentials. Try with your first name, last name and year of birth as username. <strong>Example: juanperez1990</strong>",
+        "suggestFirstLastNameYearMonth": "Invalid credentials. Try with your first name, last name, year and month of birth as username. <strong>Example: juanperez199004</strong>"
       },
       "searchCountry_placeholder": "Search country...",
       "username-tab": "Username",

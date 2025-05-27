@@ -130,9 +130,9 @@
         "empty": "Por favor, insira seu e-mail e senha",
         "invalidCredentials": "E-mail ou senha inválidos",
         "noInternet": "É necessária uma conexão com a internet para efetuar login.",
-        "suggestFirstLastName": "Credenciais inválidas. Tente com seu primeiro nome e primeiro sobrenome como nome de usuário. Exemplo: juanperez",
-        "suggestFirstLastNameYear": "Credenciais inválidas. Tente com seu primeiro nome, primeiro sobrenome e ano de nascimento como nome de usuário. Exemplo: juanperez1990",
-        "suggestFirstLastNameYearMonth": "Credenciais inválidas. Tente com seu primeiro nome, primeiro sobrenome, ano e mês de nascimento como nome de usuário. Exemplo: juanperez199004"
+        "suggestFirstLastName": "Credenciais inválidas. Tente com seu primeiro nome e primeiro sobrenome como nome de usuário. <strong>Exemplo: juanperez</strong>",
+        "suggestFirstLastNameYear": "Credenciais inválidas. Tente com seu primeiro nome, primeiro sobrenome e ano de nascimento como nome de usuário. <strong>Exemplo: juanperez1990</strong>",
+        "suggestFirstLastNameYearMonth": "Credenciais inválidas. Tente com seu primeiro nome, primeiro sobrenome, ano e mês de nascimento como nome de usuário. <strong>Exemplo: juanperez199004</strong>"
       },
       "searchCountry_placeholder": "Pesquisar país...",
       "username-tab": "Nome de Usuário",
