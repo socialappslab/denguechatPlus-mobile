@@ -21,6 +21,7 @@ import {
 import { useAuth } from "@/context/AuthProvider";
 import { useStore } from "@/hooks/useStore";
 import { formatDate } from "@/util";
+import moment from "moment";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
@@ -94,8 +95,9 @@ export default function SelectHouseScreen() {
     );
   };
   const renderHouseDescription = (house: House) => {
+    const date = moment(house.lastVisit).fromNow();
     return house.lastVisit
-      ? `${t("visit.houses.lastVisit")}: ${formatDate(house.lastVisit, language, t("visit.houses.notVisited"))}`
+      ? `${t("visit.houses.lastVisit")}: ${date}`
       : undefined;
   };
 
