@@ -5,7 +5,7 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { TextInput as RNTextInput, TouchableOpacity } from "react-native";
 import CountryPicker, {
   Country,
@@ -140,7 +140,15 @@ export default function Login() {
           if (authErrorCount.current === 1) {
             Toast.show({
               type: "error",
-              text1: t("login.error.suggestFirstLastName"),
+              props: {
+                textNode: (
+                  <Trans
+                    i18nKey="login.error.suggestFirstLastName"
+                    parent={Text}
+                    components={{ strong: <Text className="font-bold" /> }}
+                  />
+                ),
+              },
             });
             return;
           }
@@ -148,7 +156,15 @@ export default function Login() {
           if (authErrorCount.current === 2) {
             Toast.show({
               type: "error",
-              text1: t("login.error.suggestFirstLastNameYear"),
+              props: {
+                textNode: (
+                  <Trans
+                    i18nKey="login.error.suggestFirstLastNameYear"
+                    parent={Text}
+                    components={{ strong: <Text className="font-bold" /> }}
+                  />
+                ),
+              },
             });
             return;
           }
@@ -156,7 +172,15 @@ export default function Login() {
           if (authErrorCount.current === 3) {
             Toast.show({
               type: "error",
-              text1: t("login.error.suggestFirstLastNameYearMonth"),
+              props: {
+                textNode: (
+                  <Trans
+                    i18nKey="login.error.suggestFirstLastNameYearMonth"
+                    parent={Text}
+                    components={{ strong: <Text className="font-bold" /> }}
+                  />
+                ),
+              },
             });
             return;
           }
