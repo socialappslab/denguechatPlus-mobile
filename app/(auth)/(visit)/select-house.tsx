@@ -51,6 +51,7 @@ export default function SelectHouseScreen() {
       house: houseSelected,
       questionnaireId: questionnaire.id,
       teamId: user.teamId,
+      notes: "", // https://denguechat.atlassian.net/browse/DNG-523
     });
     router.push({
       pathname: "/visit/[id]",
