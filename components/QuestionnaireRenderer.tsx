@@ -1,8 +1,8 @@
 import { SelectableItem, Text, View } from "@/components/themed";
-import { VisitCase } from "@/hooks/useStore";
-import { InspectionQuestion, OptionType, ResourceType } from "@/types";
+import { VisitCase, useStore } from "@/hooks/useStore";
+import { Question, OptionType, ResourceType } from "@/types";
 import { Image } from "expo-image";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Control,
   Controller,
@@ -14,9 +14,8 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-/** Interfaces */
 interface QuestionnaireRendererProps {
-  question: InspectionQuestion;
+  question: Question;
   methods: UseFormReturn<FieldValues, any, undefined>;
   name: string;
   currentValues: any;
@@ -41,49 +40,54 @@ export interface ISelectableItem {
   weightedPoints: number | null;
 }
 
-/** Utils */
-// Prepare for ISeletableItems and order
-const formatOptionsForSelectableItems = ({
+/**
+ * Prepare for ISeletableItems and order
+ */
+function formatOptionsForSelectableItems({
   resourceName,
   resourceType,
   options,
-}: InspectionQuestion): ISelectableItem[] =>
-  options
-    ?.map(
-      ({
-        id,
-        name,
-        optionType,
-        next,
-        resourceId,
-        image,
-        required,
-        group,
-        statusColor,
-        disableOtherOptions,
-        value,
-        selectedCase,
-        weightedPoints,
-      }) => ({
-        position: id,
-        value: id,
-        label: name,
-        optionType,
-        next,
-        resourceName,
-        resourceId,
-        image: image?.url,
-        required,
-        group,
-        resourceType,
-        statusColor,
-        disableOtherOptions,
-        bool: optionType === "boolean" ? !!parseInt(value!) : undefined,
-        selectedCase,
-        weightedPoints,
-      }),
-    )
-    .sort((a, b) => a.position - b.position) || [];
+}: Question): ISelectableItem[] {
+  // @ts-expect-error
+  return (
+    options
+      .map(
+        ({
+          id,
+          name,
+          optionType,
+          next,
+          resourceId,
+          image,
+          required,
+          group,
+          statusColor,
+          disableOtherOptions,
+          value,
+          selectedCase,
+          weightedPoints,
+        }) => ({
+          position: id,
+          value: id,
+          label: name,
+          optionType,
+          next,
+          resourceName,
+          resourceId,
+          image: image?.url,
+          required,
+          group,
+          resourceType,
+          statusColor,
+          disableOtherOptions,
+          bool: optionType === "boolean" ? !!parseInt(value!) : undefined,
+          selectedCase,
+          weightedPoints,
+        }),
+      )
+      .sort((a, b) => a.position - b.position) || []
+  );
+}
 
 export interface FormStateOption {
   value?: string | number;
@@ -161,12 +165,18 @@ const QuestionnaireRenderer = ({
   currentValues,
 }: QuestionnaireRendererProps) => {
   const { t } = useTranslation();
+  const answerId = useStore((state) => state.answerId);
   const hasRequiredOptions = question?.options?.some((o) => o.required);
   const { control, getValues, setValue } = methods;
-  const formattedOptions: ISelectableItem[] =
-    formatOptionsForSelectableItems(question);
+  const formattedOptions: ISelectableItem[] = useMemo(
+    () => formatOptionsForSelectableItems(question),
+    [question],
+  );
   const hasGroup = formattedOptions.every((option) => option.group);
-  const groupedOptions = groupOptions(formattedOptions);
+  const groupedOptions = useMemo(
+    () => groupOptions(formattedOptions),
+    [formattedOptions],
+  );
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const renderOptions = useCallback(
@@ -345,7 +355,6 @@ const ControlledCheckbox = ({
             required={!!option.required}
             optionType={option.optionType}
             type="checkbox"
-            // defaultText={isSelected.text}
             disabled={!!shouldDisable}
           />
         );

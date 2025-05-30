@@ -1,61 +1,57 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import { VisitCase } from "@/hooks/useStore";
 import { PostVisibility } from "@/schema";
+import { StatusColor } from "./prepareFormData";
 export * from "./prepareFormData";
 
-// <Questionnaire types>
-export type TypeField = "text" | "multiple" | "list" | "splash";
+type TypeField = "text" | "multiple" | "list" | "splash";
 
 export interface Questionnaire {
   id: string;
-  name: number;
-  createdAt: Date;
   initialQuestion: number;
   finalQuestion: number;
   questions: Question[];
 }
 
+export type OptionType = "inputNumber" | "textArea" | "boolean";
+export type ResourceType = "attribute" | "relation";
 export interface Question {
   id: number;
   question: string;
   typeField: TypeField;
-  options?: Option[];
-  description?: string;
-  notes?: string;
-  next?: number;
-  image?: Image;
-  required?: boolean;
+  description: null | string;
+  notes: null | string;
+  next: number | null;
+  resourceName: null | string;
+  resourceType: ResourceType | null;
+  image: Image | null;
+  required: boolean;
+  options: Option[];
+  children: Question[];
 }
 
-export type ResourceType = "attribute" | "relation";
-export interface InspectionQuestion extends Question {
-  resourceName?: string;
-  resourceType?: ResourceType;
+interface Image {
+  id: number;
+  url: string;
 }
-
-export type OptionType = "inputNumber" | "textArea" | "boolean";
 
 export interface Option {
   id: number;
   name: string;
-  required?: boolean;
-  textArea?: boolean;
-  next?: number;
-  image?: { url: string };
+  required: boolean;
+  next: number | null;
+  image: Image | null;
+  resourceId: string | null;
+  optionType: OptionType | null;
+  group: string | null;
+  statusColor: StatusColor | null;
+  position: number;
+  weightedPoints: number | null;
   value?: string;
-  resourceId: string;
-  optionType: OptionType;
-  group: string;
-  statusColor?: string;
   disableOtherOptions?: boolean;
   selectedCase?: VisitCase;
   showInCase?: VisitCase;
-  weightedPoints: number | null;
-}
-
-export interface Image {
-  id: number;
-  url: string;
+  additionalInformation?: any[];
 }
 
 export interface Inspection {

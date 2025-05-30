@@ -4,7 +4,7 @@ import QuestionnaireRenderer, {
 import { Loading, SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { useVisit } from "@/hooks/useVisit";
-import { InspectionQuestion, Question } from "@/types";
+import { Question } from "@/types";
 import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
@@ -19,7 +19,7 @@ const TERMINATE = -1;
 // Custom validation function
 const isValid = (
   currentValue: FormStateOption | FormStateOption[],
-  question?: Question,
+  question: Question | null,
 ): boolean => {
   if (!question) return false;
   const required = question.options?.filter((item) => item.required) || [];
@@ -53,34 +53,41 @@ const isValid = (
 };
 
 export default function Visit() {
-  const { questionnaire, isLoadingQuestionnaire } = useVisit();
-  const router = useRouter();
-  const { id } = useLocalSearchParams();
   const { t } = useTranslation();
-  const {
-    setCurrentVisitData,
-    visitMap,
-    answerId,
-    setSelectedCase,
-    selectedCase,
-    increaseCurrentVisitInspection,
-  } = useStore();
-  const questionId = id.toString();
-  const methods = useForm({});
-  const [currentQuestion, setCurrentQuestion] = useState<
-    InspectionQuestion | undefined
-  >();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { questionnaire, isLoadingQuestionnaire } = useVisit();
+
+  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+
+  const router = useRouter();
+  const methods = useForm();
+
+  const setCurrentVisitData = useStore((state) => state.setCurrentVisitData);
+  const visitMap = useStore((state) => state.visitMap);
+  const answerId = useStore((state) => state.answerId);
+  const setSelectedCase = useStore((state) => state.setSelectedCase);
+  const selectedCase = useStore((state) => state.selectedCase);
+  const increaseCurrentVisitInspection = useStore(
+    (state) => state.increaseCurrentVisitInspection,
+  );
+
+  const questionId = Number(id);
 
   useEffect(() => {
+    if (!questionnaire) throw new Error("No questionnaire");
     const casesSoFar = Object.values(visitMap).flatMap((group) =>
       // @ts-expect-error
       Object.values(group).map((item) => item?.selectedCase),
     );
     const hasAllVisitCases =
       casesSoFar.includes("house") && casesSoFar.includes("orchard");
-    const _currentQuestion = questionnaire?.questions.find(
-      (q) => String(q.id) === questionId,
+    const _currentQuestion = questionnaire.questions.find(
+      (q) => q.id === questionId,
     );
+
+    if (!_currentQuestion)
+      throw new Error(`Could not find the question with id: ${questionId}`);
+
     const hasShowInCase = _currentQuestion?.options?.findIndex(
       (option) => option.showInCase === selectedCase,
     );
@@ -100,19 +107,19 @@ export default function Visit() {
         setCurrentQuestion({
           ..._currentQuestion,
           options: newOptions,
-        } as InspectionQuestion);
+        });
       } else {
         setCurrentQuestion({
           ..._currentQuestion,
           options: newOptions,
-        } as InspectionQuestion);
+        });
       }
     } else {
       setCurrentQuestion(
-        questionnaire?.questions.find((q) => String(q.id) === questionId),
+        questionnaire?.questions.find((q) => q.id === questionId)!,
       );
     }
-  }, [selectedCase, questionId, questionnaire]);
+  }, [questionId, questionnaire, selectedCase, visitMap]);
 
   const { getValues, watch } = methods;
 
@@ -138,12 +145,13 @@ export default function Visit() {
   };
 
   const onNext = () => {
-    if (!currentQuestion) return;
-
     const next = findNext();
-    const resourceName = currentQuestion.resourceName;
+
+    if (!currentQuestion) throw new Error("Expected a question");
+
+    const { resourceName, options } = currentQuestion;
+
     const values = methods.getValues(answerId);
-    const options = currentQuestion.options;
     const selectedOption = options?.find(
       (option) => option.id === values?.value,
     );
@@ -167,14 +175,11 @@ export default function Visit() {
       });
     }
 
-    if (next !== TERMINATE) {
-      return router.push({ pathname: "/visit/[id]", params: { id: next } });
+    if (next === TERMINATE) {
+      return router.push("/add-comment");
     }
-    if (next === TERMINATE) return router.push("/add-comment");
-  };
 
-  const onBack = () => {
-    router.back();
+    return router.push({ pathname: "/visit/[id]", params: { id: next } });
   };
 
   if (isLoadingQuestionnaire) {
@@ -207,7 +212,12 @@ export default function Visit() {
         </ScrollView>
         <View className="flex flex-row gap-2">
           <View className="flex-1">
-            <Button title={t("back")} onPress={onBack} />
+            <Button
+              title={t("back")}
+              onPress={() => {
+                router.back();
+              }}
+            />
           </View>
           <View className="flex-1">
             {isSplash && <Button primary title={t("next")} onPress={onNext} />}
