@@ -21,7 +21,7 @@ interface VisitContextType {
   isLoadingQuestionnaire: boolean;
   visitData: VisitData;
   resources: Resources;
-  setVisitData: (data: Partial<VisitData>) => Promise<void>;
+  setVisitData: (data: Partial<VisitData>) => void;
   cleanStore: () => Promise<void>;
   language: string | null;
   isConnected: boolean;
@@ -96,11 +96,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       questionnaireData,
     ) as Questionnaire;
 
-    setQuestionnaire({
-      ...deserializedQuestionnaire,
-      initialQuestion: deserializedQuestionnaire.initialQuestion,
-      questions: [...deserializedQuestionnaire.questions],
-    });
+    setQuestionnaire(deserializedQuestionnaire);
   }, [questionnaireData]);
 
   useEffect(() => {
@@ -146,7 +142,7 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     loadQuestionnaireData();
   }, []);
 
-  const setVisitData = async (data: Partial<VisitData>) => {
+  const setVisitData = (data: Partial<VisitData>) => {
     setVisitDataState((prev) => {
       const updatedData = { ...prev, ...data };
       SecureStore.setItemAsync(

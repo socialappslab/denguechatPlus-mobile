@@ -20,7 +20,6 @@ import {
 } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import { useStore } from "@/hooks/useStore";
-import { formatDate } from "@/util";
 import moment from "moment";
 
 export default function SelectHouseScreen() {
@@ -33,7 +32,7 @@ export default function SelectHouseScreen() {
   const router = useRouter();
 
   const { user, meData } = useAuth();
-  const { setVisitData, questionnaire, language, isConnected } = useVisit();
+  const { setVisitData, questionnaire, isConnected } = useVisit();
   const { initialiseCurrentVisit, storedHouseList, saveHouseList } = useStore();
 
   const updateHouse = async () => {
@@ -47,7 +46,7 @@ export default function SelectHouseScreen() {
     initialiseCurrentVisit(visitId, questionnaire.initialQuestion.toString());
 
     // We set the relevant meta
-    await setVisitData({
+    setVisitData({
       houseId: houseSelected?.id,
       house: houseSelected,
       questionnaireId: questionnaire.id,
