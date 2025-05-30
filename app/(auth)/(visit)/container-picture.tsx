@@ -13,7 +13,6 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image } from "react-native";
-import { Routes } from "./_layout";
 
 export default function ContainerPicture() {
   const { t } = useTranslation();
