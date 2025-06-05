@@ -20,7 +20,6 @@ import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
-import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useStore } from "@/hooks/useStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
@@ -32,6 +31,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
 import { useFilters } from "@/hooks/useFilters";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 interface HouseReport {
   greenQuantity: number;
@@ -187,7 +187,7 @@ export default function Visits() {
   const { t } = useTranslation();
   const router = useRouter();
   const { storedVisits, cleanUpStoredVisit } = useStore();
-  const { isConnected } = useVisit();
+  const { isInternetReachable } = useNetInfo();
   const { i18n } = useTranslation();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
   const { meData } = useAuth();
@@ -407,7 +407,7 @@ export default function Visits() {
                     {!loading && (
                       <VisitSummary
                         // @ts-expect-error
-                        date={`${formatDate(selectedVisit?.visitedAt || "", language)}`}
+                        date={`${formatDate(selectedVisit?.visitedAt || "", i18n.language)}`}
                         sector={team?.sector?.name}
                         // @ts-expect-error
                         house={`${selectedVisit?.house?.referenceCode}`}
@@ -430,7 +430,7 @@ export default function Visits() {
               <Button
                 title="Sincronizar visita"
                 onPress={() => synchronizeVisit(selectedVisit)}
-                disabled={!isConnected || loading}
+                disabled={!isInternetReachable || loading}
                 primary
               />
             )}

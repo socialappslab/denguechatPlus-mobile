@@ -1,4 +1,3 @@
-import { useNetInfo } from "@react-native-community/netinfo";
 import useAxios from "axios-hooks";
 import * as SecureStore from "expo-secure-store";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
@@ -18,7 +17,6 @@ interface VisitContextType {
   visitData: VisitData;
   resources: Resources;
   setVisitData: (data: Partial<VisitData>) => void;
-  isConnected: boolean;
 }
 
 const VisitContext = createContext<VisitContextType | undefined>(undefined);
@@ -29,7 +27,6 @@ const VisitContext = createContext<VisitContextType | undefined>(undefined);
 
 const VisitProvider = ({ children }: { children: ReactNode }) => {
   const { i18n } = useTranslation();
-  const { isInternetReachable } = useNetInfo();
   const { meData } = useAuth();
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
@@ -144,7 +141,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
         visitData,
         resources,
         setVisitData,
-        isConnected: !!isInternetReachable,
       }}
     >
       {children}
