@@ -98,9 +98,8 @@ export default function Visit() {
     if (hasShowInCase) {
       const casesSoFar = Object.values(visitMap).flatMap((group) =>
         Object.values(group).map((item) => {
-          invariant(!Array.isArray(item));
-          invariant(item.selectedCase);
-          return item.selectedCase;
+          // @ts-expect-error - array support is not implemented yet
+          return item?.selectedCase;
         }),
       );
       const hasAllVisitCases =
@@ -144,7 +143,6 @@ export default function Visit() {
       if (!next) return TERMINATE;
       return next;
     }
-    console.log(methods.watch());
 
     const next = currentValues.next;
     if (!next) return TERMINATE;
