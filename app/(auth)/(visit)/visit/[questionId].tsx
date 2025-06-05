@@ -7,8 +7,8 @@ import { Question } from "@/types";
 import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AnswerId, AnswerState, useStore } from "@/hooks/useStore";
-import { useEffect, useMemo, useState } from "react";
+import { AnswerId, AnswerState, useStore, VisitCase } from "@/hooks/useStore";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import invariant from "tiny-invariant";
@@ -74,10 +74,6 @@ export default function Visit() {
     (state) => state.increaseCurrentVisitInspection,
   );
 
-  const [currentQuestions, setCurrentQuestions] = useState<Question | null>(
-    null,
-  );
-
   const questionId = Number(questionIdAsString);
 
   const currentQuestion = useMemo(() => {
@@ -85,28 +81,25 @@ export default function Visit() {
       (question) => question.id === questionId,
     );
     invariant(maybeQuestion, `Question with id ${questionId} not found`);
-    return maybeQuestion;
-  }, [questionId, questionnaire]);
 
-  const answerId: AnswerId = `${currentQuestion.id}-${visitMetadata[visitId].inspectionIdx}`;
-
-  useEffect(() => {
-    const hasShowInCase = currentQuestion.options.some(
+    const optionsHaveShowInCase = maybeQuestion.options.some(
       (option) => option.showInCase === selectedCase,
     );
 
-    if (hasShowInCase) {
+    if (optionsHaveShowInCase) {
+      // TODO: fix the inference for this
       const casesSoFar = Object.values(visitMap).flatMap((group) =>
         Object.values(group).map((item) => {
           // @ts-expect-error - array support is not implemented yet
-          return item?.selectedCase;
+          return item?.selectedCase as VisitCase | undefined;
         }),
       );
+
       const hasAllVisitCases =
         casesSoFar.includes("house") && casesSoFar.includes("orchard");
 
       if (hasAllVisitCases) {
-        const newOptions = currentQuestion.options.filter((option) => {
+        const newOptions = maybeQuestion.options.filter((option) => {
           return (
             (option.showInCase === selectedCase &&
               option.selectedCase === selectedCase) ||
@@ -114,24 +107,26 @@ export default function Visit() {
           );
         });
 
-        setCurrentQuestions({
-          ...currentQuestion,
+        return {
+          ...maybeQuestion,
           options: newOptions,
-        });
+        };
       } else {
-        const newOptions = currentQuestion.options.filter((option) => {
+        const newOptions = maybeQuestion.options.filter((option) => {
           return option.showInCase === selectedCase;
         });
 
-        setCurrentQuestions({
-          ...currentQuestion,
+        return {
+          ...maybeQuestion,
           options: newOptions,
-        });
+        };
       }
-    } else {
-      setCurrentQuestions(currentQuestion);
     }
-  }, [currentQuestion, questionId, questionnaire, selectedCase, visitMap]);
+
+    return maybeQuestion;
+  }, [questionId, questionnaire, selectedCase, visitMap]);
+
+  const answerId: AnswerId = `${currentQuestion.id}-${visitMetadata[visitId].inspectionIdx}`;
 
   const currentValues = methods.watch(answerId) as AnswerState;
 
@@ -151,8 +146,6 @@ export default function Visit() {
 
   const onNext = () => {
     const next = findNext();
-
-    invariant(currentQuestions, "Expected a question");
 
     const selectedOption = currentQuestion.options.find(
       // @ts-expect-error - array support is not implemented yet
