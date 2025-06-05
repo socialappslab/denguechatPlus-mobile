@@ -187,7 +187,8 @@ export default function Visits() {
   const { t } = useTranslation();
   const router = useRouter();
   const { storedVisits, cleanUpStoredVisit } = useStore();
-  const { language, isConnected } = useVisit();
+  const { isConnected } = useVisit();
+  const { i18n } = useTranslation();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
   const { meData } = useAuth();
   const [team, setTeam] = useState<Team | null>(null);
@@ -373,7 +374,7 @@ export default function Visits() {
                       }
                       onPressElement={() => handlePressVisit(visit)}
                       // @ts-expect-error
-                      filled={formatDate(visit.visitedAt, language)}
+                      filled={formatDate(visit.visitedAt, i18n.language)}
                     />
                   ))}
                 </>

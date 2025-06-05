@@ -68,10 +68,11 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 
 export default function Summary() {
   const router = useRouter();
-  const { visitData, language } = useVisit();
+  const { visitData } = useVisit();
   const { isInternetReachable } = useNetInfo();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { i18n } = useTranslation();
 
   const visitMap = useStore((state) => state.visitMap);
   const visitId = useStore((state) => state.visitId);
@@ -182,7 +183,7 @@ export default function Summary() {
             </View>
           </View>
           <VisitSummary
-            date={formatDate(new Date().toString(), language) || ""}
+            date={formatDate(new Date().toString(), i18n.language) || ""}
             house={visitData.house?.referenceCode}
             sector={user?.neighborhoodName}
             greens={colorsAndQuantities.GREEN}

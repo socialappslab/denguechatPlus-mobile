@@ -18,7 +18,6 @@ interface VisitContextType {
   visitData: VisitData;
   resources: Resources;
   setVisitData: (data: Partial<VisitData>) => void;
-  language: string | null;
   isConnected: boolean;
 }
 
@@ -145,8 +144,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
         visitData,
         resources,
         setVisitData,
-        // TODO: this is not necessary, just access this through `useTranslation`
-        language: i18n.language,
         isConnected: !!isInternetReachable,
       }}
     >

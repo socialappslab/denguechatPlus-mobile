@@ -33,7 +33,8 @@ export default function NewHouse() {
   const { t } = useTranslation();
   const { user, meData } = useAuth();
 
-  const { setVisitData, language, visitData } = useVisit();
+  const { setVisitData, visitData } = useVisit();
+  const { i18n } = useTranslation();
   const initialiseCurrentVisit = useStore(
     (state) => state.initialiseCurrentVisit,
   );
@@ -127,7 +128,7 @@ export default function NewHouse() {
   };
 
   useEffect(() => {
-    const lang = getLanguageCode(language);
+    const lang = getLanguageCode(i18n.language);
     const sites: BaseObject[] = [
       {
         id: ID_CASA,
@@ -144,7 +145,7 @@ export default function NewHouse() {
     );
 
     setSiteOptions(sites);
-  }, [resourceData, language, t]);
+  }, [resourceData, i18n, t]);
 
   const onBack = () => {
     router.back();
