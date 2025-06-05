@@ -40,7 +40,7 @@ function useTarikiStatusModal() {
   const shouldShowModal =
     currentHouse.consecutiveGreenStatus >=
       consecutiveGreenVisitsForTarikiStatusValue &&
-    houseColor === StatusColor.NO_INFECTED;
+    houseColor === StatusColor.NotInfected;
 
   useEffect(() => {
     if (shouldShowModal) {

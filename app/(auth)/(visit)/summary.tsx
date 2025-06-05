@@ -58,7 +58,7 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
     highestWeightInEachContainer.sort(
       (a, b) =>
         colorOrder.indexOf(a.statusColor) - colorOrder.indexOf(b.statusColor),
-    )[0]?.statusColor ?? StatusColor.NO_INFECTED;
+    )[0]?.statusColor ?? StatusColor.NotInfected;
 
   return {
     colorsAndQuantities,
@@ -92,7 +92,7 @@ export default function Summary() {
   const visitWasNotAllowedOrWasEarlyExit = answers.length === 1;
 
   mainStatusColor = visitWasNotAllowedOrWasEarlyExit
-    ? StatusColor.INFECTED
+    ? StatusColor.Infected
     : mainStatusColor;
 
   const { createMutation: createVisit, loading } = useCreateMutation<

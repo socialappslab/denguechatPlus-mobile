@@ -52,7 +52,7 @@ const VisitSummary = ({
   date,
   sector,
   house,
-  color = StatusColor.NO_INFECTED,
+  color = StatusColor.NotInfected,
   greens = 0,
   reds = 0,
   yellows = 0,

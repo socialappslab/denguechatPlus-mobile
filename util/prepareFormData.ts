@@ -147,7 +147,7 @@ export const prepareFormData = (formData: FormState) => {
 
     // If by the end we don't have a status color, we set it here
     if (!inspections[index].statusColor)
-      inspections[index].statusColor = StatusColor.NO_INFECTED;
+      inspections[index].statusColor = StatusColor.NotInfected;
   });
 
   const returnObject = {
@@ -164,5 +164,5 @@ export const orderStatus = (statusColors: StatusColor[]) => {
     (a, b) => colorOrder.indexOf(a) - colorOrder.indexOf(b),
   );
   if (ordered[0]) return ordered[0];
-  return StatusColor.NO_INFECTED;
+  return StatusColor.NotInfected;
 };
