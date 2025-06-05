@@ -68,11 +68,18 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, language } = useVisit();
+  const { visitData, language } = useVisit();
   const { isInternetReachable } = useNetInfo();
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { visitMap, visitId, finaliseCurrentVisit } = useStore();
+
+  const visitMap = useStore((state) => state.visitMap);
+  const visitId = useStore((state) => state.visitId);
+  const finaliseCurrentVisit = useStore((state) => state.finaliseCurrentVisit);
+  const questionnaire = useStore((state) => {
+    if ((state.questionnaire, "Expected questionnaire to be defined"))
+      return state.questionnaire;
+  });
 
   const currentVisit = visitMap[visitId];
 
@@ -142,7 +149,7 @@ export default function Summary() {
         colorsAndQuantities,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       const errorData = extractAxiosErrorData(error);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({

@@ -4,7 +4,7 @@ import { PostVisibility } from "@/schema";
 import { StatusColor } from "./prepareFormData";
 export * from "./prepareFormData";
 
-type TypeField = "text" | "multiple" | "list" | "splash";
+type TypeField = "text" | "multiple" | "list" | "splash" | "splash+list";
 
 export interface Questionnaire {
   id: string;
@@ -19,15 +19,17 @@ export interface Question {
   id: number;
   question: string;
   typeField: TypeField;
-  description: null | string;
-  notes: null | string;
+  description: string | null;
+  notes: string | null;
   next: number | null;
-  resourceName: null | string;
+  resourceName: string | null;
   resourceType: ResourceType | null;
   image: Image | null;
   required: boolean;
+  // TODO: Improve the type correctness of this, `options` should be an union of
+  // multiple types of Option objects
   options: Option[];
-  children: Question[];
+  additionalData: Record<string, string> | null;
 }
 
 interface Image {
@@ -37,20 +39,85 @@ interface Image {
 
 export interface Option {
   id: number;
+
+  /**
+   * The user-facing label or text to show for the option.
+   */
   name: string;
-  required: boolean;
+
+  /**
+   * Don't know the purpose of this since it's always `false`.
+   */
+  required: false;
+
+  /**
+   * A pointer to the next question. -1 means early exit.
+   */
   next: number | null;
+
+  /**
+   * Questions have options with images for demonstration purposes.
+   */
   image: Image | null;
+
+  /**
+   * The value key for the options of questions that have a `resourceName`.
+   */
   resourceId: string | null;
+
+  /**
+   * The type of option.
+   */
   optionType: OptionType | null;
+
+  /**
+   * Questions can have grouped options.
+   */
   group: string | null;
+
+  /**
+   * Used in conjunction with `weightedPoints` to calculate the color status of
+   * the containers and the house.
+   */
   statusColor: StatusColor | null;
+
+  /**
+   * Options are sorted by custom order in the database.
+   */
   position: number;
+
+  /**
+   * Used in conjunction with `statusColor` to calculate the color status of the
+   * containers and the house.
+   */
   weightedPoints: number | null;
+
+  /**
+   * The value key of some options.
+   */
   value?: string;
+
+  /**
+   * A selected option with this flag should disable all the other available
+   * options.
+   */
   disableOtherOptions?: boolean;
+
+  /**
+   * The value key of some options that later are discriminated by the
+   * `showInCase` key.
+   */
   selectedCase?: VisitCase;
+
+  /**
+   * A discriminator to show options based on the `selectedCase`.
+   */
   showInCase?: VisitCase;
+
+  /**
+   * Don't know the purpose of this. Is not implemented by any of the clients at
+   * the moment.
+   */
   additionalInformation?: any[];
 }
 

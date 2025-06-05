@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNetInfo } from "@react-native-community/netinfo";
 import useAxios from "axios-hooks";
 import * as SecureStore from "expo-secure-store";
@@ -6,23 +5,19 @@ import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 
 import {
-  CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
   CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
   CURRENT_VISIT_LOCAL_STORAGE_KEY,
-  VISIT_MAP_LOCAL_STORAGE_KEY,
 } from "@/constants/Keys";
 import { useAuth } from "@/context/AuthProvider";
 import { ErrorResponse } from "@/schema";
 import { Questionnaire, Resources, VisitData } from "@/types";
 import { useTranslation } from "react-i18next";
+import { setQuestionnaire } from "@/hooks/useStore";
 
 interface VisitContextType {
-  questionnaire?: Questionnaire;
-  isLoadingQuestionnaire: boolean;
   visitData: VisitData;
   resources: Resources;
   setVisitData: (data: Partial<VisitData>) => void;
-  cleanStore: () => Promise<void>;
   language: string | null;
   isConnected: boolean;
 }
@@ -51,17 +46,17 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     inspections: [],
   });
 
-  const [questionnaire, setQuestionnaire] = useState<Questionnaire>();
   // @ts-expect-error `resources` is a tuple with some objects that we expect
   // from our backend and it will be used throughout the life of our app, we
   // should make sure that resources always comes in the shape that the types
   // say, or throw, because is guaranteed the app will crash at some point
   const [resources, setResources] = useState<Resources>([]);
 
-  const [
-    { data: questionnaireData, loading: isLoadingQuestionnaire },
-    featchQuestionnaire,
-  ] = useAxios<ExistingDocumentObject, unknown, ErrorResponse>(
+  const [{ data: questionnaireData }, featchQuestionnaire] = useAxios<
+    ExistingDocumentObject,
+    unknown,
+    ErrorResponse
+  >(
     {
       // We need to support en-US es-ES etc in the backend
       // for now we're manually grabbing the first part
@@ -70,13 +65,16 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     { manual: true },
   );
 
-  const [{ data: paramsData, loading: isLoadingParams }, featchParams] =
-    useAxios<Resources, unknown, ErrorResponse>(
-      {
-        url: `get_last_params`,
-      },
-      { manual: true },
-    );
+  const [{ data: paramsData }, featchParams] = useAxios<
+    Resources,
+    unknown,
+    ErrorResponse
+  >(
+    {
+      url: `get_last_params`,
+    },
+    { manual: true },
+  );
 
   useEffect(() => {
     if (!meData) {
@@ -130,18 +128,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     loadResourcesData();
   }, []);
 
-  useEffect(() => {
-    const loadQuestionnaireData = async () => {
-      const storedData = await SecureStore.getItemAsync(
-        CURRENT_QUESTIONNAIRE_LOCAL_STORAGE_KEY,
-      );
-      if (storedData) {
-        setQuestionnaire(JSON.parse(storedData));
-      }
-    };
-    loadQuestionnaireData();
-  }, []);
-
   const setVisitData = (data: Partial<VisitData>) => {
     setVisitDataState((prev) => {
       const updatedData = { ...prev, ...data };
@@ -153,24 +139,13 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const cleanStore = async () => {
-    SecureStore.setItemAsync(
-      CURRENT_VISIT_LOCAL_STORAGE_KEY,
-      JSON.stringify({}),
-    );
-    AsyncStorage.setItem(VISIT_MAP_LOCAL_STORAGE_KEY, JSON.stringify({}));
-  };
-
   return (
     <VisitContext.Provider
       value={{
         visitData,
-        questionnaire,
         resources,
-        isLoadingQuestionnaire: isLoadingQuestionnaire || isLoadingParams,
         setVisitData,
-        cleanStore,
-        // TODO: this is not necessary, just access this through i18n
+        // TODO: this is not necessary, just access this through `useTranslation`
         language: i18n.language,
         isConnected: !!isInternetReachable,
       }}

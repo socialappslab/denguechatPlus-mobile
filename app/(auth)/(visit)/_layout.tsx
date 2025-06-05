@@ -54,7 +54,7 @@ export default function VisitLayout(props: ThemeProps) {
         options={{ headerShown: false, headerShadowVisible: false }}
       />
       <Stack.Screen
-        name="visit/[id]"
+        name="visit/[questionId]"
         options={{ headerShown: true, headerShadowVisible: false }}
       />
       <Stack.Screen

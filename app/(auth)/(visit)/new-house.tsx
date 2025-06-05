@@ -24,6 +24,7 @@ import { z } from "zod";
 import { useStore } from "@/hooks/useStore";
 import { ResourceName, VisitId } from "@/types";
 import { useResourceData } from "@/hooks/useResourceData";
+import invariant from "tiny-invariant";
 
 const ID_CASA = -1;
 const ALPHANUMERIC_REGEX = /^[A-Z0-9]+$/;
@@ -32,8 +33,14 @@ export default function NewHouse() {
   const { t } = useTranslation();
   const { user, meData } = useAuth();
 
-  const { setVisitData, questionnaire, language, visitData } = useVisit();
-  const { initialiseCurrentVisit } = useStore();
+  const { setVisitData, language, visitData } = useVisit();
+  const initialiseCurrentVisit = useStore(
+    (state) => state.initialiseCurrentVisit,
+  );
+  const questionnaire = useStore((state) => {
+    invariant(state.questionnaire, "Expected questionnaire to be defined");
+    return state.questionnaire;
+  });
   const router = useRouter();
   const resourceData = useResourceData(ResourceName.SpecialPlaces);
 
@@ -73,12 +80,12 @@ export default function NewHouse() {
   } = methods;
 
   const onSubmitHandler = handleSubmit(async (values) => {
-    if (!user?.id || !questionnaire?.initialQuestion) return;
+    if (!user?.id) return;
 
     const visitId = `${user.id}-${visitData.house?.id}` as VisitId;
 
     // Set the VisitId
-    initialiseCurrentVisit(visitId, questionnaire.initialQuestion.toString());
+    initialiseCurrentVisit(visitId);
 
     // We set the relevant meta
     setVisitData({
@@ -93,8 +100,8 @@ export default function NewHouse() {
       },
     });
     router.push({
-      pathname: "/visit/[id]",
-      params: { id: questionnaire.initialQuestion },
+      pathname: "/visit/[questionId]",
+      params: { questionId: questionnaire.initialQuestion },
     });
   });
 
