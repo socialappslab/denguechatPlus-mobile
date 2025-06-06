@@ -1,7 +1,7 @@
 export enum StatusColor {
-  INFECTED = "RED",
-  POTENTIONALLY_INFECTED = "YELLOW",
-  NO_INFECTED = "GREEN",
+  Infected = "RED",
+  PotentionallyInfected = "YELLOW",
+  NotInfected = "GREEN",
 }
 
 export interface Status {

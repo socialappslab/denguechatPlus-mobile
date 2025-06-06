@@ -16,10 +16,12 @@ import {
 import { useVisit } from "@/hooks/useVisit";
 import CustomMarker from "@/components/icons/CustomMarker";
 import NoMap from "@/assets/images/no-internet-map.svg";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 const AddLocation = () => {
   const { t } = useTranslation();
-  const { isConnected, setVisitData } = useVisit();
+  const { isInternetReachable } = useNetInfo();
+  const { setVisitData } = useVisit();
   const router = useRouter();
 
   const [location, setLocation] = useState<Location.LocationObject>();
@@ -81,7 +83,7 @@ const AddLocation = () => {
 
   const handleConfirmAddress = () => {
     if (status?.status === "granted" && location?.coords) {
-      if (isConnected) {
+      if (isInternetReachable) {
         setVisitData({
           house: {
             latitude: markerCoords.latitude,
@@ -115,7 +117,7 @@ const AddLocation = () => {
 
   return (
     <View className="flex flex-1">
-      {isConnected && !Boolean(error) && (
+      {isInternetReachable && !Boolean(error) && (
         <MapView
           ref={mapRef}
           provider={PROVIDER_GOOGLE}
@@ -135,7 +137,7 @@ const AddLocation = () => {
           />
         </MapView>
       )}
-      {(!isConnected || Boolean(error)) && (
+      {(!isInternetReachable || Boolean(error)) && (
         <View className="flex-1 flex-col items-center justify-center px-10 -top-8">
           <NoMap className="mb-4"></NoMap>
           <Text className="text-2xl font-bold mb-4">
@@ -152,7 +154,7 @@ const AddLocation = () => {
       <SimpleBottomSheet>
         <View className="flex px-5 mt-6">
           <Text className="text-2xl font-bold text-center mb-4">
-            {!isConnected
+            {!isInternetReachable
               ? t("visit.newHouse.addAddress")
               : t("visit.newHouse.siteLocation")}
           </Text>
@@ -162,7 +164,7 @@ const AddLocation = () => {
               value={address}
               onChangeText={(value) => setAddress(value)}
               placeholder={t("visit.newHouse.houseNumberPlaceholder")}
-              iconMaterial={!isConnected ? undefined : "map-marker"}
+              iconMaterial={!isInternetReachable ? undefined : "map-marker"}
               isSheet
             />
           </View>

@@ -58,7 +58,7 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
     highestWeightInEachContainer.sort(
       (a, b) =>
         colorOrder.indexOf(a.statusColor) - colorOrder.indexOf(b.statusColor),
-    )[0]?.statusColor ?? StatusColor.NO_INFECTED;
+    )[0]?.statusColor ?? StatusColor.NotInfected;
 
   return {
     colorsAndQuantities,
@@ -68,11 +68,19 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 
 export default function Summary() {
   const router = useRouter();
-  const { questionnaire, visitData, language } = useVisit();
+  const { visitData } = useVisit();
   const { isInternetReachable } = useNetInfo();
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { visitMap, visitId, finaliseCurrentVisit } = useStore();
+  const { i18n } = useTranslation();
+
+  const visitMap = useStore((state) => state.visitMap);
+  const visitId = useStore((state) => state.visitId);
+  const finaliseCurrentVisit = useStore((state) => state.finaliseCurrentVisit);
+  const questionnaire = useStore((state) => {
+    if ((state.questionnaire, "Expected questionnaire to be defined"))
+      return state.questionnaire;
+  });
 
   const currentVisit = visitMap[visitId];
 
@@ -84,7 +92,7 @@ export default function Summary() {
   const visitWasNotAllowedOrWasEarlyExit = answers.length === 1;
 
   mainStatusColor = visitWasNotAllowedOrWasEarlyExit
-    ? StatusColor.INFECTED
+    ? StatusColor.Infected
     : mainStatusColor;
 
   const { createMutation: createVisit, loading } = useCreateMutation<
@@ -142,7 +150,7 @@ export default function Summary() {
         colorsAndQuantities,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       const errorData = extractAxiosErrorData(error);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
@@ -175,7 +183,7 @@ export default function Summary() {
             </View>
           </View>
           <VisitSummary
-            date={formatDate(new Date().toString(), language) || ""}
+            date={formatDate(new Date().toString(), i18n.language) || ""}
             house={visitData.house?.referenceCode}
             sector={user?.neighborhoodName}
             greens={colorsAndQuantities.GREEN}

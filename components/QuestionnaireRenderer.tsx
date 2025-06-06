@@ -1,8 +1,8 @@
 import { SelectableItem, Text, View } from "@/components/themed";
 import { VisitCase } from "@/hooks/useStore";
-import { InspectionQuestion, OptionType, ResourceType } from "@/types";
+import { Question, OptionType, ResourceType } from "@/types";
 import { Image } from "expo-image";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Control,
   Controller,
@@ -14,9 +14,8 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-/** Interfaces */
 interface QuestionnaireRendererProps {
-  question: InspectionQuestion;
+  question: Question;
   methods: UseFormReturn<FieldValues, any, undefined>;
   name: string;
   currentValues: any;
@@ -41,49 +40,55 @@ export interface ISelectableItem {
   weightedPoints: number | null;
 }
 
-/** Utils */
-// Prepare for ISeletableItems and order
-const formatOptionsForSelectableItems = ({
+/**
+ * Prepare for ISeletableItems and order
+ */
+function formatOptionsForSelectableItems({
   resourceName,
   resourceType,
   options,
-}: InspectionQuestion): ISelectableItem[] =>
-  options
-    ?.map(
-      ({
-        id,
-        name,
-        optionType,
-        next,
-        resourceId,
-        image,
-        required,
-        group,
-        statusColor,
-        disableOtherOptions,
-        value,
-        selectedCase,
-        weightedPoints,
-      }) => ({
-        position: id,
-        value: id,
-        label: name,
-        optionType,
-        next,
-        resourceName,
-        resourceId,
-        image: image?.url,
-        required,
-        group,
-        resourceType,
-        statusColor,
-        disableOtherOptions,
-        bool: optionType === "boolean" ? !!parseInt(value!) : undefined,
-        selectedCase,
-        weightedPoints,
-      }),
-    )
-    .sort((a, b) => a.position - b.position) || [];
+}: Question): ISelectableItem[] {
+  // @ts-expect-error
+  return (
+    options
+      .map(
+        ({
+          id,
+          name,
+          optionType,
+          next,
+          resourceId,
+          image,
+          required,
+          group,
+          statusColor,
+          disableOtherOptions,
+          value,
+          selectedCase,
+          weightedPoints,
+          position,
+        }) => ({
+          position,
+          value: id,
+          label: name,
+          optionType,
+          next,
+          resourceName,
+          resourceId,
+          image: image?.url,
+          required,
+          group,
+          resourceType,
+          statusColor,
+          disableOtherOptions,
+          bool: optionType === "boolean" ? !!parseInt(value!) : undefined,
+          selectedCase,
+          weightedPoints,
+        }),
+      )
+      .sort((a, b) => a.position - b.position) || []
+  );
+}
 
 export interface FormStateOption {
   value?: string | number;
@@ -161,12 +166,17 @@ const QuestionnaireRenderer = ({
   currentValues,
 }: QuestionnaireRendererProps) => {
   const { t } = useTranslation();
-  const hasRequiredOptions = question?.options?.some((o) => o.required);
+  const hasRequiredOptions = question.options.some((o) => o.required);
   const { control, getValues, setValue } = methods;
-  const formattedOptions: ISelectableItem[] =
-    formatOptionsForSelectableItems(question);
+  const formattedOptions: ISelectableItem[] = useMemo(
+    () => formatOptionsForSelectableItems(question),
+    [question],
+  );
   const hasGroup = formattedOptions.every((option) => option.group);
-  const groupedOptions = groupOptions(formattedOptions);
+  const groupedOptions = useMemo(
+    () => groupOptions(formattedOptions),
+    [formattedOptions],
+  );
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const renderOptions = useCallback(
@@ -186,7 +196,8 @@ const QuestionnaireRenderer = ({
               currentValues={currentValues}
             />
           )}
-          {question.typeField === "list" && (
+          {(question.typeField === "list" ||
+            question.typeField === "splash+list") && (
             <ControlledList
               key={option.value}
               getValues={getValues}
@@ -231,33 +242,101 @@ const QuestionnaireRenderer = ({
           </Text>
         </View>
       )}
-      {question.typeField !== "splash" && (
+      {question.typeField === "splash+list" && (
         <View>
-          <Text type="title" className="mb-5">
-            {question.question}
-          </Text>
-          {question.notes && (
-            <Text
-              type="text"
-              className="mb-8 text-center text-gray-500 dark:text-gray-400"
-            >
-              {question.notes}
-            </Text>
-          )}
-          {/* Conditionally render groupped */}
-          {!hasGroup && formattedOptions.map(renderOptions)}
-          {hasGroup &&
-            Object.keys(groupedOptions).map((title) => (
-              <View key={title} className="mb-2">
-                <Text type="subtitle" className="mb-3">
-                  {title}
-                </Text>
-                {groupedOptions[title].map(renderOptions)}
+          {question.additionalData && (
+            <View className="flex-col justify-center items-center">
+              <View
+                className={`h-52 w-52 relative mb-8 rounded-xl border-green-300 flex items-center justify-center ${!imageLoaded && "bg-green-300"}`}
+              >
+                {question.additionalData.image && (
+                  <Image
+                    source={question.additionalData.image}
+                    className="h-full w-full"
+                    onLoad={() => setImageLoaded(true)}
+                  />
+                )}
+                {!imageLoaded && (
+                  <Text className="absolute top-1/5">
+                    {t("ilustrationOrIcon")}
+                  </Text>
+                )}
               </View>
-            ))}
-          <Text type="small">{hasRequiredOptions && t("visit.required")}</Text>
+              {question.additionalData.title && (
+                <Text type="title" className="text-center">
+                  {question.additionalData.title}
+                </Text>
+              )}
+              {question.additionalData.description && (
+                <Text
+                  type="text"
+                  className="text-center p-8 pt-4 whitespace-pre-wrap"
+                >
+                  {question.additionalData.description.replace(/\\n/g, "\n")}
+                </Text>
+              )}
+            </View>
+          )}
+
+          <View>
+            <Text type="title" className="mb-5">
+              {question.question}
+            </Text>
+            {question.notes && (
+              <Text
+                type="text"
+                className="mb-8 text-center text-gray-500 dark:text-gray-400"
+              >
+                {question.notes}
+              </Text>
+            )}
+            {/* Conditionally render groupped */}
+            {!hasGroup && formattedOptions.map(renderOptions)}
+            {hasGroup &&
+              Object.keys(groupedOptions).map((title) => (
+                <View key={title} className="mb-2">
+                  <Text type="subtitle" className="mb-3">
+                    {title}
+                  </Text>
+                  {groupedOptions[title].map(renderOptions)}
+                </View>
+              ))}
+            <Text type="small">
+              {hasRequiredOptions && t("visit.required")}
+            </Text>
+          </View>
         </View>
       )}
+      {question.typeField !== "splash" &&
+        question.typeField !== "splash+list" && (
+          <View>
+            <Text type="title" className="mb-5">
+              {question.question}
+            </Text>
+            {question.notes && (
+              <Text
+                type="text"
+                className="mb-8 text-center text-gray-500 dark:text-gray-400"
+              >
+                {question.notes}
+              </Text>
+            )}
+            {/* Conditionally render groupped */}
+            {!hasGroup && formattedOptions.map(renderOptions)}
+            {hasGroup &&
+              Object.keys(groupedOptions).map((title) => (
+                <View key={title} className="mb-2">
+                  <Text type="subtitle" className="mb-3">
+                    {title}
+                  </Text>
+                  {groupedOptions[title].map(renderOptions)}
+                </View>
+              ))}
+            <Text type="small">
+              {hasRequiredOptions && t("visit.required")}
+            </Text>
+          </View>
+        )}
     </FormProvider>
   );
 };
@@ -345,7 +424,6 @@ const ControlledCheckbox = ({
             required={!!option.required}
             optionType={option.optionType}
             type="checkbox"
-            // defaultText={isSelected.text}
             disabled={!!shouldDisable}
           />
         );

@@ -8,7 +8,6 @@ import { Comment } from "@/types";
 import { getInitialsBase, formatDatePosts } from "@/util";
 import Like from "@/components/icons/Like";
 import Delete from "@/components/icons/Delete";
-import { useVisit } from "@/hooks/useVisit";
 
 interface CommentItemProps extends ThemeProps, TouchableOpacityProps {
   onPressLike: (id: number) => void;
@@ -29,7 +28,7 @@ export default function CommentItem(props: CommentItemProps) {
     likedByMe,
     loadingLike,
   } = props;
-  const { language } = useVisit();
+  const { i18n } = useTranslation();
   const { t } = useTranslation();
 
   // console.log("comment>>>>>>>>>>", comment);
@@ -51,7 +50,7 @@ export default function CommentItem(props: CommentItemProps) {
           <View className="flex flex-1 flex-row items-center mb-1">
             <Text className="font-semibold">{`${comment.createdBy.userName} ${comment.createdBy.lastName}`}</Text>
             <Text className={`text-sm opacity-60 ml-1`}>
-              • {formatDatePosts(comment.createdAt, language)}
+              • {formatDatePosts(comment.createdAt, i18n.language)}
             </Text>
           </View>
           <View className="flex flex-1 flex-row items-center">

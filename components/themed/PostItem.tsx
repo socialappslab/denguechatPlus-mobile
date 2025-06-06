@@ -13,7 +13,6 @@ import { Post } from "@/types";
 import { getInitialsBase, formatDatePosts } from "@/util";
 import Like from "@/components/icons/Like";
 import Comment from "@/components/icons/Comment";
-import { useVisit } from "@/hooks/useVisit";
 import MoreHorizontal from "@/components/icons/MoreHorizontal";
 
 interface PostItemProps extends ThemeProps, TouchableOpacityProps {
@@ -40,7 +39,7 @@ export function PostItem(props: PostItemProps) {
     loadingLike,
     post,
   } = props;
-  const { language } = useVisit();
+  const { i18n } = useTranslation();
   const { t } = useTranslation();
 
   const initials = getInitialsBase(
@@ -63,7 +62,7 @@ export function PostItem(props: PostItemProps) {
         >
           <Text className="font-semibold">{`${post.createByUser.userName} ${post.createByUser.lastName}`}</Text>
           <Text className={`text-sm opacity-60`}>
-            {post.location} • {formatDatePosts(post.createdAt, language)}
+            {post.location} • {formatDatePosts(post.createdAt, i18n.language)}
           </Text>
         </Pressable>
         {(post.canDeleteByUser || post.canEditByUser) && (
