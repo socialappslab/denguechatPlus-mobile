@@ -66,8 +66,9 @@ function formatOptionsForSelectableItems({
           value,
           selectedCase,
           weightedPoints,
+          position,
         }) => ({
-          position: id,
+          position,
           value: id,
           label: name,
           optionType,
