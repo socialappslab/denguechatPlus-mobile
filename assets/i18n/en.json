@@ -235,7 +235,7 @@
         }
       },
       "summary": {
-        "siteStatus": "Status of the site",
+        "siteStatus": "Status of the visit",
         "site": "Site",
         "title": "Summary of the visit",
         "containerStatus": "Status of the containers",
@@ -245,7 +245,9 @@
           "green": "Green",
           "yellow": "Yellow",
           "red": "Red"
-        }
+        },
+        "permissionGranted": "Permission to visit was granted",
+        "permissionNotGranted": "Permission to visit was not granted"
       },
       "addComment": {
         "title": "Add comments about the visit",
