@@ -233,7 +233,7 @@
         }
       },
       "summary": {
-        "siteStatus": "Status do local",
+        "siteStatus": "Status da visita",
         "site": "Local",
         "title": "Resumo da visita",
         "containerStatus": "Status dos contêineres",
@@ -243,7 +243,9 @@
           "green": "Verde",
           "yellow": "Amarelo",
           "red": "Vermelho"
-        }
+        },
+        "permissionGranted": "Permissão para visitar foi concedida",
+        "permissionNotGranted": "Permissão para visitar não foi concedida"
       },
       "addComment": {
         "title": "Adicionar comentários sobre a visita",

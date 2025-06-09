@@ -235,7 +235,7 @@
         }
       },
       "summary": {
-        "siteStatus": "Estado del sitio",
+        "siteStatus": "Estado de la visita",
         "site": "Sitio",
         "title": "Resumen de la visita",
         "description": "Estado del sitio al día de hoy",
@@ -245,7 +245,9 @@
           "green": "Verde",
           "yellow": "Amarillo",
           "red": "Rojo"
-        }
+        },
+        "permissionGranted": "Permiso para visitar fue concedido",
+        "permissionNotGranted": "Permiso para visitar no fue concedido"
       },
       "addComment": {
         "title": "Agregar comentarios sobre la visita",

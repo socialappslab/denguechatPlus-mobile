@@ -327,6 +327,10 @@ export default function Visits() {
 
   const snapPoints = useMemo(() => ["90%"], []);
 
+  const visitWasNotAllowedOrWasEarlyExit =
+    // @ts-expect-error
+    (selectedVisit?.answers ?? []).length === 1;
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -356,7 +360,7 @@ export default function Visits() {
               <Text className="text-xl font-bold text-center mb-2">
                 {t("visit.list.visitList")}
               </Text>
-              {hasVisits && (
+              {hasVisits ? (
                 <>
                   <Text className="text-center mb-6">
                     {t("visit.list.pending", {
@@ -378,8 +382,7 @@ export default function Visits() {
                     />
                   ))}
                 </>
-              )}
-              {!hasVisits && (
+              ) : (
                 <Text className="text-center">{t("visit.list.done")}</Text>
               )}
             </View>
@@ -396,7 +399,7 @@ export default function Visits() {
         >
           <View className="h-full w-full flex px-4 py-4">
             <View className="flex-1 mb-4">
-              <View className="border border-neutral-200 rounded-lg w-full h-full px-4">
+              <View className="w-full h-full">
                 {!success && (
                   <>
                     {loading && (
@@ -419,6 +422,9 @@ export default function Visits() {
                         yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
                         // @ts-expect-error
                         reds={selectedVisit?.colorsAndQuantities?.RED}
+                        permissionToVisitGranted={
+                          !visitWasNotAllowedOrWasEarlyExit
+                        }
                       />
                     )}
                   </>

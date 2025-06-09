@@ -92,7 +92,7 @@ export default function Summary() {
   const visitWasNotAllowedOrWasEarlyExit = answers.length === 1;
 
   mainStatusColor = visitWasNotAllowedOrWasEarlyExit
-    ? StatusColor.Infected
+    ? StatusColor.PotentionallyInfected
     : mainStatusColor;
 
   const { createMutation: createVisit, loading } = useCreateMutation<
@@ -173,9 +173,9 @@ export default function Summary() {
         className="flex-grow"
         contentContainerStyle={{ paddingBottom: 0 }}
       >
-        <View className="p-6">
-          <View className="flex flex-col justify-center items-center">
-            <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+        <View className="p-4">
+          <View className="flex-col justify-center items-center">
+            <View className="h-52 w-52 items-center justify-center">
               <Image
                 source={require("@/assets/images/summary.png")}
                 style={{ width: "100%", height: "100%", resizeMode: "contain" }}
@@ -183,17 +183,18 @@ export default function Summary() {
             </View>
           </View>
           <VisitSummary
-            date={formatDate(new Date().toString(), i18n.language) || ""}
+            date={formatDate(new Date().toString(), i18n.language) ?? ""}
             house={visitData.house?.referenceCode}
             sector={user?.neighborhoodName}
             greens={colorsAndQuantities.GREEN}
             yellows={colorsAndQuantities.YELLOW}
             reds={colorsAndQuantities.RED}
             color={mainStatusColor}
+            permissionToVisitGranted={!visitWasNotAllowedOrWasEarlyExit}
           />
         </View>
       </ScrollView>
-      <View className="py-2 px-8 border-t border-neutral-200">
+      <View className="py-2 px-4 border-t border-neutral-200">
         <Button
           primary
           title={t("finalize")}
