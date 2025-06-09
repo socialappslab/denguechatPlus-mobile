@@ -149,7 +149,7 @@ export default function Visit() {
 
     const selectedOption = currentQuestion.options.find(
       // @ts-expect-error - array support is not implemented yet
-      (option) => option.id === currentValues.value,
+      (option) => option.id === currentValues?.value,
     );
 
     if (selectedOption?.selectedCase) {
