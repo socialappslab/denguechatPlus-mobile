@@ -1,9 +1,13 @@
 import React from "react";
 import Toast from "../components/themed/Toast";
-import { ToastConfig } from "react-native-toast-message";
+import { ToastConfig, ToastConfigParams } from "react-native-toast-message";
+
+export type ToastProps = ToastConfigParams<{
+  textNode?: React.ReactNode;
+}>;
 
 export const toastConfig: ToastConfig = {
-  success: (internalState) => <Toast {...internalState} type="success" />,
-  error: (internalState) => <Toast {...internalState} type="error" />,
-  warning: (internalState) => <Toast {...internalState} type="warning" />,
+  success: (props: ToastProps) => <Toast {...props} type="success" />,
+  error: (props: ToastProps) => <Toast {...props} type="error" />,
+  warning: (props: ToastProps) => <Toast {...props} type="warning" />,
 };

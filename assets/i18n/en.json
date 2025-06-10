@@ -130,9 +130,9 @@
         "empty": "Please enter your email and password",
         "invalidCredentials": "Invalid email or password",
         "noInternet": "Internet connection is required to log in.",
-        "suggestFirstLastName": "Invalid credentials. Try with your first and last name as username. Example: juanperez",
-        "suggestFirstLastNameYear": "Invalid credentials. Try with your first name, last name and year of birth as username. Example: juanperez1990",
-        "suggestFirstLastNameYearMonth": "Invalid credentials. Try with your first name, last name, year and month of birth as username. Example: juanperez199004"
+        "suggestFirstLastName": "Invalid credentials. Try with your first and last name as username. <strong>Example: juanperez</strong>",
+        "suggestFirstLastNameYear": "Invalid credentials. Try with your first name, last name and year of birth as username. <strong>Example: juanperez1990</strong>",
+        "suggestFirstLastNameYearMonth": "Invalid credentials. Try with your first name, last name, year and month of birth as username. <strong>Example: juanperez199004</strong>"
       },
       "searchCountry_placeholder": "Search country...",
       "username-tab": "Username",
@@ -200,7 +200,6 @@
         "searchPlaceholder": "Search by site number",
         "house": "Site",
         "registerNewHouse": "Register a new site",
-        "notVisited": "Not visited",
         "specialPlace": "Special Place",
         "search": "Search for a site",
         "optionsTitle": "Choose a site",
@@ -236,7 +235,7 @@
         }
       },
       "summary": {
-        "siteStatus": "Status of the site",
+        "siteStatus": "Status of the visit",
         "site": "Site",
         "title": "Summary of the visit",
         "containerStatus": "Status of the containers",
@@ -246,7 +245,9 @@
           "green": "Green",
           "yellow": "Yellow",
           "red": "Red"
-        }
+        },
+        "permissionGranted": "Permission to visit was granted",
+        "permissionNotGranted": "Permission to visit was not granted"
       },
       "addComment": {
         "title": "Add comments about the visit",

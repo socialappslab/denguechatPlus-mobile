@@ -55,6 +55,19 @@ export const prepareFormData = (formData: FormState) => {
       if (resourceName === "host")
         visit.host = answer.map((item) => item.label);
 
+      if (resourceName === "water_source_type_ids") {
+        inspections[index]["water_source_type_ids"] = answer.map(
+          (item) => item.resourceId,
+        );
+
+        const textAreaOption = answer.find(
+          (item) => item.optionType === "textArea",
+        );
+        if (textAreaOption) {
+          inspections[index]["water_source_other"] = textAreaOption.text;
+        }
+      }
+
       const colors: StatusColor[] = answer
         .filter((item) => typeof item.statusColor === "string")
         .map((item) => item.statusColor as StatusColor);
@@ -147,7 +160,7 @@ export const prepareFormData = (formData: FormState) => {
 
     // If by the end we don't have a status color, we set it here
     if (!inspections[index].statusColor)
-      inspections[index].statusColor = StatusColor.NO_INFECTED;
+      inspections[index].statusColor = StatusColor.NotInfected;
   });
 
   const returnObject = {
@@ -164,5 +177,5 @@ export const orderStatus = (statusColors: StatusColor[]) => {
     (a, b) => colorOrder.indexOf(a) - colorOrder.indexOf(b),
   );
   if (ordered[0]) return ordered[0];
-  return StatusColor.NO_INFECTED;
+  return StatusColor.NotInfected;
 };

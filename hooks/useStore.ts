@@ -1,5 +1,5 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
-import { House, Question, VisitId } from "@/types";
+import { House, Question, Questionnaire, VisitId } from "@/types";
 import { VISITS_LOG } from "@/util/logger";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setAutoFreeze } from "immer";
@@ -9,7 +9,7 @@ import { immer } from "zustand/middleware/immer";
 
 type QuestionId = string;
 type InspectionIdx = number;
-type AnswerId = `${QuestionId}-${InspectionIdx}`;
+export type AnswerId = `${QuestionId}-${InspectionIdx}`;
 
 interface VisitMetadata {
   inspectionIdx: number;
@@ -22,13 +22,13 @@ export type VisitMetaMap = Record<VisitId, VisitMetadata>;
 export type VisitCase = "house" | "orchard";
 
 interface State {
-  answerId: AnswerId;
   selectedCase: VisitCase;
   storedHouseList: House[];
   storedVisits: QuestionnaireState[];
   visitId: VisitId;
   visitMap: VisitMap;
   visitMetadata: VisitMetaMap;
+  questionnaire: Questionnaire | null;
 }
 
 interface Actions {
@@ -38,9 +38,13 @@ interface Actions {
     data: QuestionnaireState,
   ) => void;
   increaseCurrentVisitInspection: () => void;
-  initialiseCurrentVisit: (visitId: VisitId, questionId: QuestionId) => void;
+  initialiseCurrentVisit: (visitId: VisitId) => void;
   saveHouseList: (houses: House[]) => void;
-  setCurrentVisitData: (question: Question, data: AnswerState) => void;
+  setCurrentVisitData: (
+    answerId: AnswerId,
+    question: Question,
+    data: AnswerState,
+  ) => void;
   setSelectedCase: (visitCase: VisitCase) => void;
 }
 
@@ -52,7 +56,6 @@ export const useStore = create<Store>()(
       (set) => ({
         // Always set in "Select House", dumb value
         visitId: "" as VisitId,
-        answerId: "" as AnswerId,
         visitMap: {},
         visitMetadata: {},
         selectedCase: "house",
@@ -63,26 +66,28 @@ export const useStore = create<Store>()(
          * to be then formmated, via prepareFormData
          */
         storedVisits: [],
+
+        /**
+         * The definition of the questionnaire. For now we only have the concept
+         * of a single questionnaire for all visits.
+         */
+        questionnaire: null,
+
         /**
          * To be called when a house is selected, this method
          * initialises the visit
          * @param visitId generates visitId based on houseId and userId
-         * @param questionId init questionId
          */
-        initialiseCurrentVisit: (visitId, questionId) =>
-          set(() => {
-            const inspectionIdx = 0;
-            return {
-              visitId,
-              answerId: `${questionId}-${inspectionIdx}`,
-              visitMetadata: {
-                [visitId]: { inspectionIdx },
-              },
-              visitMap: {
-                [visitId]: {},
-              },
-            };
-          }),
+        initialiseCurrentVisit: (visitId) =>
+          set(() => ({
+            visitId,
+            visitMetadata: {
+              [visitId]: { inspectionIdx: 0 },
+            },
+            visitMap: {
+              [visitId]: {},
+            },
+          })),
         /**
          * To be called when a visit is finalised
          * this will save offline visits and clean the current store
@@ -121,15 +126,13 @@ export const useStore = create<Store>()(
          * @param question the current question being rendered
          * @param data the answers saved by the form
          */
-        setCurrentVisitData: (question, data) => {
+        setCurrentVisitData: (answerId, question, data) => {
           VISITS_LOG.debug(
             `Setting data for question "${question.question}" (id: ${question.id})`,
             data,
           );
           return set((state: Store) => {
-            state.answerId =
-              `${question.id}-${state.visitMetadata[state.visitId].inspectionIdx}` as AnswerId;
-            state.visitMap[state.visitId][state.answerId] = data;
+            state.visitMap[state.visitId][answerId] = data;
           });
         },
       }),
@@ -137,3 +140,6 @@ export const useStore = create<Store>()(
     ),
   ),
 );
+
+export const setQuestionnaire = (questionnaire: Questionnaire | null) =>
+  useStore.setState(() => ({ questionnaire }));

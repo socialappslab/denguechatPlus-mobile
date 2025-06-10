@@ -19,6 +19,10 @@ import { Providers } from "@/components/Providers";
 import { useTranslation } from "react-i18next";
 import { useLocales } from "expo-localization";
 
+import moment from "moment";
+import "moment/locale/es";
+import "moment/locale/pt";
+
 Sentry.init({
   dsn: __DEV__
     ? undefined
@@ -61,6 +65,7 @@ export default function RootLayout() {
     // NOTE: Do nothing if deviceLanguage is null, we will rely on the fallback language
     if (!currentDeviceLocale) return;
     i18n.changeLanguage(currentDeviceLocale);
+    moment.locale([currentDeviceLocale, "en"]);
   }, [locales, i18n]);
 
   useEffect(() => {
@@ -122,6 +127,7 @@ function RootLayoutNav() {
             options={{ headerShown: false }}
           />
         </Stack>
+
         <Toast
           position="top"
           topOffset={110}

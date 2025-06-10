@@ -1,61 +1,124 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import { VisitCase } from "@/hooks/useStore";
 import { PostVisibility } from "@/schema";
+import { StatusColor } from "./prepareFormData";
 export * from "./prepareFormData";
 
-// <Questionnaire types>
-export type TypeField = "text" | "multiple" | "list" | "splash";
+type TypeField = "text" | "multiple" | "list" | "splash" | "splash+list";
 
 export interface Questionnaire {
   id: string;
-  name: number;
-  createdAt: Date;
   initialQuestion: number;
   finalQuestion: number;
   questions: Question[];
 }
 
+export type OptionType = "inputNumber" | "textArea" | "boolean";
+export type ResourceType = "attribute" | "relation";
 export interface Question {
   id: number;
   question: string;
   typeField: TypeField;
-  options?: Option[];
-  description?: string;
-  notes?: string;
-  next?: number;
-  image?: Image;
-  required?: boolean;
+  description: string | null;
+  notes: string | null;
+  next: number | null;
+  resourceName: string | null;
+  resourceType: ResourceType | null;
+  image: Image | null;
+  required: boolean;
+  // TODO: Improve the type correctness of this, `options` should be an union of
+  // multiple types of Option objects
+  options: Option[];
+  additionalData: Record<string, string> | null;
 }
 
-export type ResourceType = "attribute" | "relation";
-export interface InspectionQuestion extends Question {
-  resourceName?: string;
-  resourceType?: ResourceType;
+interface Image {
+  id: number;
+  url: string;
 }
-
-export type OptionType = "inputNumber" | "textArea" | "boolean";
 
 export interface Option {
   id: number;
-  name: string;
-  required?: boolean;
-  textArea?: boolean;
-  next?: number;
-  image?: { url: string };
-  value?: string;
-  resourceId: string;
-  optionType: OptionType;
-  group: string;
-  statusColor?: string;
-  disableOtherOptions?: boolean;
-  selectedCase?: VisitCase;
-  showInCase?: VisitCase;
-  weightedPoints: number | null;
-}
 
-export interface Image {
-  id: number;
-  url: string;
+  /**
+   * The user-facing label or text to show for the option.
+   */
+  name: string;
+
+  /**
+   * Don't know the purpose of this since it's always `false`.
+   */
+  required: false;
+
+  /**
+   * A pointer to the next question. -1 means early exit.
+   */
+  next: number | null;
+
+  /**
+   * Questions have options with images for demonstration purposes.
+   */
+  image: Image | null;
+
+  /**
+   * The value key for the options of questions that have a `resourceName`.
+   */
+  resourceId: string | null;
+
+  /**
+   * The type of option.
+   */
+  optionType: OptionType | null;
+
+  /**
+   * Questions can have grouped options.
+   */
+  group: string | null;
+
+  /**
+   * Used in conjunction with `weightedPoints` to calculate the color status of
+   * the containers and the house.
+   */
+  statusColor: StatusColor | null;
+
+  /**
+   * Options are sorted by custom order in the database.
+   */
+  position: number;
+
+  /**
+   * Used in conjunction with `statusColor` to calculate the color status of the
+   * containers and the house.
+   */
+  weightedPoints: number | null;
+
+  /**
+   * The value key of some options.
+   */
+  value?: string;
+
+  /**
+   * A selected option with this flag should disable all the other available
+   * options.
+   */
+  disableOtherOptions?: boolean;
+
+  /**
+   * The value key of some options that later are discriminated by the
+   * `showInCase` key.
+   */
+  selectedCase?: VisitCase;
+
+  /**
+   * A discriminator to show options based on the `selectedCase`.
+   */
+  showInCase?: VisitCase;
+
+  /**
+   * Don't know the purpose of this. Is not implemented by any of the clients at
+   * the moment.
+   */
+  additionalInformation?: any[];
 }
 
 export interface Inspection {

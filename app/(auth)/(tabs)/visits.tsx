@@ -20,7 +20,6 @@ import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
-import { useVisit } from "@/hooks/useVisit";
 import { QuestionnaireState, useStore } from "@/hooks/useStore";
 import { BaseObject, ErrorResponse, Team } from "@/schema";
 import { VisitData } from "@/types";
@@ -32,6 +31,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
 import { useFilters } from "@/hooks/useFilters";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 interface HouseReport {
   greenQuantity: number;
@@ -187,7 +187,8 @@ export default function Visits() {
   const { t } = useTranslation();
   const router = useRouter();
   const { storedVisits, cleanUpStoredVisit } = useStore();
-  const { language, isConnected } = useVisit();
+  const { isInternetReachable } = useNetInfo();
+  const { i18n } = useTranslation();
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
   const { meData } = useAuth();
   const [team, setTeam] = useState<Team | null>(null);
@@ -326,6 +327,10 @@ export default function Visits() {
 
   const snapPoints = useMemo(() => ["90%"], []);
 
+  const visitWasNotAllowedOrWasEarlyExit =
+    // @ts-expect-error
+    (selectedVisit?.answers ?? []).length === 1;
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -355,7 +360,7 @@ export default function Visits() {
               <Text className="text-xl font-bold text-center mb-2">
                 {t("visit.list.visitList")}
               </Text>
-              {hasVisits && (
+              {hasVisits ? (
                 <>
                   <Text className="text-center mb-6">
                     {t("visit.list.pending", {
@@ -373,12 +378,11 @@ export default function Visits() {
                       }
                       onPressElement={() => handlePressVisit(visit)}
                       // @ts-expect-error
-                      filled={formatDate(visit.visitedAt, language)}
+                      filled={formatDate(visit.visitedAt, i18n.language)}
                     />
                   ))}
                 </>
-              )}
-              {!hasVisits && (
+              ) : (
                 <Text className="text-center">{t("visit.list.done")}</Text>
               )}
             </View>
@@ -395,7 +399,7 @@ export default function Visits() {
         >
           <View className="h-full w-full flex px-4 py-4">
             <View className="flex-1 mb-4">
-              <View className="border border-neutral-200 rounded-lg w-full h-full px-4">
+              <View className="w-full h-full">
                 {!success && (
                   <>
                     {loading && (
@@ -406,7 +410,7 @@ export default function Visits() {
                     {!loading && (
                       <VisitSummary
                         // @ts-expect-error
-                        date={`${formatDate(selectedVisit?.visitedAt || "", language)}`}
+                        date={`${formatDate(selectedVisit?.visitedAt || "", i18n.language)}`}
                         sector={team?.sector?.name}
                         // @ts-expect-error
                         house={`${selectedVisit?.house?.referenceCode}`}
@@ -418,6 +422,9 @@ export default function Visits() {
                         yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
                         // @ts-expect-error
                         reds={selectedVisit?.colorsAndQuantities?.RED}
+                        permissionToVisitGranted={
+                          !visitWasNotAllowedOrWasEarlyExit
+                        }
                       />
                     )}
                   </>
@@ -429,7 +436,7 @@ export default function Visits() {
               <Button
                 title="Sincronizar visita"
                 onPress={() => synchronizeVisit(selectedVisit)}
-                disabled={!isConnected || loading}
+                disabled={!isInternetReachable || loading}
                 primary
               />
             )}

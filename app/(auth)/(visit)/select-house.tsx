@@ -1,4 +1,3 @@
-import { useIsFocused } from "@react-navigation/native";
 import useAxios from "axios-hooks";
 import { useRouter } from "expo-router";
 import { deserialize } from "jsonapi-fractal";
@@ -20,58 +19,70 @@ import {
 } from "@/components/themed";
 import { useAuth } from "@/context/AuthProvider";
 import { useStore } from "@/hooks/useStore";
-import { formatDate } from "@/util";
+import moment from "moment";
+import invariant from "tiny-invariant";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
-  const isFocused = useIsFocused();
 
   const [houseSelected, setHouseSelected] = useState<House>();
   const [searchText, setSearchText] = useState<string>("");
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
-  const { user, meData } = useAuth();
-  const { setVisitData, questionnaire, language, isConnected } = useVisit();
-  const { initialiseCurrentVisit, storedHouseList, saveHouseList } = useStore();
+  const { user: maybeUser, meData } = useAuth();
+  const { setVisitData } = useVisit();
+  const { isInternetReachable } = useNetInfo();
 
-  const updateHouse = async () => {
-    const catchAll =
-      !user?.id || !houseSelected?.id || !questionnaire?.initialQuestion;
-    if (catchAll) return;
+  const user = useMemo(() => {
+    invariant(maybeUser, "Expected user to be defined");
+    return maybeUser;
+  }, [maybeUser]);
 
-    const visitId = `${user.id}-${houseSelected?.id}` as VisitId;
+  const initialiseCurrentVisit = useStore(
+    (state) => state.initialiseCurrentVisit,
+  );
+  const storedHouseList = useStore((state) => state.storedHouseList);
+  const saveHouseList = useStore((state) => state.saveHouseList);
+  const questionnaire = useStore((state) => {
+    invariant(state.questionnaire, "Expected questionnaire to be defined");
+    return state.questionnaire;
+  });
+
+  async function startVisit() {
+    invariant(houseSelected, "Expected a house to be selected");
+
+    const visitId = `${user.id}-${houseSelected.id}` as VisitId;
 
     // Set the VisitId
-    initialiseCurrentVisit(visitId, questionnaire.initialQuestion.toString());
+    initialiseCurrentVisit(visitId);
 
     // We set the relevant meta
-    await setVisitData({
-      houseId: houseSelected?.id,
+    setVisitData({
+      houseId: houseSelected.id,
       house: houseSelected,
       questionnaireId: questionnaire.id,
       teamId: user.teamId,
+      notes: "", // https://denguechat.atlassian.net/browse/DNG-523
     });
     router.push({
-      pathname: "/visit/[id]",
+      pathname: "/visit/[questionId]",
       params: {
-        id: questionnaire.initialQuestion,
+        questionId: questionnaire.initialQuestion,
       },
     });
-  };
+  }
 
   const [{ data, loading }, refetch] = useAxios(
     { url: `/houses/list_to_visit` },
     { manual: true },
   );
+  useRefreshOnFocus(refetch);
 
   useEffect(() => {
-    if (isFocused) refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
-
-  useEffect(() => {
-    if (isConnected && data) {
+    if (isInternetReachable && data) {
       const deserializedData = deserialize<House>(data);
       if (!deserializedData || !Array.isArray(deserializedData)) return;
 
@@ -81,10 +92,10 @@ export default function SelectHouseScreen() {
       // always save the house list
       saveHouseList(deserializedData);
     }
-    if (!isConnected && storedHouseList) {
+    if (!isInternetReachable && storedHouseList) {
       setHouseOptions(storedHouseList);
     }
-  }, [data]);
+  }, [isInternetReachable, data]);
 
   const renderHouseLabel = (house: House) => {
     return (
@@ -93,8 +104,9 @@ export default function SelectHouseScreen() {
     );
   };
   const renderHouseDescription = (house: House) => {
+    const date = moment(house.lastVisit).fromNow();
     return house.lastVisit
-      ? `${t("visit.houses.lastVisit")}: ${formatDate(house.lastVisit, language, t("visit.houses.notVisited"))}`
+      ? `${t("visit.houses.lastVisit")}: ${date}`
       : undefined;
   };
 
@@ -199,8 +211,8 @@ export default function SelectHouseScreen() {
         <View className="pt-5">
           <Button
             primary
-            disabled={!houseSelected?.id}
-            onPress={updateHouse}
+            disabled={!houseSelected}
+            onPress={startVisit}
             title={t("next")}
           />
         </View>

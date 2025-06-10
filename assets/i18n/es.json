@@ -132,9 +132,9 @@
         "empty": "Por favor llene todos los campos",
         "invalidCredentials": "Credenciales inválidas",
         "noInternet": "Se requiere conexión a internet para loguearse.",
-        "suggestFirstLastName": "Credenciales inválidas. Intente con su primer nombre y primer apellido como nombre de usuario. Ejemplo: juanperez",
-        "suggestFirstLastNameYear": "Credenciales inválidas. Intente con su primer nombre, primer apellido y año de nacimiento como nombre de usuario. Ejemplo: juanperez1990",
-        "suggestFirstLastNameYearMonth": "Credenciales inválidas. Intente con su primer nombre, primer apellido, año y mes de nacimiento como nombre de usuario. Ejemplo: juanperez199004"
+        "suggestFirstLastName": "Credenciales inválidas. Intente con su primer nombre y primer apellido como nombre de usuario. <strong>Ejemplo: juanperez</strong>",
+        "suggestFirstLastNameYear": "Credenciales inválidas. Intente con su primer nombre, primer apellido y año de nacimiento como nombre de usuario. <strong>Ejemplo: juanperez1990</strong>",
+        "suggestFirstLastNameYearMonth": "Credenciales inválidas. Intente con su primer nombre, primer apellido, año y mes de nacimiento como nombre de usuario. <strong>Ejemplo: juanperez199004</strong>"
       },
       "searchCountry_placeholder": "Buscar país...",
       "username-tab": "Nombre de usuario",
@@ -200,7 +200,6 @@
         "searchPlaceholder": "Buscar por número de sitio",
         "house": "Sitio",
         "registerNewHouse": "Registrar un nuevo sitio",
-        "notVisited": "Sin visita",
         "specialPlace": "Lugar especial",
         "search": "Buscar un sitio",
         "optionsTitle": "Elige un sitio",
@@ -236,17 +235,19 @@
         }
       },
       "summary": {
-        "siteStatus": "Estado del sitio",
+        "siteStatus": "Estado de la visita",
         "site": "Sitio",
         "title": "Resumen de la visita",
         "description": "Estado del sitio al día de hoy",
-        "containerStatus": "Estado de los recipientes/envases",
+        "containerStatus": "Estado de los envases",
         "date": "Fecha",
         "statusColor": {
           "green": "Verde",
           "yellow": "Amarillo",
           "red": "Rojo"
-        }
+        },
+        "permissionGranted": "Permiso para visitar fue concedido",
+        "permissionNotGranted": "Permiso para visitar no fue concedido"
       },
       "addComment": {
         "title": "Agregar comentarios sobre la visita",
@@ -254,13 +255,13 @@
         "commentsAreOptional": "Los comentarios son opcionales"
       },
       "addContainer": {
-        "registerNewContainer": "Registrar otro recipiente/envase?",
-        "registerYes": "Sí, registrar otro recipiente/envase",
+        "registerNewContainer": "Registrar otro envase?",
+        "registerYes": "Sí, registrar otro envase",
         "registerNo": "No, no es necesario"
       },
       "containerPicture": {
-        "title": "Foto del recipiente/envase",
-        "description": "Toma una fotografía del recipiente/envase y regístrala",
+        "title": "Foto del envase",
+        "description": "Toma una fotografía del envase y regístrala",
         "takePhoto": "Tomar foto",
         "chooseFromGallery": "Elegir desde la galería"
       },
