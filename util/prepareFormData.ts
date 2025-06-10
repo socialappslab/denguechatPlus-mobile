@@ -55,6 +55,19 @@ export const prepareFormData = (formData: FormState) => {
       if (resourceName === "host")
         visit.host = answer.map((item) => item.label);
 
+      if (resourceName === "water_source_type_ids") {
+        inspections[index]["water_source_type_ids"] = answer.map(
+          (item) => item.resourceId,
+        );
+
+        const textAreaOption = answer.find(
+          (item) => item.optionType === "textArea",
+        );
+        if (textAreaOption) {
+          inspections[index]["water_source_other"] = textAreaOption.text;
+        }
+      }
+
       const colors: StatusColor[] = answer
         .filter((item) => typeof item.statusColor === "string")
         .map((item) => item.statusColor as StatusColor);
