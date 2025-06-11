@@ -36,11 +36,6 @@ export default function SelectHouseScreen() {
   const { setVisitData } = useVisit();
   const { isInternetReachable } = useNetInfo();
 
-  const user = useMemo(() => {
-    invariant(maybeUser, "Expected user to be defined");
-    return maybeUser;
-  }, [maybeUser]);
-
   const initialiseCurrentVisit = useStore(
     (state) => state.initialiseCurrentVisit,
   );
@@ -50,6 +45,49 @@ export default function SelectHouseScreen() {
     invariant(state.questionnaire, "Expected questionnaire to be defined");
     return state.questionnaire;
   });
+
+  const [{ data, loading }, refetch] = useAxios({
+    url: `/houses/list_to_visit`,
+  });
+  useRefreshOnFocus(refetch);
+
+  useEffect(() => {
+    if (isInternetReachable && data) {
+      const deserializedData = deserialize<House>(data);
+      if (!deserializedData || !Array.isArray(deserializedData)) return;
+
+      setHouseOptions(deserializedData);
+      setHouseSelected(undefined);
+
+      // always save the house list
+      saveHouseList(deserializedData);
+    }
+    if (!isInternetReachable && storedHouseList) {
+      setHouseOptions(storedHouseList);
+    }
+  }, [isInternetReachable, data]);
+
+  const renderHouseLabel = (house: House) => {
+    return (
+      house.specialPlace?.name ??
+      `${t("visit.houses.house")} ${house.referenceCode}`
+    );
+  };
+
+  const filteredHouses = useMemo(() => {
+    if (!searchText.length) {
+      return houseOptions;
+    }
+
+    const filtered = houseOptions.filter((house) =>
+      house.referenceCode.toUpperCase().includes(searchText.toUpperCase()),
+    );
+
+    return filtered;
+  }, [houseOptions, searchText]);
+
+  if (!maybeUser) return null;
+  const user = maybeUser;
 
   async function startVisit() {
     invariant(houseSelected, "Expected a house to be selected");
@@ -75,34 +113,6 @@ export default function SelectHouseScreen() {
     });
   }
 
-  const [{ data, loading }, refetch] = useAxios(
-    { url: `/houses/list_to_visit` },
-    { manual: true },
-  );
-  useRefreshOnFocus(refetch);
-
-  useEffect(() => {
-    if (isInternetReachable && data) {
-      const deserializedData = deserialize<House>(data);
-      if (!deserializedData || !Array.isArray(deserializedData)) return;
-
-      setHouseOptions(deserializedData);
-      setHouseSelected(undefined);
-
-      // always save the house list
-      saveHouseList(deserializedData);
-    }
-    if (!isInternetReachable && storedHouseList) {
-      setHouseOptions(storedHouseList);
-    }
-  }, [isInternetReachable, data]);
-
-  const renderHouseLabel = (house: House) => {
-    return (
-      house.specialPlace?.name ??
-      `${t("visit.houses.house")} ${house.referenceCode}`
-    );
-  };
   const renderHouseDescription = (house: House) => {
     const date = moment(house.lastVisit).fromNow();
     return house.lastVisit
@@ -116,18 +126,6 @@ export default function SelectHouseScreen() {
     // TODO: check the neighborhood type, I think we will always have a neighborhood.
     return `${house.neighborhood?.name}`;
   };
-
-  const filteredHouses = useMemo(() => {
-    if (!searchText.length) {
-      return houseOptions;
-    }
-
-    const filtered = houseOptions.filter((house) =>
-      house.referenceCode.toUpperCase().includes(searchText.toUpperCase()),
-    );
-
-    return filtered;
-  }, [houseOptions, searchText]);
 
   return (
     <SafeAreaView>
