@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Platform, Pressable, TouchableOpacity } from "react-native";
@@ -25,8 +25,10 @@ import Toast from "react-native-toast-message";
 import { useIsFocused } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
+import { useUserHasBrigade } from "@/hooks/useUserHasBrigade";
+import { useNetInfo } from "@react-native-community/netinfo";
 
-const CustomDrawerContent = () => {
+function CustomDrawerContent() {
   const router = useRouter();
   const { meData, logout, reFetchMe } = useAuth();
   const { t } = useTranslation();
@@ -34,6 +36,8 @@ const CustomDrawerContent = () => {
   const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const isFocused = useIsFocused();
+  const userHasBrigade = useUserHasBrigade();
+  const { isInternetReachable } = useNetInfo();
 
   const onPressDeleteAccount = () => {
     bottomSheetModalRef.current?.present();
@@ -64,6 +68,10 @@ const CustomDrawerContent = () => {
   }, [isFocused]);
 
   const snapPoints = useMemo(() => ["45%"], []);
+
+  const isChangeHouseBlockButtonDisabled =
+    !userHasBrigade || !isInternetReachable;
+
   return (
     <SafeAreaView>
       <View
@@ -85,6 +93,23 @@ const CustomDrawerContent = () => {
               </Text>
             </Pressable>
           </ProtectedView>
+
+          <Link
+            href="/change-house-block"
+            asChild
+            disabled={isChangeHouseBlockButtonDisabled}
+          >
+            <Pressable
+              className={`py-3 flex-row items-center ${
+                isChangeHouseBlockButtonDisabled ? "opacity-50" : ""
+              }`}
+            >
+              <MaterialIcons name="swap-horiz" size={24} color="#56534E" />
+              <Text className="font-semibold ml-3">
+                {t("drawer.changeHouseBlock")}
+              </Text>
+            </Pressable>
+          </Link>
 
           <Pressable
             className="py-3 flex-row items-center"
@@ -182,7 +207,7 @@ const CustomDrawerContent = () => {
       </View>
     </SafeAreaView>
   );
-};
+}
 
 export default function AuthLayout() {
   return (

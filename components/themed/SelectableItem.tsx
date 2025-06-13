@@ -137,13 +137,15 @@ export function SelectableItem({
         />
       )}
       {chip && (
-        <SimpleChip
-          backgroundColor="green-300"
-          padding="small"
-          borderColor="green-400"
-          border="1"
-          label={chip}
-        />
+        <View className="mt-2 bg-transparent">
+          <SimpleChip
+            backgroundColor="green-300"
+            padding="small"
+            borderColor="green-400"
+            border="1"
+            label={chip}
+          />
+        </View>
       )}
     </TouchableOpacity>
   );

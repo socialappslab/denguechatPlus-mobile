@@ -1,10 +1,10 @@
 import { PropsWithChildren } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/context/AuthProvider";
 
 import { View, Text } from "@/components/themed";
 import JoinTeam from "@/assets/images/join-brigade.svg";
+import { useUserHasBrigade } from "@/hooks/useUserHasBrigade";
 
 export const CheckTeam = ({
   view,
@@ -13,9 +13,9 @@ export const CheckTeam = ({
   view: "chat" | "visit" | "profile";
 }>) => {
   const { t } = useTranslation();
-  const { meData } = useAuth();
+  const userHasBrigade = useUserHasBrigade();
 
-  if (meData?.userProfile?.team && meData?.userProfile?.houseBlock) {
+  if (userHasBrigade) {
     return children;
   }
 
