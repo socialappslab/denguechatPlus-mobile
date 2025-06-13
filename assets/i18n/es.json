@@ -47,7 +47,9 @@
       "allBrigades": "Todas las Brigadas",
       "allHouseBlocks": "Todas los Frente a Frente",
       "successTitle": "Nueva brigada asignada",
-      "successDescription": "ahora pertenece a"
+      "successDescription": "ahora pertenece a",
+      "changeHouseBlockSuccess": "Frente a Frente actualizado",
+      "currentHouseBlock": "Frente a Frente actual"
     },
     "chat": {
       "empty": "No hay blogs",
@@ -101,7 +103,9 @@
       "brigades": "Brigadas",
       "assignBrigade": "Asignar Brigada",
       "userGuide": "Guía del Usuario",
-      "settings": "Configuración"
+      "settings": "Configuración",
+      "changeHouseBlock": "Cambiar de Frente a Frente",
+      "changeHouseBlockUpdated": "Frente a Frente actualizado a {{name}}"
     },
     "profile": {
       "account": "Cuenta",
@@ -322,6 +326,7 @@
       "genericField": "Verifica el campo",
       "mustUpdateAppTitle": "Nueva actualización",
       "mustUpdateAppDescription": "Debe actualizar la aplicación para continuar usando DengueChatPlus"
-    }
+    },
+    "internetRequired": "Se requiere conexión a Internet para realizar esta acción"
   }
 }
