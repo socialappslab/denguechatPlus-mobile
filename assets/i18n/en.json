@@ -47,7 +47,8 @@
       "allBrigades": "All Brigades",
       "allHouseBlocks": "All House Blocks",
       "successTitle": "New brigade assigned",
-      "successDescription": "now belongs to"
+      "successDescription": "now belongs to",
+      "currentHouseBlock": "Current Frente a Frente"
     },
     "chat": {
       "empty": "No blogs",
@@ -101,7 +102,10 @@
       "brigades": "Brigades",
       "assignBrigade": "Assign Brigade",
       "userGuide": "User Guide",
-      "settings": "Settings"
+      "settings": "Settings",
+      "changeHouseBlock": "Change Frente a Frente",
+      "changeHouseBlockSuccess": "Frente a Frente updated",
+      "changeHouseBlockUpdated": "Frente a Frente updated to {{name}}"
     },
     "profile": {
       "account": "Account",
@@ -321,6 +325,7 @@
       "55": "The account was temporarily locked. Multiple failed login attempts occurred. Try again later.",
       "mustUpdateAppTitle": "New update",
       "mustUpdateAppDescription": "You must update the application to continue using DengueChatPlus."
-    }
+    },
+    "internetRequired": "Internet connection is required to perform this action"
   }
 }

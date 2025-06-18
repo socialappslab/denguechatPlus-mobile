@@ -4,7 +4,6 @@ import QuestionnaireRenderer, {
 import { SafeAreaView, ScrollView, View } from "@/components/themed";
 import Button from "@/components/themed/Button";
 import { Question } from "@/types";
-import { PhotoId } from "@/util";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { AnswerId, AnswerState, useStore, VisitCase } from "@/hooks/useStore";
@@ -166,7 +165,7 @@ export default function Visit() {
 
     // Branches
     // @ts-expect-error - array support is not implemented yet
-    if (currentQuestion.resourceName === PhotoId && currentValues.bool) {
+    if (currentQuestion.resourceName === "photo_id" && currentValues.bool) {
       return router.push({
         pathname: "/container-picture",
         params: { next },

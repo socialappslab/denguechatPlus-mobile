@@ -32,7 +32,14 @@ export default function SelectHouseScreen() {
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
-  const { user: maybeUser, meData } = useAuth();
+  const { user: maybeUser, meData, reFetchMe } = useAuth();
+
+  // TODO: fix this when we have a better data fetching strategy in this page,
+  // the ideal is to invalidate the cache for the user data when the user
+  // changes the house block
+  // @ts-expect-error fix types
+  useRefreshOnFocus(reFetchMe);
+
   const { setVisitData } = useVisit();
   const { isInternetReachable } = useNetInfo();
 

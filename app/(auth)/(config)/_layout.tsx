@@ -4,7 +4,6 @@ import { Stack, useRouter } from "expo-router";
 
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { BrigadeProvider } from "@/context/BrigadeContext";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 
 export default function VisitLayout(props: ThemeProps) {
@@ -71,6 +70,23 @@ export default function VisitLayout(props: ThemeProps) {
           title: t("config.changeBrigade"),
           headerLeft: () => null,
           headerBackVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="change-house-block"
+        options={{
+          title: "Frente a Frente",
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <Ionicons
+              onPress={() => {
+                while (router.canGoBack()) router.back();
+              }}
+              name="arrow-back"
+              size={24}
+              color={color}
+            />
+          ),
         }}
       />
       <Stack.Screen
