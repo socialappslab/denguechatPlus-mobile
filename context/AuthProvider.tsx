@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useContext } from "react";
 import { router, useSegments } from "expo-router";
 import useAxios from "axios-hooks";
@@ -13,6 +19,7 @@ import {
 import { resetAuthApi, setAccessTokenToHeaders } from "@/config/axios";
 import useUser from "@/hooks/useUser";
 import { ErrorResponse } from "@/schema";
+import { LOG } from "@/util/logger";
 
 type AuthProviderType = {
   user: IUser | null;
@@ -23,7 +30,7 @@ type AuthProviderType = {
   refreshToken: string | null;
   setUser: (user: IUser | null, updateLocalStorage: boolean) => void;
   login: (token: string, refreshToken: string, user: IUser) => boolean;
-  logout: () => void;
+  logout: (user: IUser) => Promise<void>;
   reFetchMe: () => void;
 };
 
@@ -51,7 +58,7 @@ export const AuthContext = createContext<AuthProviderType>({
   reFetchMe: () => {},
   login: () => false,
   setUser: (user: IUser | null) => {},
-  logout: () => {},
+  logout: () => Promise.resolve(),
 });
 
 export function useAuth() {
@@ -108,11 +115,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
-  const logout = () => {
-    setLoadedUser(null);
-    setUserLocalStorage(null, true);
-    resetAuthApi();
-  };
+  const logout = useCallback(
+    async (user: IUser) => {
+      setLoadedUser(null);
+      setUserLocalStorage(null, true);
+      await resetAuthApi();
+      LOG.info(`Logged out of user: ${user.username}`);
+    },
+    [setLoadedUser, setUserLocalStorage],
+  );
 
   const setUser = (user: IUser | null, updateLocalStorage: boolean) => {
     setLoadedUser(user);

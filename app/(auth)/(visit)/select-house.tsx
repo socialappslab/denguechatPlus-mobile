@@ -23,6 +23,7 @@ import moment from "moment";
 import invariant from "tiny-invariant";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { VISITS_LOG } from "@/util/logger";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
@@ -118,6 +119,9 @@ export default function SelectHouseScreen() {
         questionId: questionnaire.initialQuestion,
       },
     });
+    VISITS_LOG.info(
+      `Starting visit for house ${houseSelected.referenceCode} (id: ${houseSelected.id})`,
+    );
   }
 
   const renderHouseDescription = (house: House) => {
