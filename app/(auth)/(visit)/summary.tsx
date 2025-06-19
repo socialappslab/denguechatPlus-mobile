@@ -16,7 +16,11 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { VISITS_LOG } from "@/util/logger";
 
 const getColorsAndQuantities = (inspections: Inspection[]) => {
-  const highestWeightInEachContainer = inspections
+  const validInspections = inspections.filter(
+    (inspection) => inspection.breeding_site_type_id,
+  );
+
+  const highestWeightInEachContainer = validInspections
     .map((inspection) => Object.values(inspection))
     .map((valuesArray) =>
       valuesArray
@@ -38,7 +42,7 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
     GREEN: 0,
   };
 
-  for (const [index, inspection] of inspections.entries()) {
+  for (const [index, inspection] of validInspections.entries()) {
     const quantity =
       (!Array.isArray(inspection.quantity_founded) &&
         parseInt(inspection.quantity_founded as string)) ||
