@@ -223,6 +223,7 @@ interface VisitAttributes {
   house?: Partial<House>;
   photoUri?: string;
   inspections: Inspection[];
+  familyEducationTopics: string[];
 }
 
 export interface VisitData extends VisitAttributes {

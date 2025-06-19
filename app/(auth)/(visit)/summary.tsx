@@ -118,6 +118,7 @@ export default function Summary() {
       house: visitData.houseId ? undefined : visitData.house,
       visitPermission: !visitWasNotAllowedOrWasEarlyExit,
       host: visit.host,
+      familyEducationTopics: visit.familyEducationTopics,
       visitedAt: new Date(),
       answers,
       // @ts-expect-error
