@@ -27,6 +27,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
 import { useUserHasBrigade } from "@/hooks/useUserHasBrigade";
 import { useNetInfo } from "@react-native-community/netinfo";
+import invariant from "tiny-invariant";
+import { LOG } from "@/util/logger";
 
 function CustomDrawerContent() {
   const router = useRouter();
@@ -44,21 +46,23 @@ function CustomDrawerContent() {
   };
 
   const onConfirmDeleteAccount = async () => {
+    invariant(meData, "Expected user object to be defined");
     try {
       setLoading(true);
       await authApi.delete("/users/delete_account");
-      setLoading(false);
-      logout();
+      LOG.warn(`Deleted user: ${meData.username}`);
+      await logout(meData);
     } catch (error) {
-      setLoading(false);
+      console.error(error);
       const errorData = extractAxiosErrorData(error);
-      // eslint-disable-next-line @typescript-eslint/no-shadow, @typescript-eslint/no-explicit-any
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
           type: "error",
           text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
         });
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -198,7 +202,13 @@ function CustomDrawerContent() {
                 <Text>{`${meData?.userProfile?.firstName} ${meData?.userProfile?.lastName}`}</Text>
                 <Text className="text-sm font-thin">{meData?.username}</Text>
               </View>
-              <TouchableOpacity className="mr-4" onPress={logout}>
+              <TouchableOpacity
+                className="mr-4"
+                onPress={async () => {
+                  invariant(meData, "Expected user object to be defined");
+                  await logout(meData);
+                }}
+              >
                 <Logout />
               </TouchableOpacity>
             </View>

@@ -48,12 +48,12 @@ export async function saveAccessToken(accessToken: string) {
   await SecureStore.setItemAsync(ACCESS_TOKEN_LOCAL_STORAGE_KEY, accessToken);
 }
 
-export const resetAuthApi = () => {
+export const resetAuthApi = async () => {
   if (globalConfig.headers) {
     delete globalConfig.headers["X-Authorization"];
   }
   delete authApi.defaults.headers["X-Authorization"];
-  void removeUser();
+  await removeUser();
 };
 
 export const setAccessTokenToHeaders = (accessToken: string | null) => {

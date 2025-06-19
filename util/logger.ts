@@ -22,4 +22,4 @@ const LOG = logger.createLogger({
 
 const VISITS_LOG = LOG.extend("VISITS");
 
-export { VISITS_LOG };
+export { LOG, VISITS_LOG };

@@ -38,6 +38,7 @@ import useSignIn from "@/hooks/useSignIn";
 import { extractAxiosErrorData } from "@/util";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { Link } from "expo-router";
+import { LOG } from "@/util/logger";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -107,6 +108,7 @@ export default function Login() {
 
       await signInMutation(payload);
       authErrorCount.current = 0;
+      LOG.info(`Logged in with user: ${payload.username}`);
     } catch (error) {
       setError("username", { type: "manual" });
       setError("phone", { type: "manual" });

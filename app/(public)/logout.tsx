@@ -1,28 +1,30 @@
-import React, { useEffect } from "react";
-import { useRouter } from "expo-router";
+import React from "react";
+import { Redirect } from "expo-router";
 
 import { Loading } from "@/components/themed/Loading";
 import { useAuth } from "@/context/AuthProvider";
 import { View } from "@/components/themed";
+import invariant from "tiny-invariant";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Logout() {
-  const { logout } = useAuth();
-  const router = useRouter();
+  const { logout, meData } = useAuth();
 
-  useEffect(() => {
-    logout();
+  const logoutQuery = useQuery({
+    queryKey: ["logout"],
+    queryFn: async () => {
+      invariant(meData, "Expected user object to be defined");
+      await logout(meData);
+    },
+  });
 
-    const timeoutId = setTimeout(() => {
-      router.replace("/login");
-    }, 1000);
+  if (logoutQuery.isLoading) {
+    return (
+      <View className="flex flex-1 flex-col justify-center">
+        <Loading size={"large"} />
+      </View>
+    );
+  }
 
-    return () => clearTimeout(timeoutId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <View className="flex flex-1 flex-col justify-center">
-      <Loading size={"large"} />
-    </View>
-  );
+  return <Redirect href="/login" />;
 }
