@@ -415,6 +415,7 @@ const ControlledCheckbox = ({
       render={() => {
         return (
           <SelectableItem
+            image={option.image}
             value={`${option.value}`}
             key={option.value}
             checked={isSelected}
