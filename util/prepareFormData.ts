@@ -123,10 +123,6 @@ export const prepareFormData = (formData: FormState) => {
         inspections[index]["other_elimination_method"] = answer.text;
       }
 
-      if (resourceName === "water_source_type_id" && answer.text) {
-        inspections[index]["water_source_other"] = answer.text;
-      }
-
       if (resourceName === "photo_id") {
         inspections[index][resourceName] = "temp";
       }
