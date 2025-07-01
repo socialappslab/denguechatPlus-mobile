@@ -123,7 +123,7 @@ export interface Option {
 
 export interface Inspection {
   breeding_site_type_id: number;
-  elimination_method_type_ids: number[];
+  elimination_method_type_id: number;
   other_elimination_method: string;
   water_source_type_ids?: number[];
   code_reference?: string;
