@@ -14,7 +14,7 @@ export const sanitizeInspections = (
             // @ts-expect-error
             (item) => item.id,
           ),
-          elimination_method_type_id: i?.elimination_method_type_id,
+          elimination_method_type_ids: i?.elimination_method_type_ids,
           other_elimination_method: i?.other_elimination_method,
           quantity_founded: i?.quantity_founded,
           // @ts-expect-error
