@@ -92,12 +92,9 @@ export default function Summary() {
   let { mainStatusColor, colorsAndQuantities } =
     getColorsAndQuantities(inspections);
 
-  // if there's only one answer, there was a not allowed - early exit
-  const visitWasNotAllowedOrWasEarlyExit = answers.length === 1;
-
-  mainStatusColor = visitWasNotAllowedOrWasEarlyExit
-    ? StatusColor.PotentionallyInfected
-    : mainStatusColor;
+  mainStatusColor = visit.visitPermission
+    ? mainStatusColor
+    : StatusColor.PotentionallyInfected;
 
   const { createMutation: createVisit, loading } = useCreateMutation<
     { json_params: string },
@@ -116,7 +113,7 @@ export default function Summary() {
     const sanitizedVisitData = {
       ...visitData,
       house: visitData.houseId ? undefined : visitData.house,
-      visitPermission: !visitWasNotAllowedOrWasEarlyExit,
+      visitPermission: visit.visitPermission,
       host: visit.host,
       familyEducationTopics: visit.familyEducationTopics,
       visitedAt: new Date(),
@@ -195,7 +192,8 @@ export default function Summary() {
             yellows={colorsAndQuantities.YELLOW}
             reds={colorsAndQuantities.RED}
             color={mainStatusColor}
-            permissionToVisitGranted={!visitWasNotAllowedOrWasEarlyExit}
+            // @ts-expect-error
+            permissionToVisitGranted={visit.visitPermission}
           />
         </View>
       </ScrollView>
