@@ -126,6 +126,10 @@ export const prepareFormData = (formData: FormState) => {
         }
       }
 
+      if (resourceName === "visit_permission") {
+        visit.visitPermission = answer.bool;
+      }
+
       if (resourceName === "quantity_founded") {
         inspections[index][resourceName] = !!answer.text
           ? parseInt(answer.text) + 1

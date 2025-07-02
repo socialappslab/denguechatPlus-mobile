@@ -327,10 +327,6 @@ export default function Visits() {
 
   const snapPoints = useMemo(() => ["90%"], []);
 
-  const visitWasNotAllowedOrWasEarlyExit =
-    // @ts-expect-error
-    (selectedVisit?.answers ?? []).length === 1;
-
   return (
     <SafeAreaView>
       <ScrollView
@@ -422,8 +418,9 @@ export default function Visits() {
                         yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
                         // @ts-expect-error
                         reds={selectedVisit?.colorsAndQuantities?.RED}
+                        // @ts-expect-error
                         permissionToVisitGranted={
-                          !visitWasNotAllowedOrWasEarlyExit
+                          selectedVisit?.visitPermission
                         }
                       />
                     )}
