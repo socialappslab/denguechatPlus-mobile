@@ -205,8 +205,11 @@ function useReportsQuery(
   teamId: number | null,
 ) {
   return useQuery({
-    enabled: !!sectorId && !!wedgeId && !!teamId,
-    queryKey: ["visits", "team", teamId],
+    // NOTE: we can trigger this for all sectors, wedges, and teams but we're
+    // setting the sectorId in the first render so we rather wait for the
+    // sectorId to be set before enabling the query
+    enabled: !!sectorId || !!wedgeId || !!teamId,
+    queryKey: ["visits", "team", teamId, { sectorId, wedgeId, teamId }],
     queryFn: async () => {
       return (
         await authApi.get("reports/house_status", {
