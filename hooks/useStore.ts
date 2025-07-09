@@ -62,8 +62,8 @@ export const useStore = create<Store>()(
         storedHouseList: [],
         /**
          * All visits that were not published to the backed
-         * will be save in this array as QuestionnaireState
-         * to be then formmated, via prepareFormData
+         * will be saved in this array as QuestionnaireState
+         * to be then formated, via prepareFormData
          */
         storedVisits: [],
 
