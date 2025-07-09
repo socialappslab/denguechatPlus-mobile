@@ -192,6 +192,7 @@
       "registerCopy": "Registre uma nova visita aqui.",
       "registerVisit": "Registrar uma nova visita",
       "required": "* Campos obrigatórios.",
+      "assignVisitToUser": "Atribuir visita ao usuário",
       "list": {
         "visitList": "Lista de visitas",
         "done": "Todas as visitas estão sincronizadas",

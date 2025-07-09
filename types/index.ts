@@ -398,3 +398,32 @@ export interface AccumulatedPoints {
     // just needs to be T
   } | null;
 }
+
+export interface TeamResponse {
+  data: {
+    id: string;
+    type: string;
+    attributes: {
+      name: string;
+      members: {
+        id: number;
+        fullName: string;
+        rol: "admin" | "brigadista" | "facilitador";
+      }[];
+      organizations: {
+        id: number;
+        name: string;
+      };
+      sector: {
+        id: number;
+        name: string;
+      };
+      wedge: {
+        id: number;
+        name: string;
+      };
+      visits: number;
+      sitesStatuses: object;
+    };
+  };
+}

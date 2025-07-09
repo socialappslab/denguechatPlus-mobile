@@ -73,10 +73,16 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    if (!meData) {
-      return;
+    if (!meData) return;
+
+    // NOTE: Here we're setting the current user as the "owner" of the visits.
+    // We're only executing this if we have the default value "0", which means
+    // that we don't have a real user account. We may want to handle this
+    // differently. The check is weird.
+    if (visitData.userAccountId === "0") {
+      setVisitData({ userAccountId: meData.id });
     }
-    setVisitData({ userAccountId: meData.id });
+
     featchQuestionnaire();
     featchParams();
   }, [meData, featchQuestionnaire, featchParams]);
