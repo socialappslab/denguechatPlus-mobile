@@ -347,59 +347,51 @@ export default function Visits() {
                 {t("visit.registerCopy")}
               </Text>
 
-              {/*
-               * NOTE: Should improve this, the check is a hard-coded string.
-               * And we should probably rely on permissions instead of the role.
-               * But that I think should be added in the backend first.
-               */}
-              {/* @ts-expect-error */}
-              {meData?.roles?.includes("facilitador") && (
-                <View className="mb-4">
-                  <Text className="font-medium text-sm mb-2">
-                    {t("visit.assignVisitToUser")}
-                  </Text>
+              <View className="mb-4">
+                <Text className="font-medium text-sm mb-2">
+                  {t("visit.assignVisitToUser")}
+                </Text>
 
-                  <RNPickerSelect
-                    items={teamMemberOptions}
-                    onValueChange={(value) =>
-                      setVisitData({ userAccountId: value.toString() })
-                    }
-                    value={visitData.userAccountId}
-                    style={{
-                      inputAndroid: {
-                        borderWidth: 1,
-                        // NOTE: same as `text-red-500` and `border-neutral-200` class
-                        borderColor: "#e7e5e4",
-                        padding: 8,
-                        height: 44,
-                        borderRadius: 8,
-                      },
-                      inputIOSContainer: {
-                        justifyContent: "center",
-                        paddingHorizontal: 8,
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        borderColor: "#e7e5e4",
-                        height: 44,
-                      },
-                      iconContainer: {
-                        top: "50%",
-                        transform: [{ translateY: -12 }],
-                        right: 6,
-                      },
-                    }}
-                    useNativeAndroidPickerStyle={false}
-                    Icon={() => (
-                      <MaterialCommunityIcons
-                        name="chevron-down"
-                        size={24}
-                        color="#e7e5e4"
-                      />
-                    )}
-                    doneText={t("done")}
-                  />
-                </View>
-              )}
+                <RNPickerSelect
+                  items={teamMemberOptions}
+                  onValueChange={(value) =>
+                    setVisitData({ userAccountId: value.toString() })
+                  }
+                  value={visitData.userAccountId}
+                  style={{
+                    inputAndroid: {
+                      borderWidth: 1,
+                      // NOTE: same as `text-red-500` and `border-neutral-200` class
+                      borderColor: "#e7e5e4",
+                      padding: 8,
+                      height: 44,
+                      borderRadius: 8,
+                    },
+                    inputIOSContainer: {
+                      justifyContent: "center",
+                      paddingHorizontal: 8,
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: "#e7e5e4",
+                      height: 44,
+                    },
+                    iconContainer: {
+                      top: "50%",
+                      transform: [{ translateY: -12 }],
+                      right: 6,
+                    },
+                  }}
+                  useNativeAndroidPickerStyle={false}
+                  Icon={() => (
+                    <MaterialCommunityIcons
+                      name="chevron-down"
+                      size={24}
+                      color="#e7e5e4"
+                    />
+                  )}
+                  doneText={t("done")}
+                />
+              </View>
 
               <Button
                 title={t("visit.registerVisit")}
