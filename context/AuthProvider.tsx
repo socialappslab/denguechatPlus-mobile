@@ -31,7 +31,7 @@ type AuthProviderType = {
   setUser: (user: IUser | null, updateLocalStorage: boolean) => void;
   login: (token: string, refreshToken: string, user: IUser) => boolean;
   logout: (user: IUser) => Promise<void>;
-  reFetchMe: () => void;
+  reFetchMe: () => Promise<void>;
 };
 
 function useProtectedRoute(user: IUser | null) {
@@ -55,7 +55,7 @@ export const AuthContext = createContext<AuthProviderType>({
   token: null,
   loadingRefreshToken: false,
   refreshToken: null,
-  reFetchMe: () => {},
+  reFetchMe: () => Promise.resolve(),
   login: () => false,
   setUser: (user: IUser | null) => {},
   logout: () => Promise.resolve(),
@@ -144,6 +144,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         setUser,
         login,
         logout,
+        // @ts-expect-error
         reFetchMe: fetchMe,
       }}
     >

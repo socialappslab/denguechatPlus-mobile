@@ -231,7 +231,8 @@ export default function Visits() {
   const { storedVisits, cleanUpStoredVisit } = useStore();
   const { isInternetReachable } = useNetInfo();
   const { i18n } = useTranslation();
-  const { meData } = useAuth();
+  const { meData, reFetchMe } = useAuth();
+  useRefreshOnFocus(reFetchMe);
   const { filters, setFilter } = useFilters();
   const { setVisitData, visitData } = useVisit();
 
@@ -287,7 +288,7 @@ export default function Visits() {
   async function onRefresh() {
     try {
       setRefreshing(true);
-      await Promise.all([team.refetch(), reports.refetch()]);
+      await Promise.all([reFetchMe(), team.refetch(), reports.refetch()]);
     } catch (error) {
       console.error(error);
     } finally {
@@ -357,9 +358,14 @@ export default function Visits() {
 
                 <RNPickerSelect
                   items={teamMemberOptions}
-                  onValueChange={(value) =>
-                    setVisitData({ userAccountId: value.toString() })
-                  }
+                  onValueChange={(value: number | null) => {
+                    if (!teamMemberOptions.length) return;
+                    if (!value) {
+                      setVisitData({ userAccountId: meData!.id });
+                      return;
+                    }
+                    setVisitData({ userAccountId: value.toString() });
+                  }}
                   value={visitData.userAccountId}
                   style={{
                     inputAndroid: {
