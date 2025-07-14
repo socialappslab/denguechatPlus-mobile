@@ -1,7 +1,8 @@
 import Button from "@/components/themed/Button";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
+import RNPickerSelect from "react-native-picker-select";
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import {
   FilterButton,
@@ -21,17 +22,19 @@ import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import useCreateMutation from "@/hooks/useCreateMutation";
 import { QuestionnaireState, useStore } from "@/hooks/useStore";
-import { BaseObject, ErrorResponse, Team } from "@/schema";
-import { VisitData } from "@/types";
+import { BaseObject, Team } from "@/schema";
+import { TeamResponse, VisitData } from "@/types";
 import { calculatePercentage, countSetFilters, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import useAxios from "axios-hooks";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
 import { useFilters } from "@/hooks/useFilters";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { useVisit } from "@/hooks/useVisit";
 
 interface HouseReport {
   greenQuantity: number;
@@ -43,13 +46,13 @@ interface HouseReport {
   visitVariationPercentage: number;
 }
 
-const VisitsReport = ({
+function VisitsReport({
   loading,
   data,
 }: {
   loading: boolean;
   data: HouseReport | undefined;
-}) => {
+}) {
   const { meData } = useAuth();
   const { t } = useTranslation();
   const router = useRouter();
@@ -169,9 +172,9 @@ const VisitsReport = ({
       </View>
     </View>
   );
-};
+}
 
-const SuccessSummary = () => {
+function SuccessSummary() {
   const { t } = useTranslation();
 
   return (
@@ -181,64 +184,90 @@ const SuccessSummary = () => {
       </Text>
     </View>
   );
-};
+}
+
+function useTeamQuery() {
+  const { meData } = useAuth();
+  const teamId = (meData?.userProfile?.team as BaseObject)?.id;
+
+  return useQuery({
+    enabled: !!teamId,
+    queryKey: ["visits", "team", teamId],
+    queryFn: async () => {
+      return (await authApi.get(`/teams/${teamId}`)).data as TeamResponse;
+    },
+  });
+}
+
+function useReportsQuery(
+  sectorId: number | null,
+  wedgeId: number | null,
+  teamId: number | null,
+) {
+  return useQuery({
+    // NOTE: we can trigger this for all sectors, wedges, and teams but we're
+    // setting the sectorId in the first render so we rather wait for the
+    // sectorId to be set before enabling the query
+    enabled: !!sectorId || !!wedgeId || !!teamId,
+    queryKey: ["visits", "team", teamId, { sectorId, wedgeId, teamId }],
+    queryFn: async () => {
+      return (
+        await authApi.get("reports/house_status", {
+          params: {
+            sort: "name",
+            order: "asc",
+            "filter[sector_id]": sectorId,
+            "filter[wedge_id]": wedgeId,
+            "filter[team_id]": teamId,
+          },
+        })
+      ).data as HouseReport;
+    },
+  });
+}
 
 export default function Visits() {
   const { t } = useTranslation();
-  const router = useRouter();
   const { storedVisits, cleanUpStoredVisit } = useStore();
   const { isInternetReachable } = useNetInfo();
   const { i18n } = useTranslation();
+  const { meData, reFetchMe } = useAuth();
+  useRefreshOnFocus(reFetchMe);
+  const { filters, setFilter } = useFilters();
+  const { setVisitData, visitData } = useVisit();
+
+  const router = useRouter();
+
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
-  const { meData } = useAuth();
-  const [team, setTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const { filters, setFilter } = useFilters();
-  const [data, setData] = useState<HouseReport>();
-  const [loadingReports, setLoadingReports] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const { reload } = useLocalSearchParams();
 
-  useEffect(() => {
-    if (reload) {
-      (async () => {
-        await fetchData(
-          filters.sector?.id,
-          filters.wedge?.id,
-          filters.team?.id,
-        );
-      })();
-    }
-  }, [reload]);
+  const sectorId = filters.sector?.id ?? null;
+  const wedgeId = filters.wedge?.id ?? null;
+  const teamId = filters.team?.id ?? null;
+
+  const team = useTeamQuery();
+  useRefreshOnFocus(team.refetch);
+
+  const reports = useReportsQuery(sectorId, wedgeId, teamId);
+  useRefreshOnFocus(reports.refetch);
+
+  const teamMemberOptions = useMemo(
+    () =>
+      team.data?.data.attributes.members.map((member) => ({
+        label: member.fullName,
+        value: member.id,
+      })) ?? [],
+    [team],
+  );
 
   const orderedVisits = storedVisits.sort(
     // @ts-expect-error
     (a, b) => new Date(b.visitedAt) - new Date(a.visitedAt),
   );
 
-  const [{ data: teamData }, refetchTeam] = useAxios<
-    ExistingDocumentObject,
-    unknown,
-    ErrorResponse
-  >({
-    url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
-  });
-
-  useEffect(() => {
-    if (meData) refetchTeam();
-  }, [meData, refetchTeam]);
-
-  useEffect(() => {
-    if (!teamData) return;
-    const deserializedData = deserialize<Team>(teamData);
-    if (deserializedData && !Array.isArray(deserializedData)) {
-      setTeam(deserializedData);
-    }
-  }, [teamData]);
-
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const hasVisits = storedVisits.length > 0;
 
   const { createMutation: createVisit } = useCreateMutation<
     { json_params: string },
@@ -256,38 +285,16 @@ export default function Visits() {
     });
   }, [meData]);
 
-  useEffect(() => {
-    fetchData(filters.sector?.id, filters?.wedge?.id, filters.team?.id);
-  }, [filters]);
-
-  const fetchData = async (
-    sectorId?: number,
-    wedgeId?: number,
-    teamId?: number,
-  ) => {
-    setLoadingReports(true);
+  async function onRefresh() {
     try {
-      const response = await authApi.get("reports/house_status", {
-        params: {
-          sort: "name",
-          order: "asc",
-          "filter[sector_id]": sectorId,
-          "filter[wedge_id]": wedgeId,
-          "filter[team_id]": teamId,
-        },
-      });
-      setData(response.data);
-    } catch (e) {
-      console.error(e);
+      setRefreshing(true);
+      await Promise.all([reFetchMe(), team.refetch(), reports.refetch()]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setRefreshing(false);
     }
-    setLoadingReports(false);
-  };
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await fetchData(filters.sector?.id, filters.wedge?.id, filters.team?.id);
-    setRefreshing(false);
-  };
+  }
 
   const synchronizeVisit = async (visit: any) => {
     // NOTE: copying the visit since we're going to mutate a reference
@@ -320,16 +327,12 @@ export default function Visits() {
     }
   };
 
-  const handlePressVisit = (visit: any) => {
+  const handlePressVisit = (visit: QuestionnaireState) => {
     setSelectedVisit(visit);
     bottomSheetModalRef.current?.present();
   };
 
   const snapPoints = useMemo(() => ["90%"], []);
-
-  const visitWasNotAllowedOrWasEarlyExit =
-    // @ts-expect-error
-    (selectedVisit?.answers ?? []).length === 1;
 
   return (
     <SafeAreaView>
@@ -347,6 +350,58 @@ export default function Visits() {
               <Text className="text-center mb-6">
                 {t("visit.registerCopy")}
               </Text>
+
+              <View className="mb-4">
+                <Text className="font-medium text-sm mb-2">
+                  {t("visit.assignVisitToUser")}
+                </Text>
+
+                <RNPickerSelect
+                  items={teamMemberOptions}
+                  onValueChange={(value: number | null) => {
+                    if (!teamMemberOptions.length) return;
+                    if (!value) {
+                      setVisitData({ userAccountId: meData!.id });
+                      return;
+                    }
+                    setVisitData({ userAccountId: value.toString() });
+                  }}
+                  value={visitData.userAccountId}
+                  style={{
+                    inputAndroid: {
+                      borderWidth: 1,
+                      // NOTE: same as `text-red-500` and `border-neutral-200` class
+                      borderColor: "#e7e5e4",
+                      padding: 8,
+                      height: 44,
+                      borderRadius: 8,
+                    },
+                    inputIOSContainer: {
+                      justifyContent: "center",
+                      paddingHorizontal: 8,
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: "#e7e5e4",
+                      height: 44,
+                    },
+                    iconContainer: {
+                      top: "50%",
+                      transform: [{ translateY: -12 }],
+                      right: 6,
+                    },
+                  }}
+                  useNativeAndroidPickerStyle={false}
+                  Icon={() => (
+                    <MaterialCommunityIcons
+                      name="chevron-down"
+                      size={24}
+                      color="#e7e5e4"
+                    />
+                  )}
+                  doneText={t("done")}
+                />
+              </View>
+
               <Button
                 title={t("visit.registerVisit")}
                 primary
@@ -354,13 +409,13 @@ export default function Visits() {
               />
             </View>
 
-            <VisitsReport loading={loadingReports} data={data} />
+            <VisitsReport loading={reports.isLoading} data={reports.data} />
 
             <View className="my-4 p-8 rounded-2xl border border-neutral-200">
               <Text className="text-xl font-bold text-center mb-2">
                 {t("visit.list.visitList")}
               </Text>
-              {hasVisits ? (
+              {!!storedVisits.length ? (
                 <>
                   <Text className="text-center mb-6">
                     {t("visit.list.pending", {
@@ -411,7 +466,7 @@ export default function Visits() {
                       <VisitSummary
                         // @ts-expect-error
                         date={`${formatDate(selectedVisit?.visitedAt || "", i18n.language)}`}
-                        sector={team?.sector?.name}
+                        sector={team.data?.data.attributes.sector?.name}
                         // @ts-expect-error
                         house={`${selectedVisit?.house?.referenceCode}`}
                         // @ts-expect-error
@@ -422,8 +477,9 @@ export default function Visits() {
                         yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
                         // @ts-expect-error
                         reds={selectedVisit?.colorsAndQuantities?.RED}
+                        // @ts-expect-error
                         permissionToVisitGranted={
-                          !visitWasNotAllowedOrWasEarlyExit
+                          selectedVisit?.visitPermission
                         }
                       />
                     )}

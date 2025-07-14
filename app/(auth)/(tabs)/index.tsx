@@ -1,4 +1,3 @@
-import { useIsFocused } from "@react-navigation/native";
 import useAxios from "axios-hooks";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -23,6 +22,7 @@ import { calculatePercentage, getInitials } from "@/util";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { authApi } from "@/config/axios";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
 function useBrigadePointsQuery(teamId: number | null) {
   return useQuery({
@@ -40,8 +40,8 @@ function useBrigadePointsQuery(teamId: number | null) {
 
 export default function Profile() {
   const { t } = useTranslation();
-  const isFocused = useIsFocused();
   const { meData, reFetchMe } = useAuth();
+  useRefreshOnFocus(reFetchMe);
 
   const [team, setTeam] = useState<Team | null>(null);
 
@@ -67,10 +67,6 @@ export default function Profile() {
     });
 
   useEffect(() => {
-    if (isFocused) reFetchMe();
-  }, [isFocused]);
-
-  useEffect(() => {
     if (teamId && wedgeId && sectorId) void refetchReport();
   }, [teamId, wedgeId, sectorId, refetchReport]);
 
@@ -87,18 +83,18 @@ export default function Profile() {
   }, [teamId, brigadePoints]);
 
   const refetchAll = useCallback(async () => {
-    if (isFocused) reFetchMe();
+    await reFetchMe();
     if (teamId && wedgeId && sectorId) await refetchReport();
     if (meData) await refetchTeam();
     if (teamId) await brigadePoints.refetch();
   }, [
-    isFocused,
+    reFetchMe,
     teamId,
     wedgeId,
     sectorId,
     refetchReport,
+    meData,
     refetchTeam,
-    teamId,
     brigadePoints,
   ]);
 

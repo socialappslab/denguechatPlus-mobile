@@ -64,11 +64,13 @@ export interface Team extends BaseObject {
   members: Member[];
   memberCount: number;
   visits: number;
-  sitesStatuses: {
-    green?: number;
-    yellow?: number;
-    red?: number;
-  };
+  sitesStatuses:
+    | {
+        green: number;
+        yellow: number;
+        red: number;
+      }
+    | object;
 }
 
 export const postSchema = z.object({

@@ -71,6 +71,19 @@ export const prepareFormData = (formData: FormState) => {
         }
       }
 
+      if (resourceName === "elimination_method_type_ids") {
+        inspections[index]["elimination_method_type_ids"] = answer.map(
+          (item) => item.resourceId,
+        );
+
+        const textAreaOption = answer.find(
+          (item) => item.optionType === "textArea",
+        );
+        if (textAreaOption) {
+          inspections[index]["other_elimination_method"] = textAreaOption.text;
+        }
+      }
+
       const colors: StatusColor[] = answer
         .filter((item) => typeof item.statusColor === "string")
         .map((item) => item.statusColor as StatusColor);
@@ -113,18 +126,14 @@ export const prepareFormData = (formData: FormState) => {
         }
       }
 
+      if (resourceName === "visit_permission") {
+        visit.visitPermission = answer.bool;
+      }
+
       if (resourceName === "quantity_founded") {
         inspections[index][resourceName] = !!answer.text
           ? parseInt(answer.text) + 1
           : 1;
-      }
-
-      if (answer.resourceName === "elimination_method_type_id" && answer.text) {
-        inspections[index]["other_elimination_method"] = answer.text;
-      }
-
-      if (resourceName === "water_source_type_id" && answer.text) {
-        inspections[index]["water_source_other"] = answer.text;
       }
 
       if (resourceName === "photo_id") {

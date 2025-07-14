@@ -123,7 +123,7 @@ export interface Option {
 
 export interface Inspection {
   breeding_site_type_id: number;
-  elimination_method_type_id: number;
+  elimination_method_type_ids: number[];
   other_elimination_method: string;
   water_source_type_ids?: number[];
   code_reference?: string;
@@ -397,4 +397,33 @@ export interface AccumulatedPoints {
     // TODO: remove the `null` when the backend fixes data being T | null, it
     // just needs to be T
   } | null;
+}
+
+export interface TeamResponse {
+  data: {
+    id: string;
+    type: string;
+    attributes: {
+      name: string;
+      members: {
+        id: number;
+        fullName: string;
+        rol: "admin" | "brigadista" | "facilitador";
+      }[];
+      organizations: {
+        id: number;
+        name: string;
+      };
+      sector: {
+        id: number;
+        name: string;
+      };
+      wedge: {
+        id: number;
+        name: string;
+      };
+      visits: number;
+      sitesStatuses: object;
+    };
+  };
 }

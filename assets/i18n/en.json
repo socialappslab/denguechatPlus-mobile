@@ -193,6 +193,7 @@
       "registerCopy": "Register a new visit here.",
       "registerVisit": "Register a new visit",
       "required": "* Required fields.",
+      "assignVisitToUser": "Assign visit to user",
       "list": {
         "visitList": "Visit List",
         "done": "All visits are synchronized",
