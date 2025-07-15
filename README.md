@@ -3,7 +3,7 @@
 ## Development
 
 > [!NOTE]
-> We use [development builds](https://docs.expo.dev/develop/development-builds/introduction/).
+> We use [Expo and EAS](https://expo.dev/) with [development builds](https://docs.expo.dev/develop/development-builds/introduction/) for the development of this application.
 
 1. Clone the repository: `git clone <repository-url>` and `cd denguechatPlus-mobile`
 2. Install dependencies: `yarn install`
