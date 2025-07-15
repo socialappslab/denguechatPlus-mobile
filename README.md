@@ -1,27 +1,10 @@
-# Denguechat Plus mobile
+# DengueChatPlus Mobile
 
 ## Development
 
-To use with Expo Go app, start the development server with
+> [!NOTE]
+> We use [development builds](https://docs.expo.dev/develop/development-builds/introduction/).
 
-```
-yarn start
-```
-
-and then scan the QR code with your device.
-
-### Simulator
-
-You need to have a simulator installed. The first time expo will promt to install the the Expo Go app in the simulator.
-
-To run in the ios emulator use
-
-```
-yarn ios
-```
-
-And for android, run
-
-```
-yarn android
-```
+1. Clone the repository: `git clone <repository-url>` and `cd denguechatPlus-mobile`
+2. Install dependencies: `yarn install`
+3. Run the app on your device: `yarn ios` or `yarn android`
