@@ -13,16 +13,6 @@
       },
       "channel": "development"
     },
-    "internal_test": {
-      "distribution": "internal",
-      "autoIncrement": true,
-      "android": {
-        "image": "latest",
-        "buildType": "app-bundle"
-      },
-      "environment": "preview",
-      "channel": "internal_test"
-    },
     "test_flight": {
       "distribution": "store",
       "autoIncrement": true,
