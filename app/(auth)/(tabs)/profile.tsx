@@ -1,17 +1,11 @@
 import { CheckTeam } from "@/components/segments/CheckTeam";
-import {
-  View,
-  Text,
-  ScrollView,
-  SimpleChip,
-  ProgressBar,
-} from "@/components/themed";
+import { View, Text, ScrollView, SimpleChip } from "@/components/themed";
 import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { AccumulatedPoints } from "@/types";
-import { calculatePercentage, getInitialsBase } from "@/util";
+import { getInitialsBase } from "@/util";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -103,18 +97,6 @@ const Profile = () => {
     brigadistPoints.isLoading ||
     brigadePoints.isLoading;
 
-  const brigadistPointsPercentage = useMemo(() => {
-    // TODO: remove the extra `?.data` when the backend fixes data being T | null
-    if (!brigadistPoints.data?.data || !brigadePoints.data?.data) return 0;
-
-    const percentage = calculatePercentage(
-      brigadistPoints.data.data.attributes.totalPoints,
-      brigadePoints.data.data.attributes.totalPoints,
-    );
-
-    return Math.round(percentage);
-  }, [brigadistPoints, brigadePoints]);
-
   async function handleRefresh() {
     return await Promise.all([
       report.refetch(),
@@ -193,14 +175,6 @@ const Profile = () => {
           <Text className="text-3xl font-semibold">
             {brigadistPoints.data?.data?.attributes.totalPoints ?? 0}
           </Text>
-
-          <View className="flex flex-col mt-6">
-            <ProgressBar
-              label={t("brigadistProfile.myContributionInPoints")}
-              progress={brigadistPointsPercentage}
-              colorClassName="bg-blue-500"
-            />
-          </View>
         </View>
 
         <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
