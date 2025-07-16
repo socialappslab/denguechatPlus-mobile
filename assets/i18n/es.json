@@ -313,8 +313,7 @@
     },
     "brigadistProfile": {
       "pointsOf": "Puntos de",
-      "myPoints": "Mis puntos",
-      "myContributionInPoints": "Mi contribución en puntos a la brigada"
+      "myPoints": "Mis puntos"
     },
     "errorCodes": {
       "46": "Credenciales inválidas",

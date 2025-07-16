@@ -312,8 +312,7 @@
     },
     "brigadistProfile": {
       "pointsOf": "Points of",
-      "myPoints": "My points",
-      "myContributionInPoints": "My contribution in points to the brigade"
+      "myPoints": "My points"
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",
