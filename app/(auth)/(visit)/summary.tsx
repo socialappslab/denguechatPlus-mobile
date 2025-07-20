@@ -116,6 +116,7 @@ export default function Summary() {
       visitPermission: visit.visitPermission,
       host: visit.host,
       familyEducationTopics: visit.familyEducationTopics,
+      otherFamilyEducationTopic: visit.otherFamilyEducationTopic,
       visitedAt: new Date(),
       answers,
       // @ts-expect-error
