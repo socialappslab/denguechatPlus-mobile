@@ -224,6 +224,7 @@ interface VisitAttributes {
   photoUri?: string;
   inspections: Inspection[];
   familyEducationTopics: string[];
+  otherFamilyEducationTopic?: string;
 }
 
 export interface VisitData extends VisitAttributes {

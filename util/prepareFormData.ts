@@ -55,8 +55,16 @@ export const prepareFormData = (formData: FormState) => {
       if (resourceName === "host")
         visit.host = answer.map((item) => item.label);
 
-      if (resourceName === "family_education_topics")
+      if (resourceName === "family_education_topics") {
         visit.familyEducationTopics = answer.map((item) => item.label);
+
+        const textAreaOption = answer.find(
+          (item) => item.optionType === "textArea",
+        );
+        if (textAreaOption) {
+          visit.otherFamilyEducationTopic = textAreaOption.text;
+        }
+      }
 
       if (resourceName === "water_source_type_ids") {
         inspections[index]["water_source_type_ids"] = answer.map(
