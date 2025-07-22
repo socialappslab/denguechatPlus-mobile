@@ -176,7 +176,7 @@ export default function ChangeHouseBlock() {
         {houseBlocks.data.data.map((houseBlock) => (
           <SelectableItem
             key={houseBlock.id}
-            label={`${houseBlock.attributes.name}`}
+            label={houseBlock.attributes.name}
             checked={selectedOption?.id === houseBlock.id}
             chip={[
               houseBlockTypeToLabel[houseBlock.attributes.type],
