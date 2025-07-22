@@ -54,7 +54,7 @@ export type SelectableItemProps = ViewProps & {
   /**
    * The name of the chip.
    */
-  chip?: string | null;
+  chip?: string | string[] | null;
   /**
    * Renders an image alongside the item.
    */

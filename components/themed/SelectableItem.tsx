@@ -62,7 +62,7 @@ export function SelectableItem({
   return (
     <TouchableOpacity
       onPress={!disabled ? handleChange : () => {}}
-      className={`flex p-4 mb-2 rounded-md ${checked ? "bg-green-400" : "bg-gray-400"} ${disabled && "opacity-50"}`}
+      className={`flex py-3 px-4 mb-2 rounded-md ${checked ? "bg-green-400" : "bg-gray-400"} ${disabled && "opacity-50"}`}
     >
       <View className="flex bg-transparent">
         {image && (
@@ -112,6 +112,35 @@ export function SelectableItem({
             {description && (
               <Text className="text-sky-400 text-xs">{description}</Text>
             )}
+            {chip && (
+              <>
+                {Array.isArray(chip) ? (
+                  <View className="mt-1 bg-transparent flex-row space-x-1">
+                    {chip.map((item) => (
+                      <View className="bg-transparent">
+                        <SimpleChip
+                          backgroundColor="green-300"
+                          padding="small"
+                          borderColor="green-400"
+                          border="1"
+                          label={item}
+                        />
+                      </View>
+                    ))}
+                  </View>
+                ) : (
+                  <View className="mt-1 bg-transparent">
+                    <SimpleChip
+                      backgroundColor="green-300"
+                      padding="small"
+                      borderColor="green-400"
+                      border="1"
+                      label={chip}
+                    />
+                  </View>
+                )}
+              </>
+            )}
           </View>
         </View>
       </View>
@@ -135,17 +164,6 @@ export function SelectableItem({
           placeholder={t("quantity")}
           keyboardType="numeric"
         />
-      )}
-      {chip && (
-        <View className="mt-2 bg-transparent">
-          <SimpleChip
-            backgroundColor="green-300"
-            padding="small"
-            borderColor="green-400"
-            border="1"
-            label={chip}
-          />
-        </View>
       )}
     </TouchableOpacity>
   );

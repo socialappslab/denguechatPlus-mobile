@@ -19,11 +19,11 @@ export type SimpleChipProps = ThemeProps & {
 const getPaddingSize = (padding: string) => {
   switch (padding) {
     case "small":
-      return "py-1 px-2";
+      return "py-0.5 px-1.5";
     case "medium":
-      return "py-1 px-4";
+      return "py-1 px-2";
     default:
-      return "py-2 px-6";
+      return "py-2 px-4";
   }
 };
 
@@ -44,7 +44,7 @@ export function SimpleChip(props: SimpleChipProps) {
     border === "1"
       ? `border border-${borderColor}`
       : `border-${border} border-${borderColor}`;
-  const viewClasName = `flex-row items-center ${borderClass} rounded-full ${paddingSize} bg-${backgroundColor}`;
+  const viewClasName = `flex-row items-center ${borderClass} rounded-md ${paddingSize} bg-${backgroundColor}`;
 
   return (
     <View className={viewClasName}>

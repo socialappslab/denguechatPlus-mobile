@@ -9,7 +9,7 @@ import {
 import { authApi } from "@/config/axios";
 import { useAuth } from "@/context/AuthProvider";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { Neighborhood, Wedge } from "@/types";
+import { HouseBlockType, Neighborhood, Wedge } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
@@ -34,6 +34,7 @@ function useHouseBlocksQuery(wedgeId: number | null) {
         id: number;
         reference_code: string;
       }[];
+      type: HouseBlockType;
     };
   }
 
@@ -139,6 +140,11 @@ export default function ChangeHouseBlock() {
     }
   }
 
+  const houseBlockTypeToLabel: Record<HouseBlockType, string> = {
+    [HouseBlockType.FrenteAFrente]: "Frente a Frente",
+    [HouseBlockType.Block]: "Block",
+  };
+
   if (houseBlocks.isLoading)
     return (
       <View className="flex-1 items-center justify-center">
@@ -170,13 +176,14 @@ export default function ChangeHouseBlock() {
         {houseBlocks.data.data.map((houseBlock) => (
           <SelectableItem
             key={houseBlock.id}
-            label={houseBlock.attributes.name}
+            label={`${houseBlock.attributes.name}`}
             checked={selectedOption?.id === houseBlock.id}
-            chip={
-              houseBlock.id === defaultOption?.id
-                ? t("config.currentHouseBlock")
-                : undefined
-            }
+            chip={[
+              houseBlockTypeToLabel[houseBlock.attributes.type],
+              ...(houseBlock.id === defaultOption?.id
+                ? [t("config.currentHouseBlock")]
+                : []),
+            ]}
             onValueChange={() => {
               setSelectedOption(houseBlock);
             }}

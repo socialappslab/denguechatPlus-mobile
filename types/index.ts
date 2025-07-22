@@ -278,6 +278,11 @@ export enum ResourceName {
   AppConfigParam = "AppConfigParam",
 }
 
+export enum HouseBlockType {
+  FrenteAFrente = "frente_a_frente",
+  Block = "block",
+}
+
 interface ResourceBreedingSiteTypes extends ResourceCommon {
   resourceName: ResourceName.BreedingSiteTypes;
   resourceData: ResourceDataBreedingSiteType[];

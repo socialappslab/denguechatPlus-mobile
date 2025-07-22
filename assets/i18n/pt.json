@@ -17,11 +17,13 @@
     "ilustrationOrIcon": "Ilustração ou ícone",
     "update": "Atualizar",
     "selectOption": "Selecione uma opção...",
+    "houseGroup_one": "Grupo de casas",
+    "houseGroup_other": "Grupos de casas",
     "config": {
       "search": "Buscar",
       "noResults": "Não há resultados para sua busca",
       "noResultsWedges": "Não há cunhas no setor selecionado",
-      "noResultsHouseBlock": "Não há quadras na brigada selecionada",
+      "noResultsHouseBlock": "Não há $t(houseGroup_other) na brigada selecionada",
       "filter": "Filtrar",
       "clearFilters": "Filtros limpos",
       "select": "Selecionar",
@@ -37,18 +39,17 @@
       "sector": "Setor",
       "wedge": "Cunha",
       "brigade": "Brigada",
-      "houseBlocks": "Quadras",
-      "houseBlock": "Quadra",
       "changeBrigade": "Trocar Brigada",
       "chooseBrigadeTitle": "Escolher nova brigada",
       "noBrigade": "Sem Brigada",
       "allSectors": "Todos os Setores",
       "allWedges": "Todas as Cunhas",
       "allBrigades": "Todas as Brigadas",
-      "allHouseBlocks": "Todas as Quadras",
+      "allHouseBlocks": "Todas as $t(houseGroup_other)",
       "successTitle": "Nova brigada atribuída",
       "successDescription": "agora pertence a",
-      "currentHouseBlock": "Frente a Frente atual"
+      "block": "Quarteirão",
+      "currentHouseBlock": "$t(houseGroup_one) atual"
     },
     "chat": {
       "empty": "Sem blogs",
@@ -103,9 +104,8 @@
       "assignBrigade": "Atribuir Brigada",
       "userGuide": "Guia do Usuário",
       "settings": "Configuração",
-      "changeHouseBlock": "Trocar de Frente a Frente",
-      "changeHouseBlockSuccess": "Frente a Frente atualizado",
-      "changeHouseBlockUpdated": "Frente a Frente atualizado para {{name}}"
+      "changeHouseBlock": "Trocar de $t(houseGroup_one)",
+      "changeHouseBlockUpdated": "$t(houseGroup_one) atualizado para {{name}}"
     },
     "profile": {
       "account": "Conta",
@@ -215,7 +215,6 @@
         "siteInformation": "Informações do site",
         "sector": "Setor",
         "wedge": "Cunha",
-        "houseBlock": "Quadra",
         "houseNumber": "Número do site *",
         "houseNumberPlaceholder": "Digite o número do site",
         "requiredFields": "* Campos obrigatórios.",
