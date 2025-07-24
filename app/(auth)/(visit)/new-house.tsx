@@ -193,7 +193,7 @@ export default function NewHouse() {
 
           <View className="mb-4">
             <Text className="font-medium text-sm mb-2">
-              {t("visit.newHouse.houseBlock")}
+              {t("houseGroup_one")}
             </Text>
 
             <TextInput

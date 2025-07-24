@@ -23,6 +23,7 @@ import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { authApi } from "@/config/axios";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { useHouseBlockLabel } from "@/hooks/useHouseBlockLabel";
 
 function useBrigadePointsQuery(teamId: number | null) {
   return useQuery({
@@ -43,6 +44,11 @@ export default function Profile() {
   const { meData, reFetchMe } = useAuth();
   useRefreshOnFocus(reFetchMe);
 
+  const houseBlockLabel = useHouseBlockLabel(
+    // @ts-expect-error type of meData is wrong
+    meData?.userProfile?.houseBlock.type,
+  );
+
   const [team, setTeam] = useState<Team | null>(null);
 
   const [{ data: teamData, loading: loadingTeam }, refetchTeam] = useAxios<
@@ -60,6 +66,7 @@ export default function Profile() {
   const sectorId = meData?.userProfile?.team?.sector_id;
 
   const brigadePoints = useBrigadePointsQuery(teamId ?? null);
+  useRefreshOnFocus(brigadePoints.refetch);
 
   const [{ data: reportData, loading: loadingReport }, refetchReport] =
     useAxios<ReportData, unknown, ErrorResponse>({
@@ -77,10 +84,6 @@ export default function Profile() {
       setTeam(deserializedData);
     }
   }, [teamData]);
-
-  useEffect(() => {
-    if (teamId) void brigadePoints.refetch();
-  }, [teamId, brigadePoints]);
 
   const refetchAll = useCallback(async () => {
     await reFetchMe();
@@ -137,8 +140,8 @@ export default function Profile() {
                   {/* @ts-expect-error */}
                   {meData?.userProfile?.houseBlock?.name && (
                     <Text className="font-normal mb-4">
-                      {/* @ts-expect-error */}
-                      Frente a Frente: {meData.userProfile.houseBlock.name}
+                      {houseBlockLabel}: {/* @ts-expect-error */}
+                      {meData.userProfile.houseBlock.name}
                     </Text>
                   )}
                 </View>
