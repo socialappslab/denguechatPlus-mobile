@@ -17,11 +17,13 @@
     "ilustrationOrIcon": "Ilustration or icon",
     "update": "Update",
     "selectOption": "Select an option...",
+    "houseGroup_one": "House group",
+    "houseGroup_other": "House groups",
     "config": {
       "search": "Search",
       "noResults": "No results for your search",
       "noResultsWedges": "No wedges in selected sector",
-      "noResultsHouseBlock": "No house blocks in selected brigade",
+      "noResultsHouseBlock": "No $t(houseGroup_other) in selected brigade",
       "filter": "Filter",
       "clearFilters": "Clear filters",
       "select": "Select",
@@ -37,18 +39,17 @@
       "sector": "Sector",
       "wedge": "Wedge",
       "brigade": "Brigade",
-      "houseBlocks": "House Blocks",
-      "houseBlock": "House Block",
       "changeBrigade": "Change Brigade",
       "chooseBrigadeTitle": "Choose new brigade",
       "noBrigade": "No Brigade",
       "allSectors": "All Sectors",
       "allWedges": "All Wedges",
       "allBrigades": "All Brigades",
-      "allHouseBlocks": "All House Blocks",
+      "allHouseBlocks": "All $t(houseGroup_other)",
       "successTitle": "New brigade assigned",
       "successDescription": "now belongs to",
-      "currentHouseBlock": "Current Frente a Frente"
+      "block": "Block",
+      "currentHouseBlock": "Current $t(houseGroup_one)"
     },
     "chat": {
       "empty": "No blogs",
@@ -103,9 +104,8 @@
       "assignBrigade": "Assign Brigade",
       "userGuide": "User Guide",
       "settings": "Settings",
-      "changeHouseBlock": "Change Frente a Frente",
-      "changeHouseBlockSuccess": "Frente a Frente updated",
-      "changeHouseBlockUpdated": "Frente a Frente updated to {{name}}"
+      "changeHouseBlock": "Change $t(houseGroup_one)",
+      "changeHouseBlockUpdated": "$t(houseGroup_one) updated to {{name}}"
     },
     "profile": {
       "account": "Account",
@@ -217,7 +217,6 @@
         "siteInformation": "Site Information",
         "sector": "Sector",
         "wedge": "Wedge",
-        "houseBlock": "House Block",
         "houseNumber": "Site Number *",
         "houseNumberPlaceholder": "Enter the site number",
         "requiredFields": "* Required fields.",
@@ -312,8 +311,7 @@
     },
     "brigadistProfile": {
       "pointsOf": "Points of",
-      "myPoints": "My points",
-      "myContributionInPoints": "My contribution in points to the brigade"
+      "myPoints": "My points"
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",

@@ -1,27 +1,29 @@
-# Denguechat Plus mobile
+# DengueChatPlus Mobile
 
 ## Development
 
-To use with Expo Go app, start the development server with
+> [!NOTE]
+> We use [Expo and EAS](https://expo.dev/) with [development builds](https://docs.expo.dev/develop/development-builds/introduction/) for the development of this application.
 
-```
-yarn start
-```
+1. Clone the repository: `git clone <repository-url>` and `cd denguechatPlus-mobile`
+2. Install dependencies: `yarn install`
+3. Run the app on your device: `yarn ios` or `yarn android`
 
-and then scan the QR code with your device.
+## Pipeline Process
 
-### Simulator
+> [!NOTE]
+> This section is aimed at members of the core team.
 
-You need to have a simulator installed. The first time expo will promt to install the the Expo Go app in the simulator.
+We use EAS (Expo Application Services) for our CI/CD pipeline. The build triggers and configurations are managed through the Expo panel.
 
-To run in the ios emulator use
+### Development Workflow
 
-```
-yarn ios
-```
+1. **Feature Development**: Create a new pull request from a feature branch targeting `develop`
+   - This triggers an Android build that points to the sandbox environment
+   - Used for testing and development purposes
 
-And for android, run
+2. **Production Release**: When ready for release, merge to the `main` branch
+   - This triggers both Android and iOS builds
+   - Builds are automatically submitted for production testing
 
-```
-yarn android
-```
+All pipeline configurations, including which branches trigger new releases, are configured in the Expo panel.

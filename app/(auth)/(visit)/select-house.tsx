@@ -24,6 +24,7 @@ import invariant from "tiny-invariant";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { VISITS_LOG } from "@/util/logger";
+import { useHouseBlockLabel } from "@/hooks/useHouseBlockLabel";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
@@ -34,6 +35,11 @@ export default function SelectHouseScreen() {
   const router = useRouter();
 
   const { user: maybeUser, meData, reFetchMe } = useAuth();
+
+  const houseBlockLabel = useHouseBlockLabel(
+    // @ts-expect-error type of meData is wrong
+    meData?.userProfile?.houseBlock?.type,
+  );
 
   // TODO: fix this when we have a better data fetching strategy in this page,
   // the ideal is to invalidate the cache for the user data when the user
@@ -175,7 +181,7 @@ export default function SelectHouseScreen() {
             {meData?.userProfile?.houseBlock?.name && (
               <Text className="text-md font-normal mb-4">
                 {/* @ts-expect-error */}
-                Frente a Frente: {meData.userProfile.houseBlock.name}
+                {houseBlockLabel}: {meData.userProfile.houseBlock.name}
               </Text>
             )}
           </View>

@@ -75,7 +75,7 @@ export default function VisitLayout(props: ThemeProps) {
       <Stack.Screen
         name="change-house-block"
         options={{
-          title: "Frente a Frente",
+          title: t("houseGroup_one"),
           headerShadowVisible: false,
           headerLeft: () => (
             <Ionicons
@@ -94,7 +94,7 @@ export default function VisitLayout(props: ThemeProps) {
         options={{
           headerShown: true,
           headerShadowVisible: false,
-          title: t("config.houseBlocks"),
+          title: t("houseGroup_other"),
         }}
       />
       <Stack.Screen

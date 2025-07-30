@@ -2,7 +2,7 @@ import Button from "@/components/themed/Button";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
-import RNPickerSelect from "react-native-picker-select";
+import RNPickerSelect, { Item } from "react-native-picker-select";
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import {
   FilterButton,
@@ -253,11 +253,13 @@ export default function Visits() {
   const reports = useReportsQuery(sectorId, wedgeId, teamId);
   useRefreshOnFocus(reports.refetch);
 
-  const teamMemberOptions = useMemo(
+  const teamMemberOptions: Item[] = useMemo(
     () =>
       team.data?.data.attributes.members.map((member) => ({
         label: member.fullName,
         value: member.id,
+        // https://github.com/lawnstarter/react-native-picker-select/issues/169#issuecomment-484954440
+        color: "black",
       })) ?? [],
     [team],
   );

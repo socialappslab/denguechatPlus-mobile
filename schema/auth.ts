@@ -68,13 +68,7 @@ export interface UserProfile {
   createdAt?: string;
 }
 
-export const UserStatusValues = [
-  "active",
-  "pending",
-  "inactive",
-  "locked",
-] as const;
-export type UserStatusType = (typeof UserStatusValues)[number];
+export type UserStatusType = "active" | "pending" | "inactive" | "locked";
 
 export interface IUser extends UserProfile {
   id: string;

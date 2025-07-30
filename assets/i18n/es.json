@@ -17,11 +17,13 @@
     "ilustrationOrIcon": "Ilustración o ícono",
     "update": "Actualizar",
     "selectOption": "Selecciona una opción...",
+    "houseGroup_one": "Grupo de casas",
+    "houseGroup_other": "Grupos de casas",
     "config": {
       "search": "Buscar",
       "noResults": "No hay resultados para tu búsqueda",
       "noResultsWedges": "No hay cuñas en el sector seleccionado",
-      "noResultsHouseBlock": "No hay frente a frente en la brigada seleccionada",
+      "noResultsHouseBlock": "No hay $t(houseGroup_other) en la brigada seleccionada",
       "filter": "Filtrar",
       "clearFilters": "Limpiar Filtros",
       "select": "Seleccionar",
@@ -37,19 +39,18 @@
       "sector": "Sector",
       "wedge": "Cuña",
       "brigade": "Brigada",
-      "houseBlocks": "Frente a Frentes",
-      "houseBlock": "Frente a Frente",
       "changeBrigade": "Cambiar Brigada",
       "chooseBrigadeTitle": "Elegir nueva brigada",
       "noBrigade": "Sin Brigada",
       "allSectors": "Todos los Sectores",
       "allWedges": "Todas las Cuñas",
       "allBrigades": "Todas las Brigadas",
-      "allHouseBlocks": "Todas los Frente a Frente",
+      "allHouseBlocks": "Todos los $t(houseGroup_other)",
       "successTitle": "Nueva brigada asignada",
       "successDescription": "ahora pertenece a",
-      "changeHouseBlockSuccess": "Frente a Frente actualizado",
-      "currentHouseBlock": "Frente a Frente actual"
+      "changeHouseBlockSuccess": "$t(houseGroup_one) actualizado",
+      "block": "Manzana",
+      "currentHouseBlock": "$t(houseGroup_one) actual"
     },
     "chat": {
       "empty": "No hay blogs",
@@ -104,8 +105,8 @@
       "assignBrigade": "Asignar Brigada",
       "userGuide": "Guía del Usuario",
       "settings": "Configuración",
-      "changeHouseBlock": "Cambiar de Frente a Frente",
-      "changeHouseBlockUpdated": "Frente a Frente actualizado a {{name}}"
+      "changeHouseBlock": "Cambiar de $t(houseGroup_one)",
+      "changeHouseBlockUpdated": "$t(houseGroup_one) actualizado a {{name}}"
     },
     "profile": {
       "account": "Cuenta",
@@ -217,7 +218,6 @@
         "siteInformation": "Información del sitio",
         "sector": "Sector",
         "wedge": "Cuña",
-        "houseBlock": "Frente a Frente",
         "houseNumber": "Número de sitio *",
         "houseNumberPlaceholder": "Escribe el número de sitio",
         "requiredFields": "* Campo requerido.",
@@ -313,8 +313,7 @@
     },
     "brigadistProfile": {
       "pointsOf": "Puntos de",
-      "myPoints": "Mis puntos",
-      "myContributionInPoints": "Mi contribución en puntos a la brigada"
+      "myPoints": "Mis puntos"
     },
     "errorCodes": {
       "46": "Credenciales inválidas",

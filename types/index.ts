@@ -224,6 +224,7 @@ interface VisitAttributes {
   photoUri?: string;
   inspections: Inspection[];
   familyEducationTopics: string[];
+  otherFamilyEducationTopic?: string;
 }
 
 export interface VisitData extends VisitAttributes {
@@ -275,6 +276,11 @@ export enum ResourceName {
   WaterSourceTypes = "water_source_types",
   SpecialPlaces = "special_places",
   AppConfigParam = "AppConfigParam",
+}
+
+export enum HouseBlockType {
+  FrenteAFrente = "frente_a_frente",
+  Block = "block",
 }
 
 interface ResourceBreedingSiteTypes extends ResourceCommon {

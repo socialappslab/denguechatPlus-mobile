@@ -102,7 +102,7 @@ export default function ChangeBrigade() {
                 emptyString={t("config.allBrigades")}
               />
               <ListItem
-                title={t("config.houseBlock")}
+                title={t("houseGroup_one")}
                 disabled={!selection?.newBrigade}
                 onPressElement={onPressSelectHouseBlock}
                 filled={selection?.newHouseBlock?.name}
