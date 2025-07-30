@@ -50,7 +50,7 @@
       "successDescription": "ahora pertenece a",
       "changeHouseBlockSuccess": "$t(houseGroup_one) actualizado",
       "block": "Manzana",
-      "currentHouseBlock": "$t(houseGroup_other) actual"
+      "currentHouseBlock": "$t(houseGroup_one) actual"
     },
     "chat": {
       "empty": "No hay blogs",
