@@ -142,7 +142,7 @@ export default function ChangeHouseBlock() {
 
   const houseBlockTypeToLabel: Record<HouseBlockType, string> = {
     [HouseBlockType.FrenteAFrente]: "Frente a Frente",
-    [HouseBlockType.Block]: "Block",
+    [HouseBlockType.Block]: t("config.block"),
   };
 
   if (houseBlocks.isLoading)

@@ -46,7 +46,7 @@ export default function Profile() {
 
   const houseBlockLabel = useHouseBlockLabel(
     // @ts-expect-error type of meData is wrong
-    meData?.userProfile?.houseBlock.type,
+    meData?.userProfile?.houseBlock?.type,
   );
 
   const [team, setTeam] = useState<Team | null>(null);

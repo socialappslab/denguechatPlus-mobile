@@ -116,8 +116,8 @@ export function SelectableItem({
               <>
                 {Array.isArray(chip) ? (
                   <View className="mt-1 bg-transparent flex-row space-x-1">
-                    {chip.map((item) => (
-                      <View className="bg-transparent">
+                    {chip.map((item, index) => (
+                      <View className="bg-transparent" key={index}>
                         <SimpleChip
                           backgroundColor="green-300"
                           padding="small"

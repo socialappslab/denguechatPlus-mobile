@@ -38,7 +38,7 @@ export default function SelectHouseScreen() {
 
   const houseBlockLabel = useHouseBlockLabel(
     // @ts-expect-error type of meData is wrong
-    meData?.userProfile?.houseBlock.type,
+    meData?.userProfile?.houseBlock?.type,
   );
 
   // TODO: fix this when we have a better data fetching strategy in this page,
