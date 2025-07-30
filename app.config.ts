@@ -4,7 +4,7 @@ const config: ExpoConfig = {
   name: "DengueChatPlus",
   slug: "dengue-chat-plus",
   scheme: "org.denguechat.plus",
-  version: "1.7.0",
+  version: "1.8.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   newArchEnabled: false,
