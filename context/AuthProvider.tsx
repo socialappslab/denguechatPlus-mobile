@@ -30,7 +30,7 @@ type AuthProviderType = {
   refreshToken: string | null;
   setUser: (user: IUser | null, updateLocalStorage: boolean) => void;
   login: (token: string, refreshToken: string, user: IUser) => boolean;
-  logout: (user: IUser) => Promise<void>;
+  logout: (user?: IUser | null) => Promise<void>;
   reFetchMe: () => Promise<void>;
 };
 
@@ -116,11 +116,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = useCallback(
-    async (user: IUser) => {
+    async (user?: IUser | null) => {
       setLoadedUser(null);
       setUserLocalStorage(null, true);
       await resetAuthApi();
-      LOG.info(`Logged out of user: ${user.username}`);
+      LOG.info(`Logged out of user: ${user?.username}`);
     },
     [setLoadedUser, setUserLocalStorage],
   );
