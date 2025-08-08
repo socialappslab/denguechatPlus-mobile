@@ -18,6 +18,7 @@ import {
   Loading,
 } from "@/components/themed";
 import { authApi } from "@/config/axios";
+import { HouseBlockType } from "@/types";
 
 export interface FilterModalProps {
   onFilter: (itemSeleted?: BaseObject) => void;
@@ -46,7 +47,6 @@ export function FilterModal({
   const [loading, setLoading] = useState(false);
 
   const handleFilter = () => {
-    console.log("handleFilter>>>> ", itemSelected);
     onFilter(itemSelected);
   };
 
@@ -67,12 +67,11 @@ export function FilterModal({
         const deserializedData = deserialize<Team>(data);
         if (!deserializedData || !Array.isArray(deserializedData)) return;
 
-        console.log("deserializedData ITEMS>>>>>>>>>>", deserializedData);
         setItemOptions(deserializedData);
         setItemSelected(undefined);
       }
-    } catch (err) {
-      console.log("err>>>> ", err);
+    } catch (error) {
+      console.error(error);
       setError(t("errorCodes.generic"));
     } finally {
       setLoading(false);
@@ -104,11 +103,15 @@ export function FilterModal({
     if (isFocused) {
       firstLoad();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   const renderItem = (team: Team) => {
     return `${team.name}`;
+  };
+
+  const houseBlockTypeToLabel: Record<HouseBlockType, string> = {
+    [HouseBlockType.FrenteAFrente]: "Frente a Frente",
+    [HouseBlockType.Block]: t("config.block"),
   };
 
   return (
@@ -160,6 +163,8 @@ export function FilterModal({
                 <SelectableItem
                   key={team.id}
                   checked={team.id === itemSelected?.id}
+                  // @ts-expect-error fix the type of team
+                  chip={[houseBlockTypeToLabel[team.type]]}
                   onValueChange={() => {
                     setItemSelected(team);
                   }}
