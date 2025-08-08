@@ -155,48 +155,57 @@ export default function ChangeHouseBlock() {
   invariant(houseBlocks.data, "House blocks data was expected");
 
   return (
-    <ScrollView className="px-4 pt-6 space-y-4">
-      <View className="space-y-2">
-        <Text className="text-2xl font-bold">
-          {t("drawer.changeHouseBlock")}
-        </Text>
-        <Text>
-          <Text className="font-bold">{t("config.sector")}:</Text>{" "}
-          {/* @ts-expect-error fix types */}
-          {meData?.userProfile?.team?.sector_name}
-        </Text>
-        <Text>
-          <Text className="font-bold">{t("config.wedge")}:</Text>{" "}
-          {/* @ts-expect-error fix types */}
-          {meData?.userProfile?.team?.wedge_name}
-        </Text>
-      </View>
+    <View className="h-full">
+      <ScrollView
+        className="flex-grow"
+        contentContainerStyle={{ paddingBottom: 0 }}
+      >
+        <View className="p-4 space-y-4">
+          <View className="space-y-2">
+            <Text className="text-2xl font-bold">
+              {t("drawer.changeHouseBlock")}
+            </Text>
+            <Text>
+              <Text className="font-bold">{t("config.sector")}:</Text>{" "}
+              {/* @ts-expect-error fix types */}
+              {meData?.userProfile?.team?.sector_name}
+            </Text>
+            <Text>
+              <Text className="font-bold">{t("config.wedge")}:</Text>{" "}
+              {/* @ts-expect-error fix types */}
+              {meData?.userProfile?.team?.wedge_name}
+            </Text>
+          </View>
 
-      <View>
-        {houseBlocks.data.data.map((houseBlock) => (
-          <SelectableItem
-            key={houseBlock.id}
-            label={houseBlock.attributes.name}
-            checked={selectedOption?.id === houseBlock.id}
-            chip={[
-              houseBlockTypeToLabel[houseBlock.attributes.type],
-              ...(houseBlock.id === defaultOption?.id
-                ? [t("config.currentHouseBlock")]
-                : []),
-            ]}
-            onValueChange={() => {
-              setSelectedOption(houseBlock);
-            }}
-          />
-        ))}
-      </View>
+          <View>
+            {houseBlocks.data.data.map((houseBlock) => (
+              <SelectableItem
+                key={houseBlock.id}
+                label={houseBlock.attributes.name}
+                checked={selectedOption?.id === houseBlock.id}
+                chip={[
+                  houseBlockTypeToLabel[houseBlock.attributes.type],
+                  ...(houseBlock.id === defaultOption?.id
+                    ? [t("config.currentHouseBlock")]
+                    : []),
+                ]}
+                onValueChange={() => {
+                  setSelectedOption(houseBlock);
+                }}
+              />
+            ))}
+          </View>
+        </View>
+      </ScrollView>
 
-      <Button
-        title={t("chat.actions.save")}
-        primary
-        disabled={selectedOptionIsSameAsDefault || changeHouseBlock.isPending}
-        onPress={handleSave}
-      />
-    </ScrollView>
+      <View className="py-2 px-4 border-t border-neutral-200">
+        <Button
+          title={t("chat.actions.save")}
+          primary
+          disabled={selectedOptionIsSameAsDefault || changeHouseBlock.isPending}
+          onPress={handleSave}
+        />
+      </View>
+    </View>
   );
 }
