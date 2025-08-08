@@ -99,7 +99,7 @@ function CustomDrawerContent() {
           </ProtectedView>
 
           <Link
-            href="/change-house-block"
+            href="/change-house-group"
             asChild
             disabled={isChangeHouseBlockButtonDisabled}
           >
