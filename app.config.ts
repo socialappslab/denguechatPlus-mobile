@@ -63,6 +63,15 @@ const config: ExpoConfig = {
           "Allow $(PRODUCT_NAME) to access your photos for posts",
       },
     ],
+    [
+      "@sentry/react-native/expo",
+      {
+        url: "https://sentry.io/",
+        note: "Use SENTRY_AUTH_TOKEN env to authenticate with Sentry.",
+        project: "react-native",
+        organization: "denguechatplus",
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,
