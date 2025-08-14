@@ -34,7 +34,6 @@ import {
 
 import * as Sentry from "@sentry/react-native";
 import * as Application from "expo-application";
-import * as ImagePicker from "expo-image-picker";
 import useSignIn from "@/hooks/useSignIn";
 import { extractAxiosErrorData } from "@/util";
 import { useNetInfo } from "@react-native-community/netinfo";

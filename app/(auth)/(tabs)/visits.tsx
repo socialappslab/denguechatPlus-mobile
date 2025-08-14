@@ -35,6 +35,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useVisit } from "@/hooks/useVisit";
+import * as Sentry from "@sentry/react-native";
 
 interface HouseReport {
   greenQuantity: number;
@@ -346,6 +347,15 @@ export default function Visits() {
         }
       >
         <CheckTeam view="visit">
+          <View className="p-4">
+            <Button
+              title="Throw authenticated error"
+              onPress={() => {
+                Sentry.captureException(new Error("Test authenticated error"));
+              }}
+            />
+          </View>
+
           <View className="flex flex-1 py-5 px-5 w-full">
             <View className="my-6 mb-8 p-8 rounded-2xl border border-neutral-200">
               <Text className="text-xl font-bold text-center mb-2">
