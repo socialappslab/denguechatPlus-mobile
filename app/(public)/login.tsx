@@ -34,6 +34,7 @@ import {
 
 import * as Sentry from "@sentry/react-native";
 import * as Application from "expo-application";
+import * as ImagePicker from "expo-image-picker";
 import useSignIn from "@/hooks/useSignIn";
 import { extractAxiosErrorData } from "@/util";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -378,14 +379,16 @@ export default function Login() {
             </View>
           </FormProvider>
         </View>
-        <View className="flex items-center">
+        <View className="p-4">
           <Button
-            title={`v${Application.nativeApplicationVersion}`}
-            className="opacity-50 border-0 font-normal"
+            title="Throw JS error"
             onPress={() => {
-              Sentry.captureException(new Error("First error"));
+              Sentry.captureException(new Error("Test error"));
             }}
-          ></Button>
+          />
+        </View>
+        <View className="flex items-center py-2">
+          <Text className="">{`v${Application.nativeApplicationVersion}`}</Text>
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>

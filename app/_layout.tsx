@@ -27,6 +27,9 @@ Sentry.init({
   dsn: __DEV__
     ? undefined
     : "https://1530b05d8bc80b91a3304733b4f40e15@o4508732723232768.ingest.us.sentry.io/4508732748529664",
+  sendDefaultPii: true,
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 0.75,
 });
 
 export {
@@ -42,7 +45,7 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function RootLayout() {
   const { i18n } = useTranslation();
   const { setUser } = useAuth();
 
@@ -138,3 +141,5 @@ function RootLayoutNav() {
     </>
   );
 }
+
+export default Sentry.wrap(RootLayout);
