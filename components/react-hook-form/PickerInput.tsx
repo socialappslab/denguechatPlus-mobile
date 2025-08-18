@@ -90,6 +90,8 @@ export function PickerInput<T extends FieldValues>({
           },
         }}
         useNativeAndroidPickerStyle={false}
+        // https://github.com/lawnstarter/react-native-picker-select/pull/377
+        fixAndroidTouchableBug={true}
         Icon={() => (
           <MaterialCommunityIcons
             name="chevron-down"
