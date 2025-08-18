@@ -405,6 +405,8 @@ export default function Visits() {
                     },
                   }}
                   useNativeAndroidPickerStyle={false}
+                  // https://github.com/lawnstarter/react-native-picker-select/pull/377
+                  fixAndroidTouchableBug={true}
                   Icon={() => (
                     <MaterialCommunityIcons
                       name="chevron-down"
