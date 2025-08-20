@@ -4,7 +4,7 @@ const config: ExpoConfig = {
   name: "DengueChatPlus",
   slug: "dengue-chat-plus",
   scheme: "org.denguechat.plus",
-  version: "1.8.1",
+  version: "1.9.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   newArchEnabled: false,
@@ -61,6 +61,15 @@ const config: ExpoConfig = {
       {
         photosPermission:
           "Allow $(PRODUCT_NAME) to access your photos for posts",
+      },
+    ],
+    [
+      "@sentry/react-native/expo",
+      {
+        url: "https://sentry.io/",
+        note: "Use SENTRY_AUTH_TOKEN env to authenticate with Sentry.",
+        project: "react-native",
+        organization: "denguechatplus",
       },
     ],
   ],

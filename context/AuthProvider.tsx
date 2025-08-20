@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { router, useSegments } from "expo-router";
 import useAxios from "axios-hooks";
 import { ExistingDocumentObject, deserialize, CaseType } from "jsonapi-fractal";
+import * as Sentry from "@sentry/react-native";
 
 import { IUser } from "@/schema/auth";
 import { useStorageState } from "@/hooks/useStorageState";
@@ -119,6 +120,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     async (user?: IUser | null) => {
       setLoadedUser(null);
       setUserLocalStorage(null, true);
+      Sentry.setUser(null);
       await resetAuthApi();
       LOG.info(`Logged out of user: ${user?.username}`);
     },

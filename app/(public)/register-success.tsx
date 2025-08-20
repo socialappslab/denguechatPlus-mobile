@@ -24,7 +24,7 @@ export default function RegisterSuccess() {
           title={t("backToHome")}
           className="mt-4"
           onPress={() => {
-            router.navigate("/login");
+            router.dismissAll();
           }}
         />
       </View>

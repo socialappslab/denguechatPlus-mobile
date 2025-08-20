@@ -2,6 +2,7 @@ import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { ILoginResponse, IUser, LoginRequestType } from "../schema/auth";
 import { setAccessTokenToHeaders, useAxiosNoAuth } from "../config/axios";
 import { useAuth } from "@/context/AuthProvider";
+import * as Sentry from "@sentry/react-native";
 
 type IUseSignIn = {
   signInMutation: (payload: LoginRequestType) => Promise<void>;
@@ -35,6 +36,12 @@ export default function useSignIn(): IUseSignIn {
         loginRes.data.meta.jwt.res.refresh,
         { ...deserializedData, username: data.username },
       );
+
+      Sentry.setUser({
+        id: deserializedData.id,
+        email: deserializedData.email,
+        username: data.username,
+      });
     } else {
       throw new Error("Couldn't deserialize user data");
     }

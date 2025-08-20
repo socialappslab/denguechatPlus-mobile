@@ -73,7 +73,7 @@ export default function VisitLayout(props: ThemeProps) {
         }}
       />
       <Stack.Screen
-        name="change-house-block"
+        name="change-house-group"
         options={{
           title: t("houseGroup_one"),
           headerShadowVisible: false,

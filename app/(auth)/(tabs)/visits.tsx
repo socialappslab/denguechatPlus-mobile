@@ -255,12 +255,14 @@ export default function Visits() {
 
   const teamMemberOptions: Item[] = useMemo(
     () =>
-      team.data?.data.attributes.members.map((member) => ({
-        label: member.fullName,
-        value: member.id,
-        // https://github.com/lawnstarter/react-native-picker-select/issues/169#issuecomment-484954440
-        color: "black",
-      })) ?? [],
+      team.data?.data.attributes.members
+        .map((member) => ({
+          label: member.fullName,
+          value: member.id,
+          // https://github.com/lawnstarter/react-native-picker-select/issues/169#issuecomment-484954440
+          color: "black",
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) ?? [],
     [team],
   );
 
@@ -393,6 +395,8 @@ export default function Visits() {
                     },
                   }}
                   useNativeAndroidPickerStyle={false}
+                  // https://github.com/lawnstarter/react-native-picker-select/pull/377
+                  fixAndroidTouchableBug={true}
                   Icon={() => (
                     <MaterialCommunityIcons
                       name="chevron-down"
