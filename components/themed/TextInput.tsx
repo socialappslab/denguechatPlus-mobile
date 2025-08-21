@@ -1,4 +1,9 @@
-import { TextInput as DefaultTextInput, TouchableOpacity } from "react-native";
+import {
+  TextInput as DefaultTextInput,
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useRef } from "react";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
@@ -50,7 +55,14 @@ export function TextInput({
   };
 
   const classNameBorder = `${hasError ? "border-red-500" : "border-neutral-200"} ${readOnly ? "bg-neutral-50 opacity-60" : ""}  border rounded-lg p-2 h-11`;
-  const styleInput = { backgroundColor, color, fontFamily: FontFamily.regular };
+  const styleInput: StyleProp<TextStyle> = {
+    backgroundColor,
+    color,
+    fontFamily: FontFamily.regular,
+    // Adding p-0 due to a height problem after migrating to SDK 53
+    // https://github.com/facebook/react-native/issues/36861#issuecomment-3041795703
+    padding: 0,
+  };
 
   if (!search && !iconMaterial) {
     if (isSheet) {
@@ -92,15 +104,7 @@ export function TextInput({
           <DefaultTextInput
             ref={inputRefSearch}
             value={value}
-            style={[
-              styleInput,
-              {
-                marginLeft: 4,
-                display: "flex",
-                flex: 1,
-              },
-              style,
-            ]}
+            style={[styleInput, { marginLeft: 4, flexGrow: 1 }, style]}
             {...otherProps}
           />
         )}
