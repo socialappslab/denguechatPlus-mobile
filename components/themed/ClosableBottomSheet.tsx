@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type ClosableBottomSheetProps = ThemeProps &
   BottomSheetProps & {
-    bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
+    bottomSheetModalRef: React.RefObject<BottomSheetModalMethods | null>;
     title?: string;
     onClose?: () => void;
     onlyBackdrop?: boolean;

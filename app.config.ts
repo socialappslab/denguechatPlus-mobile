@@ -20,7 +20,7 @@ const config: ExpoConfig = {
   android: {
     package: "org.denguechatplus",
     versionCode: 1,
-    blockedPermissions: ["android.permission.READ_MEDIA_VIDEO"],
+    edgeToEdgeEnabled: true,
     config: {
       googleMaps: {
         apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID,
@@ -33,6 +33,7 @@ const config: ExpoConfig = {
     "expo-asset",
     "expo-localization",
     "expo-secure-store",
+    "expo-web-browser",
     [
       "expo-splash-screen",
       {

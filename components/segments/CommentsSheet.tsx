@@ -48,7 +48,7 @@ import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { Button } from "@/components/themed";
 
 export type CommentsSheetProps = ThemeProps & {
-  bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
+  bottomSheetModalRef: React.RefObject<BottomSheetModalMethods | null>;
   postId?: number;
   updateCommentCount: (diff: number) => void;
 };
