@@ -1,7 +1,7 @@
 import ContainerPictureIllustration from "@/assets/images/container-picture.svg";
 import FlipCameraIcon from "@/assets/images/icons/flip-camera.svg";
-import Shutter from "@/assets/images/icons/shutter.svg";
-import { Button, Loading, SafeAreaView, Text, View } from "@/components/themed";
+import ShutterIcon from "@/assets/images/icons/shutter.svg";
+import { Button, Loading, SafeAreaView, Text } from "@/components/themed";
 import {
   CameraCapturedPicture,
   CameraType,
@@ -10,14 +10,17 @@ import {
 } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Image } from "react-native";
+import { Image, View } from "react-native";
+import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
 
 export default function ContainerPicture() {
   const { t } = useTranslation();
   const { next } = useLocalSearchParams<{ next: string }>();
   const router = useRouter();
+  const { attachPhotoToCurrentInspection } = useInspectionPhotos();
+
   const [photoMode, setPhotoMode] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
   const [photoUri, setPhotoUri] = useState<string>();
@@ -26,24 +29,23 @@ export default function ContainerPicture() {
 
   const camera = useRef<CameraView | null>(null);
 
-  const takePicture = async () => {
+  async function takePicture() {
     if (!cameraReady) return;
     await camera.current?.takePictureAsync({ onPictureSaved: savePicture });
-  };
+  }
 
-  const flipCamera = useCallback(() => {
-    if (facing === "back") return setFacing("front");
-    setFacing("back");
-  }, [facing, setFacing]);
+  function toggleCameraFacing() {
+    setFacing((current) => (current === "back" ? "front" : "back"));
+  }
 
-  const savePicture = async (picture: CameraCapturedPicture) => {
+  async function savePicture(picture: CameraCapturedPicture) {
     setPhotoUri(picture.uri);
     setPhotoMode(false);
-  };
+  }
 
   const openCamera = () => setPhotoMode(true);
 
-  const onChooseFromGallery = async () => {
+  async function onChooseFromGallery() {
     const permission = await ImagePicker.getMediaLibraryPermissionsAsync();
     if (!permission.granted)
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -53,61 +55,57 @@ export default function ContainerPicture() {
     if (!picture.assets) return;
     const [photoSelected] = picture.assets;
     setPhotoUri(photoSelected.uri);
-  };
-
-  // useEffect(() => {
-  //   if (permission && !permission.granted) requestPermission();
-  // }, [permission, requestPermission]);
-
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <Loading />;
   }
 
-  if (!permission.granted) {
-    requestPermission();
-  }
+  async function handleNext() {
+    if (photoUri) await attachPhotoToCurrentInspection(photoUri);
 
-  if (photoMode) {
-    return (
-      <View>
-        <CameraView
-          className="h-full w-full flex pb-20 justify-center items-end flex-row"
-          facing={facing}
-          onCameraReady={() => setCameraReady(true)}
-          ref={camera}
-        >
-          <FlipCameraIcon
-            onPress={flipCamera}
-            className="absolute left-8 bottom-20"
-          />
-          <Shutter onPress={takePicture} />
-        </CameraView>
-      </View>
-    );
-  }
-
-  const onBack = () => router.back();
-  const onNext = () =>
     router.push({
       pathname: "/visit/[questionId]",
       params: { questionId: next },
     });
+  }
+
+  if (!permission) return <Loading />;
+
+  if (!permission.granted) void requestPermission();
+
+  if (photoMode) {
+    return (
+      <View className="relative">
+        <CameraView
+          className="h-full w-full flex pb-20 justify-center items-end flex-row"
+          facing={facing}
+          mode="picture"
+          onCameraReady={() => setCameraReady(true)}
+          ref={camera}
+        />
+        <View className="absolute bottom-16 px-8 flex-row items-center w-full">
+          <View className="w-1/3">
+            <FlipCameraIcon onPress={toggleCameraFacing} />
+          </View>
+          <View className="w-1/3 items-center">
+            <ShutterIcon onPress={takePicture} />
+          </View>
+          <View className="w-1/3" />
+        </View>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView>
       <View className="flex flex-1 py-5 px-5 h-full">
         <View className="flex flex-col justify-center items-center flex-1">
-          {!photoUri && (
-            <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
-              <ContainerPictureIllustration width="100%" height="100%" />
-            </View>
-          )}
-          {photoUri && (
+          {photoUri ? (
             <Image
               source={{ uri: photoUri }}
               className={`h-52 w-52 rounded-xl mb-8`}
             />
+          ) : (
+            <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center">
+              <ContainerPictureIllustration width="100%" height="100%" />
+            </View>
           )}
           <Text type="title" className="text-center">
             {t("visit.containerPicture.title")}
@@ -131,11 +129,19 @@ export default function ContainerPicture() {
         </View>
 
         <View className="flex flex-row gap-2">
-          <Button title={t("back")} onPress={onBack} className="flex-1" />
+          <Button
+            title={t("back")}
+            onPress={() => {
+              router.back();
+            }}
+            className="flex-1"
+          />
           <Button
             primary
             title={t("next")}
-            onPress={onNext}
+            onPress={async () => {
+              await handleNext();
+            }}
             className="flex-1"
           />
         </View>
