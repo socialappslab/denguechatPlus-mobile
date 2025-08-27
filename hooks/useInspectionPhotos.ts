@@ -14,7 +14,7 @@ export function useInspectionPhotos() {
     visitMetadata = useStore((state) => state.visitMetadata),
     inspectionPhotos = useStore((state) => state.inspectionPhotos);
 
-  const currentInspectionIndex = visitMetadata[visitId].inspectionIdx;
+  const currentInspectionIndex = visitMetadata[visitId]?.inspectionIdx;
 
   const attachPhotoToCurrentInspection = useCallback(
     async (photoUri: string) => {
