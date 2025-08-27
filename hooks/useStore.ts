@@ -7,14 +7,22 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-type QuestionId = string;
-type InspectionIdx = number;
-export type AnswerId = `${QuestionId}-${InspectionIdx}`;
-
 interface VisitMetadata {
   inspectionIdx: number;
 }
 
+export interface InspectionPhoto {
+  filename: string;
+  uri: string;
+  visitId: VisitId;
+  inspectionIdx: number;
+  referenceCode: string;
+}
+
+type QuestionId = string;
+type InspectionIdx = VisitMetadata["inspectionIdx"];
+
+export type AnswerId = `${QuestionId}-${InspectionIdx}`;
 export type AnswerState = ISelectableItem | ISelectableItem[];
 export type QuestionnaireState = Record<QuestionId, AnswerState>;
 export type VisitMap = Record<VisitId, QuestionnaireState>;
@@ -28,6 +36,7 @@ interface State {
   visitId: VisitId;
   visitMap: VisitMap;
   visitMetadata: VisitMetaMap;
+  inspectionPhotos: InspectionPhoto[];
   questionnaire: Questionnaire | null;
 }
 
@@ -58,6 +67,7 @@ export const useStore = create<Store>()(
         visitId: "" as VisitId,
         visitMap: {},
         visitMetadata: {},
+        inspectionPhotos: [],
         selectedCase: "house",
         storedHouseList: [],
         /**
@@ -143,3 +153,11 @@ export const useStore = create<Store>()(
 
 export const setQuestionnaire = (questionnaire: Questionnaire | null) =>
   useStore.setState(() => ({ questionnaire }));
+
+export const setInspectionPhotos = (inspectionPhotos: InspectionPhoto[]) =>
+  useStore.setState(() => ({ inspectionPhotos }));
+
+export const setInspectionPhoto = (inspectionPhoto: InspectionPhoto) =>
+  useStore.setState((state) => {
+    state.inspectionPhotos.push(inspectionPhoto);
+  });

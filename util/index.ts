@@ -24,8 +24,6 @@ export function extractAxiosErrorData(error: unknown): ErrorResponse | null {
   return null;
 }
 
-export const parseId = (v: string) => parseInt(v.match(/\d+/)![0], 10);
-
 export const formatDate = (
   dateString: string,
   language: string | null,
@@ -115,4 +113,14 @@ export const getLanguageCode = (language: string | null): string => {
 export function calculatePercentage(value: number, total: number): number {
   if (total === 0) return 0;
   return (value * 100) / total;
+}
+
+export function getFilenameFromURI(uri: string) {
+  const chunks = uri.split("/");
+  return chunks[chunks.length - 1];
+}
+
+export function getBasenameFromFilename(filename: string) {
+  const chunks = filename.split(".");
+  return chunks[0];
 }

@@ -1,13 +1,18 @@
 import { FormState, VisitData } from "@/types";
 import { Answer, Inspection, StatusColor } from "@/types/prepareFormData";
+import { InspectionPhoto } from "@/hooks/useStore";
 
 /**
  *
- * @param formData
+ * @param formData Response objects of all questions
+ * @param inspectionPhotos Photos of each inspection
  * @returns takes all SelectableItems from a given formState and returns
  * formatted inspection, answers and colorStatus
  */
-export const prepareFormData = (formData: FormState) => {
+export const prepareFormData = (
+  formData: FormState,
+  inspectionPhotos: InspectionPhoto[],
+) => {
   const questions = Object.keys(formData);
   let inspections: Inspection[] = [];
   let answers: Answer[] = [];
@@ -145,7 +150,13 @@ export const prepareFormData = (formData: FormState) => {
       }
 
       if (resourceName === "photo_id") {
-        inspections[index][resourceName] = "temp";
+        const photo = inspectionPhotos.find(
+          (photo) => photo.inspectionIdx === index,
+        );
+        if (photo) {
+          inspections[index][resourceName] = photo.filename;
+          inspections[index].code_reference = photo.referenceCode;
+        }
       }
     }
 
@@ -183,12 +194,11 @@ export const prepareFormData = (formData: FormState) => {
       inspections[index].statusColor = StatusColor.NotInfected;
   });
 
-  const returnObject = {
+  return {
     inspections,
     answers,
     visit,
   };
-  return returnObject;
 };
 
 export const orderStatus = (statusColors: StatusColor[]) => {
