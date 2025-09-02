@@ -143,6 +143,7 @@ export default function Summary() {
       answers,
       // @ts-expect-error
       inspections: sanitizeInspections(inspections),
+      wasOffline: !isInternetReachable,
     };
 
     VISITS_LOG.debug("Payload prepared for the server", sanitizedVisitData);
