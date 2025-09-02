@@ -29,6 +29,7 @@ import { useUserHasBrigade } from "@/hooks/useUserHasBrigade";
 import { useNetInfo } from "@react-native-community/netinfo";
 import invariant from "tiny-invariant";
 import { LOG } from "@/util/logger";
+import * as Sentry from "@sentry/react-native";
 
 function CustomDrawerContent() {
   const router = useRouter();
@@ -54,6 +55,7 @@ function CustomDrawerContent() {
       await logout(meData);
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
       const errorData = extractAxiosErrorData(error);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({

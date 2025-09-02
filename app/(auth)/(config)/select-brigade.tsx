@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { deserialize } from "jsonapi-fractal";
@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { debounce } from "lodash";
 import { useIsFocused } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 
 import {
   FilterButton,
@@ -87,8 +88,9 @@ export default function SelectBrigade() {
 
         setHasMore(data.links?.self !== data.links?.last);
       }
-    } catch (err) {
+    } catch (error) {
       setError(t("errorCodes.generic"));
+      Sentry.captureException(error);
     } finally {
       setLoading(false);
       setLoadingMore(false);

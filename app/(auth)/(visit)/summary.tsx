@@ -18,6 +18,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authApi } from "@/config/axios";
 import { useMemo } from "react";
 import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
+import * as Sentry from "@sentry/react-native";
 
 const getColorsAndQuantities = (inspections: Inspection[]) => {
   const validInspections = inspections.filter(
@@ -188,6 +189,7 @@ export default function Summary() {
       });
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
       const errorData = extractAxiosErrorData(error);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({

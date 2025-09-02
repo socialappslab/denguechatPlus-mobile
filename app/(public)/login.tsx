@@ -110,6 +110,7 @@ export default function Login() {
       authErrorCount.current = 0;
       LOG.info(`Logged in with user: ${payload.username}`);
     } catch (error) {
+      Sentry.captureException(error);
       setError("username", { type: "manual" });
       setError("phone", { type: "manual" });
       setError("password", { type: "manual" });

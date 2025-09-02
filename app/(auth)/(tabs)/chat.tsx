@@ -12,6 +12,7 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Toast from "react-native-toast-message";
+import * as Sentry from "@sentry/react-native";
 
 import {
   Text,
@@ -158,8 +159,9 @@ export default function Chat() {
         // console.log("data.links>>>", data.links);
         setHasMore(data.links?.self !== data.links?.last);
       }
-    } catch (err) {
-      console.log("error>>>>>>", err);
+    } catch (error) {
+      console.error(error);
+      Sentry.captureException(error);
       setError(t("errorCodes.generic"));
     } finally {
       setLoading(false);
@@ -244,7 +246,8 @@ export default function Chat() {
         return newState;
       });
     } catch (error) {
-      console.log("Error liking comment", error);
+      console.error(error);
+      Sentry.captureException(error);
       setState((prev) => {
         const newState = { ...prev };
         const post = newState[`${id}`];

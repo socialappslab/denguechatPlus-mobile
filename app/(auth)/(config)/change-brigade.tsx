@@ -18,6 +18,7 @@ import { useBrigades } from "@/hooks/useBrigades";
 import { AvatarBig } from "@/components/segments/AvatarBig";
 import Toast from "react-native-toast-message";
 import { extractAxiosErrorData } from "@/util";
+import * as Sentry from "@sentry/react-native";
 
 export default function ChangeBrigade() {
   const { t } = useTranslation();
@@ -52,6 +53,7 @@ export default function ChangeBrigade() {
       router.push("/change-brigade-success");
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
       const errorData = extractAxiosErrorData(error);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({

@@ -29,6 +29,7 @@ import { ApiResponseCollection, Wedge } from "@/schema";
 import { useRouter } from "expo-router";
 import { extractAxiosErrorData } from "@/util";
 import Toast from "react-native-toast-message";
+import * as Sentry from "@sentry/react-native";
 
 interface City {
   id: string;
@@ -285,6 +286,7 @@ export default function Register() {
       await createAccount.mutateAsync(payload);
       router.replace("/register-success");
     } catch (error) {
+      Sentry.captureException(error);
       const errorData = extractAxiosErrorData(error);
 
       if (!errorData || !errorData.errors || errorData.errors.length === 0) {

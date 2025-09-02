@@ -35,6 +35,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useVisit } from "@/hooks/useVisit";
 import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
+import * as Sentry from "@sentry/react-native";
 
 interface HouseReport {
   greenQuantity: number;
@@ -313,6 +314,7 @@ export default function Visits() {
       await Promise.all([reFetchMe(), team.refetch(), reports.refetch()]);
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
     } finally {
       setRefreshing(false);
     }
@@ -349,6 +351,7 @@ export default function Visits() {
         text1: t("success"),
       });
     } catch (error) {
+      Sentry.captureException(error);
       Toast.show({
         type: "error",
         text1: t(["errorCodes.generic"]),

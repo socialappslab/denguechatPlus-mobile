@@ -18,6 +18,7 @@ import Toast from "react-native-toast-message";
 import invariant from "tiny-invariant";
 import { useFocusEffect } from "expo-router";
 import { useNetInfo } from "@react-native-community/netinfo";
+import * as Sentry from "@sentry/react-native";
 
 function useHouseBlocksQuery(wedgeId: number | null) {
   interface HouseBlock {
@@ -133,6 +134,7 @@ export default function ChangeHouseBlock() {
       router.back();
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
       Toast.show({
         type: "error",
         text1: t("errorCodes.generic"),
