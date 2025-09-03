@@ -6,6 +6,7 @@ import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import Toast from "react-native-toast-message";
+import Sentry from "@sentry/react-native";
 
 import {
   useForm,
@@ -126,6 +127,7 @@ export default function NewPost() {
     } catch (error) {
       // @ts-expect-error
       console.error("Error posting data:", JSON.stringify(error?.response));
+      Sentry.captureException(error);
       Toast.show({
         type: "error",
         text1: t("errorCodes.generic"),
@@ -178,6 +180,7 @@ export default function NewPost() {
       }
     } catch (error) {
       console.error("Error selecting image:", error);
+      Sentry.captureException(error);
     } finally {
       setLoadingPhoto(false);
     }

@@ -225,6 +225,12 @@ interface VisitAttributes {
   inspections: Inspection[];
   familyEducationTopics: string[];
   otherFamilyEducationTopic?: string;
+  /**
+   * Can be `null`, because when we added this feature, we didn't knew the
+   * correct value for existing records and defaulting to `false` was going to
+   * mess up the data.
+   */
+  wasOffline: boolean | null;
 }
 
 export interface VisitData extends VisitAttributes {

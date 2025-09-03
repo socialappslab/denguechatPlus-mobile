@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { debounce } from "lodash";
 import { useIsFocused } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 
 import {
   FilterButton,
@@ -82,8 +83,9 @@ export default function SelectUser() {
 
         setHasMore(data.links?.self !== data.links?.last);
       }
-    } catch (err) {
+    } catch (error) {
       setError(t("errorCodes.generic"));
+      Sentry.captureException(error);
     } finally {
       setLoading(false);
       setLoadingMore(false);

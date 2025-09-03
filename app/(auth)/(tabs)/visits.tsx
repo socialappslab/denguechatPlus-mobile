@@ -20,7 +20,6 @@ import VisitSummary from "@/components/VisitSummary";
 import { authApi } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/AuthProvider";
-import useCreateMutation from "@/hooks/useCreateMutation";
 import { QuestionnaireState, useStore } from "@/hooks/useStore";
 import { BaseObject, Team } from "@/schema";
 import { TeamResponse, VisitData } from "@/types";
@@ -32,9 +31,11 @@ import Toast from "react-native-toast-message";
 import { useFilters } from "@/hooks/useFilters";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useVisit } from "@/hooks/useVisit";
+import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
+import * as Sentry from "@sentry/react-native";
 
 interface HouseReport {
   greenQuantity: number;
@@ -226,20 +227,41 @@ function useReportsQuery(
   });
 }
 
+function useCreateVisitMutation() {
+  return useMutation({
+    mutationFn: (data: FormData) => {
+      return authApi.post<VisitData>("/visits", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    },
+  });
+}
+
 export default function Visits() {
   const { t } = useTranslation();
-  const { storedVisits, cleanUpStoredVisit } = useStore();
   const { isInternetReachable } = useNetInfo();
   const { i18n } = useTranslation();
   const { meData, reFetchMe } = useAuth();
   useRefreshOnFocus(reFetchMe);
   const { filters, setFilter } = useFilters();
   const { setVisitData, visitData } = useVisit();
+  const { deleteInspectionPhotosFromVisit } = useInspectionPhotos();
 
   const router = useRouter();
 
+  const storedVisits = useStore((state) => state.storedVisits);
+  const cleanUpStoredVisit = useStore((state) => state.cleanUpStoredVisit);
+  const visitId = useStore((state) => state.visitId);
+  const inspectionPhotos = useStore((state) => state.inspectionPhotos);
+
+  const inspectionPhotosForCurrentVisit = useMemo(
+    () => inspectionPhotos.filter((photo) => photo.visitId === visitId),
+    [inspectionPhotos, visitId],
+  );
+
   const [selectedVisit, setSelectedVisit] = useState<QuestionnaireState>();
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -252,6 +274,8 @@ export default function Visits() {
 
   const reports = useReportsQuery(sectorId, wedgeId, teamId);
   useRefreshOnFocus(reports.refetch);
+
+  const createVisit = useCreateVisitMutation();
 
   const teamMemberOptions: Item[] = useMemo(
     () =>
@@ -273,11 +297,6 @@ export default function Visits() {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const { createMutation: createVisit } = useCreateMutation<
-    { json_params: string },
-    VisitData
-  >("visits", { "Content-Type": "multipart/form-data" });
-
   useEffect(() => {
     setFilter({
       sector: {
@@ -295,6 +314,7 @@ export default function Visits() {
       await Promise.all([reFetchMe(), team.refetch(), reports.refetch()]);
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
     } finally {
       setRefreshing(false);
     }
@@ -311,8 +331,18 @@ export default function Visits() {
     delete newVisit.colorsAndQuantities;
 
     try {
-      setLoading(true);
-      await createVisit({ json_params: JSON.stringify(newVisit) });
+      const form = new FormData();
+      form.append("json_params", JSON.stringify(newVisit));
+      for (const photo of inspectionPhotosForCurrentVisit) {
+        // @ts-expect-error doesn't expect the object part
+        form.append("photos[]", {
+          uri: photo.uri,
+          name: photo.filename,
+          type: "image/jpeg",
+        });
+      }
+      await createVisit.mutateAsync(form);
+      await deleteInspectionPhotosFromVisit(visitId);
       cleanUpStoredVisit(newVisit);
       setSuccess(true);
       bottomSheetModalRef.current?.close();
@@ -321,13 +351,12 @@ export default function Visits() {
         text1: t("success"),
       });
     } catch (error) {
+      Sentry.captureException(error);
       Toast.show({
         type: "error",
         text1: t(["errorCodes.generic"]),
       });
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -463,12 +492,11 @@ export default function Visits() {
               <View className="w-full h-full">
                 {!success && (
                   <>
-                    {loading && (
+                    {createVisit.isPending ? (
                       <View className="flex flex-1 items-center justify-center">
                         <Loading />
                       </View>
-                    )}
-                    {!loading && (
+                    ) : (
                       <VisitSummary
                         // @ts-expect-error
                         date={`${formatDate(selectedVisit?.visitedAt || "", i18n.language)}`}
@@ -494,21 +522,19 @@ export default function Visits() {
                 {success && <SuccessSummary />}
               </View>
             </View>
-            {!success && (
+            {!success ? (
               <Button
                 title="Sincronizar visita"
                 onPress={() => synchronizeVisit(selectedVisit)}
-                disabled={!isInternetReachable || loading}
+                disabled={!isInternetReachable || createVisit.isPending}
                 primary
               />
-            )}
-            {success && (
+            ) : (
               <Button
                 title="Cerrar"
                 onPress={() => {
                   setSuccess(false);
                   bottomSheetModalRef.current?.close();
-                  setLoading(false);
                 }}
               />
             )}

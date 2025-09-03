@@ -20,6 +20,7 @@ import { BottomSheetScrollViewMethods } from "@gorhom/bottom-sheet/lib/typescrip
 
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
+import * as Sentry from "@sentry/react-native";
 
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -48,7 +49,7 @@ import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { Button } from "@/components/themed";
 
 export type CommentsSheetProps = ThemeProps & {
-  bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
+  bottomSheetModalRef: React.RefObject<BottomSheetModalMethods | null>;
   postId?: number;
   updateCommentCount: (diff: number) => void;
 };
@@ -165,6 +166,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         scrollViewRef.current?.scrollToEnd();
       }, 1000);
     } catch (error) {
+      Sentry.captureException(error);
       // @ts-expect-error
       console.error("Error posting data:", JSON.stringify(error?.response));
       Toast.show({
@@ -243,6 +245,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
       }
     } catch (error) {
       console.error("Error selecting image:", error);
+      Sentry.captureException(error);
     } finally {
       setLoadingPhoto(false);
     }
@@ -351,7 +354,8 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         return newState;
       });
     } catch (error) {
-      console.log("Error liking comment", error);
+      console.error(error);
+      Sentry.captureException(error);
       setState((prev) => {
         const newState = { ...prev };
         const post = newState[`${id}`];
@@ -381,7 +385,8 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         text1: t("chat.commentDeleted"),
       });
     } catch (error) {
-      console.log("Error deleting comment", error);
+      console.error(error);
+      Sentry.captureException(error);
     } finally {
       setPostigComment(false);
     }

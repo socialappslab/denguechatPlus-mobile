@@ -4,7 +4,7 @@ const config: ExpoConfig = {
   name: "DengueChatPlus",
   slug: "dengue-chat-plus",
   scheme: "org.denguechat.plus",
-  version: "1.9.0",
+  version: "1.10.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   newArchEnabled: false,
@@ -20,7 +20,7 @@ const config: ExpoConfig = {
   android: {
     package: "org.denguechatplus",
     versionCode: 1,
-    blockedPermissions: ["android.permission.READ_MEDIA_VIDEO"],
+    edgeToEdgeEnabled: true,
     config: {
       googleMaps: {
         apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID,
@@ -33,6 +33,7 @@ const config: ExpoConfig = {
     "expo-asset",
     "expo-localization",
     "expo-secure-store",
+    "expo-web-browser",
     [
       "expo-splash-screen",
       {

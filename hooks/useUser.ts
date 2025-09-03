@@ -3,6 +3,7 @@ import { USER_LOCAL_STORAGE_KEY } from "../constants/Keys";
 import { useStorageState } from "./useStorageState";
 import { IUser } from "../schema/auth";
 import * as SecureStore from "expo-secure-store";
+import * as Sentry from "@sentry/react-native";
 
 type UseUserHook = [
   [boolean, IUser | null],
@@ -20,7 +21,8 @@ export default function useUser(): UseUserHook {
       try {
         setLoadedUser(JSON.parse(user));
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {
+      } catch (error) {
+        Sentry.captureException(error);
         setLoadedUser(null);
       }
     }

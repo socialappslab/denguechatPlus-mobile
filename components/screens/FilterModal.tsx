@@ -19,6 +19,7 @@ import {
 } from "@/components/themed";
 import { authApi } from "@/config/axios";
 import { HouseBlockType } from "@/types";
+import * as Sentry from "@sentry/react-native";
 
 export interface FilterModalProps {
   onFilter: (itemSeleted?: BaseObject) => void;
@@ -72,6 +73,7 @@ export function FilterModal({
       }
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
       setError(t("errorCodes.generic"));
     } finally {
       setLoading(false);

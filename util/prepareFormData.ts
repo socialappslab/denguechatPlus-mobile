@@ -1,13 +1,17 @@
 import { FormState, VisitData } from "@/types";
 import { Answer, Inspection, StatusColor } from "@/types/prepareFormData";
+import { InspectionPhoto } from "@/hooks/useStore";
 
 /**
- *
- * @param formData
+ * @param formData Response objects of all questions
+ * @param inspectionPhotos Photos of each inspection
  * @returns takes all SelectableItems from a given formState and returns
  * formatted inspection, answers and colorStatus
  */
-export const prepareFormData = (formData: FormState) => {
+export const prepareFormData = (
+  formData: FormState,
+  inspectionPhotos: InspectionPhoto[],
+) => {
   const questions = Object.keys(formData);
   let inspections: Inspection[] = [];
   let answers: Answer[] = [];
@@ -19,7 +23,8 @@ export const prepareFormData = (formData: FormState) => {
     if (!inspections[index]) inspections[index] = {};
     if (!answers[index]) answers[index] = {};
 
-    if (Array.isArray(answer)) {
+    const isAnswerMultipleSelection = Array.isArray(answer);
+    if (isAnswerMultipleSelection) {
       const [first] = answer;
       if (!first) return;
       const resourceName = first.resourceName as string;
@@ -135,7 +140,22 @@ export const prepareFormData = (formData: FormState) => {
       }
 
       if (resourceName === "visit_permission") {
+        /*
+         * This is an special case, for this answer we need to set the visit
+         * permission in two places for the following reasons:
+         *
+         * 1. We're required to send the visitPermission key to the backend to
+         *    show the visit permission status in the web.
+         * 2. We're using the visitPermission key to show the visit permission
+         *    status in the summary page.
+         * 3. We have to track the detail of the reply for the "Data" tab. And
+         *    of course to have the detail why the brigadist didn't have permission
+         *    to go into the house.
+         */
         visit.visitPermission = answer.bool;
+
+        const questionId = `question_${question}`;
+        answers[index][questionId] = answer.value;
       }
 
       if (resourceName === "quantity_founded") {
@@ -145,7 +165,13 @@ export const prepareFormData = (formData: FormState) => {
       }
 
       if (resourceName === "photo_id") {
-        inspections[index][resourceName] = "temp";
+        const photo = inspectionPhotos.find(
+          (photo) => photo.inspectionIdx === index,
+        );
+        if (photo) {
+          inspections[index][resourceName] = photo.filename;
+          inspections[index].code_reference = photo.referenceCode;
+        }
       }
     }
 
@@ -183,12 +209,11 @@ export const prepareFormData = (formData: FormState) => {
       inspections[index].statusColor = StatusColor.NotInfected;
   });
 
-  const returnObject = {
+  return {
     inspections,
     answers,
     visit,
   };
-  return returnObject;
 };
 
 export const orderStatus = (statusColors: StatusColor[]) => {

@@ -6,7 +6,7 @@ import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 export type SimpleTextInputProps = ThemeProps &
   DefaultTextInput["props"] & {
-    inputRef?: React.RefObject<DefaultTextInput>;
+    inputRef?: React.RefObject<DefaultTextInput | null>;
     isSheet?: boolean;
   };
 

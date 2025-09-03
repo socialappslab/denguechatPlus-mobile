@@ -1,7 +1,6 @@
 import { Button, ScrollView, View } from "@/components/themed";
 import VisitSummary from "@/components/VisitSummary";
 import { useAuth } from "@/context/AuthProvider";
-import useCreateMutation from "@/hooks/useCreateMutation";
 import { useVisit } from "@/hooks/useVisit";
 import { useStore } from "@/hooks/useStore";
 import { VisitData } from "@/types";
@@ -14,6 +13,12 @@ import { sanitizeInspections } from "@/util/sanitizeInspections";
 import { Image } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { VISITS_LOG } from "@/util/logger";
+import invariant from "tiny-invariant";
+import { useMutation } from "@tanstack/react-query";
+import { authApi } from "@/config/axios";
+import { useMemo } from "react";
+import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
+import * as Sentry from "@sentry/react-native";
 
 const getColorsAndQuantities = (inspections: Inspection[]) => {
   const validInspections = inspections.filter(
@@ -70,6 +75,18 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
   };
 };
 
+function useCreateVisitMutation() {
+  return useMutation({
+    mutationFn: (data: FormData) => {
+      return authApi.post<VisitData>("/visits", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    },
+  });
+}
+
 export default function Summary() {
   const router = useRouter();
   const { visitData } = useVisit();
@@ -77,18 +94,27 @@ export default function Summary() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { i18n } = useTranslation();
+  const { deleteInspectionPhotosFromVisit } = useInspectionPhotos();
 
   const visitMap = useStore((state) => state.visitMap);
   const visitId = useStore((state) => state.visitId);
+  const inspectionPhotos = useStore((state) => state.inspectionPhotos);
   const finaliseCurrentVisit = useStore((state) => state.finaliseCurrentVisit);
   const questionnaire = useStore((state) => {
-    if ((state.questionnaire, "Expected questionnaire to be defined"))
-      return state.questionnaire;
+    invariant(state.questionnaire, "Expected questionnaire to be defined");
+    return state.questionnaire;
   });
 
   const currentVisit = visitMap[visitId];
+  const inspectionPhotosForCurrentVisit = useMemo(
+    () => inspectionPhotos.filter((photo) => photo.visitId === visitId),
+    [inspectionPhotos, visitId],
+  );
 
-  const { inspections, answers, visit } = prepareFormData(currentVisit);
+  const { inspections, answers, visit } = prepareFormData(
+    currentVisit,
+    inspectionPhotosForCurrentVisit,
+  );
   let { mainStatusColor, colorsAndQuantities } =
     getColorsAndQuantities(inspections);
 
@@ -96,10 +122,7 @@ export default function Summary() {
     ? mainStatusColor
     : StatusColor.PotentionallyInfected;
 
-  const { createMutation: createVisit, loading } = useCreateMutation<
-    { json_params: string },
-    VisitData
-  >("visits", { "Content-Type": "multipart/form-data" });
+  const createVisit = useCreateVisitMutation();
 
   const onFinalize = async () => {
     // This should never happen, but we're being cautious
@@ -121,6 +144,7 @@ export default function Summary() {
       answers,
       // @ts-expect-error
       inspections: sanitizeInspections(inspections),
+      wasOffline: !isInternetReachable,
     };
 
     VISITS_LOG.debug("Payload prepared for the server", sanitizedVisitData);
@@ -128,7 +152,18 @@ export default function Summary() {
     try {
       // We only make the request if it's connected
       if (isInternetReachable) {
-        await createVisit({ json_params: JSON.stringify(sanitizedVisitData) });
+        const form = new FormData();
+        form.append("json_params", JSON.stringify(sanitizedVisitData));
+        for (const photo of inspectionPhotosForCurrentVisit) {
+          // @ts-expect-error doesn't expect the object part
+          form.append("photos[]", {
+            uri: photo.uri,
+            name: photo.filename,
+            type: "image/jpeg",
+          });
+        }
+        await createVisit.mutateAsync(form);
+        await deleteInspectionPhotosFromVisit(visitId);
         VISITS_LOG.info("Visit sent to the server successfully");
       }
       Toast.show({
@@ -154,6 +189,7 @@ export default function Summary() {
       });
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
       const errorData = extractAxiosErrorData(error);
       errorData?.errors?.forEach((error: any) => {
         Toast.show({
@@ -203,7 +239,7 @@ export default function Summary() {
           primary
           title={t("finalize")}
           onPress={onFinalize}
-          disabled={loading}
+          disabled={createVisit.isPending}
         />
       </View>
     </View>

@@ -44,9 +44,7 @@ export default function VisitLayout(props: ThemeProps) {
           title: t("config.brigaderList"),
           headerLeft: () => (
             <Ionicons
-              onPress={() => {
-                while (router.canGoBack()) router.back();
-              }}
+              onPress={() => router.back()}
               name="arrow-back"
               size={24}
               color={color}
@@ -79,9 +77,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShadowVisible: false,
           headerLeft: () => (
             <Ionicons
-              onPress={() => {
-                while (router.canGoBack()) router.back();
-              }}
+              onPress={() => router.back()}
               name="arrow-back"
               size={24}
               color={color}
