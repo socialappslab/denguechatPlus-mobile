@@ -34,15 +34,24 @@ import {
 
 import * as Sentry from "@sentry/react-native";
 import * as Application from "expo-application";
-import useSignIn from "@/hooks/useSignIn";
 import { extractAxiosErrorData } from "@/util";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { Link } from "expo-router";
 import { LOG } from "@/util/logger";
+import { useMutation } from "@tanstack/react-query";
+import { axios } from "@/config/axios";
+import useSessionStore from "@/hooks/useSessionStore";
+import { useStore } from "@/hooks/useStore";
+
+function useLogInMutation() {
+  return useMutation({
+    mutationFn: async (data: LoginInputType) =>
+      (await axios.post("/users/session", data)).data,
+  });
+}
 
 export default function Login() {
   const { t } = useTranslation();
-  const { signInMutation, loading } = useSignIn();
   const { isConnected } = useNetInfo();
 
   const [, setPhoneNumber] = useState("");
@@ -52,12 +61,13 @@ export default function Login() {
   const [phoneCountryCode, setPhoneCountryCode] = useState<CountryCode>("PE");
   const [showPhoneCountryPicker, setShowPhoneCountryPicker] = useState(false);
 
-  const phoneInput = useRef<PhoneInput>(null);
-
   const methods = useForm<LoginInputType>({});
+  const logIn = useLogInMutation();
+  const setUser = useStore((state) => state.setUser);
+  const setSession = useSessionStore((state) => state.setSession);
 
+  const phoneInput = useRef<PhoneInput>(null);
   const refPassword = useRef<RNTextInput>(null);
-
   const authErrorCount = useRef(0);
 
   const {
@@ -106,10 +116,14 @@ export default function Login() {
         };
       }
 
-      await signInMutation(payload);
-      authErrorCount.current = 0;
+      const response = await logIn.mutateAsync(payload);
+      setSession(response.meta.jwt.res);
+      setUser(response.data.attributes);
       LOG.info(`Logged in with user: ${payload.username}`);
+
+      authErrorCount.current = 0;
     } catch (error) {
+      console.error(error);
       Sentry.captureException(error);
       setError("username", { type: "manual" });
       setError("phone", { type: "manual" });
@@ -363,7 +377,7 @@ export default function Login() {
 
             <Button
               primary
-              disabled={loading}
+              disabled={logIn.isPending}
               className="mb-4"
               title={t("login.action")}
               onPress={handleSubmit(onSubmitHandler)}

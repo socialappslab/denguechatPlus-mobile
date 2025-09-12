@@ -1,8 +1,11 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
-import { House, Question, Questionnaire, VisitId } from "@/types";
+import { axios } from "@/config/axios";
+import { IUser } from "@/schema/auth";
+import { House, Question, Questionnaire, Resources, VisitId } from "@/types";
 import { VISITS_LOG } from "@/util/logger";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setAutoFreeze } from "immer";
+import { CaseType, deserialize } from "jsonapi-fractal";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -29,7 +32,14 @@ export type VisitMap = Record<VisitId, QuestionnaireState>;
 export type VisitMetaMap = Record<VisitId, VisitMetadata>;
 export type VisitCase = "house" | "orchard";
 
-interface State {
+interface Store {
+  user: IUser | null;
+  setUser: (user: IUser | null) => void;
+
+  // TODO: fix types for both user and userProfile
+  userProfile: IUser | null;
+  fetchUserProfile: () => Promise<IUser>;
+
   selectedCase: VisitCase;
   storedHouseList: House[];
   storedVisits: QuestionnaireState[];
@@ -37,10 +47,13 @@ interface State {
   visitMap: VisitMap;
   visitMetadata: VisitMetaMap;
   inspectionPhotos: InspectionPhoto[];
-  questionnaire: Questionnaire | null;
-}
 
-interface Actions {
+  questionnaire: Questionnaire | null;
+  fetchQuestionnaire: (language: string) => Promise<Questionnaire>;
+
+  appConfig: Resources | null;
+  fetchAppConfig: () => Promise<Resources>;
+
   cleanUpStoredVisit: (visit: any) => void;
   finaliseCurrentVisit: (
     isConnected: boolean,
@@ -57,12 +70,24 @@ interface Actions {
   setSelectedCase: (visitCase: VisitCase) => void;
 }
 
-type Store = State & Actions;
-
 export const useStore = create<Store>()(
   immer(
     persist(
       (set) => ({
+        user: null,
+        setUser: (user) => set({ user }),
+
+        userProfile: null,
+        fetchUserProfile: async () => {
+          // TODO: annotate the response
+          const { data: userProfile } = await axios.get("users/me");
+          const deserializedData = deserialize(userProfile, {
+            changeCase: CaseType.camelCase,
+          }) as IUser;
+          set({ userProfile: deserializedData });
+          return deserializedData;
+        },
+
         // Always set in "Select House", dumb value
         visitId: "" as VisitId,
         visitMap: {},
@@ -82,6 +107,23 @@ export const useStore = create<Store>()(
          * of a single questionnaire for all visits.
          */
         questionnaire: null,
+        fetchQuestionnaire: async (language) => {
+          // TODO: annotate the response
+          const { data: questionnaire } = await axios.get(
+            "/questionnaires/current",
+            { params: { language } },
+          );
+          set({ questionnaire: questionnaire.data });
+          return questionnaire.data;
+        },
+
+        appConfig: null,
+        fetchAppConfig: async () => {
+          // TODO: annotate the response
+          const { data: appConfig } = await axios.get("/get_last_params");
+          set({ appConfig });
+          return appConfig;
+        },
 
         /**
          * To be called when a house is selected, this method

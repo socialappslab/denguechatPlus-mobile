@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useRouter } from "expo-router";
+import { Link, useRouter, useSegments } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Platform, Pressable, TouchableOpacity } from "react-native";
@@ -10,8 +10,6 @@ import {
 } from "@gorhom/bottom-sheet";
 
 import { Button, Loading, SafeAreaView, Text, View } from "@/components/themed";
-import { useAuth } from "@/context/AuthProvider";
-import { VisitProvider } from "@/context/VisitContext";
 import AssignBrigade from "@/assets/images/icons/add-brigade.svg";
 import Logout from "@/assets/images/icons/logout.svg";
 import Logo from "@/assets/images/logo-small.svg";
@@ -20,9 +18,8 @@ import Cog from "@/assets/images/icons/cog.svg";
 import ProtectedView from "@/components/control/ProtectedView";
 import { extractAxiosErrorData, getInitialsBase } from "@/util";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import Toast from "react-native-toast-message";
-import { useIsFocused } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
 import { useUserHasBrigade } from "@/hooks/useUserHasBrigade";
@@ -30,29 +27,37 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import invariant from "tiny-invariant";
 import { LOG } from "@/util/logger";
 import * as Sentry from "@sentry/react-native";
+import { useStore } from "@/hooks/useStore";
+import { useQuery } from "@tanstack/react-query";
+import useSessionStore from "@/hooks/useSessionStore";
+import { VisitProvider } from "@/context/VisitContext";
 
 function CustomDrawerContent() {
   const router = useRouter();
-  const { meData, logout, reFetchMe } = useAuth();
+
+  const userProfile = useStore((state) => state.userProfile);
+
   const { t } = useTranslation();
   const [openSettings, setOpenSettings] = useState(false);
   const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const isFocused = useIsFocused();
   const userHasBrigade = useUserHasBrigade();
   const { isInternetReachable } = useNetInfo();
+  const resetSessionStore = useSessionStore((state) => state.reset);
 
   const onPressDeleteAccount = () => {
     bottomSheetModalRef.current?.present();
   };
 
   const onConfirmDeleteAccount = async () => {
-    invariant(meData, "Expected user object to be defined");
+    invariant(userProfile, "Expected user object to be defined");
     try {
       setLoading(true);
-      await authApi.delete("/users/delete_account");
-      LOG.warn(`Deleted user: ${meData.username}`);
-      await logout(meData);
+      await axios.delete("/users/delete_account");
+      LOG.warn(`Deleted user: ${userProfile.username}`);
+      resetSessionStore();
+      Sentry.setUser(null);
+      LOG.info(`Logged out from user: ${userProfile.username}`);
     } catch (error) {
       console.error(error);
       Sentry.captureException(error);
@@ -67,11 +72,6 @@ function CustomDrawerContent() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (isFocused) reFetchMe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
 
   const snapPoints = useMemo(() => ["45%"], []);
 
@@ -191,24 +191,27 @@ function CustomDrawerContent() {
           <View className="flex-row items-center px-2">
             <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3">
               <Text className="font-bold text-sm text-green-700">
-                {meData?.userProfile
+                {userProfile
                   ? getInitialsBase(
-                      String(meData.userProfile.firstName),
-                      String(meData.userProfile.lastName),
+                      String(userProfile.userProfile?.firstName),
+                      String(userProfile.userProfile?.lastName),
                     )
                   : "U"}
               </Text>
             </View>
             <View className="flex flex-1 flex-row items-center">
               <View className="flex flex-1 flex-col">
-                <Text>{`${meData?.userProfile?.firstName} ${meData?.userProfile?.lastName}`}</Text>
-                <Text className="text-sm font-thin">{meData?.username}</Text>
+                <Text>{`${userProfile?.userProfile?.firstName} ${userProfile?.userProfile?.lastName}`}</Text>
+                <Text className="text-sm font-thin">
+                  {userProfile?.username}
+                </Text>
               </View>
               <TouchableOpacity
                 className="mr-4"
                 onPress={async () => {
-                  invariant(meData, "Expected user object to be defined");
-                  await logout(meData);
+                  resetSessionStore();
+                  Sentry.setUser(null);
+                  LOG.info(`Logged out from user: ${userProfile?.username}`);
                 }}
               >
                 <Logout />
@@ -221,7 +224,62 @@ function CustomDrawerContent() {
   );
 }
 
+function useQuestionnaireQuery() {
+  const { i18n } = useTranslation();
+  const fetchQuestionnaire = useStore((state) => state.fetchQuestionnaire);
+
+  return useQuery({
+    enabled: false,
+    // TODO: check if this bypasses the cache
+    gcTime: 0,
+    queryKey: ["questionnaire", i18n.language],
+    queryFn: async () => await fetchQuestionnaire(i18n.language),
+  });
+}
+
+function useAppConfigQuery() {
+  const fetchAppConfig = useStore((state) => state.fetchAppConfig);
+
+  return useQuery({
+    enabled: false,
+    // TODO: check if this bypasses the cache
+    gcTime: 0,
+    queryKey: ["appConfig"],
+    queryFn: async () => await fetchAppConfig(),
+  });
+}
+
+function useUserProfileQuery() {
+  const fetchUserProfile = useStore((state) => state.fetchUserProfile);
+
+  return useQuery({
+    enabled: false,
+    // TODO: check if this bypasses the cache
+    gcTime: 0,
+    queryKey: ["userProfile"],
+    queryFn: async () => await fetchUserProfile(),
+  });
+}
+
 export default function AuthLayout() {
+  const questionnaire = useQuestionnaireQuery();
+  const appConfig = useAppConfigQuery();
+  const userProfile = useUserProfileQuery();
+  const segments = useSegments();
+
+  /*
+   * These are requests that should be made whenever the user navigates to
+   * another page.
+   */
+  useEffect(() => {
+    async function execute() {
+      await questionnaire.refetch();
+      await appConfig.refetch();
+      await userProfile.refetch();
+    }
+    void execute();
+  }, [questionnaire, appConfig, userProfile, segments]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <VisitProvider>

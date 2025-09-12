@@ -1,21 +1,12 @@
-import useAxios from "axios-hooks";
 import * as SecureStore from "expo-secure-store";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 
-import {
-  CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
-  CURRENT_VISIT_LOCAL_STORAGE_KEY,
-} from "@/constants/Keys";
-import { useAuth } from "@/context/AuthProvider";
-import { ErrorResponse } from "@/schema";
-import { Questionnaire, Resources, VisitData } from "@/types";
-import { useTranslation } from "react-i18next";
-import { setQuestionnaire } from "@/hooks/useStore";
+import { CURRENT_VISIT_LOCAL_STORAGE_KEY } from "@/constants/Keys";
+import { VisitData } from "@/types";
+import { useStore } from "@/hooks/useStore";
 
 interface VisitContextType {
   visitData: VisitData;
-  resources: Resources;
   setVisitData: (data: Partial<VisitData>) => void;
 }
 
@@ -26,8 +17,7 @@ const VisitContext = createContext<VisitContextType | undefined>(undefined);
  */
 
 const VisitProvider = ({ children }: { children: ReactNode }) => {
-  const { i18n } = useTranslation();
-  const { meData } = useAuth();
+  const userProfile = useStore((state) => state.userProfile);
   const [visitData, setVisitDataState] = useState<VisitData>({
     answers: {},
     // @ts-expect-error
@@ -42,69 +32,17 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     inspections: [],
   });
 
-  // @ts-expect-error `resources` is a tuple with some objects that we expect
-  // from our backend and it will be used throughout the life of our app, we
-  // should make sure that resources always comes in the shape that the types
-  // say, or throw, because is guaranteed the app will crash at some point
-  const [resources, setResources] = useState<Resources>([]);
-
-  const [{ data: questionnaireData }, featchQuestionnaire] = useAxios<
-    ExistingDocumentObject,
-    unknown,
-    ErrorResponse
-  >(
-    {
-      // We need to support en-US es-ES etc in the backend
-      // for now we're manually grabbing the first part
-      url: `questionnaires/current?language=${i18n.language}`,
-    },
-    { manual: true },
-  );
-
-  const [{ data: paramsData }, featchParams] = useAxios<
-    Resources,
-    unknown,
-    ErrorResponse
-  >(
-    {
-      url: `get_last_params`,
-    },
-    { manual: true },
-  );
-
   useEffect(() => {
-    if (!meData) return;
+    if (!userProfile) return;
 
     // NOTE: Here we're setting the current user as the "owner" of the visits.
     // We're only executing this if we have the default value "0", which means
     // that we don't have a real user account. We may want to handle this
     // differently. The check is weird.
     if (visitData.userAccountId === "0") {
-      setVisitData({ userAccountId: meData.id });
+      setVisitData({ userAccountId: userProfile.id });
     }
-
-    featchQuestionnaire();
-    featchParams();
-  }, [meData, featchQuestionnaire, featchParams]);
-
-  useEffect(() => {
-    if (!questionnaireData) {
-      return;
-    }
-
-    const deserializedQuestionnaire = deserialize<Questionnaire>(
-      questionnaireData,
-    ) as Questionnaire;
-
-    setQuestionnaire(deserializedQuestionnaire);
-  }, [questionnaireData]);
-
-  useEffect(() => {
-    if (!paramsData) {
-      return;
-    }
-    setResources(paramsData);
-  }, [paramsData]);
+  }, [userProfile]);
 
   useEffect(() => {
     const loadVisitData = async () => {
@@ -116,18 +54,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     loadVisitData();
-  }, []);
-
-  useEffect(() => {
-    const loadResourcesData = async () => {
-      const storedData = await SecureStore.getItemAsync(
-        CURRENT_RESOURCES_LOCAL_STORAGE_KEY,
-      );
-      if (storedData) {
-        setResources(JSON.parse(storedData));
-      }
-    };
-    loadResourcesData();
   }, []);
 
   const setVisitData = (data: Partial<VisitData>) => {
@@ -145,7 +71,6 @@ const VisitProvider = ({ children }: { children: ReactNode }) => {
     <VisitContext.Provider
       value={{
         visitData,
-        resources,
         setVisitData,
       }}
     >

@@ -1,6 +1,5 @@
 import { Button, ScrollView, View } from "@/components/themed";
 import VisitSummary from "@/components/VisitSummary";
-import { useAuth } from "@/context/AuthProvider";
 import { useVisit } from "@/hooks/useVisit";
 import { useStore } from "@/hooks/useStore";
 import { VisitData } from "@/types";
@@ -15,7 +14,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { VISITS_LOG } from "@/util/logger";
 import invariant from "tiny-invariant";
 import { useMutation } from "@tanstack/react-query";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import { useMemo } from "react";
 import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
 import * as Sentry from "@sentry/react-native";
@@ -78,7 +77,7 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 function useCreateVisitMutation() {
   return useMutation({
     mutationFn: (data: FormData) => {
-      return authApi.post<VisitData>("/visits", data, {
+      return axios.post<VisitData>("/visits", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -91,7 +90,7 @@ export default function Summary() {
   const router = useRouter();
   const { visitData } = useVisit();
   const { isInternetReachable } = useNetInfo();
-  const { user } = useAuth();
+  const user = useStore((state) => state.user);
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const { deleteInspectionPhotosFromVisit } = useInspectionPhotos();

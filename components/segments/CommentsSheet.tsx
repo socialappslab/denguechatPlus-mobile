@@ -41,7 +41,7 @@ import { Post } from "@/types";
 import CloseCircle from "@/assets/images/icons/close-circle.svg";
 import CommentItem from "@/components/segments/CommentItem";
 
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import Media from "@/components/icons/Media";
 import Send from "@/components/icons/Send";
 import DeleteSmall from "@/components/icons/DeleteSmall";
@@ -146,7 +146,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
     form.append("content", values.content);
 
     try {
-      const response = await authApi.post(`posts/${postId}/comments`, form, {
+      const response = await axios.post(`posts/${postId}/comments`, form, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -343,7 +343,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
         }
         return newState;
       });
-      await authApi.post(`posts/${postId}/comments/${id}/like`);
+      await axios.post(`posts/${postId}/comments/${id}/like`);
       console.log("Comment liked:");
       setState((prev) => {
         const newState = { ...prev };
@@ -374,7 +374,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const handlePressConfirmDelete = async () => {
     try {
       setPostigComment(true);
-      await authApi.delete(`posts/${postId}/comments/${commentToDeleteId}`);
+      await axios.delete(`posts/${postId}/comments/${commentToDeleteId}`);
       console.log("Comment deleted:");
       refetchPost();
       bottomSheetModalDeleteRef.current?.close();

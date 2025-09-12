@@ -6,7 +6,6 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { BaseObject, Team } from "@/schema";
-import { useAuth } from "@/context/AuthProvider";
 import {
   Text,
   View,
@@ -31,7 +30,8 @@ const ALPHANUMERIC_REGEX = /^[A-Z0-9]+$/;
 
 export default function NewHouse() {
   const { t } = useTranslation();
-  const { user, meData } = useAuth();
+  const user = useStore((state) => state.user);
+  const userProfile = useStore((state) => state.userProfile);
 
   const { setVisitData, visitData } = useVisit();
   const { i18n } = useTranslation();
@@ -95,7 +95,7 @@ export default function NewHouse() {
       teamId: user.teamId,
       house: {
         ...visitData.house,
-        houseBlockId: (meData?.userProfile?.houseBlock as BaseObject)?.id,
+        houseBlockId: (userProfile?.userProfile?.houseBlock as BaseObject)?.id,
         referenceCode: String(values.siteNumber),
         specialPlaceId: itemSelectedId !== ID_CASA ? itemSelectedId : undefined,
       },
@@ -175,7 +175,7 @@ export default function NewHouse() {
             <TextInput
               readOnly={true}
               editable={false}
-              value={(meData?.userProfile?.team as Team)?.sector_name}
+              value={(userProfile?.userProfile?.team as Team)?.sector_name}
             />
           </View>
 
@@ -187,7 +187,7 @@ export default function NewHouse() {
             <TextInput
               readOnly={true}
               editable={false}
-              value={(meData?.userProfile?.team as Team)?.wedge_name}
+              value={(userProfile?.userProfile?.team as Team)?.wedge_name}
             />
           </View>
 
@@ -199,7 +199,7 @@ export default function NewHouse() {
             <TextInput
               readOnly={true}
               editable={false}
-              value={(meData?.userProfile?.houseBlock as BaseObject)?.name}
+              value={(userProfile?.userProfile?.houseBlock as BaseObject)?.name}
             />
           </View>
 

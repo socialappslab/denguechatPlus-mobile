@@ -25,7 +25,7 @@ import { IUser } from "@/schema/auth";
 
 import { countSetFilters, getInitialsBase } from "@/util";
 import Colors from "@/constants/Colors";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import { BaseObject } from "@/schema";
 import { useBrigades } from "@/hooks/useBrigades";
 
@@ -47,7 +47,7 @@ export default function SelectUser() {
   const fetchData = async (page: number, query: string, teamId?: number) => {
     setError("");
     try {
-      const response = await authApi.get("users", {
+      const response = await axios.get("users", {
         params: {
           "filter[status][]": "active",
           "page[number]": page,

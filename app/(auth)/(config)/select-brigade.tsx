@@ -24,7 +24,7 @@ import {
 
 import { countSetFilters, getInitialsBase } from "@/util";
 import Colors from "@/constants/Colors";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 
 import { useBrigades } from "@/hooks/useBrigades";
 import { Team } from "@/schema";
@@ -52,7 +52,7 @@ export default function SelectBrigade() {
   ) => {
     setError("");
     try {
-      const response = await authApi.get("teams", {
+      const response = await axios.get("teams", {
         params: {
           "page[number]": page,
           "page[size]": 15,

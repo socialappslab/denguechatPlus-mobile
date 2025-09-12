@@ -17,9 +17,8 @@ import {
 } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import VisitSummary from "@/components/VisitSummary";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import Colors from "@/constants/Colors";
-import { useAuth } from "@/context/AuthProvider";
 import { QuestionnaireState, useStore } from "@/hooks/useStore";
 import { BaseObject, Team } from "@/schema";
 import { TeamResponse, VisitData } from "@/types";
@@ -54,7 +53,7 @@ function VisitsReport({
   loading: boolean;
   data: HouseReport | undefined;
 }) {
-  const { meData } = useAuth();
+  const userProfile = useStore((state) => state.userProfile);
   const { t } = useTranslation();
   const router = useRouter();
   const { filters } = useFilters();
@@ -96,7 +95,7 @@ function VisitsReport({
               <View className="flex">
                 <Text type="title" className="mb-2 w-52">
                   {filters.sector?.name ||
-                    (meData?.userProfile?.team as Team)?.sector_name}
+                    (userProfile?.userProfile?.team as Team)?.sector_name}
                 </Text>
                 {(filters.team?.name || filters.wedge?.name) && (
                   <Text type="small" className="mb-6 w-52">
@@ -188,14 +187,14 @@ function SuccessSummary() {
 }
 
 function useTeamQuery() {
-  const { meData } = useAuth();
-  const teamId = (meData?.userProfile?.team as BaseObject)?.id;
+  const userProfile = useStore((state) => state.userProfile);
+  const teamId = (userProfile?.userProfile?.team as BaseObject)?.id;
 
   return useQuery({
     enabled: !!teamId,
     queryKey: ["visits", "team", teamId],
     queryFn: async () => {
-      return (await authApi.get(`/teams/${teamId}`)).data as TeamResponse;
+      return (await axios.get(`/teams/${teamId}`)).data as TeamResponse;
     },
   });
 }
@@ -213,7 +212,7 @@ function useReportsQuery(
     queryKey: ["visits", "team", teamId, { sectorId, wedgeId, teamId }],
     queryFn: async () => {
       return (
-        await authApi.get("reports/house_status", {
+        await axios.get("reports/house_status", {
           params: {
             sort: "name",
             order: "asc",
@@ -230,7 +229,7 @@ function useReportsQuery(
 function useCreateVisitMutation() {
   return useMutation({
     mutationFn: (data: FormData) => {
-      return authApi.post<VisitData>("/visits", data, {
+      return axios.post<VisitData>("/visits", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -243,8 +242,7 @@ export default function Visits() {
   const { t } = useTranslation();
   const { isInternetReachable } = useNetInfo();
   const { i18n } = useTranslation();
-  const { meData, reFetchMe } = useAuth();
-  useRefreshOnFocus(reFetchMe);
+  const userProfile = useStore((state) => state.userProfile);
   const { filters, setFilter } = useFilters();
   const { setVisitData, visitData } = useVisit();
   const { deleteInspectionPhotosFromVisit } = useInspectionPhotos();
@@ -301,17 +299,17 @@ export default function Visits() {
     setFilter({
       sector: {
         // @ts-expect-error
-        id: meData?.userProfile?.team?.sector_id as number,
+        id: userProfile?.userProfile?.team?.sector_id as number,
         // @ts-expect-error
-        name: meData?.userProfile?.team?.sector_name,
+        name: userProfile?.userProfile?.team?.sector_name,
       },
     });
-  }, [meData]);
+  }, [userProfile]);
 
   async function onRefresh() {
     try {
       setRefreshing(true);
-      await Promise.all([reFetchMe(), team.refetch(), reports.refetch()]);
+      await Promise.all([team.refetch(), reports.refetch()]);
     } catch (error) {
       console.error(error);
       Sentry.captureException(error);
@@ -394,7 +392,7 @@ export default function Visits() {
                   onValueChange={(value: number | null) => {
                     if (!teamMemberOptions.length) return;
                     if (!value) {
-                      setVisitData({ userAccountId: meData!.id });
+                      setVisitData({ userAccountId: userProfile!.id });
                       return;
                     }
                     setVisitData({ userAccountId: value.toString() });

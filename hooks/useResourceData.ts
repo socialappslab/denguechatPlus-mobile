@@ -1,6 +1,6 @@
 import { ResourceName, Resources } from "@/types";
-import { useVisit } from "./useVisit";
 import { useMemo } from "react";
+import { useStore } from "./useStore";
 
 type CurrentResource<T extends ResourceName> = Extract<
   Resources[number],
@@ -8,10 +8,10 @@ type CurrentResource<T extends ResourceName> = Extract<
 >;
 
 export function useResourceData<T extends ResourceName>(resourceName: T) {
-  const { resources } = useVisit();
+  const appConfig = useStore((state) => state.appConfig);
 
   return useMemo(() => {
-    const resource = resources.find(
+    const resource = appConfig?.find(
       (resource) => resource.resourceName === resourceName,
     ) as CurrentResource<T> | undefined;
 
@@ -22,5 +22,5 @@ export function useResourceData<T extends ResourceName>(resourceName: T) {
     }
 
     return resource.resourceData as CurrentResource<T>["resourceData"];
-  }, [resourceName, resources]);
+  }, [resourceName, appConfig]);
 }

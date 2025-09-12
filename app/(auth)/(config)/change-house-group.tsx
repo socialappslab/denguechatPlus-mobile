@@ -6,8 +6,7 @@ import {
   Text,
   View,
 } from "@/components/themed";
-import { authApi } from "@/config/axios";
-import { useAuth } from "@/context/AuthProvider";
+import { axios } from "@/config/axios";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { HouseBlockType, Neighborhood, Wedge } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -19,6 +18,7 @@ import invariant from "tiny-invariant";
 import { useFocusEffect } from "expo-router";
 import { useNetInfo } from "@react-native-community/netinfo";
 import * as Sentry from "@sentry/react-native";
+import { useStore } from "@/hooks/useStore";
 
 function useHouseBlocksQuery(wedgeId: number | null) {
   interface HouseBlock {
@@ -57,7 +57,7 @@ function useHouseBlocksQuery(wedgeId: number | null) {
       const params = new URLSearchParams({
         "filter[wedge_id]": wedgeId!.toString(),
       });
-      return (await authApi.get(`/house_blocks?${params}`))
+      return (await axios.get(`/house_blocks?${params}`))
         .data as HouseBlockResponse;
     },
   });
@@ -66,7 +66,7 @@ function useHouseBlocksQuery(wedgeId: number | null) {
 function useChangeHouseBlockMutation() {
   return useMutation({
     mutationFn: async (houseBlockId: number) => {
-      return await authApi.put(`/users/change_house_block`, {
+      return await axios.put(`/users/change_house_block`, {
         house_block_id: houseBlockId,
       });
     },
@@ -75,12 +75,14 @@ function useChangeHouseBlockMutation() {
 
 export default function ChangeHouseBlock() {
   const { t } = useTranslation();
-  const { meData } = useAuth();
-  const router = useRouter();
   const { isInternetReachable } = useNetInfo();
 
-  // @ts-expect-error fix types
-  const wedgeId: number | null = meData?.userProfile?.team?.wedge_id ?? null;
+  const userProfile = useStore((state) => state.userProfile);
+  const router = useRouter();
+
+  const wedgeId: number | null =
+    // @ts-expect-error fix types
+    userProfile?.userProfile?.team?.wedge_id ?? null;
 
   const houseBlocks = useHouseBlocksQuery(wedgeId);
   useRefreshOnFocus(houseBlocks.refetch);
@@ -89,7 +91,7 @@ export default function ChangeHouseBlock() {
 
   const houseBlockId: string | undefined =
     // @ts-expect-error fix types
-    meData?.userProfile?.houseBlock?.id?.toString();
+    userProfile?.userProfile?.houseBlock?.id?.toString();
 
   const defaultOption = useMemo(
     () =>
@@ -170,12 +172,12 @@ export default function ChangeHouseBlock() {
             <Text>
               <Text className="font-bold">{t("config.sector")}:</Text>{" "}
               {/* @ts-expect-error fix types */}
-              {meData?.userProfile?.team?.sector_name}
+              {userProfile?.userProfile?.team?.sector_name}
             </Text>
             <Text>
               <Text className="font-bold">{t("config.wedge")}:</Text>{" "}
               {/* @ts-expect-error fix types */}
-              {meData?.userProfile?.team?.wedge_name}
+              {userProfile?.userProfile?.team?.wedge_name}
             </Text>
           </View>
 
