@@ -1,5 +1,5 @@
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useNavigationContainerRef } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import * as SplashScreen from "expo-splash-screen";
@@ -13,6 +13,7 @@ import { StatusBar } from "expo-status-bar";
 import { Providers } from "@/components/Providers";
 import { useTranslation } from "react-i18next";
 import { useLocales } from "expo-localization";
+import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 
 import moment from "moment";
 import "moment/locale/es";
@@ -75,6 +76,10 @@ function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const navigationRef = useNavigationContainerRef();
+  // @ts-expect-error https://github.com/expo/dev-plugins/issues/70
+  useReactNavigationDevTools(navigationRef);
+
   const session = useSessionStore((state) => state.session);
 
   return (
