@@ -45,7 +45,7 @@ interface Store {
 
   // TODO: fix types for both user and userProfile
   userProfile: IUser | null;
-  fetchUserProfile: () => Promise<IUser>;
+  fetchUserProfile: () => Promise<void>;
 
   selectedCase: VisitCase;
   storedHouseList: House[];
@@ -56,10 +56,10 @@ interface Store {
   inspectionPhotos: InspectionPhoto[];
 
   questionnaire: Questionnaire | null;
-  fetchQuestionnaire: (language: string) => Promise<Questionnaire>;
+  fetchQuestionnaire: (language: string) => Promise<void>;
 
   appConfig: Resources | null;
-  fetchAppConfig: () => Promise<Resources>;
+  fetchAppConfig: () => Promise<void>;
 
   visitData: Partial<VisitData>;
   setVisitData: (payload: Partial<VisitData>) => void;
@@ -95,7 +95,6 @@ export const useStore = create<Store>()(
             changeCase: CaseType.camelCase,
           }) as IUser;
           set({ userProfile: deserializedData });
-          return deserializedData;
         },
 
         // Always set in "Select House", dumb value
@@ -123,8 +122,7 @@ export const useStore = create<Store>()(
             "/questionnaires/current",
             { params: { language } },
           );
-          set({ questionnaire: questionnaire.data });
-          return questionnaire.data;
+          set({ questionnaire: questionnaire.data.attributes });
         },
 
         appConfig: null,
@@ -132,7 +130,6 @@ export const useStore = create<Store>()(
           // TODO: annotate the response
           const { data: appConfig } = await axios.get("/get_last_params");
           set({ appConfig });
-          return appConfig;
         },
 
         visitData: {

@@ -28,7 +28,6 @@ import invariant from "tiny-invariant";
 import { LOG } from "@/util/logger";
 import * as Sentry from "@sentry/react-native";
 import { useStore } from "@/hooks/useStore";
-import { useQuery } from "@tanstack/react-query";
 import useSessionStore from "@/hooks/useSessionStore";
 
 function CustomDrawerContent() {
@@ -223,61 +222,31 @@ function CustomDrawerContent() {
   );
 }
 
-function useQuestionnaireQuery() {
-  const { i18n } = useTranslation();
-  const fetchQuestionnaire = useStore((state) => state.fetchQuestionnaire);
-
-  return useQuery({
-    enabled: false,
-    // TODO: check if this bypasses the cache
-    gcTime: 0,
-    queryKey: ["questionnaire", i18n.language],
-    queryFn: async () => await fetchQuestionnaire(i18n.language),
-  });
-}
-
-function useAppConfigQuery() {
-  const fetchAppConfig = useStore((state) => state.fetchAppConfig);
-
-  return useQuery({
-    enabled: false,
-    // TODO: check if this bypasses the cache
-    gcTime: 0,
-    queryKey: ["appConfig"],
-    queryFn: async () => await fetchAppConfig(),
-  });
-}
-
-function useUserProfileQuery() {
-  const fetchUserProfile = useStore((state) => state.fetchUserProfile);
-
-  return useQuery({
-    enabled: false,
-    // TODO: check if this bypasses the cache
-    gcTime: 0,
-    queryKey: ["userProfile"],
-    queryFn: async () => await fetchUserProfile(),
-  });
-}
-
 export default function AuthLayout() {
-  const questionnaire = useQuestionnaireQuery();
-  const appConfig = useAppConfigQuery();
-  const userProfile = useUserProfileQuery();
+  const { i18n } = useTranslation();
   const segments = useSegments();
+
+  const fetchQuestionnaire = useStore((state) => state.fetchQuestionnaire);
+  const fetchAppConfig = useStore((state) => state.fetchAppConfig);
+  const fetchUserProfile = useStore((state) => state.fetchUserProfile);
 
   /*
    * These are requests that should be made whenever the user navigates to
    * another page.
    */
   useEffect(() => {
-    async function execute() {
-      await questionnaire.refetch();
-      await appConfig.refetch();
-      await userProfile.refetch();
-    }
-    void execute();
-  }, [questionnaire, appConfig, userProfile, segments]);
+    void Promise.all([
+      fetchQuestionnaire(i18n.language),
+      fetchAppConfig(),
+      fetchUserProfile(),
+    ]);
+  }, [
+    segments,
+    fetchQuestionnaire,
+    i18n.language,
+    fetchAppConfig,
+    fetchUserProfile,
+  ]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
