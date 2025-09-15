@@ -5,6 +5,7 @@ import { Alert, Linking, Platform } from "react-native";
 import i18n from "./i18n";
 import invariant from "tiny-invariant";
 import useSessionStore from "@/hooks/useSessionStore";
+import { configure } from "axios-hooks";
 
 invariant(
   process.env.EXPO_PUBLIC_API_URL,
@@ -79,5 +80,9 @@ axios.interceptors.response.use(undefined, (error) => {
 });
 
 // TODO: Implement refresh token logic
+
+// NOTE: Configure axios-hooks, remove this after migrating all requests to
+// TanStack Query
+configure({ axios, cache: false });
 
 export { axios };
