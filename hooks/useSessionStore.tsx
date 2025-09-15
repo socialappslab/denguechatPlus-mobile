@@ -17,9 +17,6 @@ interface SessionState {
   setSession: (session: Session) => void;
 
   reset: () => void;
-
-  _hasHydrated: boolean;
-  setHasHydrated: (state: boolean) => void;
 }
 
 /*
@@ -37,17 +34,8 @@ const useSessionStore = create<SessionState>()(
       reset: () => {
         set(store.getInitialState());
       },
-
-      _hasHydrated: false,
-      setHasHydrated: (state) => {
-        set({ _hasHydrated: state });
-      },
     }),
-    {
-      name: "session-store",
-      storage: createJSONStorage(() => storage),
-      onRehydrateStorage: (state) => () => state.setHasHydrated(true),
-    },
+    { name: "session-store", storage: createJSONStorage(() => storage) },
   ),
 );
 
