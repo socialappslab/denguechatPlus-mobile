@@ -17,7 +17,6 @@ import {
 } from "@/components/themed";
 import { getLanguageCode } from "@/util";
 import { Button } from "@/components/themed";
-import { useVisit } from "@/hooks/useVisit";
 import { Alert } from "react-native";
 import { z } from "zod";
 import { useStore } from "@/hooks/useStore";
@@ -33,7 +32,8 @@ export default function NewHouse() {
   const user = useStore((state) => state.user);
   const userProfile = useStore((state) => state.userProfile);
 
-  const { setVisitData, visitData } = useVisit();
+  const visitData = useStore((state) => state.visitData);
+  const setVisitData = useStore((state) => state.setVisitData);
   const { i18n } = useTranslation();
   const initialiseCurrentVisit = useStore(
     (state) => state.initialiseCurrentVisit,

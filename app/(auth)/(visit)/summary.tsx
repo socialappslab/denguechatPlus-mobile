@@ -1,6 +1,5 @@
 import { Button, ScrollView, View } from "@/components/themed";
 import VisitSummary from "@/components/VisitSummary";
-import { useVisit } from "@/hooks/useVisit";
 import { useStore } from "@/hooks/useStore";
 import { VisitData } from "@/types";
 import { Inspection, StatusColor } from "@/types/prepareFormData";
@@ -88,7 +87,7 @@ function useCreateVisitMutation() {
 
 export default function Summary() {
   const router = useRouter();
-  const { visitData } = useVisit();
+  const visitData = useStore((state) => state.visitData);
   const { isInternetReachable } = useNetInfo();
   const user = useStore((state) => state.user);
   const { t } = useTranslation();

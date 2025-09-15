@@ -1,7 +1,14 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import { axios } from "@/config/axios";
 import { IUser } from "@/schema/auth";
-import { House, Question, Questionnaire, Resources, VisitId } from "@/types";
+import {
+  House,
+  Question,
+  Questionnaire,
+  Resources,
+  VisitData,
+  VisitId,
+} from "@/types";
 import { VISITS_LOG } from "@/util/logger";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setAutoFreeze } from "immer";
@@ -53,6 +60,9 @@ interface Store {
 
   appConfig: Resources | null;
   fetchAppConfig: () => Promise<Resources>;
+
+  visitData: Partial<VisitData>;
+  setVisitData: (payload: Partial<VisitData>) => void;
 
   cleanUpStoredVisit: (visit: any) => void;
   finaliseCurrentVisit: (
@@ -123,6 +133,18 @@ export const useStore = create<Store>()(
           const { data: appConfig } = await axios.get("/get_last_params");
           set({ appConfig });
           return appConfig;
+        },
+
+        visitData: {
+          houseId: 0, // set
+          // house: House | undefined // set, get
+          questionnaireId: "0", // set
+          teamId: 0, // set
+          userAccountId: "0", // set, get
+          notes: "", // set, get
+        },
+        setVisitData: (visitData) => {
+          set({ visitData });
         },
 
         /**

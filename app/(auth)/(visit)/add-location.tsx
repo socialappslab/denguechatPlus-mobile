@@ -13,15 +13,15 @@ import {
   Button,
   Text,
 } from "@/components/themed";
-import { useVisit } from "@/hooks/useVisit";
 import CustomMarker from "@/components/icons/CustomMarker";
 import NoMap from "@/assets/images/no-internet-map.svg";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { useStore } from "@/hooks/useStore";
 
 const AddLocation = () => {
   const { t } = useTranslation();
   const { isInternetReachable } = useNetInfo();
-  const { setVisitData } = useVisit();
+  const setVisitData = useStore((state) => state.setVisitData);
   const router = useRouter();
 
   const [location, setLocation] = useState<Location.LocationObject>();

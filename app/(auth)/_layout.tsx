@@ -30,7 +30,6 @@ import * as Sentry from "@sentry/react-native";
 import { useStore } from "@/hooks/useStore";
 import { useQuery } from "@tanstack/react-query";
 import useSessionStore from "@/hooks/useSessionStore";
-import { VisitProvider } from "@/context/VisitContext";
 
 function CustomDrawerContent() {
   const router = useRouter();
@@ -282,18 +281,16 @@ export default function AuthLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <VisitProvider>
-        <BottomSheetModalProvider>
-          <Drawer
-            backBehavior="history"
-            drawerContent={() => <CustomDrawerContent />}
-            screenOptions={{
-              headerShown: false,
-              swipeEdgeWidth: 0,
-            }}
-          ></Drawer>
-        </BottomSheetModalProvider>
-      </VisitProvider>
+      <BottomSheetModalProvider>
+        <Drawer
+          backBehavior="history"
+          drawerContent={() => <CustomDrawerContent />}
+          screenOptions={{
+            headerShown: false,
+            swipeEdgeWidth: 0,
+          }}
+        />
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }

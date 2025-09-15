@@ -32,7 +32,6 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { useVisit } from "@/hooks/useVisit";
 import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
 import * as Sentry from "@sentry/react-native";
 
@@ -244,7 +243,8 @@ export default function Visits() {
   const { i18n } = useTranslation();
   const userProfile = useStore((state) => state.userProfile);
   const { filters, setFilter } = useFilters();
-  const { setVisitData, visitData } = useVisit();
+  const visitData = useStore((state) => state.visitData);
+  const setVisitData = useStore((state) => state.setVisitData);
   const { deleteInspectionPhotosFromVisit } = useInspectionPhotos();
 
   const router = useRouter();
@@ -294,6 +294,18 @@ export default function Visits() {
   );
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  useEffect(() => {
+    if (!userProfile) return;
+
+    // NOTE: Here we're setting the current user as the "owner" of the visits.
+    // We're only executing this if we have the default value "0", which means
+    // that we don't have a real user account. We may want to handle this
+    // differently. The check is weird.
+    if (visitData.userAccountId === "0") {
+      setVisitData({ userAccountId: userProfile.id });
+    }
+  }, [userProfile]);
 
   useEffect(() => {
     setFilter({

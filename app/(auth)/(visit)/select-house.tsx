@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SelectableItem } from "@/components/themed";
-import { useVisit } from "@/hooks/useVisit";
 import { House, VisitId } from "@/types";
 
 import {
@@ -41,7 +40,7 @@ export default function SelectHouseScreen() {
     userProfile?.userProfile?.houseBlock?.type,
   );
 
-  const { setVisitData } = useVisit();
+  const setVisitData = useStore((state) => state.setVisitData);
   const { isInternetReachable } = useNetInfo();
 
   const initialiseCurrentVisit = useStore(
