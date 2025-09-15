@@ -5,15 +5,9 @@ import { create } from "zustand";
 
 // NOTE: Custom storage engine to keep user data securely with expo-secure-store
 const storage: StateStorage<void> = {
-  getItem: async (name: string) => {
-    return await SecureStore.getItemAsync(name);
-  },
-  setItem: async (name: string, value: string) => {
-    await SecureStore.setItemAsync(name, value);
-  },
-  removeItem: async (name: string) => {
-    await SecureStore.deleteItemAsync(name);
-  },
+  getItem: SecureStore.getItemAsync,
+  setItem: SecureStore.setItemAsync,
+  removeItem: SecureStore.deleteItemAsync,
 };
 
 type Session = ILoginResponse["meta"]["jwt"]["res"];
