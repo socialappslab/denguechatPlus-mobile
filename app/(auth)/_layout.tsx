@@ -289,7 +289,9 @@ export default function AuthLayout() {
             headerShown: false,
             swipeEdgeWidth: 0,
           }}
-        />
+        >
+          <Drawer.Screen name="(tabs)" />
+        </Drawer>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
