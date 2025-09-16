@@ -27,7 +27,6 @@ import {
   PostVisibility,
   Team,
 } from "@/schema";
-import { useAuth } from "@/context/AuthProvider";
 
 import {
   Text,
@@ -43,14 +42,15 @@ import { getInitialsBase } from "@/util";
 import { Button } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import Media from "@/components/icons/Media";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import { Post } from "@/types";
 import DeleteSmall from "@/components/icons/DeleteSmall";
+import { useStore } from "@/hooks/useStore";
 
 export default function EditPost() {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
-  const { meData } = useAuth();
+  const userProfile = useStore((state) => state.userProfile);
   const router = useRouter();
   const [selectedPhoto, setSelectedPhoto] =
     useState<ImagePicker.ImagePickerAsset>();
@@ -155,7 +155,7 @@ export default function EditPost() {
     }
 
     try {
-      const response = await authApi.put(`posts/${post?.id}`, form, {
+      const response = await axios.put(`posts/${post?.id}`, form, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -227,8 +227,8 @@ export default function EditPost() {
   };
 
   const initials = getInitialsBase(
-    String(meData?.userProfile?.firstName),
-    String(meData?.userProfile?.lastName),
+    String(userProfile?.userProfile?.firstName),
+    String(userProfile?.userProfile?.lastName),
   );
 
   return (
@@ -250,9 +250,9 @@ export default function EditPost() {
                   </Text>
                 </View>
                 <View className="flex flex-1 flex-col">
-                  <Text className="font-semibold">{`${meData?.userProfile?.firstName} ${meData?.userProfile?.lastName}`}</Text>
+                  <Text className="font-semibold">{`${userProfile?.userProfile?.firstName} ${userProfile?.userProfile?.lastName}`}</Text>
                   <Text className={`text-sm opacity-60`}>
-                    {(meData?.userProfile?.team as Team)?.sector_name}
+                    {(userProfile?.userProfile?.team as Team)?.sector_name}
                   </Text>
                 </View>
 

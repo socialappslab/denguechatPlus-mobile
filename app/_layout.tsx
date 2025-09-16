@@ -1,27 +1,24 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import { useState } from "react";
+import { Stack, useNavigationContainerRef } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { useAuth } from "@/context/AuthProvider";
-import { setHeaderFromLocalStorage } from "@/config/axios";
 import "@/config/i18n";
 import { toastConfig } from "@/config/toast";
-import useUser from "@/hooks/useUser";
 import * as Sentry from "@sentry/react-native";
 import { StatusBar } from "expo-status-bar";
 import { Providers } from "@/components/Providers";
 import { useTranslation } from "react-i18next";
 import { useLocales } from "expo-localization";
+import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 
 import moment from "moment";
 import "moment/locale/es";
 import "moment/locale/pt";
+import useSessionStore from "@/hooks/useSessionStore";
 
 Sentry.init({
   dsn: __DEV__
@@ -39,7 +36,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(auth)/(tabs)",
+  initialRouteName: "(auth)/(tabs)/index",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -47,20 +44,14 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
   const { i18n } = useTranslation();
-  const { setUser } = useAuth();
 
   const locales = useLocales();
 
-  const [loadedToken, setLoadedToken] = useState(false);
-  const [loadedUser, setLoadedUser] = useState(false);
-  const [[loadingUser, user]] = useUser();
-
-  const [loadedFonts, error] = useFonts({
+  const [areFontsLoaded, fontLoadError] = useFonts({
     "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
     "Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
     "Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
     "Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
-    ...FontAwesome.font,
   });
 
   useEffect(() => {
@@ -72,33 +63,12 @@ function RootLayout() {
   }, [locales, i18n]);
 
   useEffect(() => {
-    if (!loadingUser) {
-      setUser(user, false);
-      setLoadedUser(true);
-    }
-  }, [loadingUser, setUser, user]);
-
-  useEffect(() => {
-    const getAccessTokenAsync = async () => {
-      await setHeaderFromLocalStorage(); // set header token from local storage on first load
-      setLoadedToken(true);
-    };
-
-    getAccessTokenAsync();
-  }, [loadingUser]);
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loadedFonts && loadedUser && loadedToken) {
+    if (areFontsLoaded || fontLoadError) {
       SplashScreen.hideAsync();
     }
-  }, [loadedFonts, loadedUser, loadedToken]);
+  }, [areFontsLoaded, fontLoadError]);
 
-  if (!loadedFonts) {
+  if (!areFontsLoaded && !fontLoadError) {
     return null;
   }
 
@@ -106,29 +76,30 @@ function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const navigationRef = useNavigationContainerRef();
+  // @ts-expect-error https://github.com/expo/dev-plugins/issues/70
+  useReactNavigationDevTools(navigationRef);
+
+  const session = useSessionStore((state) => state.session);
+
   return (
     <>
       <StatusBar style="dark" />
 
       <Providers>
         <Stack>
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(public)/login"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="(public)/register"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="(public)/register-success"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="(public)/logout"
-            options={{ headerShown: false }}
-          />
+          <Stack.Protected guard={!!session}>
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          </Stack.Protected>
+
+          <Stack.Protected guard={!session}>
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="register-success"
+              options={{ headerShown: false }}
+            />
+          </Stack.Protected>
         </Stack>
 
         <Toast

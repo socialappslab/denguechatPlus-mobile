@@ -4,6 +4,11 @@ import moment from "moment";
 
 import { ErrorResponse } from "@/schema";
 import { FilterData } from "@/context/BrigadeContext";
+import { IUser } from "@/schema/auth";
+import useSessionStore from "@/hooks/useSessionStore";
+import { useStore } from "@/hooks/useStore";
+import { LOG } from "./logger";
+import * as Sentry from "@sentry/react";
 
 export * from "./prepareFormData";
 
@@ -123,4 +128,13 @@ export function getFilenameFromURI(uri: string) {
 export function getBasenameFromFilename(filename: string) {
   const chunks = filename.split(".");
   return chunks[0];
+}
+
+export function logout() {
+  const { reset: resetSessionStore } = useSessionStore.getState();
+  const { reset: resetStore, userProfile } = useStore.getState();
+  resetSessionStore();
+  resetStore();
+  Sentry.setUser(null);
+  LOG.info(`Logged out from user: ${userProfile?.username}`);
 }

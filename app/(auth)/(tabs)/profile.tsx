@@ -1,9 +1,9 @@
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import { View, Text, ScrollView, SimpleChip } from "@/components/themed";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import Colors from "@/constants/Colors";
-import { useAuth } from "@/context/AuthProvider";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { useStore } from "@/hooks/useStore";
 import { AccumulatedPoints } from "@/types";
 import { getInitialsBase } from "@/util";
 import { useQuery } from "@tanstack/react-query";
@@ -31,7 +31,7 @@ function useReportQuery({
         "filter[wedge_id]": wedgeId!.toString(),
         "filter[sector_id]": sectorId!.toString(),
       });
-      return (await authApi.get(`/reports/house_status?${params}`)).data;
+      return (await axios.get(`/reports/house_status?${params}`)).data;
     },
   });
 }
@@ -44,7 +44,7 @@ function useBrigadistPointsQuery(userId: number | null) {
       const params = new URLSearchParams({
         "filter[user_account_id]": userId!.toString(),
       });
-      return (await authApi.get(`/points/accumulated_points?${params}`))
+      return (await axios.get(`/points/accumulated_points?${params}`))
         .data as AccumulatedPoints;
     },
   });
@@ -58,7 +58,7 @@ function useBrigadePointsQuery(teamId: number | null) {
       const params = new URLSearchParams({
         "filter[team_id]": teamId!.toString(),
       });
-      return (await authApi.get(`/points/accumulated_points?${params}`))
+      return (await axios.get(`/points/accumulated_points?${params}`))
         .data as AccumulatedPoints;
     },
   });
@@ -66,16 +66,16 @@ function useBrigadePointsQuery(teamId: number | null) {
 
 const Profile = () => {
   const { t } = useTranslation();
-  const { meData } = useAuth();
+  const userProfile = useStore((state) => state.userProfile);
 
-  // @ts-expect-error type of meData is not correct
-  const teamId = meData?.userProfile?.team?.id;
-  // @ts-expect-error type of meData is not correct
-  const sectorId = meData?.userProfile?.team?.sector_id;
-  // @ts-expect-error type of meData is not correct
-  const wedgeId = meData?.userProfile?.team?.wedge_id;
-  // @ts-expect-error type of meData is not correct
-  const userId = meData?.userProfile?.id;
+  // @ts-expect-error type of userProfile is not correct
+  const teamId = userProfile?.userProfile?.team?.id;
+  // @ts-expect-error type of userProfile is not correct
+  const sectorId = userProfile?.userProfile?.team?.sector_id;
+  // @ts-expect-error type of userProfile is not correct
+  const wedgeId = userProfile?.userProfile?.team?.wedge_id;
+  // @ts-expect-error type of userProfile is not correct
+  const userId = userProfile?.userProfile?.id;
 
   const reportParams = useMemo(
     () => ({ teamId, sectorId, wedgeId }),
@@ -92,7 +92,7 @@ const Profile = () => {
   useRefreshOnFocus(brigadePoints.refetch);
 
   const isLoading =
-    !meData ||
+    !userProfile ||
     report.isLoading ||
     brigadistPoints.isLoading ||
     brigadePoints.isLoading;
@@ -124,20 +124,21 @@ const Profile = () => {
           <View className="flex items-center justify-center w-24 h-24 rounded-full bg-green-300 mr-3">
             <Text className="font-bold text-3xl text-green-700">
               {getInitialsBase(
-                // @ts-expect-error type of meData is not correct
-                meData?.userProfile.firstName,
-                // @ts-expect-error type of meData is not correct
-                meData?.userProfile.lastName,
+                // @ts-expect-error type of userProfile is not correct
+                userProfile?.userProfile.firstName,
+                // @ts-expect-error type of userProfile is not correct
+                userProfile?.userProfile.lastName,
               )}
             </Text>
           </View>
 
           <Text className="text-2xl font-bold mt-4">
-            {meData?.userProfile?.firstName} {meData?.userProfile?.lastName}
+            {userProfile?.userProfile?.firstName}{" "}
+            {userProfile?.userProfile?.lastName}
           </Text>
           <Text className="text-base text-gray-800">
-            {/* @ts-expect-error type of meData is not correct */}
-            {meData?.userProfile?.team?.name}
+            {/* @ts-expect-error type of userProfile is not correct */}
+            {userProfile?.userProfile?.team?.name}
           </Text>
         </View>
 

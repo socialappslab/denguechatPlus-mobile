@@ -2,7 +2,7 @@
 import { PropsWithChildren } from "react";
 
 import { IUser } from "@/schema/auth";
-import { useAuth } from "@/context/AuthProvider";
+import { useStore } from "@/hooks/useStore";
 
 export interface ProtectedViewProps extends PropsWithChildren {
   hasPermission?: string | string[];
@@ -58,19 +58,22 @@ export default function ProtectedView({
   hasSomePermission,
   hasSomeResource,
 }: ProtectedViewProps) {
-  const { meData } = useAuth();
+  const userProfile = useStore((state) => state.userProfile);
 
-  if (!meData) return null;
+  if (!userProfile) return null;
 
-  if (hasPermission && chekcHasPermission(meData, hasPermission)) {
+  if (hasPermission && chekcHasPermission(userProfile, hasPermission)) {
     return <>{children}</>;
   }
 
-  if (hasSomePermission && checkHasSomePermission(meData, hasSomePermission)) {
+  if (
+    hasSomePermission &&
+    checkHasSomePermission(userProfile, hasSomePermission)
+  ) {
     return <>{children}</>;
   }
 
-  if (hasSomeResource && checkHasSomeResource(meData, hasSomeResource)) {
+  if (hasSomeResource && checkHasSomeResource(userProfile, hasSomeResource)) {
     return <>{children}</>;
   }
 }

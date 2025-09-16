@@ -6,7 +6,7 @@ import {
   TextInput,
   View,
 } from "@/components/themed";
-import { useVisit } from "@/hooks/useVisit";
+import { useStore } from "@/hooks/useStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,8 @@ import { useTranslation } from "react-i18next";
 const AddComment = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { setVisitData, visitData } = useVisit();
+  const visitData = useStore((state) => state.visitData);
+  const setVisitData = useStore((state) => state.setVisitData);
   const [text, setText] = useState(visitData.notes);
 
   const onNext = () => router.push("/summary");

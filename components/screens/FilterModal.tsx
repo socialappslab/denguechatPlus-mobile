@@ -17,7 +17,7 @@ import {
   SafeAreaView,
   Loading,
 } from "@/components/themed";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import { HouseBlockType } from "@/types";
 import * as Sentry from "@sentry/react-native";
 
@@ -54,7 +54,7 @@ export function FilterModal({
   const fetchData = async (query: string) => {
     setError("");
     try {
-      const response = await authApi.get(endpoint, {
+      const response = await axios.get(endpoint, {
         params: {
           "filter[name]": query,
           "page[number]": 1,

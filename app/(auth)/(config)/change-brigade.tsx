@@ -12,7 +12,7 @@ import {
 } from "@/components/themed";
 import { IUser } from "@/schema/auth";
 
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import { BaseObject } from "@/schema";
 import { useBrigades } from "@/hooks/useBrigades";
 import { AvatarBig } from "@/components/segments/AvatarBig";
@@ -44,7 +44,7 @@ export default function ChangeBrigade() {
   const onChangeBrigade = async () => {
     setLoading(true);
     try {
-      await authApi.put(`/users/change_team`, {
+      await axios.put(`/users/change_team`, {
         teamId: selection?.newBrigade?.id,
         houseBlockId: selection?.newHouseBlock?.id,
         userId: user?.id,

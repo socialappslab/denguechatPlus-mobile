@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SelectableItem } from "@/components/themed";
-import { useVisit } from "@/hooks/useVisit";
 import { House, VisitId } from "@/types";
 
 import {
@@ -17,7 +16,6 @@ import {
   TextInput,
   View,
 } from "@/components/themed";
-import { useAuth } from "@/context/AuthProvider";
 import { useStore } from "@/hooks/useStore";
 import moment from "moment";
 import invariant from "tiny-invariant";
@@ -34,19 +32,15 @@ export default function SelectHouseScreen() {
   const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
-  const { user: maybeUser, meData, reFetchMe } = useAuth();
+  const maybeUser = useStore((state) => state.user);
+  const userProfile = useStore((state) => state.userProfile);
 
   const houseBlockLabel = useHouseBlockLabel(
-    // @ts-expect-error type of meData is wrong
-    meData?.userProfile?.houseBlock?.type,
+    // @ts-expect-error type of userProfile is wrong
+    userProfile?.userProfile?.houseBlock?.type,
   );
 
-  // TODO: fix this when we have a better data fetching strategy in this page,
-  // the ideal is to invalidate the cache for the user data when the user
-  // changes the house block
-  useRefreshOnFocus(reFetchMe);
-
-  const { setVisitData } = useVisit();
+  const setVisitData = useStore((state) => state.setVisitData);
   const { isInternetReachable } = useNetInfo();
 
   const initialiseCurrentVisit = useStore(
@@ -178,10 +172,10 @@ export default function SelectHouseScreen() {
             </Text>
 
             {/* @ts-expect-error */}
-            {meData?.userProfile?.houseBlock?.name && (
+            {userProfile?.userProfile?.houseBlock?.name && (
               <Text className="text-md font-normal mb-4">
                 {/* @ts-expect-error */}
-                {houseBlockLabel}: {meData.userProfile.houseBlock.name}
+                {houseBlockLabel}: {userProfile.userProfile.houseBlock.name}
               </Text>
             )}
           </View>

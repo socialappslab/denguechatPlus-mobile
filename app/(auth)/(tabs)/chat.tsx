@@ -23,14 +23,14 @@ import {
 } from "@/components/themed";
 import { Post } from "@/types";
 import Colors from "@/constants/Colors";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import { Team } from "@/schema";
-import { useAuth } from "@/context/AuthProvider";
 import { SimpleSelectableChip } from "@/components/themed/SelectableChip";
 import CommentsSheet from "@/components/segments/CommentsSheet";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { ActionItem } from "@/components/themed/ActionItem";
 import { Button } from "@/components/themed";
+import { useStore } from "@/hooks/useStore";
 
 type PostState = Record<
   string,
@@ -45,7 +45,7 @@ type PostState = Record<
 
 export default function Chat() {
   const { t } = useTranslation();
-  const { meData, reFetchMe } = useAuth();
+  const userProfile = useStore((state) => state.userProfile);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -75,18 +75,13 @@ export default function Chat() {
   useEffect(() => {
     if (isFocused) {
       firstLoad();
-
-      if (!meData) {
-        reFetchMe();
-      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused, meData]);
+  }, [isFocused]);
 
   const fetchData = async (page: number, teamId?: number) => {
     setError("");
     try {
-      const response = await authApi.get("posts", {
+      const response = await axios.get("posts", {
         headers: {
           source: "mobile",
         },
@@ -174,7 +169,10 @@ export default function Chat() {
     setCurrentPage(1);
     setHasMore(true);
     setLoading(true);
-    fetchData(1, all ? undefined : (meData?.userProfile?.team as Team)?.id);
+    fetchData(
+      1,
+      all ? undefined : (userProfile?.userProfile?.team as Team)?.id,
+    );
   };
 
   const loadMoreData = () => {
@@ -185,7 +183,7 @@ export default function Chat() {
       setCurrentPage(nextPage);
       fetchData(
         nextPage,
-        all ? undefined : (meData?.userProfile?.team as Team)?.id,
+        all ? undefined : (userProfile?.userProfile?.team as Team)?.id,
       );
     }
   };
@@ -219,7 +217,10 @@ export default function Chat() {
     setDataList([]);
     setHasMore(true);
     setCurrentPage(1);
-    fetchData(1, all ? undefined : (meData?.userProfile?.team as Team)?.id);
+    fetchData(
+      1,
+      all ? undefined : (userProfile?.userProfile?.team as Team)?.id,
+    );
     setUnmountOptions(false);
   };
 
@@ -236,7 +237,7 @@ export default function Chat() {
         post.loadingLike = true;
         return newState;
       });
-      await authApi.post(`posts/${id}/like`);
+      await axios.post(`posts/${id}/like`);
       console.log("Post liked:");
       setState((prev) => {
         const newState = { ...prev };
@@ -264,7 +265,6 @@ export default function Chat() {
 
   const onPressOptions = (post: Post) => {
     setSelectedPost(post);
-    console.log("onPressOptions>>>> ", post);
     bottomSheetModalOptionsRef.current?.present();
   };
 
@@ -334,9 +334,7 @@ export default function Chat() {
   const handlePressConfirmDelete = async () => {
     try {
       setDeleteLoading(true);
-      console.log("selectedPost?.id to delete>>>>", selectedPost?.id);
-      await authApi.delete(`posts/${selectedPost?.id}`);
-      console.log("Post deleted:");
+      await axios.delete(`posts/${selectedPost?.id}`);
 
       firstLoad();
       handlePressCancel();
@@ -346,7 +344,8 @@ export default function Chat() {
         text1: t("chat.postDeleted"),
       });
     } catch (error) {
-      console.log("Error deleting post", error);
+      console.error("Error deleting post", error);
+      Sentry.captureException(error);
     } finally {
       setDeleteLoading(false);
     }
@@ -375,7 +374,7 @@ export default function Chat() {
           <SimpleSelectableChip
             label={t("chat.visibility.myBrigade")}
             checked={!all}
-            disabled={!(meData?.userProfile?.team as Team)?.id}
+            disabled={!(userProfile?.userProfile?.team as Team)?.id}
             onPressElement={handlePressMyBrigade}
           />
         </View>
