@@ -16,7 +16,7 @@ import Logo from "@/assets/images/logo-small.svg";
 import Cog from "@/assets/images/icons/cog.svg";
 
 import ProtectedView from "@/components/control/ProtectedView";
-import { extractAxiosErrorData, getInitialsBase } from "@/util";
+import { extractAxiosErrorData, getInitialsBase, logout } from "@/util";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { axios } from "@/config/axios";
 import Toast from "react-native-toast-message";
@@ -28,7 +28,6 @@ import invariant from "tiny-invariant";
 import { LOG } from "@/util/logger";
 import * as Sentry from "@sentry/react-native";
 import { useStore } from "@/hooks/useStore";
-import useSessionStore from "@/hooks/useSessionStore";
 
 function CustomDrawerContent() {
   const router = useRouter();
@@ -41,8 +40,6 @@ function CustomDrawerContent() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const userHasBrigade = useUserHasBrigade();
   const { isInternetReachable } = useNetInfo();
-  const resetSessionStore = useSessionStore((state) => state.reset);
-  const resetStore = useStore((state) => state.reset);
 
   const onPressDeleteAccount = () => {
     bottomSheetModalRef.current?.present();
@@ -54,10 +51,7 @@ function CustomDrawerContent() {
       setLoading(true);
       await axios.delete("/users/delete_account");
       LOG.warn(`Deleted user: ${userProfile.username}`);
-      resetSessionStore();
-      resetStore();
-      Sentry.setUser(null);
-      LOG.info(`Logged out from user: ${userProfile.username}`);
+      logout();
     } catch (error) {
       console.error(error);
       Sentry.captureException(error);
@@ -208,11 +202,8 @@ function CustomDrawerContent() {
               </View>
               <TouchableOpacity
                 className="mr-4"
-                onPress={async () => {
-                  resetSessionStore();
-                  resetStore();
-                  Sentry.setUser(null);
-                  LOG.info(`Logged out from user: ${userProfile?.username}`);
+                onPress={() => {
+                  logout();
                 }}
               >
                 <Logout />
