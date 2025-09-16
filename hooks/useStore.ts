@@ -78,12 +78,14 @@ interface Store {
     data: AnswerState,
   ) => void;
   setSelectedCase: (visitCase: VisitCase) => void;
+
+  reset: () => void;
 }
 
 export const useStore = create<Store>()(
   immer(
     persist(
-      (set) => ({
+      (set, _get, store) => ({
         user: null,
         setUser: (user) => set({ user }),
 
@@ -205,6 +207,10 @@ export const useStore = create<Store>()(
           return set((state: Store) => {
             state.visitMap[state.visitId][answerId] = data;
           });
+        },
+
+        reset: () => {
+          set(store.getInitialState());
         },
       }),
       { name: "visit-store", storage: createJSONStorage(() => AsyncStorage) },

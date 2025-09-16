@@ -42,6 +42,7 @@ function CustomDrawerContent() {
   const userHasBrigade = useUserHasBrigade();
   const { isInternetReachable } = useNetInfo();
   const resetSessionStore = useSessionStore((state) => state.reset);
+  const resetStore = useStore((state) => state.reset);
 
   const onPressDeleteAccount = () => {
     bottomSheetModalRef.current?.present();
@@ -54,6 +55,7 @@ function CustomDrawerContent() {
       await axios.delete("/users/delete_account");
       LOG.warn(`Deleted user: ${userProfile.username}`);
       resetSessionStore();
+      resetStore();
       Sentry.setUser(null);
       LOG.info(`Logged out from user: ${userProfile.username}`);
     } catch (error) {
@@ -208,6 +210,7 @@ function CustomDrawerContent() {
                 className="mr-4"
                 onPress={async () => {
                   resetSessionStore();
+                  resetStore();
                   Sentry.setUser(null);
                   LOG.info(`Logged out from user: ${userProfile?.username}`);
                 }}
