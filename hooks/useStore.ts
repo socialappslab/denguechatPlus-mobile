@@ -135,15 +135,15 @@ export const useStore = create<Store>()(
         },
 
         visitData: {
-          houseId: 0, // set
-          // house: House | undefined // set, get
-          questionnaireId: "0", // set
-          teamId: 0, // set
-          userAccountId: "0", // set, get
-          notes: "", // set, get
+          houseId: 0,
+          house: undefined,
+          questionnaireId: "0",
+          teamId: 0,
+          userAccountId: "0",
+          notes: "",
         },
         setVisitData: (visitData) => {
-          set({ visitData });
+          set((state) => ({ visitData: { ...state.visitData, ...visitData } }));
         },
 
         /**
@@ -154,6 +154,14 @@ export const useStore = create<Store>()(
         initialiseCurrentVisit: (visitId) =>
           set(() => ({
             visitId,
+            visitData: {
+              houseId: 0,
+              house: undefined,
+              questionnaireId: "0",
+              teamId: 0,
+              userAccountId: "0",
+              notes: "",
+            },
             visitMetadata: {
               [visitId]: { inspectionIdx: 0 },
             },
