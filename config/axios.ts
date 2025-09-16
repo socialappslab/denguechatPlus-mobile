@@ -6,6 +6,7 @@ import i18n from "./i18n";
 import invariant from "tiny-invariant";
 import useSessionStore from "@/hooks/useSessionStore";
 import { configure } from "axios-hooks";
+import { logout } from "@/util";
 
 invariant(
   process.env.EXPO_PUBLIC_API_URL,
@@ -79,7 +80,17 @@ axios.interceptors.response.use(undefined, (error) => {
   return Promise.reject(error);
 });
 
-// TODO: Implement refresh token logic
+axios.interceptors.response.use(undefined, (error) => {
+  if (
+    error instanceof AxiosError &&
+    (error.status === HttpStatusCode.Unauthorized ||
+      error.status === HttpStatusCode.Forbidden)
+  ) {
+    logout();
+  }
+
+  return Promise.reject(error);
+});
 
 // NOTE: Configure axios-hooks, remove this after migrating all requests to
 // TanStack Query
