@@ -13,6 +13,7 @@ import { VISITS_LOG } from "@/util/logger";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setAutoFreeze } from "immer";
 import { CaseType, deserialize } from "jsonapi-fractal";
+import invariant from "tiny-invariant";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -48,12 +49,14 @@ interface Store {
   fetchUserProfile: () => Promise<void>;
 
   selectedCase: VisitCase;
-  storedHouseList: House[];
   storedVisits: QuestionnaireState[];
   visitId: VisitId;
   visitMap: VisitMap;
   visitMetadata: VisitMetaMap;
   inspectionPhotos: InspectionPhoto[];
+
+  storedHouseList: House[];
+  fetchHouses: () => Promise<House[]>;
 
   questionnaire: Questionnaire | null;
   fetchQuestionnaire: (language: string) => Promise<void>;
@@ -71,7 +74,6 @@ interface Store {
   ) => void;
   increaseCurrentVisitInspection: () => void;
   initialiseCurrentVisit: (visitId: VisitId) => void;
-  saveHouseList: (houses: House[]) => void;
   setCurrentVisitData: (
     answerId: AnswerId,
     question: Question,
@@ -105,7 +107,25 @@ export const useStore = create<Store>()(
         visitMetadata: {},
         inspectionPhotos: [],
         selectedCase: "house",
+
         storedHouseList: [],
+        fetchHouses: async () => {
+          const response = await axios.get("/houses/list_to_visit");
+          const deserializedData = deserialize<House>(response.data);
+
+          invariant(deserializedData, "Expected object to be defined");
+          invariant(
+            Array.isArray(deserializedData),
+            "Expected array of houses",
+          );
+
+          set((state) => {
+            state.storedHouseList = deserializedData;
+          });
+
+          return deserializedData;
+        },
+
         /**
          * All visits that were not published to the backed
          * will be saved in this array as QuestionnaireState
@@ -189,10 +209,6 @@ export const useStore = create<Store>()(
         increaseCurrentVisitInspection: () =>
           set((state: Store) => {
             ++state.visitMetadata[state.visitId].inspectionIdx;
-          }),
-        saveHouseList: (houses) =>
-          set((state) => {
-            state.storedHouseList = houses;
           }),
         cleanUpStoredVisit: (visit) =>
           set((state) => {
