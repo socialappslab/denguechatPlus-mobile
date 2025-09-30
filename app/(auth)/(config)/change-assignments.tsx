@@ -148,7 +148,7 @@ export default function ChangeBrigade() {
             }
             primary
             onPress={onChangeBrigade}
-            title={t("config.changeBrigade")}
+            title={t("drawer.changeAssignments")}
           />
         </View>
       </View>

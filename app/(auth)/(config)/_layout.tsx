@@ -57,7 +57,7 @@ export default function VisitLayout(props: ThemeProps) {
         options={{
           headerShown: true,
           headerShadowVisible: false,
-          title: t("config.changeBrigade"),
+          title: t("drawer.changeAssignments"),
           headerLeft: () => null,
           headerBackVisible: false,
         }}
