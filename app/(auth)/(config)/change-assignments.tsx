@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
@@ -10,44 +10,65 @@ import {
   Loading,
   ListItem,
 } from "@/components/themed";
-import { IUser } from "@/schema/auth";
 
 import { axios } from "@/config/axios";
-import { BaseObject } from "@/schema";
 import { useBrigades } from "@/hooks/useBrigades";
 import { AvatarBig } from "@/components/segments/AvatarBig";
 import Toast from "react-native-toast-message";
 import { extractAxiosErrorData } from "@/util";
 import * as Sentry from "@sentry/react-native";
+import { useMutation } from "@tanstack/react-query";
+import invariant from "tiny-invariant";
+import { useStore } from "@/hooks/useStore";
+
+function useChangeAssignmentMutation() {
+  return useMutation({
+    mutationFn: (payload: {
+      userId?: number;
+      teamId?: number;
+      houseBlockId?: number;
+    }) =>
+      axios.put("/users/change_assignment", {
+        userId: payload.userId,
+        teamId: payload.teamId,
+        houseBlockId: payload.houseBlockId,
+      }),
+  });
+}
 
 export default function ChangeBrigade() {
   const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const { selection } = useBrigades();
-  const [user] = useState(selection?.brigader);
+
+  const userProfile = useStore((state) => state.userProfile);
+  const user = useMemo(() => {
+    invariant(selection.brigader, "Expected a brigader");
+    return selection.brigader;
+  }, [selection]);
+
+  const isMyUser = userProfile?.id === user.id;
+  // @ts-expect-error
+  const brigradeName = user.team?.name || t("config.noBrigade");
+  const houseGroupName =
+    // @ts-expect-error
+    user.houseBlocks?.[0]?.name?.trim() ??
+    // @ts-expect-error
+    user.houseBlock?.name?.trim() ??
+    t("config.noHouseGroup");
 
   const router = useRouter();
+  const changeAssignment = useChangeAssignmentMutation();
 
-  const renderBrigade = (user?: IUser) => {
-    return (user?.team as BaseObject)?.name || t("config.noBrigade");
-  };
-
-  const onPressSelectBrigade = () => {
-    router.push("/select-brigade");
-  };
-
-  const onPressSelectHouseBlock = () => {
-    router.push("/select-house-block");
-  };
-
-  const onChangeBrigade = async () => {
+  async function onChangeBrigade() {
     setLoading(true);
     try {
-      await axios.put(`/users/change_team`, {
-        teamId: selection?.newBrigade?.id,
-        houseBlockId: selection?.newHouseBlock?.id,
-        userId: user?.id,
+      await changeAssignment.mutateAsync({
+        // @ts-expect-error
+        userId: isMyUser ? undefined : user.id,
+        teamId: selection.newBrigade?.id,
+        houseBlockId: selection.newHouseBlock?.id,
       });
 
       router.push("/change-brigade-success");
@@ -71,7 +92,7 @@ export default function ChangeBrigade() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <SafeAreaView>
@@ -86,28 +107,28 @@ export default function ChangeBrigade() {
                 </Text>
                 <View className="flex flex-row items-center justify-center">
                   <Text className="text-sm font-normal text-center">
-                    {renderBrigade(user)}
+                    {brigradeName} - {houseGroupName}
                   </Text>
                 </View>
               </View>
             </View>
 
-            <Text className="text-lg font-bold mb-0">
-              {t("config.chooseBrigadeTitle")}
-            </Text>
-
             <View className="flex flex-1 mt-4">
               <ListItem
                 title={t("config.brigade")}
-                onPressElement={onPressSelectBrigade}
-                filled={selection?.newBrigade?.name}
+                onPressElement={() => {
+                  router.push("/select-brigade");
+                }}
+                filled={selection.newBrigade?.name}
                 emptyString={t("config.allBrigades")}
               />
               <ListItem
                 title={t("houseGroup_one")}
-                disabled={!selection?.newBrigade}
-                onPressElement={onPressSelectHouseBlock}
-                filled={selection?.newHouseBlock?.name}
+                disabled={!selection.newBrigade}
+                onPressElement={() => {
+                  router.push("/select-house-group");
+                }}
+                filled={selection.newHouseBlock?.name}
                 emptyString={t("config.allHouseBlocks")}
               />
             </View>
@@ -123,7 +144,7 @@ export default function ChangeBrigade() {
         <View className="pt-5">
           <Button
             disabled={
-              !selection?.newBrigade || !selection?.newHouseBlock || loading
+              !selection.newBrigade || !selection.newHouseBlock || loading
             }
             primary
             onPress={onChangeBrigade}

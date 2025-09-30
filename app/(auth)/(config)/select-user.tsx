@@ -42,7 +42,7 @@ export default function SelectUser() {
   const [hasMore, setHasMore] = useState(true);
 
   const router = useRouter();
-  const { filters, setSelection } = useBrigades();
+  const { filters, setSelection, clearState } = useBrigades();
 
   const fetchData = async (page: number, query: string, teamId?: number) => {
     setError("");
@@ -50,13 +50,17 @@ export default function SelectUser() {
       const response = await axios.get("users", {
         params: {
           "filter[status][]": "active",
-          "page[number]": page,
-          "page[size]": 15,
+          page: {
+            number: page,
+            size: 15,
+          },
           sort: "user_profiles.first_name",
           order: "asc",
-          "filter[full_name]": query,
-          "filter[role_name]": "brigadista",
-          "filter[team_id]": teamId,
+          filter: {
+            full_name: query,
+            role_name: "brigadista",
+            team_id: teamId,
+          },
         },
       });
 
@@ -117,31 +121,28 @@ export default function SelectUser() {
     }
   };
 
-  const renderSpinner = () => {
+  function renderSpinner() {
     if (!loadingMore) return null;
     return (
       <View className="py-4">
         <Loading />
       </View>
     );
-  };
+  }
 
-  const onPressElement = (user: IUser) => {
+  function onPressElement(user: IUser) {
+    clearState();
     setSelection({ brigader: user });
-    router.push(`/change-brigade`);
-  };
+    router.push(`/change-assignments`);
+  }
 
-  const onPressFilter = () => {
-    router.push(`/filters-users`);
-  };
-
-  const firstLoad = (team?: BaseObject) => {
+  function firstLoad(team?: BaseObject) {
     setSearchText("");
     setDataList([]);
     setHasMore(true);
     setCurrentPage(1);
     fetchData(1, "", team?.id);
-  };
+  }
 
   useEffect(() => {
     if (isFocused) {
@@ -191,15 +192,17 @@ export default function SelectUser() {
           </View>
           <FilterButton
             filters={countSetFilters(filters, ["team"])}
-            onPress={onPressFilter}
+            onPress={() => {
+              router.push(`/filters-users`);
+            }}
           />
         </View>
-        {loading && (
+
+        {loading ? (
           <View className="my-4">
             <Loading />
           </View>
-        )}
-        {!loading && (
+        ) : (
           <FlatList
             contentContainerStyle={{ paddingBottom: 20 }}
             data={dataList}
@@ -215,7 +218,7 @@ export default function SelectUser() {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             renderItem={renderItem}
-            keyExtractor={(item: IUser, index: number) => String(item.id)}
+            keyExtractor={(item: IUser) => String(item.id)}
             onEndReached={loadMoreData}
             onEndReachedThreshold={0.9}
             ListEmptyComponent={showNoResultsOrErrors}

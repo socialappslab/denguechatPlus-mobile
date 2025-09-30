@@ -107,10 +107,6 @@ export function FilterModal({
     }
   }, [isFocused]);
 
-  const renderItem = (team: Team) => {
-    return `${team.name}`;
-  };
-
   const houseBlockTypeToLabel: Record<HouseBlockType, string> = {
     [HouseBlockType.FrenteAFrente]: "Frente a Frente",
     [HouseBlockType.Block]: t("config.block"),
@@ -170,7 +166,7 @@ export function FilterModal({
                   onValueChange={() => {
                     setItemSelected(team);
                   }}
-                  label={renderItem(team)}
+                  label={team?.name}
                 />
               ))}
             </View>

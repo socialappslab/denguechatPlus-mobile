@@ -11,9 +11,9 @@ export interface FilterData {
 }
 
 interface SelectionData {
-  brigader?: IUser;
-  newBrigade?: Team;
-  newHouseBlock?: BaseObject;
+  brigader: IUser | null;
+  newBrigade: Team | null;
+  newHouseBlock: BaseObject | null;
   filters: FilterData;
 }
 
@@ -31,6 +31,9 @@ const BrigadeProvider = ({ children }: { children: ReactNode }) => {
   const [filterData, setFilterData] = useState<FilterData>({});
 
   const [selectionData, setSelectionData] = useState<SelectionData>({
+    brigader: null,
+    newBrigade: null,
+    newHouseBlock: null,
     filters: {},
   });
 
@@ -50,7 +53,12 @@ const BrigadeProvider = ({ children }: { children: ReactNode }) => {
 
   const clearState = () => {
     setFilterData({});
-    setSelectionData({ filters: {} });
+    setSelectionData({
+      brigader: null,
+      newBrigade: null,
+      newHouseBlock: null,
+      filters: {},
+    });
   };
 
   return (

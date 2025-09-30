@@ -40,14 +40,13 @@
       "wedge": "Cuña",
       "brigade": "Brigada",
       "changeBrigade": "Cambiar Brigada",
-      "chooseBrigadeTitle": "Elegir nueva brigada",
       "noBrigade": "Sin Brigada",
+      "noHouseGroup": "Sin $t(houseGroup_one)",
       "allSectors": "Todos los Sectores",
       "allWedges": "Todas las Cuñas",
       "allBrigades": "Todas las Brigadas",
       "allHouseBlocks": "Todos los $t(houseGroup_other)",
-      "successTitle": "Nueva brigada asignada",
-      "successDescription": "ahora pertenece a",
+      "successTitle": "Nuevas asignaciones realizadas",
       "changeHouseBlockSuccess": "$t(houseGroup_one) actualizado",
       "block": "Manzana",
       "currentHouseBlock": "$t(houseGroup_one) actual"
@@ -106,7 +105,8 @@
       "userGuide": "Guía del Usuario",
       "settings": "Configuración",
       "changeHouseBlock": "Cambiar de $t(houseGroup_one)",
-      "changeHouseBlockUpdated": "$t(houseGroup_one) actualizado a {{name}}"
+      "changeHouseBlockUpdated": "$t(houseGroup_one) actualizado a {{name}}",
+      "changeAssignments": "Cambiar asignaciones"
     },
     "profile": {
       "account": "Cuenta",

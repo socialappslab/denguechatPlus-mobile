@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useRouter, useSegments } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Platform, Pressable, TouchableOpacity } from "react-native";
@@ -10,12 +10,10 @@ import {
 } from "@gorhom/bottom-sheet";
 
 import { Button, Loading, SafeAreaView, Text, View } from "@/components/themed";
-import AssignBrigade from "@/assets/images/icons/add-brigade.svg";
 import Logout from "@/assets/images/icons/logout.svg";
 import Logo from "@/assets/images/logo-small.svg";
 import Cog from "@/assets/images/icons/cog.svg";
 
-import ProtectedView from "@/components/control/ProtectedView";
 import { extractAxiosErrorData, getInitialsBase, logout } from "@/util";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { axios } from "@/config/axios";
@@ -28,12 +26,15 @@ import invariant from "tiny-invariant";
 import { LOG } from "@/util/logger";
 import * as Sentry from "@sentry/react-native";
 import { useStore } from "@/hooks/useStore";
+import { useBrigades } from "@/hooks/useBrigades";
 
 function CustomDrawerContent() {
   const router = useRouter();
-
   const userProfile = useStore((state) => state.userProfile);
+  // TODO: fix the type for the user
+  const userRole = userProfile?.roles?.[0] as unknown as string | undefined;
 
+  const { setSelection, clearState } = useBrigades();
   const { t } = useTranslation();
   const [openSettings, setOpenSettings] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -69,7 +70,7 @@ function CustomDrawerContent() {
 
   const snapPoints = useMemo(() => ["45%"], []);
 
-  const isChangeHouseBlockButtonDisabled =
+  const isChangeAssignmentButtonDisabled =
     !userHasBrigade || !isInternetReachable;
 
   return (
@@ -82,34 +83,28 @@ function CustomDrawerContent() {
           <Text className="text-lg font-semibold">DengueChatPlus</Text>
         </View>
         <View className="flex-grow px-2">
-          <ProtectedView hasPermission={["users-change_team"]}>
-            <Pressable
-              className="py-3 flex-row items-center"
-              onPress={() => router.push("/select-user")}
-            >
-              <AssignBrigade />
-              <Text className="font-semibold ml-3">
-                {t("drawer.assignBrigade")}
-              </Text>
-            </Pressable>
-          </ProtectedView>
+          <Pressable
+            className={`py-3 flex-row items-center ${
+              isChangeAssignmentButtonDisabled ? "opacity-50" : ""
+            }`}
+            onPress={() => {
+              if (userRole === "team_leader" || userRole === "admin") {
+                router.navigate("/select-user");
+                return;
+              }
 
-          <Link
-            href="/change-house-group"
-            asChild
-            disabled={isChangeHouseBlockButtonDisabled}
+              clearState();
+              // @ts-expect-error expects another shape but UserProfile does satisfies the shape
+              setSelection({ brigader: userProfile?.userProfile });
+              router.navigate("/change-assignments");
+            }}
+            disabled={isChangeAssignmentButtonDisabled}
           >
-            <Pressable
-              className={`py-3 flex-row items-center ${
-                isChangeHouseBlockButtonDisabled ? "opacity-50" : ""
-              }`}
-            >
-              <MaterialIcons name="swap-horiz" size={24} color="#56534E" />
-              <Text className="font-semibold ml-3">
-                {t("drawer.changeHouseBlock")}
-              </Text>
-            </Pressable>
-          </Link>
+            <MaterialIcons name="swap-horiz" size={24} color="#56534E" />
+            <Text className="font-semibold ml-3">
+              {t("drawer.changeAssignments")}
+            </Text>
+          </Pressable>
 
           <Pressable
             className="py-3 flex-row items-center"

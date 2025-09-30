@@ -40,14 +40,13 @@
       "wedge": "Wedge",
       "brigade": "Brigade",
       "changeBrigade": "Change Brigade",
-      "chooseBrigadeTitle": "Choose new brigade",
       "noBrigade": "No Brigade",
+      "noHouseGroup": "No $t(houseGroup_one)",
       "allSectors": "All Sectors",
       "allWedges": "All Wedges",
       "allBrigades": "All Brigades",
       "allHouseBlocks": "All $t(houseGroup_other)",
-      "successTitle": "New brigade assigned",
-      "successDescription": "now belongs to",
+      "successTitle": "New assignments made",
       "block": "Block",
       "currentHouseBlock": "Current $t(houseGroup_one)"
     },
@@ -105,7 +104,8 @@
       "userGuide": "User Guide",
       "settings": "Settings",
       "changeHouseBlock": "Change $t(houseGroup_one)",
-      "changeHouseBlockUpdated": "$t(houseGroup_one) updated to {{name}}"
+      "changeHouseBlockUpdated": "$t(houseGroup_one) updated to {{name}}",
+      "changeAssignments": "Change assignments"
     },
     "profile": {
       "account": "Account",
