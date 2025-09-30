@@ -33,6 +33,10 @@ function useTarikiStatusModal() {
   const modalRef = useRef<BottomSheetModal>(null);
 
   const houseId = Number(visitId.split("-")[1]);
+  /**
+   * TODO: Get rid of this global state, and get the data needed from TanStack
+   * Query's cache or something like that.
+   */
   const currentHouse = storedHouseList.find((house) => house.id === houseId);
 
   if (!currentHouse) throw new Error("House not found");
