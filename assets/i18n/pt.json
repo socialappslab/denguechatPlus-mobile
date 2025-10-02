@@ -46,7 +46,7 @@
       "allWedges": "Todas as Cunhas",
       "allBrigades": "Todas as Brigadas",
       "allHouseBlocks": "Todas as $t(houseGroup_other)",
-      "successTitle": "Novas atribuições feitas",
+      "successTitle": "Novo $t(houseGroup_one) atribuído",
       "block": "Quarteirão",
       "currentHouseBlock": "$t(houseGroup_one) atual"
     },
@@ -104,8 +104,7 @@
       "userGuide": "Guia do Usuário",
       "settings": "Configuração",
       "changeHouseBlock": "Trocar de $t(houseGroup_one)",
-      "changeHouseBlockUpdated": "$t(houseGroup_one) atualizado para {{name}}",
-      "changeAssignments": "Alterar atribuições"
+      "changeHouseBlockUpdated": "$t(houseGroup_one) atualizado para {{name}}"
     },
     "profile": {
       "account": "Conta",

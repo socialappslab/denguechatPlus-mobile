@@ -46,7 +46,7 @@
       "allWedges": "All Wedges",
       "allBrigades": "All Brigades",
       "allHouseBlocks": "All $t(houseGroup_other)",
-      "successTitle": "New assignments made",
+      "successTitle": "New $t(houseGroup_one) assigned",
       "block": "Block",
       "currentHouseBlock": "Current $t(houseGroup_one)"
     },
@@ -104,8 +104,7 @@
       "userGuide": "User Guide",
       "settings": "Settings",
       "changeHouseBlock": "Change $t(houseGroup_one)",
-      "changeHouseBlockUpdated": "$t(houseGroup_one) updated to {{name}}",
-      "changeAssignments": "Change assignments"
+      "changeHouseBlockUpdated": "$t(houseGroup_one) updated to {{name}}"
     },
     "profile": {
       "account": "Account",

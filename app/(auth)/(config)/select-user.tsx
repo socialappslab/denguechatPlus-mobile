@@ -133,7 +133,7 @@ export default function SelectUser() {
   function onPressElement(user: IUser) {
     clearState();
     setSelection({ brigader: user });
-    router.push(`/change-assignments`);
+    router.push(`/change-house-group`);
   }
 
   function firstLoad(team?: BaseObject) {

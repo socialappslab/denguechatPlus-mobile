@@ -46,7 +46,7 @@
       "allWedges": "Todas las Cuñas",
       "allBrigades": "Todas las Brigadas",
       "allHouseBlocks": "Todos los $t(houseGroup_other)",
-      "successTitle": "Nuevas asignaciones realizadas",
+      "successTitle": "Nuevo $t(houseGroup_one) asignado",
       "changeHouseBlockSuccess": "$t(houseGroup_one) actualizado",
       "block": "Manzana",
       "currentHouseBlock": "$t(houseGroup_one) actual"
@@ -105,8 +105,7 @@
       "userGuide": "Guía del Usuario",
       "settings": "Configuración",
       "changeHouseBlock": "Cambiar de $t(houseGroup_one)",
-      "changeHouseBlockUpdated": "$t(houseGroup_one) actualizado a {{name}}",
-      "changeAssignments": "Cambiar asignaciones"
+      "changeHouseBlockUpdated": "$t(houseGroup_one) actualizado a {{name}}"
     },
     "profile": {
       "account": "Cuenta",

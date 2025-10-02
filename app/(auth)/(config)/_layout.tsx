@@ -57,15 +57,15 @@ export default function VisitLayout(props: ThemeProps) {
         options={{
           headerShown: true,
           headerShadowVisible: false,
-          title: t("drawer.changeAssignments"),
+          title: t("drawer.changeHouseBlock"),
           headerLeft: () => null,
           headerBackVisible: false,
         }}
       />
       <Stack.Screen
-        name="change-assignments"
+        name="change-house-group"
         options={{
-          title: t("drawer.changeAssignments"),
+          title: t("drawer.changeHouseBlock"),
           headerShadowVisible: false,
           headerLeft: () => (
             <Ionicons

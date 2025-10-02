@@ -96,13 +96,13 @@ function CustomDrawerContent() {
               clearState();
               // @ts-expect-error expects another shape but UserProfile does satisfies the shape
               setSelection({ brigader: userProfile?.userProfile });
-              router.navigate("/change-assignments");
+              router.navigate("/change-house-group");
             }}
             disabled={isChangeAssignmentButtonDisabled}
           >
             <MaterialIcons name="swap-horiz" size={24} color="#56534E" />
             <Text className="font-semibold ml-3">
-              {t("drawer.changeAssignments")}
+              {t("drawer.changeHouseBlock")}
             </Text>
           </Pressable>
 
