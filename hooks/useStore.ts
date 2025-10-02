@@ -48,6 +48,9 @@ interface Store {
   userProfile: IUser | null;
   fetchUserProfile: () => Promise<void>;
 
+  ownerOfVisits: number | null;
+  setOwnerOfVisits: (userId: number | null) => void;
+
   selectedCase: VisitCase;
   storedVisits: QuestionnaireState[];
   visitId: VisitId;
@@ -100,6 +103,9 @@ export const useStore = create<Store>()(
           }) as IUser;
           set({ userProfile: deserializedData });
         },
+
+        ownerOfVisits: null,
+        setOwnerOfVisits: (userId) => set({ ownerOfVisits: userId }),
 
         // Always set in "Select House", dumb value
         visitId: "" as VisitId,
@@ -159,7 +165,7 @@ export const useStore = create<Store>()(
           house: undefined,
           questionnaireId: "0",
           teamId: 0,
-          userAccountId: "0",
+          userAccountId: 0,
           notes: "",
         },
         setVisitData: (visitData) => {
@@ -172,14 +178,14 @@ export const useStore = create<Store>()(
          * @param visitId generates visitId based on houseId and userId
          */
         initialiseCurrentVisit: (visitId) =>
-          set(() => ({
+          set((state) => ({
             visitId,
             visitData: {
               houseId: 0,
               house: undefined,
               questionnaireId: "0",
               teamId: 0,
-              userAccountId: "0",
+              userAccountId: state.ownerOfVisits,
               notes: "",
             },
             visitMetadata: {

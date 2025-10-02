@@ -71,7 +71,7 @@ export interface UserProfile {
 export type UserStatusType = "active" | "pending" | "inactive" | "locked";
 
 export interface IUser extends UserProfile {
-  id: string;
+  id: number;
   status?: UserStatusType;
   permissions?: string[];
 

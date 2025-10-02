@@ -65,6 +65,7 @@ export default function Login() {
   const logIn = useLogInMutation();
   const setUser = useStore((state) => state.setUser);
   const setSession = useSessionStore((state) => state.setSession);
+  const setOwnerOfVisits = useStore((state) => state.setOwnerOfVisits);
 
   const phoneInput = useRef<PhoneInput>(null);
   const refPassword = useRef<RNTextInput>(null);
@@ -118,7 +119,9 @@ export default function Login() {
 
       const response = await logIn.mutateAsync(payload);
       setSession(response.meta.jwt.res);
-      setUser(response.data.attributes);
+      const user = response.data.attributes;
+      setUser(user);
+      setOwnerOfVisits(user.id);
       LOG.info(`Logged in with user: ${payload.username}`);
 
       authErrorCount.current = 0;

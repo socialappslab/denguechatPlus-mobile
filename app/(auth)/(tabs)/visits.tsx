@@ -1,5 +1,5 @@
 import Button from "@/components/themed/Button";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
 import RNPickerSelect, { Item } from "react-native-picker-select";
@@ -215,9 +215,11 @@ function useReportsQuery(
           params: {
             sort: "name",
             order: "asc",
-            "filter[sector_id]": sectorId,
-            "filter[wedge_id]": wedgeId,
-            "filter[team_id]": teamId,
+            filter: {
+              sector_id: sectorId,
+              wedge_id: wedgeId,
+              team_id: teamId,
+            },
           },
         })
       ).data as HouseReport;
@@ -241,18 +243,16 @@ export default function Visits() {
   const { t } = useTranslation();
   const { isInternetReachable } = useNetInfo();
   const { i18n } = useTranslation();
-  const userProfile = useStore((state) => state.userProfile);
   const { filters, setFilter } = useFilters();
-  const visitData = useStore((state) => state.visitData);
-  const setVisitData = useStore((state) => state.setVisitData);
   const { deleteInspectionPhotosFromVisit } = useInspectionPhotos();
 
-  const router = useRouter();
-
+  const userProfile = useStore((state) => state.userProfile);
   const storedVisits = useStore((state) => state.storedVisits);
   const cleanUpStoredVisit = useStore((state) => state.cleanUpStoredVisit);
   const visitId = useStore((state) => state.visitId);
   const inspectionPhotos = useStore((state) => state.inspectionPhotos);
+  const ownerOfVisits = useStore((state) => state.ownerOfVisits);
+  const setOwnerOfVisits = useStore((state) => state.setOwnerOfVisits);
 
   const inspectionPhotosForCurrentVisit = useMemo(
     () => inspectionPhotos.filter((photo) => photo.visitId === visitId),
@@ -294,18 +294,6 @@ export default function Visits() {
   );
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  useEffect(() => {
-    if (!userProfile) return;
-
-    // NOTE: Here we're setting the current user as the "owner" of the visits.
-    // We're only executing this if we have the default value "0", which means
-    // that we don't have a real user account. We may want to handle this
-    // differently. The check is weird.
-    if (visitData.userAccountId === "0") {
-      setVisitData({ userAccountId: userProfile.id });
-    }
-  }, [userProfile]);
 
   useEffect(() => {
     setFilter({
@@ -401,15 +389,15 @@ export default function Visits() {
 
                 <RNPickerSelect
                   items={teamMemberOptions}
+                  value={ownerOfVisits}
                   onValueChange={(value: number | null) => {
                     if (!teamMemberOptions.length) return;
                     if (!value) {
-                      setVisitData({ userAccountId: userProfile!.id });
+                      setOwnerOfVisits(userProfile!.id);
                       return;
                     }
-                    setVisitData({ userAccountId: value.toString() });
+                    setOwnerOfVisits(value);
                   }}
-                  value={visitData.userAccountId}
                   style={{
                     inputAndroid: {
                       borderWidth: 1,
@@ -447,11 +435,9 @@ export default function Visits() {
                 />
               </View>
 
-              <Button
-                title={t("visit.registerVisit")}
-                primary
-                onPress={() => router.push("/select-house")}
-              />
+              <Link href="/select-house" asChild>
+                <Button title={t("visit.registerVisit")} primary />
+              </Link>
             </View>
 
             <VisitsReport loading={reports.isLoading} data={reports.data} />

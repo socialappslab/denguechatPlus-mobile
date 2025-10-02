@@ -65,7 +65,6 @@ export default function ChangeBrigade() {
     setLoading(true);
     try {
       await changeAssignment.mutateAsync({
-        // @ts-expect-error
         userId: isMyUser ? undefined : user.id,
         teamId: selection.newBrigade?.id,
         houseBlockId: selection.newHouseBlock?.id,
