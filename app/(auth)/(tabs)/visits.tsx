@@ -306,6 +306,17 @@ export default function Visits() {
     });
   }, [userProfile]);
 
+  useEffect(() => {
+    // NOTE: set an owner of visits if it's null, this will should happen after
+    // updating the app and not logging out after the fix in:
+    // https://denguechat.atlassian.net/browse/DNG-1015
+    // We can remove this after the release and forcing the version to whatever
+    // the version of the app that includes this fix ends up being
+    if (ownerOfVisits === null) {
+      setOwnerOfVisits(userProfile!.id);
+    }
+  }, [ownerOfVisits, setOwnerOfVisits, userProfile]);
+
   async function onRefresh() {
     try {
       setRefreshing(true);
