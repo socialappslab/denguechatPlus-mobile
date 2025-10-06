@@ -24,7 +24,7 @@ import {
 
 import { countSetFilters, getInitialsBase } from "@/util";
 import Colors from "@/constants/Colors";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 
 import { useBrigades } from "@/hooks/useBrigades";
 import { Team } from "@/schema";
@@ -52,15 +52,17 @@ export default function SelectBrigade() {
   ) => {
     setError("");
     try {
-      const response = await authApi.get("teams", {
+      const response = await axios.get("teams", {
         params: {
-          "page[number]": page,
-          "page[size]": 15,
           sort: "name",
           order: "asc",
-          "filter[name]": query,
-          "filter[sector_id]": sectorId,
-          "filter[wedge_id]": wedgeId,
+          filter: {
+            number: page,
+            size: 15,
+            name: query,
+            sector_id: sectorId,
+            wedge_id: wedgeId,
+          },
         },
       });
 
@@ -225,7 +227,7 @@ export default function SelectBrigade() {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             renderItem={renderItem}
-            keyExtractor={(item: Team, index: number) => String(item.id)}
+            keyExtractor={(item) => String(item.id)}
             onEndReached={loadMoreData}
             onEndReachedThreshold={0.9}
             ListEmptyComponent={showNoResultsOrErrors}

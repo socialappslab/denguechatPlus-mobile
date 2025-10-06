@@ -22,7 +22,7 @@ import {
   PickerInput,
   TextInput,
 } from "@/components/react-hook-form";
-import { publicApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiResponseCollection, Wedge } from "@/schema";
@@ -129,7 +129,7 @@ function useCitiesQuery() {
         "page[size]": "1000",
       }).toString();
 
-      return (await publicApi.get(`/public/cities?${params}`))
+      return (await axios.get(`/public/cities?${params}`))
         .data as ApiResponseCollection<City>;
     },
   });
@@ -146,7 +146,7 @@ function useNeighborhoodsQuery(cityId: string | null) {
         "page[size]": "1000",
       }).toString();
 
-      return (await publicApi.get(`/public/neighborhoods?${params}`))
+      return (await axios.get(`/public/neighborhoods?${params}`))
         .data as ApiResponseCollection<Neighborhood>;
     },
   });
@@ -162,7 +162,7 @@ function useOrganizationsQuery() {
         sort: "name",
       }).toString();
 
-      return (await publicApi.get(`/public/organizations?${params}`))
+      return (await axios.get(`/public/organizations?${params}`))
         .data as ApiResponseCollection<Organization>;
     },
   });
@@ -188,7 +188,7 @@ interface CreateAccountPayload {
 function useCreateAccountMutation() {
   return useMutation({
     mutationFn: (data: CreateAccountPayload) => {
-      return publicApi.post("users/accounts", data);
+      return axios.post("/users/accounts", data);
     },
   });
 }

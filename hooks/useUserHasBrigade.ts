@@ -1,6 +1,8 @@
-import { useAuth } from "@/context/AuthProvider";
+import { useStore } from "./useStore";
 
 export function useUserHasBrigade() {
-  const { meData } = useAuth();
-  return Boolean(meData?.userProfile?.team && meData?.userProfile?.houseBlock);
+  const userProfile = useStore((state) => state.userProfile);
+  return Boolean(
+    userProfile?.userProfile?.team && userProfile?.userProfile?.houseBlock,
+  );
 }

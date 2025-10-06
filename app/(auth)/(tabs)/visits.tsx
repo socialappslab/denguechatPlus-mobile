@@ -1,5 +1,5 @@
 import Button from "@/components/themed/Button";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
 import RNPickerSelect, { Item } from "react-native-picker-select";
@@ -17,9 +17,8 @@ import {
 } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import VisitSummary from "@/components/VisitSummary";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import Colors from "@/constants/Colors";
-import { useAuth } from "@/context/AuthProvider";
 import { QuestionnaireState, useStore } from "@/hooks/useStore";
 import { BaseObject, Team } from "@/schema";
 import { TeamResponse, VisitData } from "@/types";
@@ -33,7 +32,6 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { useVisit } from "@/hooks/useVisit";
 import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
 import * as Sentry from "@sentry/react-native";
 
@@ -54,7 +52,7 @@ function VisitsReport({
   loading: boolean;
   data: HouseReport | undefined;
 }) {
-  const { meData } = useAuth();
+  const userProfile = useStore((state) => state.userProfile);
   const { t } = useTranslation();
   const router = useRouter();
   const { filters } = useFilters();
@@ -96,7 +94,7 @@ function VisitsReport({
               <View className="flex">
                 <Text type="title" className="mb-2 w-52">
                   {filters.sector?.name ||
-                    (meData?.userProfile?.team as Team)?.sector_name}
+                    (userProfile?.userProfile?.team as Team)?.sector_name}
                 </Text>
                 {(filters.team?.name || filters.wedge?.name) && (
                   <Text type="small" className="mb-6 w-52">
@@ -188,14 +186,14 @@ function SuccessSummary() {
 }
 
 function useTeamQuery() {
-  const { meData } = useAuth();
-  const teamId = (meData?.userProfile?.team as BaseObject)?.id;
+  const userProfile = useStore((state) => state.userProfile);
+  const teamId = (userProfile?.userProfile?.team as BaseObject)?.id;
 
   return useQuery({
     enabled: !!teamId,
     queryKey: ["visits", "team", teamId],
     queryFn: async () => {
-      return (await authApi.get(`/teams/${teamId}`)).data as TeamResponse;
+      return (await axios.get(`/teams/${teamId}`)).data as TeamResponse;
     },
   });
 }
@@ -213,13 +211,15 @@ function useReportsQuery(
     queryKey: ["visits", "team", teamId, { sectorId, wedgeId, teamId }],
     queryFn: async () => {
       return (
-        await authApi.get("reports/house_status", {
+        await axios.get("reports/house_status", {
           params: {
             sort: "name",
             order: "asc",
-            "filter[sector_id]": sectorId,
-            "filter[wedge_id]": wedgeId,
-            "filter[team_id]": teamId,
+            filter: {
+              sector_id: sectorId,
+              wedge_id: wedgeId,
+              team_id: teamId,
+            },
           },
         })
       ).data as HouseReport;
@@ -230,7 +230,7 @@ function useReportsQuery(
 function useCreateVisitMutation() {
   return useMutation({
     mutationFn: (data: FormData) => {
-      return authApi.post<VisitData>("/visits", data, {
+      return axios.post<VisitData>("/visits", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -243,18 +243,16 @@ export default function Visits() {
   const { t } = useTranslation();
   const { isInternetReachable } = useNetInfo();
   const { i18n } = useTranslation();
-  const { meData, reFetchMe } = useAuth();
-  useRefreshOnFocus(reFetchMe);
   const { filters, setFilter } = useFilters();
-  const { setVisitData, visitData } = useVisit();
   const { deleteInspectionPhotosFromVisit } = useInspectionPhotos();
 
-  const router = useRouter();
-
+  const userProfile = useStore((state) => state.userProfile);
   const storedVisits = useStore((state) => state.storedVisits);
   const cleanUpStoredVisit = useStore((state) => state.cleanUpStoredVisit);
   const visitId = useStore((state) => state.visitId);
   const inspectionPhotos = useStore((state) => state.inspectionPhotos);
+  const ownerOfVisits = useStore((state) => state.ownerOfVisits);
+  const setOwnerOfVisits = useStore((state) => state.setOwnerOfVisits);
 
   const inspectionPhotosForCurrentVisit = useMemo(
     () => inspectionPhotos.filter((photo) => photo.visitId === visitId),
@@ -301,17 +299,28 @@ export default function Visits() {
     setFilter({
       sector: {
         // @ts-expect-error
-        id: meData?.userProfile?.team?.sector_id as number,
+        id: userProfile?.userProfile?.team?.sector_id as number,
         // @ts-expect-error
-        name: meData?.userProfile?.team?.sector_name,
+        name: userProfile?.userProfile?.team?.sector_name,
       },
     });
-  }, [meData]);
+  }, [userProfile]);
+
+  useEffect(() => {
+    // NOTE: set an owner of visits if it's null, this will should happen after
+    // updating the app and not logging out after the fix in:
+    // https://denguechat.atlassian.net/browse/DNG-1015
+    // We can remove this after the release and forcing the version to whatever
+    // the version of the app that includes this fix ends up being
+    if (ownerOfVisits === null) {
+      setOwnerOfVisits(userProfile!.id);
+    }
+  }, [ownerOfVisits, setOwnerOfVisits, userProfile]);
 
   async function onRefresh() {
     try {
       setRefreshing(true);
-      await Promise.all([reFetchMe(), team.refetch(), reports.refetch()]);
+      await Promise.all([team.refetch(), reports.refetch()]);
     } catch (error) {
       console.error(error);
       Sentry.captureException(error);
@@ -391,15 +400,15 @@ export default function Visits() {
 
                 <RNPickerSelect
                   items={teamMemberOptions}
+                  value={ownerOfVisits}
                   onValueChange={(value: number | null) => {
                     if (!teamMemberOptions.length) return;
                     if (!value) {
-                      setVisitData({ userAccountId: meData!.id });
+                      setOwnerOfVisits(userProfile!.id);
                       return;
                     }
-                    setVisitData({ userAccountId: value.toString() });
+                    setOwnerOfVisits(value);
                   }}
-                  value={visitData.userAccountId}
                   style={{
                     inputAndroid: {
                       borderWidth: 1,
@@ -437,11 +446,9 @@ export default function Visits() {
                 />
               </View>
 
-              <Button
-                title={t("visit.registerVisit")}
-                primary
-                onPress={() => router.push("/select-house")}
-              />
+              <Link href="/select-house" asChild>
+                <Button title={t("visit.registerVisit")} primary />
+              </Link>
             </View>
 
             <VisitsReport loading={reports.isLoading} data={reports.data} />

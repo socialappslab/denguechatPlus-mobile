@@ -1,213 +1,156 @@
+import { useMemo, useState } from "react";
+import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
+
 import {
   Button,
-  Loading,
-  ScrollView,
-  SelectableItem,
   Text,
   View,
+  SafeAreaView,
+  Loading,
+  ListItem,
 } from "@/components/themed";
-import { authApi } from "@/config/axios";
-import { useAuth } from "@/context/AuthProvider";
-import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { HouseBlockType, Neighborhood, Wedge } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
-import { useCallback, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
+
+import { axios } from "@/config/axios";
+import { useBrigades } from "@/hooks/useBrigades";
+import { AvatarBig } from "@/components/segments/AvatarBig";
 import Toast from "react-native-toast-message";
-import invariant from "tiny-invariant";
-import { useFocusEffect } from "expo-router";
-import { useNetInfo } from "@react-native-community/netinfo";
+import { extractAxiosErrorData } from "@/util";
 import * as Sentry from "@sentry/react-native";
+import { useMutation } from "@tanstack/react-query";
+import invariant from "tiny-invariant";
+import { useStore } from "@/hooks/useStore";
 
-function useHouseBlocksQuery(wedgeId: number | null) {
-  interface HouseBlock {
-    id: string;
-    type: "houseBlock";
-    attributes: {
-      name: string;
-      brigadist: string;
-      inUse: boolean;
-      team: null;
-      wedge: Wedge;
-      neighborhood: Neighborhood;
-      houses: {
-        id: number;
-        reference_code: string;
-      }[];
-      type: HouseBlockType;
-    };
-  }
-
-  interface HouseBlockResponse {
-    data: HouseBlock[];
-    links: {
-      self: number;
-      last: number;
-    };
-    meta: {
-      total: number;
-    };
-  }
-
-  return useQuery({
-    enabled: !!wedgeId,
-    queryKey: ["houseBlocks", wedgeId!],
-    queryFn: async () => {
-      const params = new URLSearchParams({
-        "filter[wedge_id]": wedgeId!.toString(),
-      });
-      return (await authApi.get(`/house_blocks?${params}`))
-        .data as HouseBlockResponse;
-    },
-  });
-}
-
-function useChangeHouseBlockMutation() {
+function useChangeAssignmentMutation() {
   return useMutation({
-    mutationFn: async (houseBlockId: number) => {
-      return await authApi.put(`/users/change_house_block`, {
-        house_block_id: houseBlockId,
-      });
-    },
+    mutationFn: (payload: {
+      userId?: number;
+      teamId?: number;
+      houseBlockId?: number;
+    }) =>
+      axios.put("/users/change_assignment", {
+        userId: payload.userId,
+        teamId: payload.teamId,
+        houseBlockId: payload.houseBlockId,
+      }),
   });
 }
 
-export default function ChangeHouseBlock() {
+export default function ChangeBrigade() {
   const { t } = useTranslation();
-  const { meData } = useAuth();
+
+  const [loading, setLoading] = useState(false);
+  const { selection } = useBrigades();
+
+  const userProfile = useStore((state) => state.userProfile);
+  const user = useMemo(() => {
+    invariant(selection.brigader, "Expected a brigader");
+    return selection.brigader;
+  }, [selection]);
+
+  const isMyUser = userProfile?.id === user.id;
+  // @ts-expect-error
+  const brigradeName = user.team?.name || t("config.noBrigade");
+  const houseGroupName =
+    // @ts-expect-error
+    user.houseBlocks?.[0]?.name?.trim() ??
+    // @ts-expect-error
+    user.houseBlock?.name?.trim() ??
+    t("config.noHouseGroup");
+
   const router = useRouter();
-  const { isInternetReachable } = useNetInfo();
+  const changeAssignment = useChangeAssignmentMutation();
 
-  // @ts-expect-error fix types
-  const wedgeId: number | null = meData?.userProfile?.team?.wedge_id ?? null;
-
-  const houseBlocks = useHouseBlocksQuery(wedgeId);
-  useRefreshOnFocus(houseBlocks.refetch);
-
-  const changeHouseBlock = useChangeHouseBlockMutation();
-
-  const houseBlockId: string | undefined =
-    // @ts-expect-error fix types
-    meData?.userProfile?.houseBlock?.id?.toString();
-
-  const defaultOption = useMemo(
-    () =>
-      houseBlocks.data?.data.find(
-        (houseBlock) => houseBlock.id === houseBlockId,
-      ),
-    [houseBlocks.data, houseBlockId],
-  );
-
-  const [selectedOption, setSelectedOption] = useState(defaultOption);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (defaultOption) {
-        setSelectedOption(defaultOption);
-      }
-    }, [defaultOption]),
-  );
-
-  const selectedOptionIsSameAsDefault =
-    selectedOption?.id === defaultOption?.id;
-
-  async function handleSave() {
-    invariant(selectedOption, "A selected option was expected");
-
-    if (!isInternetReachable) {
-      Toast.show({
-        type: "error",
-        text1: t("internetRequired"),
-      });
-      return;
-    }
-
+  async function onChangeBrigade() {
+    setLoading(true);
     try {
-      await changeHouseBlock.mutateAsync(Number(selectedOption.id));
-      Toast.show({
-        type: "success",
-        text1: t("drawer.changeHouseBlockUpdated", {
-          name: selectedOption.attributes.name,
-        }),
+      await changeAssignment.mutateAsync({
+        userId: isMyUser ? undefined : user.id,
+        teamId: selection.newBrigade?.id,
+        houseBlockId: selection.newHouseBlock?.id,
       });
-      router.back();
+
+      router.push("/change-brigade-success");
     } catch (error) {
       console.error(error);
       Sentry.captureException(error);
-      Toast.show({
-        type: "error",
-        text1: t("errorCodes.generic"),
+      const errorData = extractAxiosErrorData(error);
+      errorData?.errors?.forEach((error: any) => {
+        Toast.show({
+          type: "error",
+          text1: t([`errorCodes.${error.error_code}`, "errorCodes.generic"]),
+        });
+        console.error(error);
       });
+      if (!errorData?.errors || errorData?.errors.length === 0) {
+        Toast.show({
+          type: "error",
+          text1: t("login.error.invalidCredentials"),
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
-  const houseBlockTypeToLabel: Record<HouseBlockType, string> = {
-    [HouseBlockType.FrenteAFrente]: "Frente a Frente",
-    [HouseBlockType.Block]: t("config.block"),
-  };
-
-  if (houseBlocks.isLoading)
-    return (
-      <View className="flex-1 items-center justify-center">
-        <Loading />
-      </View>
-    );
-
-  invariant(houseBlocks.data, "House blocks data was expected");
-
   return (
-    <View className="h-full">
-      <ScrollView
-        className="flex-grow"
-        contentContainerStyle={{ paddingBottom: 0 }}
-      >
-        <View className="p-4 space-y-4">
-          <View className="space-y-2">
-            <Text className="text-2xl font-bold">
-              {t("drawer.changeHouseBlock")}
-            </Text>
-            <Text>
-              <Text className="font-bold">{t("config.sector")}:</Text>{" "}
-              {/* @ts-expect-error fix types */}
-              {meData?.userProfile?.team?.sector_name}
-            </Text>
-            <Text>
-              <Text className="font-bold">{t("config.wedge")}:</Text>{" "}
-              {/* @ts-expect-error fix types */}
-              {meData?.userProfile?.team?.wedge_name}
-            </Text>
-          </View>
+    <SafeAreaView>
+      <View className="flex flex-1 py-5 px-5">
+        {!loading && (
+          <>
+            <View className="flex flex-row items-center justify-center mb-8">
+              <View className="flex items-center justify-center mb-2">
+                <AvatarBig user={user} />
+                <Text className="text-lg font-semibold text-center mb-1">
+                  {`${user?.firstName} ${user?.lastName}`}
+                </Text>
+                <View className="flex flex-row items-center justify-center">
+                  <Text className="text-sm font-normal text-center">
+                    {brigradeName} - {houseGroupName}
+                  </Text>
+                </View>
+              </View>
+            </View>
 
-          <View>
-            {houseBlocks.data.data.map((houseBlock) => (
-              <SelectableItem
-                key={houseBlock.id}
-                label={houseBlock.attributes.name}
-                checked={selectedOption?.id === houseBlock.id}
-                chip={[
-                  houseBlockTypeToLabel[houseBlock.attributes.type],
-                  ...(houseBlock.id === defaultOption?.id
-                    ? [t("config.currentHouseBlock")]
-                    : []),
-                ]}
-                onValueChange={() => {
-                  setSelectedOption(houseBlock);
+            <View className="flex flex-1 mt-4">
+              <ListItem
+                title={t("config.brigade")}
+                onPressElement={() => {
+                  router.push("/select-brigade");
                 }}
+                filled={selection.newBrigade?.name}
+                emptyString={t("config.allBrigades")}
               />
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+              <ListItem
+                title={t("houseGroup_one")}
+                disabled={!selection.newBrigade}
+                onPressElement={() => {
+                  router.push("/select-house-group");
+                }}
+                filled={selection.newHouseBlock?.name}
+                emptyString={t("config.allHouseBlocks")}
+              />
+            </View>
+          </>
+        )}
 
-      <View className="py-2 px-4 border-t border-neutral-200">
-        <Button
-          title={t("chat.actions.save")}
-          primary
-          disabled={selectedOptionIsSameAsDefault || changeHouseBlock.isPending}
-          onPress={handleSave}
-        />
+        {loading && (
+          <View className="flex flex-1 items-center justify-center">
+            <Loading />
+          </View>
+        )}
+
+        <View className="pt-5">
+          <Button
+            disabled={
+              !selection.newBrigade || !selection.newHouseBlock || loading
+            }
+            primary
+            onPress={onChangeBrigade}
+            title={t("drawer.changeHouseBlock")}
+          />
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

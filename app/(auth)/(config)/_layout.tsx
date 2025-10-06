@@ -53,19 +53,11 @@ export default function VisitLayout(props: ThemeProps) {
         }}
       />
       <Stack.Screen
-        name="change-brigade"
-        options={{
-          headerShown: true,
-          headerShadowVisible: false,
-          title: t("config.changeBrigade"),
-        }}
-      />
-      <Stack.Screen
         name="change-brigade-success"
         options={{
           headerShown: true,
           headerShadowVisible: false,
-          title: t("config.changeBrigade"),
+          title: t("drawer.changeHouseBlock"),
           headerLeft: () => null,
           headerBackVisible: false,
         }}
@@ -73,7 +65,7 @@ export default function VisitLayout(props: ThemeProps) {
       <Stack.Screen
         name="change-house-group"
         options={{
-          title: t("houseGroup_one"),
+          title: t("drawer.changeHouseBlock"),
           headerShadowVisible: false,
           headerLeft: () => (
             <Ionicons
@@ -86,7 +78,7 @@ export default function VisitLayout(props: ThemeProps) {
         }}
       />
       <Stack.Screen
-        name="select-house-block"
+        name="select-house-group"
         options={{
           headerShown: true,
           headerShadowVisible: false,

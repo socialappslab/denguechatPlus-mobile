@@ -1,11 +1,8 @@
-import useAxios from "axios-hooks";
 import { useRouter } from "expo-router";
-import { deserialize } from "jsonapi-fractal";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SelectableItem } from "@/components/themed";
-import { useVisit } from "@/hooks/useVisit";
 import { House, VisitId } from "@/types";
 
 import {
@@ -17,68 +14,47 @@ import {
   TextInput,
   View,
 } from "@/components/themed";
-import { useAuth } from "@/context/AuthProvider";
 import { useStore } from "@/hooks/useStore";
 import moment from "moment";
 import invariant from "tiny-invariant";
-import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { useNetInfo } from "@react-native-community/netinfo";
 import { VISITS_LOG } from "@/util/logger";
 import { useHouseBlockLabel } from "@/hooks/useHouseBlockLabel";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { useQuery } from "@tanstack/react-query";
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
 
   const [houseSelected, setHouseSelected] = useState<House>();
   const [searchText, setSearchText] = useState<string>("");
-  const [houseOptions, setHouseOptions] = useState<House[]>([]);
   const router = useRouter();
 
-  const { user: maybeUser, meData, reFetchMe } = useAuth();
+  const maybeUser = useStore((state) => state.user);
+  const userProfile = useStore((state) => state.userProfile);
+  const fetchHouses = useStore((state) => state.fetchHouses);
+  const storedHouseList = useStore((state) => state.storedHouseList);
 
   const houseBlockLabel = useHouseBlockLabel(
-    // @ts-expect-error type of meData is wrong
-    meData?.userProfile?.houseBlock?.type,
+    // @ts-expect-error type of userProfile is wrong
+    userProfile?.userProfile?.houseBlock?.type,
   );
 
-  // TODO: fix this when we have a better data fetching strategy in this page,
-  // the ideal is to invalidate the cache for the user data when the user
-  // changes the house block
-  useRefreshOnFocus(reFetchMe);
-
-  const { setVisitData } = useVisit();
-  const { isInternetReachable } = useNetInfo();
+  const setVisitData = useStore((state) => state.setVisitData);
 
   const initialiseCurrentVisit = useStore(
     (state) => state.initialiseCurrentVisit,
   );
-  const storedHouseList = useStore((state) => state.storedHouseList);
-  const saveHouseList = useStore((state) => state.saveHouseList);
   const questionnaire = useStore((state) => {
     invariant(state.questionnaire, "Expected questionnaire to be defined");
     return state.questionnaire;
   });
 
-  const [{ data, loading }, refetch] = useAxios({
-    url: `/houses/list_to_visit`,
+  const houses = useQuery({
+    queryKey: ["housesToVisit"],
+    initialData: storedHouseList,
+    queryFn: fetchHouses,
   });
-  useRefreshOnFocus(refetch);
-
-  useEffect(() => {
-    if (isInternetReachable && data) {
-      const deserializedData = deserialize<House>(data);
-      if (!deserializedData || !Array.isArray(deserializedData)) return;
-
-      setHouseOptions(deserializedData);
-      setHouseSelected(undefined);
-
-      // always save the house list
-      saveHouseList(deserializedData);
-    }
-    if (!isInternetReachable && storedHouseList) {
-      setHouseOptions(storedHouseList);
-    }
-  }, [isInternetReachable, data]);
+  useRefreshOnFocus(houses.refetch);
 
   const renderHouseLabel = (house: House) => {
     return (
@@ -89,15 +65,15 @@ export default function SelectHouseScreen() {
 
   const filteredHouses = useMemo(() => {
     if (!searchText.length) {
-      return houseOptions;
+      return houses.data;
     }
 
-    const filtered = houseOptions.filter((house) =>
+    const filtered = houses.data.filter((house) =>
       house.referenceCode.toUpperCase().includes(searchText.toUpperCase()),
     );
 
     return filtered;
-  }, [houseOptions, searchText]);
+  }, [houses.data, searchText]);
 
   if (!maybeUser) return null;
   const user = maybeUser;
@@ -161,34 +137,34 @@ export default function SelectHouseScreen() {
           />
         </View>
 
-        {loading && (
+        {houses.isLoading && (
           <View className="my-4">
             <Loading />
           </View>
         )}
 
-        {!loading && houseOptions.length > 0 && (
+        {!houses.isLoading && houses.data.length > 0 && (
           <View className="mb-2">
             <Text className="text-xl font-bold mb-2">
               {t("visit.houses.optionsTitle")}
             </Text>
 
             <Text className="text-md font-normal mb-2">
-              {renderTitle(houseOptions)}
+              {renderTitle(houses.data)}
             </Text>
 
             {/* @ts-expect-error */}
-            {meData?.userProfile?.houseBlock?.name && (
+            {userProfile?.userProfile?.houseBlock?.name && (
               <Text className="text-md font-normal mb-4">
                 {/* @ts-expect-error */}
-                {houseBlockLabel}: {meData.userProfile.houseBlock.name}
+                {houseBlockLabel}: {userProfile.userProfile.houseBlock.name}
               </Text>
             )}
           </View>
         )}
 
         <ScrollView className="pb-4" showsVerticalScrollIndicator={false}>
-          {!loading && filteredHouses.length > 0 && (
+          {!houses.isLoading && filteredHouses.length > 0 && (
             <View className="my-1">
               {filteredHouses.map((house) => (
                 <SelectableItem

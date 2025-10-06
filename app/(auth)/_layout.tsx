@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useRouter } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Platform, Pressable, TouchableOpacity } from "react-native";
@@ -10,19 +10,14 @@ import {
 } from "@gorhom/bottom-sheet";
 
 import { Button, Loading, SafeAreaView, Text, View } from "@/components/themed";
-import { useAuth } from "@/context/AuthProvider";
-import { VisitProvider } from "@/context/VisitContext";
-import AssignBrigade from "@/assets/images/icons/add-brigade.svg";
 import Logout from "@/assets/images/icons/logout.svg";
 import Logo from "@/assets/images/logo-small.svg";
 import Cog from "@/assets/images/icons/cog.svg";
 
-import ProtectedView from "@/components/control/ProtectedView";
-import { extractAxiosErrorData, getInitialsBase } from "@/util";
+import { extractAxiosErrorData, getInitialsBase, logout } from "@/util";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import Toast from "react-native-toast-message";
-import { useIsFocused } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
 import { useUserHasBrigade } from "@/hooks/useUserHasBrigade";
@@ -30,15 +25,20 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import invariant from "tiny-invariant";
 import { LOG } from "@/util/logger";
 import * as Sentry from "@sentry/react-native";
+import { useStore } from "@/hooks/useStore";
+import { useBrigades } from "@/hooks/useBrigades";
 
 function CustomDrawerContent() {
   const router = useRouter();
-  const { meData, logout, reFetchMe } = useAuth();
+  const userProfile = useStore((state) => state.userProfile);
+  // TODO: fix the type for the user
+  const userRole = userProfile?.roles?.[0] as unknown as string | undefined;
+
+  const { setSelection, clearState } = useBrigades();
   const { t } = useTranslation();
   const [openSettings, setOpenSettings] = useState(false);
   const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const isFocused = useIsFocused();
   const userHasBrigade = useUserHasBrigade();
   const { isInternetReachable } = useNetInfo();
 
@@ -47,12 +47,12 @@ function CustomDrawerContent() {
   };
 
   const onConfirmDeleteAccount = async () => {
-    invariant(meData, "Expected user object to be defined");
+    invariant(userProfile, "Expected user object to be defined");
     try {
       setLoading(true);
-      await authApi.delete("/users/delete_account");
-      LOG.warn(`Deleted user: ${meData.username}`);
-      await logout(meData);
+      await axios.delete("/users/delete_account");
+      LOG.warn(`Deleted user: ${userProfile.username}`);
+      logout();
     } catch (error) {
       console.error(error);
       Sentry.captureException(error);
@@ -68,14 +68,9 @@ function CustomDrawerContent() {
     }
   };
 
-  useEffect(() => {
-    if (isFocused) reFetchMe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
-
   const snapPoints = useMemo(() => ["45%"], []);
 
-  const isChangeHouseBlockButtonDisabled =
+  const isChangeAssignmentButtonDisabled =
     !userHasBrigade || !isInternetReachable;
 
   return (
@@ -88,34 +83,28 @@ function CustomDrawerContent() {
           <Text className="text-lg font-semibold">DengueChatPlus</Text>
         </View>
         <View className="flex-grow px-2">
-          <ProtectedView hasPermission={["users-change_team"]}>
-            <Pressable
-              className="py-3 flex-row items-center"
-              onPress={() => router.push("/select-user")}
-            >
-              <AssignBrigade />
-              <Text className="font-semibold ml-3">
-                {t("drawer.assignBrigade")}
-              </Text>
-            </Pressable>
-          </ProtectedView>
+          <Pressable
+            className={`py-3 flex-row items-center ${
+              isChangeAssignmentButtonDisabled ? "opacity-50" : ""
+            }`}
+            onPress={() => {
+              if (userRole === "team_leader" || userRole === "admin") {
+                router.navigate("/select-user");
+                return;
+              }
 
-          <Link
-            href="/change-house-group"
-            asChild
-            disabled={isChangeHouseBlockButtonDisabled}
+              clearState();
+              // @ts-expect-error expects another shape but UserProfile does satisfies the shape
+              setSelection({ brigader: userProfile?.userProfile });
+              router.navigate("/change-house-group");
+            }}
+            disabled={isChangeAssignmentButtonDisabled}
           >
-            <Pressable
-              className={`py-3 flex-row items-center ${
-                isChangeHouseBlockButtonDisabled ? "opacity-50" : ""
-              }`}
-            >
-              <MaterialIcons name="swap-horiz" size={24} color="#56534E" />
-              <Text className="font-semibold ml-3">
-                {t("drawer.changeHouseBlock")}
-              </Text>
-            </Pressable>
-          </Link>
+            <MaterialIcons name="swap-horiz" size={24} color="#56534E" />
+            <Text className="font-semibold ml-3">
+              {t("drawer.changeHouseBlock")}
+            </Text>
+          </Pressable>
 
           <Pressable
             className="py-3 flex-row items-center"
@@ -191,24 +180,25 @@ function CustomDrawerContent() {
           <View className="flex-row items-center px-2">
             <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3">
               <Text className="font-bold text-sm text-green-700">
-                {meData?.userProfile
+                {userProfile
                   ? getInitialsBase(
-                      String(meData.userProfile.firstName),
-                      String(meData.userProfile.lastName),
+                      String(userProfile.userProfile?.firstName),
+                      String(userProfile.userProfile?.lastName),
                     )
                   : "U"}
               </Text>
             </View>
             <View className="flex flex-1 flex-row items-center">
               <View className="flex flex-1 flex-col">
-                <Text>{`${meData?.userProfile?.firstName} ${meData?.userProfile?.lastName}`}</Text>
-                <Text className="text-sm font-thin">{meData?.username}</Text>
+                <Text>{`${userProfile?.userProfile?.firstName} ${userProfile?.userProfile?.lastName}`}</Text>
+                <Text className="text-sm font-thin">
+                  {userProfile?.username}
+                </Text>
               </View>
               <TouchableOpacity
                 className="mr-4"
-                onPress={async () => {
-                  invariant(meData, "Expected user object to be defined");
-                  await logout(meData);
+                onPress={() => {
+                  logout();
                 }}
               >
                 <Logout />
@@ -222,20 +212,45 @@ function CustomDrawerContent() {
 }
 
 export default function AuthLayout() {
+  const { i18n } = useTranslation();
+  const segments = useSegments();
+
+  const fetchQuestionnaire = useStore((state) => state.fetchQuestionnaire);
+  const fetchAppConfig = useStore((state) => state.fetchAppConfig);
+  const fetchUserProfile = useStore((state) => state.fetchUserProfile);
+
+  /*
+   * These are requests that should be made whenever the user navigates to
+   * another page.
+   */
+  useEffect(() => {
+    void Promise.all([
+      fetchQuestionnaire(i18n.language),
+      fetchAppConfig(),
+      fetchUserProfile(),
+    ]);
+  }, [
+    segments,
+    fetchQuestionnaire,
+    i18n.language,
+    fetchAppConfig,
+    fetchUserProfile,
+  ]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <VisitProvider>
-        <BottomSheetModalProvider>
-          <Drawer
-            backBehavior="history"
-            drawerContent={() => <CustomDrawerContent />}
-            screenOptions={{
-              headerShown: false,
-              swipeEdgeWidth: 0,
-            }}
-          ></Drawer>
-        </BottomSheetModalProvider>
-      </VisitProvider>
+      <BottomSheetModalProvider>
+        <Drawer
+          backBehavior="history"
+          drawerContent={() => <CustomDrawerContent />}
+          screenOptions={{
+            headerShown: false,
+            swipeEdgeWidth: 0,
+          }}
+        >
+          <Drawer.Screen name="(tabs)" />
+        </Drawer>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }

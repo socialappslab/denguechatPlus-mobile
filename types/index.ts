@@ -217,7 +217,7 @@ interface VisitAttributes {
   houseId: number;
   questionnaireId: string;
   teamId: number;
-  userAccountId: string;
+  userAccountId: number;
   notes?: string;
   visitedAt: string;
   house?: Partial<House>;

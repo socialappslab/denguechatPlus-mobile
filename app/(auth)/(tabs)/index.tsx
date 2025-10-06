@@ -1,6 +1,4 @@
-import useAxios from "axios-hooks";
-import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
@@ -15,97 +13,105 @@ import {
   View,
 } from "@/components/themed";
 import Colors from "@/constants/Colors";
-import { useAuth } from "@/context/AuthProvider";
-import { BaseObject, ErrorResponse, Team, TEAM_LEADER_ROLE } from "@/schema";
+import { Team, TEAM_LEADER_ROLE } from "@/schema";
 import { AccumulatedPoints, ReportData } from "@/types";
 import { calculatePercentage, getInitials } from "@/util";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
-import { authApi } from "@/config/axios";
+import { axios } from "@/config/axios";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useHouseBlockLabel } from "@/hooks/useHouseBlockLabel";
+import { useStore } from "@/hooks/useStore";
+
+function useReportQuery({
+  teamId = null,
+  wedgeId = null,
+  sectorId = null,
+}: {
+  teamId: number | null;
+  wedgeId: number | null;
+  sectorId: number | null;
+}) {
+  const params = {
+    sort: "name",
+    order: "asc",
+    filter: {
+      team_id: teamId,
+      wedge_id: wedgeId,
+      sector_id: sectorId,
+    },
+  };
+
+  return useQuery({
+    enabled: !!teamId && !!wedgeId && !!sectorId,
+    queryKey: ["houseStatus", params],
+    queryFn: async () => {
+      // TODO: annotate response
+      return (await axios.get(`/reports/house_status`, { params }))
+        .data as ReportData;
+    },
+  });
+}
 
 function useBrigadePointsQuery(teamId: number | null) {
+  const params = {
+    filter: { team_id: teamId },
+  };
+
   return useQuery({
     enabled: !!teamId,
     queryKey: ["brigadePoints", teamId!],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        "filter[team_id]": teamId!.toString(),
-      });
-      return (await authApi.get(`/points/accumulated_points?${params}`))
+      return (await axios.get(`/points/accumulated_points`, { params }))
         .data as AccumulatedPoints;
+    },
+  });
+}
+
+function useTeamQuery(teamId: number | null) {
+  return useQuery({
+    enabled: !!teamId,
+    queryKey: ["teams", teamId!],
+    queryFn: async () => {
+      // TODO: annotate response
+      return (await axios.get(`/teams/${teamId}`)).data.data.attributes as Team;
     },
   });
 }
 
 export default function Profile() {
   const { t } = useTranslation();
-  const { meData, reFetchMe } = useAuth();
-  useRefreshOnFocus(reFetchMe);
+  const userProfile = useStore((state) => state.userProfile);
 
   const houseBlockLabel = useHouseBlockLabel(
-    // @ts-expect-error type of meData is wrong
-    meData?.userProfile?.houseBlock?.type,
+    // @ts-expect-error type of userProfile is wrong
+    userProfile?.userProfile?.houseBlock?.type,
   );
 
-  const [team, setTeam] = useState<Team | null>(null);
-
-  const [{ data: teamData, loading: loadingTeam }, refetchTeam] = useAxios<
-    ExistingDocumentObject,
-    unknown,
-    ErrorResponse
-  >({
-    url: `teams/${(meData?.userProfile?.team as BaseObject)?.id}`,
-  });
-
-  const teamId = team?.id;
   // @ts-expect-error
-  const wedgeId = meData?.userProfile?.team?.wedge_id;
+  const teamId = userProfile?.userProfile?.team?.id;
   // @ts-expect-error
-  const sectorId = meData?.userProfile?.team?.sector_id;
+  const wedgeId = userProfile?.userProfile?.team?.wedge_id;
+  // @ts-expect-error
+  const sectorId = userProfile?.userProfile?.team?.sector_id;
+
+  const team = useTeamQuery(teamId ?? null);
+  const report = useReportQuery({ teamId, wedgeId, sectorId });
 
   const brigadePoints = useBrigadePointsQuery(teamId ?? null);
   useRefreshOnFocus(brigadePoints.refetch);
 
-  const [{ data: reportData, loading: loadingReport }, refetchReport] =
-    useAxios<ReportData, unknown, ErrorResponse>({
-      url: `reports/house_status?sort=name&order=asc&filter[team_id]=${teamId}&filter[wedge_id]=${wedgeId}&filter[sector_id]=${sectorId}`,
-    });
-
-  useEffect(() => {
-    if (teamId && wedgeId && sectorId) void refetchReport();
-  }, [teamId, wedgeId, sectorId, refetchReport]);
-
-  useEffect(() => {
-    if (!teamData) return;
-    const deserializedData = deserialize<Team>(teamData);
-    if (deserializedData && !Array.isArray(deserializedData)) {
-      setTeam(deserializedData);
-    }
-  }, [teamData]);
-
   const refetchAll = useCallback(async () => {
-    await reFetchMe();
-    if (teamId && wedgeId && sectorId) await refetchReport();
-    if (meData) await refetchTeam();
+    if (teamId && wedgeId && sectorId) await report.refetch();
+    if (userProfile) await team.refetch();
     if (teamId) await brigadePoints.refetch();
-  }, [
-    reFetchMe,
-    teamId,
-    wedgeId,
-    sectorId,
-    refetchReport,
-    meData,
-    refetchTeam,
-    brigadePoints,
-  ]);
+  }, [teamId, wedgeId, sectorId, report, userProfile, team, brigadePoints]);
 
   // NOTE: maybe we can generalize this in the future, we have the same thing at `(tabs)/visits.tsx`
   const colorPercentages = useMemo(() => {
-    if (!reportData) return [0, 0, 0];
+    if (!report.data) return [0, 0, 0];
 
-    const { redQuantity, orangeQuantity, greenQuantity } = reportData;
+    const { redQuantity, orangeQuantity, greenQuantity } = report.data;
 
     const total = redQuantity + orangeQuantity + greenQuantity;
 
@@ -114,34 +120,39 @@ export default function Profile() {
     const green = Math.floor(calculatePercentage(greenQuantity, total));
 
     return [green, orange, red];
-  }, [reportData]);
+  }, [report]);
 
   return (
     <SafeAreaView>
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={loadingReport} onRefresh={refetchAll} />
+          <RefreshControl
+            refreshing={report.isLoading}
+            onRefresh={refetchAll}
+          />
         }
       >
         <CheckTeam view="profile">
           <View className="flex flex-1">
-            {loadingTeam && brigadePoints.isLoading && (
+            {team.isLoading && brigadePoints.isLoading && (
               <View className="flex flex-1 items-center justify-center">
                 <Loading />
               </View>
             )}
-            {!loadingTeam && !brigadePoints.isLoading && (
+            {!team.isLoading && !brigadePoints.isLoading && (
               <ScrollView className="p-5" showsVerticalScrollIndicator={false}>
                 <View className="mb-2">
-                  <Text className="text-xl font-bold mb-2">{team?.name}</Text>
+                  <Text className="text-xl font-bold mb-2">
+                    {team.data?.name}
+                  </Text>
                   <Text className="font-normal mb-2">
-                    {team?.sector?.name} - {team?.wedge?.name}
+                    {team.data?.sector?.name} - {team.data?.wedge?.name}
                   </Text>
                   {/* @ts-expect-error */}
-                  {meData?.userProfile?.houseBlock?.name && (
+                  {userProfile?.userProfile?.houseBlock?.name && (
                     <Text className="font-normal mb-4">
                       {houseBlockLabel}: {/* @ts-expect-error */}
-                      {meData.userProfile.houseBlock.name}
+                      {userProfile.userProfile.houseBlock.name}
                     </Text>
                   )}
                 </View>
@@ -152,21 +163,21 @@ export default function Profile() {
                   </Text>
                   <View className="flex-row items-center justify-between">
                     <Text className="text-3xl font-semibold">
-                      {reportData?.visitQuantity ?? 0}
+                      {report.data?.visitQuantity ?? 0}
                     </Text>
-                    {!!reportData?.visitVariationPercentage && (
+                    {!!report.data?.visitVariationPercentage && (
                       <SimpleChip
                         border="1"
                         padding="small"
                         textColor="neutral-500"
                         borderColor="neutral-500"
                         ionIcon={
-                          reportData?.visitVariationPercentage > 0
+                          report.data?.visitVariationPercentage > 0
                             ? "arrow-up"
                             : "arrow-down"
                         }
                         iconColor={Colors.light.neutral}
-                        label={`${reportData?.visitVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
+                        label={`${report.data?.visitVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
                       />
                     )}
                   </View>
@@ -189,22 +200,22 @@ export default function Profile() {
                   </Text>
                   <View className="flex-row items-center justify-between">
                     <Text className="text-3xl font-semibold">
-                      {reportData?.houseQuantity ?? 0}
+                      {report.data?.houseQuantity ?? 0}
                     </Text>
 
-                    {!!reportData?.siteVariationPercentage && (
+                    {!!report.data?.siteVariationPercentage && (
                       <SimpleChip
                         border="1"
                         padding="small"
                         textColor="neutral-500"
                         borderColor="neutral-500"
                         ionIcon={
-                          reportData?.siteVariationPercentage > 0
+                          report.data?.siteVariationPercentage > 0
                             ? "arrow-up"
                             : "arrow-down"
                         }
                         iconColor={Colors.light.neutral}
-                        label={`${reportData?.siteVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
+                        label={`${report.data?.siteVariationPercentage}% ${t("brigade.cards.numberThisWeek")}`}
                       />
                     )}
                   </View>
@@ -235,10 +246,10 @@ export default function Profile() {
                     </Text>
                   </View>
 
-                  {team?.members?.map((member, index) => (
+                  {team.data?.members?.map((member, index) => (
                     <View
                       key={member.id}
-                      className={`flex-row items-center p-4 border-neutral-200 ${index === team?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
+                      className={`flex-row items-center p-4 border-neutral-200 ${index === team.data?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
                     >
                       <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-300 mr-3">
                         <Text className="font-bold text-sm text-green-700">

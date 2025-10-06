@@ -11,11 +11,16 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useQuery } from "@tanstack/react-query";
+import { useStore } from "@/hooks/useStore";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
-export default function TabLayout(props: ThemeProps) {
+export default function TabLayout({ lightColor, darkColor }: ThemeProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { lightColor, darkColor } = props;
+
+  const storedHouseList = useStore((state) => state.storedHouseList);
+  const fetchHouses = useStore((state) => state.fetchHouses);
 
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
@@ -23,6 +28,13 @@ export default function TabLayout(props: ThemeProps) {
   );
 
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+
+  const houses = useQuery({
+    queryKey: ["housesToVisit"],
+    initialData: storedHouseList,
+    queryFn: fetchHouses,
+  });
+  useRefreshOnFocus(houses.refetch);
 
   return (
     <Tabs
