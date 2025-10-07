@@ -120,7 +120,7 @@ export default function SelectHouseScreen() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="flex flex-1 py-5 px-5">
         <Text className="text-xl font-bold mb-4">
           {t("visit.houses.search")}

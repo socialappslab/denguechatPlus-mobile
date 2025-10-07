@@ -1,6 +1,5 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Platform } from "react-native";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 
 import Colors from "@/constants/Colors";
@@ -10,14 +9,12 @@ import BrigadeIcon from "@/assets/images/icons/brigade.svg";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import { useStore } from "@/hooks/useStore";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
 export default function TabLayout({ lightColor, darkColor }: ThemeProps) {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
 
   const storedHouseList = useStore((state) => state.storedHouseList);
   const fetchHouses = useStore((state) => state.fetchHouses);
@@ -40,23 +37,17 @@ export default function TabLayout({ lightColor, darkColor }: ThemeProps) {
     <Tabs
       initialRouteName="index"
       screenOptions={{
-        headerStyle: {
-          backgroundColor,
-        },
+        headerStyle: { backgroundColor },
         headerTitleAlign: "center",
         headerShadowVisible: false,
         headerTintColor: color,
+        headerLeft: () => <DrawerToggleButton tintColor={color} />,
+
         tabBarStyle: {
-          position: "absolute",
-          height: Platform.OS === "ios" ? 85 : 75,
-          paddingBottom: Platform.OS === "ios" ? insets.bottom : 20,
           backgroundColor: Colors["light"].backgroundTabs,
         },
         tabBarActiveTintColor: Colors["light"].tint,
-        tabBarLabelStyle: {
-          fontFamily: "Inter-Bold",
-        },
-        headerLeft: () => <DrawerToggleButton tintColor={color} />,
+        tabBarLabelStyle: { fontFamily: "Inter-Bold" },
       }}
     >
       <Tabs.Screen

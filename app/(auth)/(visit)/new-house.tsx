@@ -152,7 +152,7 @@ export default function NewHouse() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="flex flex-1 py-5 px-5 h-full">
         <ScrollView
           showsVerticalScrollIndicator={false}

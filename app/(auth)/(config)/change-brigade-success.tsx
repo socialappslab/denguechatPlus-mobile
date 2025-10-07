@@ -43,7 +43,7 @@ export default function BrigaderList() {
     t("config.noHouseGroup");
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="flex flex-1 py-5 px-5">
         <View className="flex flex-1 items-center justify-center">
           <View className="flex flex-row items-center justify-center mb-4 px-6">

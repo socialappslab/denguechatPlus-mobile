@@ -12,10 +12,7 @@ export function ScrollView(props: ScrollViewProps) {
 
   return (
     <DefaultScrollView
-      contentContainerStyle={[
-        { paddingBottom: 30 },
-        otherProps.contentContainerStyle,
-      ]}
+      contentContainerStyle={[otherProps.contentContainerStyle]}
       style={[{ backgroundColor }, style]}
       {...otherProps}
     />

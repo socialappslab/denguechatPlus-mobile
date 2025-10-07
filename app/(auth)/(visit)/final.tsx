@@ -1,5 +1,5 @@
 import FinalIllustration from "@/assets/images/final.svg";
-import { Button, Text, View } from "@/components/themed";
+import { Button, SafeAreaView, Text, View } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -81,73 +81,75 @@ export default function Final() {
   const snapPoints = useMemo(() => [460], []);
 
   return (
-    <View className="h-full p-6 pt-20 pb-10 flex flex-col justify-between items-center">
-      {/* This View is used for space between */}
-      <View />
-      <View className="flex flex-col justify-center items-center">
-        <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
-          <FinalIllustration width="100%" height="100%" />
+    <SafeAreaView edges={["right", "bottom", "left"]}>
+      <View className="h-full p-6 justify-between items-center">
+        {/* This View is used for space between */}
+        <View />
+        <View className="justify-center items-center">
+          <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+            <FinalIllustration width="100%" height="100%" />
+          </View>
+          <View>
+            <Text type="title" className="text-center mb-4">
+              {t(`visit.final.title`)}
+            </Text>
+            <Text type="text" className="text-center px-10">
+              {t(`visit.final.${prefix}.greetings`)}
+            </Text>
+          </View>
         </View>
-        <View>
-          <Text type="title" className="text-center mb-4">
-            {t(`visit.final.title`)}
-          </Text>
-          <Text type="text" className="text-center px-10">
-            {t(`visit.final.${prefix}.greetings`)}
-          </Text>
+        <View className="flex-row gap-2 self-end justify-self-end">
+          <View className="flex-1">
+            <Button
+              primary
+              title={t("backToHome")}
+              onPress={() => {
+                router.dismissAll();
+              }}
+            />
+          </View>
         </View>
-      </View>
-      <View className="flex flex-row gap-2 self-end justify-self-end">
-        <View className="flex-1">
-          <Button
-            primary
-            title={t("backToHome")}
-            onPress={() => {
-              router.dismissAll();
-            }}
-          />
-        </View>
-      </View>
 
-      <ClosableBottomSheet
-        bottomSheetModalRef={tarikiStatusModalRef}
-        title={t("visit.final.tarikiStatusModal.title")}
-        snapPoints={snapPoints}
-      >
-        <View className="flex-1 p-4">
-          <View className="border border-gray-100 p-8 rounded-xl items-center relative overflow-hidden">
-            <ConfettiImage className="absolute inset-0 opacity-80" />
+        <ClosableBottomSheet
+          bottomSheetModalRef={tarikiStatusModalRef}
+          title={t("visit.final.tarikiStatusModal.title")}
+          snapPoints={snapPoints}
+        >
+          <View className="flex-1 p-4">
+            <View className="border border-gray-100 p-8 rounded-xl items-center relative overflow-hidden">
+              <ConfettiImage className="absolute inset-0 opacity-80" />
 
-            <View className="rounded-full border-[16px] border-primary aspect-square p-6 items-center justify-center">
-              <Text className="text-3xl font-bold">
-                {brigadistPoints.value}
+              <View className="rounded-full border-[16px] border-primary aspect-square p-6 items-center justify-center">
+                <Text className="text-3xl font-bold">
+                  {brigadistPoints.value}
+                </Text>
+                <Text className="">
+                  {t("visit.final.tarikiStatusModal.points")}
+                </Text>
+              </View>
+
+              <Text className="text-center font-bold text-2xl mt-4">
+                {t("visit.final.tarikiStatusModal.title")}
               </Text>
-              <Text className="">
-                {t("visit.final.tarikiStatusModal.points")}
+              <Text className="text-center mt-2 text-gray-800">
+                {t("visit.final.tarikiStatusModal.description", {
+                  brigadistPoints: brigadistPoints.value,
+                  brigadePoints: brigadePoints.value,
+                })}
               </Text>
             </View>
 
-            <Text className="text-center font-bold text-2xl mt-4">
-              {t("visit.final.tarikiStatusModal.title")}
-            </Text>
-            <Text className="text-center mt-2 text-gray-800">
-              {t("visit.final.tarikiStatusModal.description", {
-                brigadistPoints: brigadistPoints.value,
-                brigadePoints: brigadePoints.value,
-              })}
-            </Text>
+            <Button
+              primary
+              title={t("visit.final.tarikiStatusModal.button")}
+              onPress={() => {
+                tarikiStatusModalRef.current?.close();
+              }}
+              className="mt-4"
+            />
           </View>
-
-          <Button
-            primary
-            title={t("visit.final.tarikiStatusModal.button")}
-            onPress={() => {
-              tarikiStatusModalRef.current?.close();
-            }}
-            className="mt-4"
-          />
-        </View>
-      </ClosableBottomSheet>
-    </View>
+        </ClosableBottomSheet>
+      </View>
+    </SafeAreaView>
   );
 }
