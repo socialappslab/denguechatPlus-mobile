@@ -113,7 +113,7 @@ export function FilterModal({
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <StatusBar
         barStyle={Platform.OS === "ios" ? "light-content" : "default"}
       />

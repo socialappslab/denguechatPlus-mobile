@@ -352,8 +352,8 @@ export default function Chat() {
   };
 
   return (
-    <SafeAreaView>
-      <View className="flex flex-1 py-5">
+    <>
+      <View className="flex flex-1">
         <View className="flex flex-row items-center px-5 mb-4">
           <TouchableOpacity
             onPress={onPressNewPost}
@@ -410,7 +410,6 @@ export default function Chat() {
           />
         )}
       </View>
-      <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View>
       <CommentsSheet
         postId={selectedPost?.id}
         bottomSheetModalRef={bottomSheetModalRef}
@@ -471,6 +470,6 @@ export default function Chat() {
           />
         </View>
       </ClosableBottomSheet>
-    </SafeAreaView>
+    </>
   );
 }

@@ -94,7 +94,7 @@ export default function ContainerPicture() {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="flex flex-1 py-5 px-5 h-full">
         <View className="flex flex-col justify-center items-center flex-1">
           {photoUri ? (

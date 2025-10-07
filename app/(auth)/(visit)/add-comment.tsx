@@ -27,7 +27,7 @@ const AddComment = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="flex flex-1 py-5 px-5 h-full">
         <View className="flex justify-start flex-1">
           {/* Wrapped in scroll view to hid the keyboard */}

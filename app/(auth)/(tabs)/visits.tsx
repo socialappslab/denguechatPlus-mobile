@@ -9,7 +9,6 @@ import {
   ListItem,
   Loading,
   ProgressBar,
-  SafeAreaView,
   ScrollView,
   SimpleChip,
   Text,
@@ -82,7 +81,7 @@ function VisitsReport({
 
   return (
     <View>
-      <View className="p-4 mb-4 border border-neutral-200 rounded-lg">
+      <View className="p-4 border border-neutral-200 rounded-lg">
         {loading && !data && (
           <View className="flex flex-1 items-center justify-center my-48">
             <Loading />
@@ -377,177 +376,171 @@ export default function Visits() {
   const snapPoints = useMemo(() => ["90%"], []);
 
   return (
-    <SafeAreaView>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <CheckTeam view="visit">
-          <View className="flex flex-1 py-5 px-5 w-full">
-            <View className="my-6 mb-8 p-8 rounded-2xl border border-neutral-200">
-              <Text className="text-xl font-bold text-center mb-2">
-                {t("visit.newVisit")}
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <CheckTeam view="visit">
+        <View className="flex flex-1 py-5 px-5 w-full space-y-4">
+          <View className="p-8 rounded-lg border border-neutral-200">
+            <Text className="text-xl font-bold text-center mb-2">
+              {t("visit.newVisit")}
+            </Text>
+            <Text className="text-center mb-6">{t("visit.registerCopy")}</Text>
+
+            <View className="mb-4">
+              <Text className="font-medium text-sm mb-2">
+                {t("visit.assignVisitToUser")}
               </Text>
-              <Text className="text-center mb-6">
-                {t("visit.registerCopy")}
-              </Text>
 
-              <View className="mb-4">
-                <Text className="font-medium text-sm mb-2">
-                  {t("visit.assignVisitToUser")}
-                </Text>
-
-                <RNPickerSelect
-                  items={teamMemberOptions}
-                  value={ownerOfVisits}
-                  onValueChange={(value: number | null) => {
-                    if (!teamMemberOptions.length) return;
-                    if (!value) {
-                      setOwnerOfVisits(userProfile!.id);
-                      return;
-                    }
-                    setOwnerOfVisits(value);
-                  }}
-                  style={{
-                    inputAndroid: {
-                      borderWidth: 1,
-                      // NOTE: same as `text-red-500` and `border-neutral-200` class
-                      borderColor: "#e7e5e4",
-                      padding: 8,
-                      height: 44,
-                      borderRadius: 8,
-                    },
-                    inputIOSContainer: {
-                      justifyContent: "center",
-                      paddingHorizontal: 8,
-                      borderRadius: 8,
-                      borderWidth: 1,
-                      borderColor: "#e7e5e4",
-                      height: 44,
-                    },
-                    iconContainer: {
-                      top: "50%",
-                      transform: [{ translateY: -12 }],
-                      right: 6,
-                    },
-                  }}
-                  useNativeAndroidPickerStyle={false}
-                  // https://github.com/lawnstarter/react-native-picker-select/pull/377
-                  fixAndroidTouchableBug={true}
-                  Icon={() => (
-                    <MaterialCommunityIcons
-                      name="chevron-down"
-                      size={24}
-                      color="#e7e5e4"
-                    />
-                  )}
-                  doneText={t("done")}
-                />
-              </View>
-
-              <Link href="/select-house" asChild>
-                <Button title={t("visit.registerVisit")} primary />
-              </Link>
-            </View>
-
-            <VisitsReport loading={reports.isLoading} data={reports.data} />
-
-            <View className="my-4 p-8 rounded-2xl border border-neutral-200">
-              <Text className="text-xl font-bold text-center mb-2">
-                {t("visit.list.visitList")}
-              </Text>
-              {!!storedVisits.length ? (
-                <>
-                  <Text className="text-center mb-6">
-                    {t("visit.list.pending", {
-                      storedVisits: storedVisits.length,
-                    })}
-                  </Text>
-                  {orderedVisits.map((visit, idx) => (
-                    <ListItem
-                      key={idx}
-                      testID="offlineVisit"
-                      title={
-                        visit.house &&
-                        // @ts-expect-error
-                        `${t("visit.houses.house")} ${visit?.house?.referenceCode}`
-                      }
-                      onPressElement={() => handlePressVisit(visit)}
-                      // @ts-expect-error
-                      filled={formatDate(visit.visitedAt, i18n.language)}
-                    />
-                  ))}
-                </>
-              ) : (
-                <Text className="text-center">{t("visit.list.done")}</Text>
-              )}
-            </View>
-          </View>
-        </CheckTeam>
-
-        <View className={Platform.OS === "ios" ? "h-6" : "h-14"}></View>
-
-        <ClosableBottomSheet
-          title={`Casa ${selectedVisit?.referenceCode || ""}`}
-          snapPoints={snapPoints}
-          bottomSheetModalRef={bottomSheetModalRef}
-          onClose={() => setSuccess(false)}
-        >
-          <View className="h-full w-full flex px-4 py-4">
-            <View className="flex-1 mb-4">
-              <View className="w-full h-full">
-                {!success && (
-                  <>
-                    {createVisit.isPending ? (
-                      <View className="flex flex-1 items-center justify-center">
-                        <Loading />
-                      </View>
-                    ) : (
-                      <VisitSummary
-                        // @ts-expect-error
-                        date={`${formatDate(selectedVisit?.visitedAt || "", i18n.language)}`}
-                        sector={team.data?.data.attributes.sector?.name}
-                        // @ts-expect-error
-                        house={`${selectedVisit?.house?.referenceCode}`}
-                        // @ts-expect-error
-                        color={selectedVisit?.statusColor}
-                        // @ts-expect-error
-                        greens={selectedVisit?.colorsAndQuantities?.GREEN}
-                        // @ts-expect-error
-                        yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
-                        // @ts-expect-error
-                        reds={selectedVisit?.colorsAndQuantities?.RED}
-                        // @ts-expect-error
-                        permissionToVisitGranted={
-                          selectedVisit?.visitPermission
-                        }
-                      />
-                    )}
-                  </>
-                )}
-                {success && <SuccessSummary />}
-              </View>
-            </View>
-            {!success ? (
-              <Button
-                title="Sincronizar visita"
-                onPress={() => synchronizeVisit(selectedVisit)}
-                disabled={!isInternetReachable || createVisit.isPending}
-                primary
-              />
-            ) : (
-              <Button
-                title="Cerrar"
-                onPress={() => {
-                  setSuccess(false);
-                  bottomSheetModalRef.current?.close();
+              <RNPickerSelect
+                items={teamMemberOptions}
+                value={ownerOfVisits}
+                onValueChange={(value: number | null) => {
+                  if (!teamMemberOptions.length) return;
+                  if (!value) {
+                    setOwnerOfVisits(userProfile!.id);
+                    return;
+                  }
+                  setOwnerOfVisits(value);
                 }}
+                style={{
+                  inputAndroid: {
+                    borderWidth: 1,
+                    // NOTE: same as `text-red-500` and `border-neutral-200` class
+                    borderColor: "#e7e5e4",
+                    padding: 8,
+                    height: 44,
+                    borderRadius: 8,
+                  },
+                  inputIOSContainer: {
+                    justifyContent: "center",
+                    paddingHorizontal: 8,
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    borderColor: "#e7e5e4",
+                    height: 44,
+                  },
+                  iconContainer: {
+                    top: "50%",
+                    transform: [{ translateY: -12 }],
+                    right: 6,
+                  },
+                }}
+                useNativeAndroidPickerStyle={false}
+                // https://github.com/lawnstarter/react-native-picker-select/pull/377
+                fixAndroidTouchableBug={true}
+                Icon={() => (
+                  <MaterialCommunityIcons
+                    name="chevron-down"
+                    size={24}
+                    color="#e7e5e4"
+                  />
+                )}
+                doneText={t("done")}
               />
+            </View>
+
+            <Link href="/select-house" asChild>
+              <Button title={t("visit.registerVisit")} primary />
+            </Link>
+          </View>
+
+          <View>
+            <VisitsReport loading={reports.isLoading} data={reports.data} />
+          </View>
+
+          <View className="p-8 rounded-lg border border-neutral-200">
+            <Text className="text-xl font-bold text-center mb-2">
+              {t("visit.list.visitList")}
+            </Text>
+            {!!storedVisits.length ? (
+              <>
+                <Text className="text-center mb-6">
+                  {t("visit.list.pending", {
+                    storedVisits: storedVisits.length,
+                  })}
+                </Text>
+                {orderedVisits.map((visit, idx) => (
+                  <ListItem
+                    key={idx}
+                    testID="offlineVisit"
+                    title={
+                      visit.house &&
+                      // @ts-expect-error
+                      `${t("visit.houses.house")} ${visit?.house?.referenceCode}`
+                    }
+                    onPressElement={() => handlePressVisit(visit)}
+                    // @ts-expect-error
+                    filled={formatDate(visit.visitedAt, i18n.language)}
+                  />
+                ))}
+              </>
+            ) : (
+              <Text className="text-center">{t("visit.list.done")}</Text>
             )}
           </View>
-        </ClosableBottomSheet>
-      </ScrollView>
-    </SafeAreaView>
+        </View>
+      </CheckTeam>
+
+      <ClosableBottomSheet
+        title={`Casa ${selectedVisit?.referenceCode || ""}`}
+        snapPoints={snapPoints}
+        bottomSheetModalRef={bottomSheetModalRef}
+        onClose={() => setSuccess(false)}
+      >
+        <View className="h-full w-full flex px-4 py-4">
+          <View className="flex-1 mb-4">
+            <View className="w-full h-full">
+              {!success && (
+                <>
+                  {createVisit.isPending ? (
+                    <View className="flex flex-1 items-center justify-center">
+                      <Loading />
+                    </View>
+                  ) : (
+                    <VisitSummary
+                      // @ts-expect-error
+                      date={`${formatDate(selectedVisit?.visitedAt || "", i18n.language)}`}
+                      sector={team.data?.data.attributes.sector?.name}
+                      // @ts-expect-error
+                      house={`${selectedVisit?.house?.referenceCode}`}
+                      // @ts-expect-error
+                      color={selectedVisit?.statusColor}
+                      // @ts-expect-error
+                      greens={selectedVisit?.colorsAndQuantities?.GREEN}
+                      // @ts-expect-error
+                      yellows={selectedVisit?.colorsAndQuantities?.YELLOW}
+                      // @ts-expect-error
+                      reds={selectedVisit?.colorsAndQuantities?.RED}
+                      // @ts-expect-error
+                      permissionToVisitGranted={selectedVisit?.visitPermission}
+                    />
+                  )}
+                </>
+              )}
+              {success && <SuccessSummary />}
+            </View>
+          </View>
+          {!success ? (
+            <Button
+              title="Sincronizar visita"
+              onPress={() => synchronizeVisit(selectedVisit)}
+              disabled={!isInternetReachable || createVisit.isPending}
+              primary
+            />
+          ) : (
+            <Button
+              title="Cerrar"
+              onPress={() => {
+                setSuccess(false);
+                bottomSheetModalRef.current?.close();
+              }}
+            />
+          )}
+        </View>
+      </ClosableBottomSheet>
+    </ScrollView>
   );
 }

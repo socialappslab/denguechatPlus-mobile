@@ -94,7 +94,7 @@ export default function ChangeBrigade() {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="flex flex-1 py-5 px-5">
         {!loading && (
           <>
