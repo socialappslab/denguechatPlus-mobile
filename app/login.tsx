@@ -216,7 +216,7 @@ export default function Login() {
 
   return (
     <KeyboardAvoidingView>
-      <SafeAreaView className="flex-1 flex flex-col">
+      <SafeAreaView>
         <View className="flex flex-1 flex-col justify-center px-6">
           <View className="flex flex-col items-center mb-2">
             <Logo className="mb-4"></Logo>

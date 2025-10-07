@@ -177,7 +177,7 @@ export default function SelectUser() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="flex flex-1 py-5 px-5">
         <View className="flex flex-row items-center mb-6">
           <View className="flex flex-1 mr-2">

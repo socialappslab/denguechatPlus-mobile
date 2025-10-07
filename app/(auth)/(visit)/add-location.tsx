@@ -71,7 +71,7 @@ const AddLocation = () => {
     if (data) {
       const { address } = data;
       console.log("address>>", address);
-      setAddress(address.address);
+      setAddress(address?.address);
     }
   }, [data]);
 

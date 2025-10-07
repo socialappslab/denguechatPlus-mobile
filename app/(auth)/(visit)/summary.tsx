@@ -1,4 +1,4 @@
-import { Button, ScrollView, View } from "@/components/themed";
+import { Button, SafeAreaView, ScrollView, View } from "@/components/themed";
 import VisitSummary from "@/components/VisitSummary";
 import { useStore } from "@/hooks/useStore";
 import { VisitData } from "@/types";
@@ -205,7 +205,7 @@ export default function Summary() {
   };
 
   return (
-    <View className="h-full">
+    <SafeAreaView edges={["right", "bottom", "left"]}>
       <ScrollView
         className="flex-grow"
         contentContainerStyle={{ paddingBottom: 0 }}
@@ -240,6 +240,6 @@ export default function Summary() {
           disabled={createVisit.isPending}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
