@@ -1,4 +1,10 @@
-import { useFonts } from "expo-font";
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from "@expo-google-fonts/inter";
 import { Stack, useNavigationContainerRef } from "expo-router";
 import Toast from "react-native-toast-message";
 
@@ -48,10 +54,10 @@ function RootLayout() {
   const locales = useLocales();
 
   const [areFontsLoaded, fontLoadError] = useFonts({
-    "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
-    "Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
-    "Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
-    "Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
+    "Inter-Bold": Inter_700Bold,
+    "Inter-Medium": Inter_500Medium,
+    "Inter-SemiBold": Inter_600SemiBold,
+    "Inter-Regular": Inter_400Regular,
   });
 
   useEffect(() => {
