@@ -70,7 +70,7 @@
     "react-dom": "19.0.0",
     "react-hook-form": "7.54.2",
     "react-i18next": "^14.1.2",
-    "react-native": "0.79.5",
+    "react-native": "0.79.6",
     "react-native-circular-progress-indicator": "^4.4.2",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-gesture-handler": "~2.24.0",
