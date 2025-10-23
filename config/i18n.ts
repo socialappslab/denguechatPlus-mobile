@@ -8,10 +8,6 @@ import pt from "@/assets/i18n/pt.json";
 const resources = { en, es, pt };
 
 i18n.use(initReactI18next).init({
-  // TODO: our app throws an error about the pluralization not being correct in
-  // our locale files but it think is a mistake. Still we need to fix that by
-  // avoiding any `*Plural` in our keys and remove this key.
-  compatibilityJSON: "v3",
   resources,
   fallbackLng: "es",
   interpolation: {
