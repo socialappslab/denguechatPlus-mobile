@@ -7,25 +7,18 @@ const config: ExpoConfig = {
   version: "1.11.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  newArchEnabled: false,
   ios: {
     supportsTablet: true,
     bundleIdentifier: "org.denguechatplus",
     buildNumber: "1",
     config: {
       usesNonExemptEncryption: false,
-      googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS,
     },
   },
   android: {
     package: "org.denguechatplus",
     versionCode: 1,
     edgeToEdgeEnabled: true,
-    config: {
-      googleMaps: {
-        apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID,
-      },
-    },
   },
   plugins: [
     "expo-router",
@@ -62,6 +55,14 @@ const config: ExpoConfig = {
       {
         photosPermission:
           "Allow $(PRODUCT_NAME) to access your photos for posts",
+      },
+    ],
+    [
+      "react-native-maps",
+      {
+        iosGoogleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS,
+        androidGoogleMapsApiKey:
+          process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID,
       },
     ],
     [
