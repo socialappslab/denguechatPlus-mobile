@@ -15,9 +15,6 @@ module.exports = (() => {
     ...resolver,
     assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
     sourceExts: [...resolver.sourceExts, "svg"],
-
-    // https://github.com/expo/expo/discussions/36551
-    unstable_enablePackageExports: false,
   };
 
   return config;

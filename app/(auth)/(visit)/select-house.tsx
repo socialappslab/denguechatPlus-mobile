@@ -168,9 +168,11 @@ export default function SelectHouseScreen() {
             <View className="my-1">
               {filteredHouses.map((house) => (
                 <SelectableItem
-                  testID="houseItem"
                   key={house.id}
-                  checked={house.id === houseSelected?.id}
+                  checked={
+                    // NOTE: we cannot do house.id === houseSelected?.id because the compiler for some reason doesn't understand the safe navigation operator
+                    house.id === (houseSelected ? houseSelected.id : undefined)
+                  }
                   onValueChange={() => {
                     setHouseSelected(house);
                   }}

@@ -101,6 +101,7 @@ export function ClosableBottomSheet(props: ClosableBottomSheetProps) {
           style={[{ backgroundColor: shadowColor }, StyleSheet.absoluteFill]}
         />
       )}
+      enableDynamicSizing={false}
       {...otherProps}
     >
       {!onlyBackdrop && (

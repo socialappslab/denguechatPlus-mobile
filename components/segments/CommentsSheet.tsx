@@ -416,6 +416,7 @@ export default function CommentsSheet(props: CommentsSheetProps) {
           style={[{ backgroundColor: shadowColor }, StyleSheet.absoluteFill]}
         />
       )}
+      enableDynamicSizing={false}
     >
       <View isSheet className="flex flex-row items-center px-5 mb-2">
         <View className="flex flex-1 flex-col">
