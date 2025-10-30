@@ -3,7 +3,7 @@ import {
   consoleTransport,
   fileAsyncTransport,
 } from "react-native-logs";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 
 const LOG = logger.createLogger({
   transport: __DEV__ ? consoleTransport : fileAsyncTransport,

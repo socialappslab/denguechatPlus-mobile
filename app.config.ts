@@ -18,7 +18,6 @@ const config: ExpoConfig = {
   android: {
     package: "org.denguechatplus",
     versionCode: 1,
-    edgeToEdgeEnabled: true,
   },
   plugins: [
     "expo-router",
