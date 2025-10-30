@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { deserialize } from "jsonapi-fractal";
@@ -8,7 +8,6 @@ import {
   Platform,
   RefreshControl,
 } from "react-native";
-import { debounce } from "lodash";
 import { useIsFocused } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 
@@ -28,6 +27,7 @@ import Colors from "@/constants/Colors";
 import { axios } from "@/config/axios";
 import { BaseObject } from "@/schema";
 import { useBrigades } from "@/hooks/useBrigades";
+import { useDebounceCallback } from "usehooks-ts";
 
 export default function SelectUser() {
   const { t } = useTranslation();
@@ -44,65 +44,62 @@ export default function SelectUser() {
   const router = useRouter();
   const { filters, setSelection, clearState } = useBrigades();
 
-  const fetchData = async (page: number, query: string, teamId?: number) => {
-    setError("");
-    try {
-      const response = await axios.get("users", {
-        params: {
-          "filter[status][]": "active",
-          page: {
-            number: page,
-            size: 15,
+  const fetchData = useCallback(
+    async (page: number, query: string, teamId?: number) => {
+      setError("");
+      try {
+        const response = await axios.get("users", {
+          params: {
+            "filter[status][]": "active",
+            page: {
+              number: page,
+              size: 15,
+            },
+            sort: "user_profiles.first_name",
+            order: "asc",
+            filter: {
+              full_name: query,
+              role_name: "brigadista",
+              team_id: teamId,
+            },
           },
-          sort: "user_profiles.first_name",
-          order: "asc",
-          filter: {
-            full_name: query,
-            role_name: "brigadista",
-            team_id: teamId,
-          },
-        },
-      });
+        });
 
-      const data = response.data;
-      if (data) {
-        const deserializedData = deserialize<IUser>(data);
-        if (!deserializedData || !Array.isArray(deserializedData)) return;
+        const data = response.data;
+        if (data) {
+          const deserializedData = deserialize<IUser>(data);
+          if (!deserializedData || !Array.isArray(deserializedData)) return;
 
-        if (page === 1) {
-          setDataList(deserializedData);
-        } else {
-          setDataList((prevData) => {
-            let updatedList = [...prevData, ...deserializedData];
+          if (page === 1) {
+            setDataList(deserializedData);
+          } else {
+            setDataList((prevData) => {
+              let updatedList = [...prevData, ...deserializedData];
 
-            const uniqueList = Array.from(
-              new Set(updatedList.map((item) => item.id)),
-            )
-              .map((id) => updatedList.find((item) => item.id === id))
-              .filter((item): item is IUser => item !== undefined);
+              const uniqueList = Array.from(
+                new Set(updatedList.map((item) => item.id)),
+              )
+                .map((id) => updatedList.find((item) => item.id === id))
+                .filter((item): item is IUser => item !== undefined);
 
-            return uniqueList;
-          });
+              return uniqueList;
+            });
+          }
+
+          setHasMore(data.links?.self !== data.links?.last);
         }
-
-        setHasMore(data.links?.self !== data.links?.last);
+      } catch (error) {
+        setError(t("errorCodes.generic"));
+        Sentry.captureException(error);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
       }
-    } catch (error) {
-      setError(t("errorCodes.generic"));
-      Sentry.captureException(error);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  };
+    },
+    [t],
+  );
 
-  const debouncedFetchData = debounce(fetchData, 200);
-
-  useEffect(() => {
-    return () => {
-      debouncedFetchData.cancel();
-    };
-  }, [debouncedFetchData]);
+  const debouncedFetchData = useDebounceCallback(fetchData, 700);
 
   const handleSearch = async (query: string) => {
     setSearchText(query);

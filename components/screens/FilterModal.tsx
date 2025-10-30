@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 
 import { deserialize } from "jsonapi-fractal";
 import { Platform, StatusBar } from "react-native";
-import { debounce } from "lodash";
 import { useIsFocused } from "@react-navigation/native";
 
 import { BaseObject, Team } from "@/schema";
@@ -20,6 +19,7 @@ import {
 import { axios } from "@/config/axios";
 import { HouseBlockType } from "@/types";
 import * as Sentry from "@sentry/react-native";
+import { useDebounceCallback } from "usehooks-ts";
 
 export interface FilterModalProps {
   onFilter: (itemSeleted?: BaseObject) => void;
@@ -80,13 +80,7 @@ export function FilterModal({
     }
   };
 
-  const debouncedFetchData = useCallback(debounce(fetchData, 300), []);
-
-  useEffect(() => {
-    return () => {
-      debouncedFetchData.cancel();
-    };
-  }, [debouncedFetchData]);
+  const debouncedFetchData = useDebounceCallback(fetchData, 700);
 
   const handleSearch = async (query: string) => {
     setSearchText(query);
