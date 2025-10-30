@@ -14,7 +14,6 @@ const LOG = logger.createLogger({
       warn: "yellowBright",
       error: "redBright",
     },
-    // @ts-expect-error https://github.com/mowispace/react-native-logs/issues/112
     FS: FileSystem,
   },
   enabledExtensions: ["VISITS"],
