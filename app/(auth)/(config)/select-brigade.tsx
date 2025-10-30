@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { deserialize } from "jsonapi-fractal";
@@ -8,9 +8,9 @@ import {
   Platform,
   RefreshControl,
 } from "react-native";
-import { debounce } from "lodash";
 import { useIsFocused } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
+import { useDebounceCallback } from "usehooks-ts";
 
 import {
   FilterButton,
@@ -99,13 +99,7 @@ export default function SelectBrigade() {
     }
   };
 
-  const debouncedFetchData = debounce(fetchData, 200);
-
-  useEffect(() => {
-    return () => {
-      debouncedFetchData.cancel();
-    };
-  }, [debouncedFetchData]);
+  const debouncedFetchData = useDebounceCallback(fetchData, 700);
 
   const handleSearch = async (query: string) => {
     setSearchText(query);
