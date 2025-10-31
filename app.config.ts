@@ -4,28 +4,20 @@ const config: ExpoConfig = {
   name: "DengueChatPlus",
   slug: "dengue-chat-plus",
   scheme: "org.denguechat.plus",
-  version: "1.11.0",
+  version: "1.11.1",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  newArchEnabled: false,
   ios: {
     supportsTablet: true,
     bundleIdentifier: "org.denguechatplus",
     buildNumber: "1",
     config: {
       usesNonExemptEncryption: false,
-      googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS,
     },
   },
   android: {
     package: "org.denguechatplus",
     versionCode: 1,
-    edgeToEdgeEnabled: true,
-    config: {
-      googleMaps: {
-        apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID,
-      },
-    },
   },
   plugins: [
     "expo-router",
@@ -65,6 +57,14 @@ const config: ExpoConfig = {
       },
     ],
     [
+      "react-native-maps",
+      {
+        iosGoogleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS,
+        androidGoogleMapsApiKey:
+          process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID,
+      },
+    ],
+    [
       "@sentry/react-native/expo",
       {
         url: "https://sentry.io/",
@@ -76,6 +76,7 @@ const config: ExpoConfig = {
   ],
   experiments: {
     typedRoutes: true,
+    reactCompiler: true,
   },
   extra: {
     router: {

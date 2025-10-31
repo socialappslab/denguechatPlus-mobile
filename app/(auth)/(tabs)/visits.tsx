@@ -24,7 +24,7 @@ import { TeamResponse, VisitData } from "@/types";
 import { calculatePercentage, countSetFilters, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Platform, RefreshControl } from "react-native";
+import { RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
 import { useFilters } from "@/hooks/useFilters";
 import { useNetInfo } from "@react-native-community/netinfo";

@@ -56,6 +56,7 @@ export function SimpleBottomSheet(props: SimpleBottomSheetProps) {
       android_keyboardInputMode="adjustResize"
       handleIndicatorStyle={styles.handleIndicator}
       backgroundStyle={[styles.background, { backgroundColor }]}
+      enableDynamicSizing={false}
       {...otherProps}
     >
       {children}

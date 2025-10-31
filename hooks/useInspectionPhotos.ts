@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import invariant from "tiny-invariant";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { getBasenameFromFilename, getFilenameFromURI } from "@/util";
 import {
   setInspectionPhoto,
