@@ -1,7 +1,7 @@
 {
   "name": "dengue-chat-plus",
   "main": "expo-router/entry",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "scripts": {
     "start": "expo start -c",
     "android": "expo run:android",
