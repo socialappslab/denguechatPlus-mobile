@@ -139,6 +139,7 @@ export interface Inspection {
   photo_id?: string;
   site_type?: string;
   status_color?: string;
+  location: "house" | "orchard";
 }
 
 export interface Country {
@@ -224,7 +225,7 @@ interface VisitAttributes {
   photoUri?: string;
   inspections: Inspection[];
   familyEducationTopics: string[];
-  otherFamilyEducationTopic?: string;
+  otherFamilyEducationTopic?: string | null;
   /**
    * Can be `null`, because when we added this feature, we didn't knew the
    * correct value for existing records and defaulting to `false` was going to

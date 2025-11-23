@@ -62,7 +62,7 @@ export type SelectableItemProps = ViewProps & {
   /**
    * Renders a text area or an input alongside the item.
    */
-  optionType?: OptionType;
+  optionType?: OptionType | null;
   /**
    * Value indicating if checkbox is checked.
    */

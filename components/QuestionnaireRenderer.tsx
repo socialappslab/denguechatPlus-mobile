@@ -26,14 +26,14 @@ export interface ISelectableItem {
   label: string;
   required?: boolean;
   image?: string;
-  resourceName?: string;
-  resourceId?: string;
-  next?: number;
-  optionType?: OptionType;
+  resourceName?: string | null;
+  resourceId?: string | number | null;
+  next?: number | null;
+  optionType?: OptionType | null;
   group?: string;
-  text?: string;
-  resourceType?: ResourceType;
-  statusColor?: string;
+  text?: string | null;
+  resourceType?: ResourceType | null;
+  statusColor?: string | null;
   disableOtherOptions?: boolean;
   bool?: boolean;
   selectedCase?: VisitCase;
@@ -92,13 +92,13 @@ function formatOptionsForSelectableItems({
 
 export interface FormStateOption {
   value?: string | number;
-  resourceName?: string;
-  resourceId?: string;
-  next?: number;
-  text?: string;
-  resourceType?: string;
-  optionType?: string;
-  statusColor?: string;
+  resourceName?: string | null;
+  resourceId?: string | number | null;
+  next?: number | null;
+  text?: string | null;
+  resourceType?: string | null;
+  optionType?: string | null;
+  statusColor?: string | null;
   disableOtherOptions?: boolean;
   inspectionIdx?: number;
   label?: string;

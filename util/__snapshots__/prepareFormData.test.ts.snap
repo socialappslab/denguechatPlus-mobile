@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`prepareFormData handles simple case with one container and without searching the other side of the house 1`] = `
+{
+  "answers": [
+    {
+      "question_1-0": 252,
+      "question_20-0": 321,
+      "question_5-0": 267,
+      "question_7-0": 269,
+    },
+    {},
+  ],
+  "inspections": [
+    {
+      "breeding_site_type_id": 28,
+      "container_protection_ids": [
+        {
+          "id": 1,
+          "statusColor": "GREEN",
+          "weightedPoints": 9,
+        },
+      ],
+      "elimination_method_type_ids": [
+        3,
+      ],
+      "host": [
+        null,
+      ],
+      "location": "orchard",
+      "photo_id": {
+        "statusColor": null,
+        "value": false,
+        "weightedPoints": null,
+      },
+      "quantity_founded": 1,
+      "statusColor": "RED",
+      "statusColors": [
+        "RED",
+        "GREEN",
+      ],
+      "type_content_id": [
+        {
+          "id": 1,
+          "statusColor": "RED",
+          "weightedPoints": 100,
+        },
+      ],
+      "visit_permission": {
+        "statusColor": null,
+        "value": true,
+        "weightedPoints": null,
+      },
+      "was_chemically_treated": {
+        "statusColor": null,
+        "value": "No, it was not treated",
+        "weightedPoints": null,
+      },
+      "water_source_type_ids": [
+        3,
+      ],
+    },
+    {
+      "family_education_topics": [
+        null,
+      ],
+      "statusColors": [],
+    },
+  ],
+  "visit": {
+    "familyEducationTopics": [
+      "Explanation of larvae and pupae",
+    ],
+    "host": [
+      "Senior adult",
+    ],
+    "visitPermission": true,
+  },
+}
+`;
