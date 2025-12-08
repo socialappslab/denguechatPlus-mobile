@@ -213,7 +213,13 @@ export type FormState = Record<QuestionId, ISelectableItem | ISelectableItem[]>;
 
 interface VisitAttributes {
   host: string[];
-  visitPermission: boolean;
+  visitPermissionOptionId: number;
+  visitPermissionOther?: string;
+  /**
+   * Derived from the selected option's `bool` value, used for UI display
+   * to determine if access to the house was granted.
+   */
+  visitPermissionGranted: boolean;
   houseId: number;
   questionnaireId: string;
   teamId: number;

@@ -140,22 +140,11 @@ export const prepareFormData = (
       }
 
       if (resourceName === "visit_permission") {
-        /*
-         * This is an special case, for this answer we need to set the visit
-         * permission in two places for the following reasons:
-         *
-         * 1. We're required to send the visitPermission key to the backend to
-         *    show the visit permission status in the web.
-         * 2. We're using the visitPermission key to show the visit permission
-         *    status in the summary page.
-         * 3. We have to track the detail of the reply for the "Data" tab. And
-         *    of course to have the detail why the brigadist didn't have permission
-         *    to go into the house.
-         */
-        visit.visitPermission = answer.bool;
-
-        const questionId = `question_${question}`;
-        answers[index][questionId] = answer.value;
+        visit.visitPermissionOptionId = answer.value as number;
+        visit.visitPermissionGranted = answer.bool ?? false;
+        if (answer.text) {
+          visit.visitPermissionOther = answer.text;
+        }
       }
 
       if (resourceName === "quantity_founded") {
