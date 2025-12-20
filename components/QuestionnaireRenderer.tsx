@@ -1,6 +1,6 @@
 import { SelectableItem, Text, View } from "@/components/themed";
 import { VisitCase } from "@/hooks/useStore";
-import { Question, OptionType, ResourceType } from "@/types";
+import { Question, OptionType, ResourceType, TypeField } from "@/types";
 import { Image } from "expo-image";
 import React, { useCallback, useMemo, useState } from "react";
 import {
@@ -38,6 +38,7 @@ export interface ISelectableItem {
   bool?: boolean;
   selectedCase?: VisitCase;
   weightedPoints: number | null;
+  location: VisitCase;
 }
 
 /**
@@ -185,7 +186,7 @@ const QuestionnaireRenderer = ({
         <React.Fragment
           key={`${option.optionType}-${option.label}-${option.required}-${option.value}`}
         >
-          {question.typeField === "multiple" && (
+          {question.typeField === TypeField.Multiple && (
             <ControlledCheckbox
               key={option.value}
               setValue={setValue}
@@ -196,8 +197,8 @@ const QuestionnaireRenderer = ({
               currentValues={currentValues}
             />
           )}
-          {(question.typeField === "list" ||
-            question.typeField === "splash+list") && (
+          {(question.typeField === TypeField.List ||
+            question.typeField === TypeField.SplashList) && (
             <ControlledList
               key={option.value}
               getValues={getValues}
@@ -215,7 +216,7 @@ const QuestionnaireRenderer = ({
 
   return (
     <FormProvider {...methods}>
-      {question.typeField === "splash" && (
+      {question.typeField === TypeField.Splash && (
         <View className="flex flex-col justify-center items-center h-full">
           <View
             className={`h-52 w-52 relative mb-8 rounded-xl border-green-300 flex items-center justify-center ${!imageLoaded && "bg-green-300"}`}
@@ -242,7 +243,7 @@ const QuestionnaireRenderer = ({
           </Text>
         </View>
       )}
-      {question.typeField === "splash+list" && (
+      {question.typeField === TypeField.SplashList && (
         <View>
           {question.additionalData && (
             <View className="flex-col justify-center items-center">
@@ -290,25 +291,26 @@ const QuestionnaireRenderer = ({
                 {question.notes}
               </Text>
             )}
-            {/* Conditionally render groupped */}
-            {!hasGroup && formattedOptions.map(renderOptions)}
-            {hasGroup &&
-              Object.keys(groupedOptions).map((title) => (
-                <View key={title} className="mb-2">
-                  <Text type="subtitle" className="mb-3">
-                    {title}
-                  </Text>
-                  {groupedOptions[title].map(renderOptions)}
-                </View>
-              ))}
+
+            {hasGroup
+              ? Object.keys(groupedOptions).map((title) => (
+                  <View key={title} className="mb-2">
+                    <Text type="subtitle" className="mb-3">
+                      {title}
+                    </Text>
+                    {groupedOptions[title].map(renderOptions)}
+                  </View>
+                ))
+              : formattedOptions.map(renderOptions)}
+
             <Text type="small">
               {hasRequiredOptions && t("visit.required")}
             </Text>
           </View>
         </View>
       )}
-      {question.typeField !== "splash" &&
-        question.typeField !== "splash+list" && (
+      {question.typeField !== TypeField.Splash &&
+        question.typeField !== TypeField.SplashList && (
           <View>
             <Text type="title" className="mb-5">
               {question.question}
@@ -321,17 +323,17 @@ const QuestionnaireRenderer = ({
                 {question.notes}
               </Text>
             )}
-            {/* Conditionally render groupped */}
-            {!hasGroup && formattedOptions.map(renderOptions)}
-            {hasGroup &&
-              Object.keys(groupedOptions).map((title) => (
-                <View key={title} className="mb-2">
-                  <Text type="subtitle" className="mb-3">
-                    {title}
-                  </Text>
-                  {groupedOptions[title].map(renderOptions)}
-                </View>
-              ))}
+
+            {hasGroup
+              ? Object.keys(groupedOptions).map((title) => (
+                  <View key={title} className="mb-2">
+                    <Text type="subtitle" className="mb-3">
+                      {title}
+                    </Text>
+                    {groupedOptions[title].map(renderOptions)}
+                  </View>
+                ))
+              : formattedOptions.map(renderOptions)}
             <Text type="small">
               {hasRequiredOptions && t("visit.required")}
             </Text>

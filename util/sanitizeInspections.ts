@@ -28,6 +28,7 @@ export const sanitizeInspections = (
           visited_at: i?.visited_at,
           water_source_other: i?.water_source_other,
           water_source_type_ids: i?.water_source_type_ids,
+          location: i?.location,
         };
         // sanitize
         // @ts-expect-error

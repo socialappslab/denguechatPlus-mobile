@@ -4,7 +4,13 @@ import { PostVisibility } from "@/schema";
 import { StatusColor } from "./prepareFormData";
 export * from "./prepareFormData";
 
-type TypeField = "text" | "multiple" | "list" | "splash" | "splash+list";
+export enum TypeField {
+  Text = "text",
+  Multiple = "multiple",
+  List = "list",
+  Splash = "splash",
+  SplashList = "splash+list",
+}
 
 export interface Questionnaire {
   id: string;
@@ -139,6 +145,7 @@ export interface Inspection {
   photo_id?: string;
   site_type?: string;
   status_color?: string;
+  location?: VisitCase;
 }
 
 export interface Country {
@@ -213,7 +220,13 @@ export type FormState = Record<QuestionId, ISelectableItem | ISelectableItem[]>;
 
 interface VisitAttributes {
   host: string[];
-  visitPermission: boolean;
+  visitPermissionOptionId: number;
+  visitPermissionOther?: string;
+  /**
+   * Derived from the selected option's `bool` value, used for UI display
+   * to determine if access to the house was granted.
+   */
+  visitPermissionGranted: boolean;
   houseId: number;
   questionnaireId: string;
   teamId: number;

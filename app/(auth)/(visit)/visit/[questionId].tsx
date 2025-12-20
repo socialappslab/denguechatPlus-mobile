@@ -160,8 +160,17 @@ export default function Visit() {
     }
 
     // Persist values
-    if (currentValues)
-      setCurrentVisitData(answerId, currentQuestion, currentValues);
+    if (currentValues) {
+      /*
+       * We add the location always to each answer to later track the location
+       * of each container.
+       */
+      const withLocation: AnswerState = {
+        ...currentValues,
+        location: selectedCase,
+      };
+      setCurrentVisitData(answerId, currentQuestion, withLocation);
+    }
 
     // Branches
     // @ts-expect-error - array support is not implemented yet
