@@ -143,7 +143,7 @@ export default function Visit() {
     return next;
   }
 
-  const onNext = () => {
+  function onNext() {
     const next = findNext();
 
     const selectedOption = currentQuestion.options.find(
@@ -165,10 +165,9 @@ export default function Visit() {
        * We add the location always to each answer to later track the location
        * of each container.
        */
-      const withLocation: AnswerState = {
-        ...currentValues,
-        location: selectedCase,
-      };
+      const withLocation: AnswerState = Array.isArray(currentValues)
+        ? currentValues.map((item) => ({ ...item, location: selectedCase }))
+        : { ...currentValues, location: selectedCase };
       setCurrentVisitData(answerId, currentQuestion, withLocation);
     }
 
@@ -189,7 +188,7 @@ export default function Visit() {
       pathname: "/visit/[questionId]",
       params: { questionId: next },
     });
-  };
+  }
 
   const disableNextButton = !isValid(currentValues, currentQuestion);
 
