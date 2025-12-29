@@ -515,7 +515,7 @@ export default function Visits() {
                       // @ts-expect-error
                       reds={selectedVisit?.colorsAndQuantities?.RED}
                       // @ts-expect-error
-                      permissionToVisitGranted={selectedVisit?.visitPermission}
+                      permissionToVisitGranted={selectedVisit?.visitPermissionGranted}
                     />
                   )}
                 </>

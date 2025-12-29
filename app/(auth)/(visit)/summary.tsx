@@ -116,7 +116,7 @@ export default function Summary() {
   let { mainStatusColor, colorsAndQuantities } =
     getColorsAndQuantities(inspections);
 
-  mainStatusColor = visit.visitPermission
+  mainStatusColor = visit.visitPermissionGranted
     ? mainStatusColor
     : StatusColor.PotentionallyInfected;
 
@@ -134,7 +134,8 @@ export default function Summary() {
     const sanitizedVisitData = {
       ...visitData,
       house: visitData.houseId ? undefined : visitData.house,
-      visitPermission: visit.visitPermission,
+      visitPermissionOptionId: visit.visitPermissionOptionId,
+      visitPermissionOther: visit.visitPermissionOther,
       host: visit.host,
       familyEducationTopics: visit.familyEducationTopics,
       otherFamilyEducationTopic: visit.otherFamilyEducationTopic,
@@ -228,7 +229,7 @@ export default function Summary() {
             reds={colorsAndQuantities.RED}
             color={mainStatusColor}
             // @ts-expect-error
-            permissionToVisitGranted={visit.visitPermission}
+            permissionToVisitGranted={visit.visitPermissionGranted}
           />
         </View>
       </ScrollView>
