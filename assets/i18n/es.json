@@ -95,7 +95,15 @@
       "homes": "Casas",
       "myBrigade": "Mi Brigada",
       "visit": "Visitas",
+      "data": "Datos",
       "profile": "Perfil"
+    },
+    "data": {
+      "presets": {
+        "today": "Hoy",
+        "last30Days": "30 días",
+        "last6Months": "6 meses"
+      }
     },
     "drawer": {
       "myCity": "Mi Ciudad",

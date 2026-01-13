@@ -2,9 +2,15 @@ import { ScrollView, Text } from "@/components/themed";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { axios } from "@/config/axios";
 import { useStore } from "@/hooks/useStore";
+import { BaseObject } from "@/schema";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { LayoutChangeEvent, useWindowDimensions, View } from "react-native";
+import {
+  useWindowDimensions,
+  View,
+  Platform,
+  RefreshControl,
+} from "react-native";
 import {
   BarChart,
   barDataItem,
@@ -13,134 +19,358 @@ import {
   PieChart,
   pieDataItem,
 } from "react-native-gifted-charts";
+import { useTranslation } from "react-i18next";
+import { Picker as AndroidPicker } from "@expo/ui/jetpack-compose";
+import { Host, Picker as IOSPicker } from "@expo/ui/swift-ui";
+import moment from "moment";
+
+const COLORS_MAP = {
+  green: "#27AE60",
+  yellow: "#F2C94C",
+  red: "#EB5757",
+  grey: "#828282",
+};
+const COLORS = Object.values(COLORS_MAP);
+
+const CONTAINER_TYPE_COLORS: Record<string, string> = {
+  Drums: "#E67E22",
+  Buckets: "#2D9CDB",
+  Tires: "#EB5757",
+  Tanks: "#27AE60",
+  Bottles: "#9B51E0",
+  Other: "#828282",
+  Tambores: "#E67E22",
+  Baldes: "#2D9CDB",
+  Neumáticos: "#EB5757",
+  Tanques: "#27AE60",
+  Botellas: "#9B51E0",
+  Otro: "#828282",
+  Pneus: "#EB5757",
+  Garrafas: "#9B51E0",
+  Outro: "#828282",
+};
+
+const FALLBACK_COLORS = [
+  "#BB6BD9",
+  "#56CCF2",
+  "#F2994A",
+  "#219653",
+  "#2F80ED",
+  "#F2C94C",
+  "#4F4F4F",
+  "#BDBDBD",
+];
+
+type DateRange = { from: string; to: string };
+function useStatsQuery(teamId?: number, range?: DateRange) {
+  interface TeamStatsResponse {
+    data: {
+      id: string;
+      type: "teamStats";
+      attributes: TeamStatsAttributes;
+    };
+  }
+
+  interface TeamStatsAttributes {
+    housesVisited: number;
+    positiveContainers: number;
+    coveragePercentage: number;
+    housesWithAedesPercentage: number;
+    houseAccessStatus: HouseAccessStatusItem[];
+    houseAccessStatusChart: HouseAccessStatusChartItem[];
+    containerPositives: ContainerItem[];
+    containerPositivesChart: ContainerChartItem[];
+    containerTypesInspected: ContainerItem[];
+    containerTypesInspectedChart: ContainerChartItem[];
+    riskChange: PeriodColorDistribution[];
+    houseColorDistribution: PeriodColorDistribution[];
+  }
+
+  interface HouseAccessStatusItem {
+    option_id: number;
+    name_es: string;
+    name_en: string;
+    name_pt: string;
+    count: number;
+  }
+
+  interface HouseAccessStatusChartItem {
+    option_id: number;
+    name_es: string;
+    name_en: string;
+    name_pt: string;
+    value: number;
+  }
+
+  interface ContainerItem {
+    breeding_site_type_id: number;
+    name_es: string;
+    name_en: string;
+    name_pt: string;
+    count: number;
+  }
+
+  interface ContainerChartItem {
+    breeding_site_type_id: number;
+    name_es: string;
+    name_en: string;
+    name_pt: string;
+    value: number;
+  }
+
+  interface PeriodColorDistribution {
+    period: string;
+    start_date: string;
+    end_date: string;
+    green: number;
+    yellow: number;
+    red: number;
+  }
+
+  return useQuery({
+    enabled: !!teamId,
+    queryKey: ["teams", teamId, "stats", range],
+    queryFn: () =>
+      axios.get<TeamStatsResponse>(`/teams/${teamId}/stats`, { params: range }),
+    select: ({ data }) => data.data.attributes,
+  });
+}
 
 enum Preset {
   Today,
   Last30Days,
   Last6Months,
 }
+function getDataRange(preset: Preset): DateRange {
+  const now = moment();
+  const today = now.format("YYYY/MM/DD");
 
-interface DateRange {
-  from: string;
-  to: string;
-}
+  switch (preset) {
+    case Preset.Last30Days:
+      const last30Days = now.subtract(30, "days").format("YYYY/MM/DD");
+      return { from: last30Days, to: today };
 
-function useStatsQuery(teamId?: number, range?: DateRange) {
-  interface Stats {
-    data: {
-      id: string;
-      type: "teamStats";
-      attributes: {
-        housesVisited: number;
-        positiveContainers: number;
-        coveragePercentage: number;
-        housesWithAedesPercentage: number;
-      };
-    };
+    case Preset.Last6Months:
+      const last6Months = now.subtract(6, "months").format("YYYY/MM/DD");
+      return { from: last6Months, to: today };
+
+    case Preset.Today:
+    default:
+      return { from: today, to: today };
   }
-
-  return useQuery({
-    enabled: !!teamId,
-    queryKey: ["teams", teamId, "stats"],
-    queryFn: () =>
-      axios.get<Stats>(`/teams/${teamId}/stats`, { params: range }),
-    select: ({ data }) => data.data.attributes,
-  });
 }
 
 export default function Data() {
   const user = useStore((state) => state.user);
-  // @ts-expect-error
-  const stats = useStatsQuery(user?.team?.id);
+  const { t, i18n } = useTranslation();
 
   const { width } = useWindowDimensions();
-  const [chartContainerWidth, setChartContainerWidth] = useState(0);
+  const [selectedPreset, setSelectedPreset] = useState<Preset>(
+    Preset.Last30Days,
+  );
 
   const padding = 20;
   const gap = 16;
   const cardWidth = (width - padding * 2 - gap) / 2;
-  const chartWidthFallback = width - padding * 2 - 32;
-  const chartWidth = chartContainerWidth || chartWidthFallback;
-  const chartInnerWidth = Math.max(chartWidth - 24, 0);
+  const chartWidth = width - padding * 2 - 32; // 32 = card horizontal padding (16 * 2)
+  const chartInnerWidth = Math.max(chartWidth - 24, 0); // 24 = CardContent padding
 
-  const handleChartLayout = (event: LayoutChangeEvent) => {
-    setChartContainerWidth(Math.floor(event.nativeEvent.layout.width));
+  // NOTE: order matters here
+  const presetToLabel: Record<Preset, string> = {
+    [Preset.Today]: t("data.presets.today"),
+    [Preset.Last30Days]: t("data.presets.last30Days"),
+    [Preset.Last6Months]: t("data.presets.last6Months"),
+  };
+  const presetOptions = Object.values(presetToLabel);
+
+  const dateRange = getDataRange(selectedPreset);
+  const stats = useStatsQuery((user?.team as BaseObject)?.id, dateRange);
+
+  type LocalizedItem = { name_es: string; name_en: string; name_pt: string };
+  function getLocalizedName(item: LocalizedItem): string {
+    // @ts-expect-error can index with `name_${string}`, has to be `name_${'es' | 'en' | 'pt'}`
+    return item[`name_${i18n.language}`] ?? item.name_es;
+  }
+
+  const getColorForItem = (
+    name: string,
+    colorMap: Record<string, string>,
+    fallbackIndex: number,
+  ): string => {
+    if (colorMap[name]) {
+      return colorMap[name];
+    }
+
+    const lowerName = name.toLowerCase();
+    const matchingKey = Object.keys(colorMap).find(
+      (key) => key.toLowerCase() === lowerName,
+    );
+
+    if (matchingKey) {
+      return colorMap[matchingKey];
+    }
+
+    return FALLBACK_COLORS[fallbackIndex % FALLBACK_COLORS.length];
   };
 
-  const houseAccessData: pieDataItem[] = [
-    { value: 120, color: "#2D9CDB", text: "With Access" },
-    { value: 35, color: "#EB5757", text: "House Closed" },
-    { value: 28, color: "#F2C94C", text: "No Permission" },
-    { value: 14, color: "#6FCF97", text: "Uninhabited" },
-    { value: 19, color: "#9B51E0", text: "Asked to Return" },
-    { value: 9, color: "#828282", text: "No Permission (Other)" },
-  ];
+  const formatPeriodLabel = (period: string): string => {
+    if (!period) return "";
 
-  const containerPositiveData: barDataItem[] = [
-    { value: 58, label: "Drums", frontColor: "#E67E22" },
-    { value: 46, label: "Buckets", frontColor: "#2D9CDB" },
-    { value: 41, label: "Tires", frontColor: "#EB5757" },
-    { value: 33, label: "Tanks", frontColor: "#27AE60" },
-    { value: 27, label: "Bottles", frontColor: "#9B51E0" },
-    { value: 22, label: "Other", frontColor: "#828282" },
-  ];
+    if (period.includes("-W")) {
+      return period.split("-W")[1] ? `W${period.split("-W")[1]}` : period;
+    }
 
-  const riskLabels = ["W1", "W2", "W3", "W4", "W5", "W6"];
-  const riskGreen: lineDataItem[] = [
-    { value: 38, label: riskLabels[0] },
-    { value: 42, label: riskLabels[1] },
-    { value: 35, label: riskLabels[2] },
-    { value: 40, label: riskLabels[3] },
-    { value: 46, label: riskLabels[4] },
-    { value: 44, label: riskLabels[5] },
-  ];
-  const riskYellow: lineDataItem[] = [
-    { value: 18 },
-    { value: 22 },
-    { value: 27 },
-    { value: 24 },
-    { value: 29 },
-    { value: 26 },
-  ];
-  const riskRed: lineDataItem[] = [
-    { value: 8 },
-    { value: 12 },
-    { value: 10 },
-    { value: 14 },
-    { value: 16 },
-    { value: 13 },
-  ];
+    if (/^\d{4}-\d{2}$/.test(period)) {
+      const [year, month] = period.split("-");
+      const date = new Date(parseInt(year), parseInt(month) - 1, 1);
+      return date.toLocaleDateString(i18n.language, { month: "short" });
+    }
 
-  const distLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-  const distGreen: lineDataItem[] = [
-    { value: 120, label: distLabels[0] },
-    { value: 128, label: distLabels[1] },
-    { value: 140, label: distLabels[2] },
-    { value: 134, label: distLabels[3] },
-    { value: 150, label: distLabels[4] },
-    { value: 158, label: distLabels[5] },
-  ];
-  const distYellow: lineDataItem[] = [
-    { value: 68 },
-    { value: 74 },
-    { value: 72 },
-    { value: 80 },
-    { value: 86 },
-    { value: 90 },
-  ];
-  const distRed: lineDataItem[] = [
-    { value: 24 },
-    { value: 28 },
-    { value: 32 },
-    { value: 36 },
-    { value: 34 },
-    { value: 38 },
-  ];
+    if (period.includes("-Q")) {
+      return period.split("-Q")[1] ? `Q${period.split("-Q")[1]}` : period;
+    }
+
+    return period;
+  };
+
+  type HouseAccessChart = {
+    data: pieDataItem[];
+    legends: LegendProps[];
+  };
+  function getHouseAccessChart(): HouseAccessChart {
+    const data = stats.data?.houseAccessStatusChart ?? [];
+    if (data.length === 0) return { data: [], legends: [] };
+
+    const final: HouseAccessChart = { data: [], legends: [] };
+
+    for (const [index, item] of data.entries()) {
+      const label = getLocalizedName(item);
+      const color = COLORS[index];
+
+      final.data.push({ value: item.value, text: item.value + "%", color });
+      final.legends.push({ color, label });
+    }
+
+    return final;
+  }
+
+  type PositiveContainersChart = {
+    data: barDataItem[];
+    legends: LegendProps[];
+  };
+  function getPositiveContainersChart(): PositiveContainersChart {
+    const data = stats.data?.containerPositivesChart ?? [];
+    if (data.length === 0) return { data: [], legends: [] };
+
+    const final: PositiveContainersChart = { data: [], legends: [] };
+
+    for (const [index, item] of data.entries()) {
+      const name = getLocalizedName(item);
+      const color = getColorForItem(name, CONTAINER_TYPE_COLORS, index);
+
+      final.data.push({
+        value: item.value,
+        frontColor: color,
+      });
+      final.legends.push({ color, label: name });
+    }
+
+    return final;
+  }
+
+  function getRiskChart() {
+    const apiData = stats.data?.riskChange ?? [];
+
+    if (apiData.length === 0) {
+      return { labels: [], green: [], yellow: [], red: [] };
+    }
+
+    const labels = apiData.map((item) => formatPeriodLabel(item.period));
+    const green: lineDataItem[] = apiData.map((item, index) => ({
+      value: item.green,
+      label: labels[index],
+    }));
+    const yellow: lineDataItem[] = apiData.map((item) => ({
+      value: item.yellow,
+    }));
+    const red: lineDataItem[] = apiData.map((item) => ({
+      value: item.red,
+    }));
+
+    return { labels, green, yellow, red };
+  }
+
+  function getDistributionChart() {
+    const apiData = stats.data?.houseColorDistribution ?? [];
+
+    if (apiData.length === 0) {
+      return { labels: [], green: [], yellow: [], red: [] };
+    }
+
+    const labels = apiData.map((item) => formatPeriodLabel(item.period));
+    const green: lineDataItem[] = apiData.map((item, index) => ({
+      value: item.green,
+      label: labels[index],
+    }));
+    const yellow: lineDataItem[] = apiData.map((item) => ({
+      value: item.yellow,
+    }));
+    const red: lineDataItem[] = apiData.map((item) => ({
+      value: item.red,
+    }));
+
+    return { labels, green, yellow, red };
+  }
+
+  const houseAccessChart = getHouseAccessChart();
+  const positiveContainersChart = getPositiveContainersChart();
+  const riskChart = getRiskChart();
+  const distributionChart = getDistributionChart();
+
+  const riskLabels = riskChart.labels;
+  const riskGreen = riskChart.green;
+  const riskYellow = riskChart.yellow;
+  const riskRed = riskChart.red;
+
+  const distLabels = distributionChart.labels;
+  const distGreen = distributionChart.green;
+  const distYellow = distributionChart.yellow;
+  const distRed = distributionChart.red;
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={stats.isLoading}
+          onRefresh={stats.refetch}
+        />
+      }
+    >
       <View style={{ padding }}>
-        <View className="flex-row flex-wrap w-full" style={{ gap }}>
+        <View className="items-center">
+          {Platform.OS === "android" ? (
+            <AndroidPicker
+              options={presetOptions}
+              selectedIndex={selectedPreset}
+              onOptionSelected={({ nativeEvent: { index } }) => {
+                setSelectedPreset(index);
+              }}
+              variant="segmented"
+            />
+          ) : Platform.OS === "ios" ? (
+            <Host matchContents>
+              <IOSPicker
+                options={presetOptions}
+                selectedIndex={selectedPreset}
+                onOptionSelected={({ nativeEvent: { index } }) => {
+                  setSelectedPreset(index);
+                }}
+                variant="segmented"
+              />
+            </Host>
+          ) : null}
+        </View>
+        <View className="flex-row flex-wrap w-full mt-6" style={{ gap }}>
           <Card style={{ width: cardWidth }}>
             <CardHeader>
               <CardTitle>Casas visitadas</CardTitle>
@@ -194,29 +424,18 @@ export default function Data() {
             <CardContent>
               <View className="items-center">
                 <PieChart
-                  data={houseAccessData}
+                  data={houseAccessChart.data}
                   showText
-                  textColor="#111827"
-                  radius={90}
-                  showExternalLabels
                   labelsPosition="outward"
-                  labelLineConfig={{ color: "#9CA3AF", length: 12 }}
                 />
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
-                {houseAccessData.map((item) => (
-                  <View key={item.text} className="flex-row items-center">
-                    <View
-                      style={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: 2,
-                        backgroundColor: item.color,
-                        marginRight: 6,
-                      }}
-                    />
-                    <Text className="text-xs">{item.text}</Text>
-                  </View>
+                {houseAccessChart.legends.map((legend) => (
+                  <Legend
+                    key={legend.label}
+                    color={legend.color}
+                    label={legend.label}
+                  />
                 ))}
               </View>
             </CardContent>
@@ -227,22 +446,26 @@ export default function Data() {
               <CardTitle>Container Types with Most Positives</CardTitle>
             </CardHeader>
             <CardContent>
-              <View onLayout={handleChartLayout} style={{ overflow: "hidden" }}>
+              <View style={{ overflow: "hidden" }}>
                 <BarChart
-                  data={containerPositiveData}
-                  height={200}
-                  width={chartInnerWidth}
-                  barWidth={24}
-                  spacing={16}
+                  data={positiveContainersChart.data}
                   adjustToWidth
-                  parentWidth={chartInnerWidth}
                   roundedTop
+                  barWidth={18}
                   showValuesAsTopLabel
                   topLabelTextStyle={{ color: "#111827", fontSize: 12 }}
                   yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                  xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
                   isAnimated
                 />
+              </View>
+              <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
+                {positiveContainersChart.legends.map((legend) => (
+                  <Legend
+                    key={legend.label}
+                    color={legend.color}
+                    label={legend.label}
+                  />
+                ))}
               </View>
             </CardContent>
           </Card>
@@ -252,7 +475,7 @@ export default function Data() {
               <CardTitle>Risk Change Chart in the City</CardTitle>
             </CardHeader>
             <CardContent>
-              <View onLayout={handleChartLayout} style={{ overflow: "hidden" }}>
+              <View style={{ overflow: "hidden" }}>
                 <LineChart
                   data={riskGreen}
                   data2={riskYellow}
@@ -260,17 +483,20 @@ export default function Data() {
                   color1="#27AE60"
                   color2="#F2C94C"
                   color3="#EB5757"
-                  height={200}
-                  width={chartInnerWidth}
-                  spacing={32}
-                  initialSpacing={8}
-                  endSpacing={8}
-                  adjustToWidth
-                  dataPointsRadius={4}
-                  yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                  xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                  rulesColor="#E5E7EB"
-                  isAnimated
+                  dataPointsColor1="#27AE60"
+                  dataPointsColor2="#F2C94C"
+                  dataPointsColor3="#EB5757"
+                  // spacing={32}
+                  // initialSpacing={8}
+                  // endSpacing={8}
+                  // adjustToWidth
+                  curved
+                  // thickness={2}
+                  // yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
+                  // xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
+                  // rulesColor="#E5E7EB"
+                  // isAnimated
+                  // animateOnDataChange
                 />
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
@@ -279,18 +505,11 @@ export default function Data() {
                   { label: "Yellow", color: "#F2C94C" },
                   { label: "Red", color: "#EB5757" },
                 ].map((item) => (
-                  <View key={item.label} className="flex-row items-center">
-                    <View
-                      style={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: 2,
-                        backgroundColor: item.color,
-                        marginRight: 6,
-                      }}
-                    />
-                    <Text className="text-xs">{item.label}</Text>
-                  </View>
+                  <Legend
+                    key={item.label}
+                    color={item.color}
+                    label={item.label}
+                  />
                 ))}
               </View>
             </CardContent>
@@ -301,7 +520,7 @@ export default function Data() {
               <CardTitle>House Color Distribution</CardTitle>
             </CardHeader>
             <CardContent>
-              <View onLayout={handleChartLayout} style={{ overflow: "hidden" }}>
+              <View style={{ overflow: "hidden" }}>
                 <LineChart
                   data={distGreen}
                   data2={distYellow}
@@ -309,17 +528,23 @@ export default function Data() {
                   color1="#27AE60"
                   color2="#F2C94C"
                   color3="#EB5757"
+                  dataPointsColor1="#27AE60"
+                  dataPointsColor2="#F2C94C"
+                  dataPointsColor3="#EB5757"
                   height={200}
                   width={chartInnerWidth}
                   spacing={34}
                   initialSpacing={8}
                   endSpacing={8}
                   adjustToWidth
+                  curved
+                  thickness={2}
                   dataPointsRadius={4}
                   yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
                   xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
                   rulesColor="#E5E7EB"
                   isAnimated
+                  animateOnDataChange
                 />
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
@@ -328,18 +553,11 @@ export default function Data() {
                   { label: "Yellow", color: "#F2C94C" },
                   { label: "Red", color: "#EB5757" },
                 ].map((item) => (
-                  <View key={item.label} className="flex-row items-center">
-                    <View
-                      style={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: 2,
-                        backgroundColor: item.color,
-                        marginRight: 6,
-                      }}
-                    />
-                    <Text className="text-xs">{item.label}</Text>
-                  </View>
+                  <Legend
+                    key={item.label}
+                    color={item.color}
+                    label={item.label}
+                  />
                 ))}
               </View>
             </CardContent>
@@ -347,5 +565,21 @@ export default function Data() {
         </View>
       </View>
     </ScrollView>
+  );
+}
+
+interface LegendProps {
+  color: string;
+  label: string;
+}
+function Legend(props: LegendProps) {
+  return (
+    <View key={props.label} className="flex-row items-center">
+      <View
+        style={{ backgroundColor: props.color }}
+        className="w-3 h-3 rounded-sm"
+      />
+      <Text className="ml-1 text-xs">{props.label}</Text>
+    </View>
   );
 }

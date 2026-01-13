@@ -97,6 +97,13 @@
       "data": "Data",
       "profile": "Profile"
     },
+    "data": {
+      "presets": {
+        "today": "Today",
+        "last30Days": "30 days",
+        "last6Months": "6 months"
+      }
+    },
     "drawer": {
       "myCity": "My City",
       "myCommunity": "My Community",
