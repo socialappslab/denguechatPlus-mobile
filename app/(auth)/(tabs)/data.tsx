@@ -14,8 +14,6 @@ import {
 import {
   BarChart,
   barDataItem,
-  LineChart,
-  lineDataItem,
   PieChart,
   pieDataItem,
 } from "react-native-gifted-charts";
@@ -293,26 +291,25 @@ export default function Data() {
     return final;
   }
 
-  function getRiskChart() {
+  type RiskChartData = {
+    stacks: { value: number; color: string }[];
+    label: string;
+  };
+  function getRiskChart(): RiskChartData[] {
     const apiData = stats.data?.riskChange ?? [];
 
     if (apiData.length === 0) {
-      return { labels: [], green: [], yellow: [], red: [] };
+      return [];
     }
 
-    const labels = apiData.map((item) => formatPeriodLabel(item.period));
-    const green: lineDataItem[] = apiData.map((item, index) => ({
-      value: item.green,
-      label: labels[index],
+    return apiData.map((item) => ({
+      stacks: [
+        { value: item.green, color: COLORS_MAP.green },
+        { value: item.yellow, color: COLORS_MAP.yellow },
+        { value: item.red, color: COLORS_MAP.red },
+      ],
+      label: formatPeriodLabel(item.period),
     }));
-    const yellow: lineDataItem[] = apiData.map((item) => ({
-      value: item.yellow,
-    }));
-    const red: lineDataItem[] = apiData.map((item) => ({
-      value: item.red,
-    }));
-
-    return { labels, green, yellow, red };
   }
 
   const houseAccessChart = getHouseAccessChart();
@@ -351,17 +348,15 @@ export default function Data() {
   const containerTypesMaxValue =
     Math.max(...containerTypesChart.data.map((d) => d.value ?? 0), 0) * 1.1;
 
-  const riskChart = getRiskChart();
-  const riskGreen = riskChart.green;
-  const riskYellow = riskChart.yellow;
-  const riskRed = riskChart.red;
+  const riskChartData = getRiskChart();
 
-  const riskMaxValue = Math.max(
-    ...riskGreen.map((d) => d.value ?? 0),
-    ...riskYellow.map((d) => d.value ?? 0),
-    ...riskRed.map((d) => d.value ?? 0),
-    0,
-  );
+  const riskMaxValue =
+    Math.max(
+      ...riskChartData.map((d) =>
+        d.stacks.reduce((sum, s) => sum + s.value, 0),
+      ),
+      0,
+    ) * 1.1;
 
   return (
     <ScrollView
@@ -563,17 +558,9 @@ export default function Data() {
             </CardHeader>
             <CardContent>
               <View style={{ overflow: "hidden" }}>
-                <LineChart
-                  data={riskGreen}
-                  data2={riskYellow}
-                  data3={riskRed}
-                  color1="#27AE60"
-                  color2="#F2C94C"
-                  color3="#EB5757"
-                  dataPointsColor1="#27AE60"
-                  dataPointsColor2="#F2C94C"
-                  dataPointsColor3="#EB5757"
-                  curved
+                <BarChart
+                  stackData={riskChartData}
+                  adjustToWidth
                   maxValue={riskMaxValue}
                   yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
                   xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
@@ -581,9 +568,9 @@ export default function Data() {
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
                 {[
-                  { label: t("data.legends.green"), color: "#27AE60" },
-                  { label: t("data.legends.yellow"), color: "#F2C94C" },
-                  { label: t("data.legends.red"), color: "#EB5757" },
+                  { label: t("data.legends.green"), color: COLORS_MAP.green },
+                  { label: t("data.legends.yellow"), color: COLORS_MAP.yellow },
+                  { label: t("data.legends.red"), color: COLORS_MAP.red },
                 ].map((item) => (
                   <Legend
                     key={item.label}
