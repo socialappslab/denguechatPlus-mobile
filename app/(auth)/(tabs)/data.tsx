@@ -27,6 +27,8 @@ const COLORS_MAP = {
   yellow: "#F2C94C",
   red: "#EB5757",
   grey: "#828282",
+  blue: "#2F80ED",
+  purple: "#BB6BD9",
 };
 const COLORS = Object.values(COLORS_MAP);
 
@@ -581,7 +583,6 @@ export default function Data() {
               </View>
             </CardContent>
           </Card>
-
         </View>
       </View>
     </ScrollView>
