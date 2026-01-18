@@ -513,6 +513,40 @@ export default function Data() {
 
           <Card>
             <CardHeader>
+              <CardTitle>{t("data.charts.containerTypesInspected")}</CardTitle>
+              <CardDescription>
+                {t("data.charts.containerTypesInspectedDesc")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <View style={{ overflow: "hidden" }}>
+                <BarChart
+                  data={containerTypesChart.data}
+                  adjustToWidth
+                  showValuesAsTopLabel
+                  maxValue={containerTypesMaxValue}
+                  topLabelTextStyle={{
+                    color: "#111827",
+                    fontSize: 12,
+                    marginBottom: 2,
+                  }}
+                  yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
+                />
+              </View>
+              <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
+                {containerTypesChart.legends.map((legend) => (
+                  <Legend
+                    key={legend.label}
+                    color={legend.color}
+                    label={legend.label}
+                  />
+                ))}
+              </View>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>
                 {t("data.charts.containerTypesWithMostPositives")}
               </CardTitle>
@@ -537,40 +571,6 @@ export default function Data() {
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
                 {positiveContainersChart.legends.map((legend) => (
-                  <Legend
-                    key={legend.label}
-                    color={legend.color}
-                    label={legend.label}
-                  />
-                ))}
-              </View>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("data.charts.containerTypesInspected")}</CardTitle>
-              <CardDescription>
-                {t("data.charts.containerTypesInspectedDesc")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <View style={{ overflow: "hidden" }}>
-                <BarChart
-                  data={containerTypesChart.data}
-                  adjustToWidth
-                  showValuesAsTopLabel
-                  maxValue={containerTypesMaxValue}
-                  topLabelTextStyle={{
-                    color: "#111827",
-                    fontSize: 12,
-                    marginBottom: 2,
-                  }}
-                  yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                />
-              </View>
-              <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
-                {containerTypesChart.legends.map((legend) => (
                   <Legend
                     key={legend.label}
                     color={legend.color}
