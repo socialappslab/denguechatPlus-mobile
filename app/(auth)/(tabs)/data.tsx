@@ -168,6 +168,11 @@ export default function Data() {
   const [selectedPreset, setSelectedPreset] = useState<Preset>(
     Preset.Last30Days,
   );
+  const [selectedHouseAccess, setSelectedHouseAccess] = useState<{
+    label: string;
+    value: number;
+    percentage: number;
+  } | null>(null);
 
   const padding = 20;
   const gap = 16;
@@ -243,11 +248,22 @@ export default function Data() {
 
     const final: HouseAccessChart = { data: [], legends: [] };
 
+    // Calculate total for percentage calculation
+    const total = data.reduce((sum, item) => sum + item.value, 0);
+
     for (const [index, item] of data.entries()) {
       const label = getLocalizedName(item);
       const color = COLORS[index];
 
-      final.data.push({ value: item.value, text: item.value + "%", color });
+      const percentage = total > 0 ? Math.round((item.value / total) * 100) : 0;
+
+      final.data.push({
+        value: item.value,
+        color,
+        focused: selectedHouseAccess?.label === label,
+        onPress: () =>
+          setSelectedHouseAccess({ label, value: item.value, percentage }),
+      });
       final.legends.push({ color, label });
     }
 
@@ -324,6 +340,40 @@ export default function Data() {
 
   const houseAccessChart = getHouseAccessChart();
   const positiveContainersChart = getPositiveContainersChart();
+
+  type ContainerTypesChart = {
+    data: barDataItem[];
+    legends: LegendProps[];
+  };
+  function getContainerTypesChart(): ContainerTypesChart {
+    const data = stats.data?.containerTypesInspectedChart ?? [];
+    if (data.length === 0) return { data: [], legends: [] };
+
+    const final: ContainerTypesChart = { data: [], legends: [] };
+
+    for (const [index, item] of data.entries()) {
+      const name = getLocalizedName(item);
+      const color = getColorForItem(name, CONTAINER_TYPE_COLORS, index);
+
+      final.data.push({
+        value: item.value,
+        frontColor: color,
+      });
+      final.legends.push({ color, label: name });
+    }
+
+    return final;
+  }
+
+  const containerTypesChart = getContainerTypesChart();
+
+  // NOTE: add 10% padding to max value to leave room for top labels
+  const containersMaxValue =
+    Math.max(...positiveContainersChart.data.map((d) => d.value ?? 0), 0) * 1.1;
+
+  const containerTypesMaxValue =
+    Math.max(...containerTypesChart.data.map((d) => d.value ?? 0), 0) * 1.1;
+
   const riskChart = getRiskChart();
   const distributionChart = getDistributionChart();
 
@@ -332,10 +382,24 @@ export default function Data() {
   const riskYellow = riskChart.yellow;
   const riskRed = riskChart.red;
 
+  const riskMaxValue = Math.max(
+    ...riskGreen.map((d) => d.value ?? 0),
+    ...riskYellow.map((d) => d.value ?? 0),
+    ...riskRed.map((d) => d.value ?? 0),
+    0,
+  );
+
   const distLabels = distributionChart.labels;
   const distGreen = distributionChart.green;
   const distYellow = distributionChart.yellow;
   const distRed = distributionChart.red;
+
+  const distMaxValue = Math.max(
+    ...distGreen.map((d) => d.value ?? 0),
+    ...distYellow.map((d) => d.value ?? 0),
+    ...distRed.map((d) => d.value ?? 0),
+    0,
+  );
 
   return (
     <ScrollView
@@ -356,9 +420,15 @@ export default function Data() {
                 setSelectedPreset(index);
               }}
               variant="segmented"
+              elementColors={{
+                activeContentColor: "#FFFFFF",
+                activeContainerColor: COLORS_MAP.green,
+                inactiveContainerColor: "#F1FCF2",
+                inactiveContentColor: "#000000",
+              }}
             />
           ) : Platform.OS === "ios" ? (
-            <Host matchContents>
+            <Host style={{ width: "100%", height: 32 }}>
               <IOSPicker
                 options={presetOptions}
                 selectedIndex={selectedPreset}
@@ -373,7 +443,7 @@ export default function Data() {
         <View className="flex-row flex-wrap w-full mt-6" style={{ gap }}>
           <Card style={{ width: cardWidth }}>
             <CardHeader>
-              <CardTitle>Casas visitadas</CardTitle>
+              <CardTitle>{t("data.kpi.housesVisited")}</CardTitle>
             </CardHeader>
             <CardContent>
               <Text className="text-3xl font-bold leading-none">
@@ -384,7 +454,7 @@ export default function Data() {
 
           <Card style={{ width: cardWidth }}>
             <CardHeader>
-              <CardTitle>Envases positivos</CardTitle>
+              <CardTitle>{t("data.kpi.positiveContainers")}</CardTitle>
             </CardHeader>
             <CardContent>
               <Text className="text-3xl font-bold leading-none">
@@ -395,7 +465,7 @@ export default function Data() {
 
           <Card style={{ width: cardWidth }}>
             <CardHeader>
-              <CardTitle>Cobertura</CardTitle>
+              <CardTitle>{t("data.kpi.coverage")}</CardTitle>
             </CardHeader>
             <CardContent>
               <Text className="text-3xl font-bold leading-none">
@@ -406,7 +476,7 @@ export default function Data() {
 
           <Card style={{ width: cardWidth }}>
             <CardHeader>
-              <CardTitle>Casas con aedes</CardTitle>
+              <CardTitle>{t("data.kpi.housesWithAedes")}</CardTitle>
             </CardHeader>
             <CardContent>
               <Text className="text-3xl font-bold leading-none">
@@ -419,14 +489,32 @@ export default function Data() {
         <View className="mt-6" style={{ gap: 16 }}>
           <Card>
             <CardHeader>
-              <CardTitle>House Access Status</CardTitle>
+              <CardTitle>{t("data.charts.houseAccessStatus")}</CardTitle>
             </CardHeader>
             <CardContent>
               <View className="items-center">
                 <PieChart
                   data={houseAccessChart.data}
-                  showText
-                  labelsPosition="outward"
+                  donut
+                  focusOnPress
+                  radius={100}
+                  innerRadius={60}
+                  centerLabelComponent={() =>
+                    selectedHouseAccess ? (
+                      <View className="items-center justify-center">
+                        <Text className="text-2xl font-bold">
+                          {selectedHouseAccess.percentage}%
+                        </Text>
+                        <Text className="text-sm text-gray-500">
+                          ({selectedHouseAccess.value})
+                        </Text>
+                      </View>
+                    ) : (
+                      <Text className="text-sm text-gray-400">
+                        {t("data.charts.tapSlice")}
+                      </Text>
+                    )
+                  }
                 />
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
@@ -443,7 +531,9 @@ export default function Data() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Container Types with Most Positives</CardTitle>
+              <CardTitle>
+                {t("data.charts.containerTypesWithMostPositives")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <View style={{ overflow: "hidden" }}>
@@ -451,11 +541,14 @@ export default function Data() {
                   data={positiveContainersChart.data}
                   adjustToWidth
                   roundedTop
-                  barWidth={18}
                   showValuesAsTopLabel
-                  topLabelTextStyle={{ color: "#111827", fontSize: 12 }}
+                  maxValue={containersMaxValue}
+                  topLabelTextStyle={{
+                    color: "#111827",
+                    fontSize: 12,
+                    marginBottom: 2,
+                  }}
                   yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                  isAnimated
                 />
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
@@ -472,7 +565,39 @@ export default function Data() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Risk Change Chart in the City</CardTitle>
+              <CardTitle>{t("data.charts.containerTypesInspected")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <View style={{ overflow: "hidden" }}>
+                <BarChart
+                  data={containerTypesChart.data}
+                  adjustToWidth
+                  roundedTop
+                  showValuesAsTopLabel
+                  maxValue={containerTypesMaxValue}
+                  topLabelTextStyle={{
+                    color: "#111827",
+                    fontSize: 12,
+                    marginBottom: 2,
+                  }}
+                  yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
+                />
+              </View>
+              <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
+                {containerTypesChart.legends.map((legend) => (
+                  <Legend
+                    key={legend.label}
+                    color={legend.color}
+                    label={legend.label}
+                  />
+                ))}
+              </View>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("data.charts.riskChangeInCity")}</CardTitle>
             </CardHeader>
             <CardContent>
               <View style={{ overflow: "hidden" }}>
@@ -486,24 +611,17 @@ export default function Data() {
                   dataPointsColor1="#27AE60"
                   dataPointsColor2="#F2C94C"
                   dataPointsColor3="#EB5757"
-                  // spacing={32}
-                  // initialSpacing={8}
-                  // endSpacing={8}
-                  // adjustToWidth
                   curved
-                  // thickness={2}
-                  // yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                  // xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                  // rulesColor="#E5E7EB"
-                  // isAnimated
-                  // animateOnDataChange
+                  maxValue={riskMaxValue}
+                  yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
+                  xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
                 />
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
                 {[
-                  { label: "Green", color: "#27AE60" },
-                  { label: "Yellow", color: "#F2C94C" },
-                  { label: "Red", color: "#EB5757" },
+                  { label: t("data.legends.green"), color: "#27AE60" },
+                  { label: t("data.legends.yellow"), color: "#F2C94C" },
+                  { label: t("data.legends.red"), color: "#EB5757" },
                 ].map((item) => (
                   <Legend
                     key={item.label}
@@ -517,7 +635,7 @@ export default function Data() {
 
           <Card>
             <CardHeader>
-              <CardTitle>House Color Distribution</CardTitle>
+              <CardTitle>{t("data.charts.houseColorDistribution")}</CardTitle>
             </CardHeader>
             <CardContent>
               <View style={{ overflow: "hidden" }}>
@@ -531,27 +649,18 @@ export default function Data() {
                   dataPointsColor1="#27AE60"
                   dataPointsColor2="#F2C94C"
                   dataPointsColor3="#EB5757"
-                  height={200}
-                  width={chartInnerWidth}
-                  spacing={34}
-                  initialSpacing={8}
-                  endSpacing={8}
-                  adjustToWidth
                   curved
-                  thickness={2}
-                  dataPointsRadius={4}
+                  maxValue={distMaxValue}
                   yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
                   xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
                   rulesColor="#E5E7EB"
-                  isAnimated
-                  animateOnDataChange
                 />
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
                 {[
-                  { label: "Green", color: "#27AE60" },
-                  { label: "Yellow", color: "#F2C94C" },
-                  { label: "Red", color: "#EB5757" },
+                  { label: t("data.legends.green"), color: "#27AE60" },
+                  { label: t("data.legends.yellow"), color: "#F2C94C" },
+                  { label: t("data.legends.red"), color: "#EB5757" },
                 ].map((item) => (
                   <Legend
                     key={item.label}

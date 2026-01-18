@@ -102,6 +102,25 @@
         "today": "Today",
         "last30Days": "30 days",
         "last6Months": "6 months"
+      },
+      "kpi": {
+        "housesVisited": "Houses visited",
+        "positiveContainers": "Positive containers",
+        "coverage": "Coverage",
+        "housesWithAedes": "Houses with Aedes"
+      },
+      "charts": {
+        "houseAccessStatus": "House Access Status",
+        "containerTypesWithMostPositives": "Container Types with Most Positives",
+        "containerTypesInspected": "Container Types Inspected",
+        "riskChangeInCity": "Risk Change Chart in the City",
+        "houseColorDistribution": "House Color Distribution",
+        "tapSlice": "Tap a slice"
+      },
+      "legends": {
+        "green": "Green",
+        "yellow": "Yellow",
+        "red": "Red"
       }
     },
     "drawer": {
