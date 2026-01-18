@@ -36,6 +36,17 @@ const CardTitle = styled(function ({
   );
 });
 
+const CardDescription = styled(function ({
+  style,
+  children,
+}: PropsWithChildren<{ style?: StyleProp<TextStyle> }>) {
+  return (
+    <Text style={style} className="text-xs text-gray-500 mt-1">
+      {children}
+    </Text>
+  );
+});
+
 const CardContent = styled(function ({
   style,
   children,
@@ -47,4 +58,4 @@ const CardContent = styled(function ({
   );
 });
 
-export { Card, CardContent, CardHeader, CardTitle };
+export { Card, CardContent, CardDescription, CardHeader, CardTitle };

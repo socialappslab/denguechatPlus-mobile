@@ -1,5 +1,11 @@
 import { ScrollView, Text } from "@/components/themed";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { axios } from "@/config/axios";
 import { useStore } from "@/hooks/useStore";
 import { BaseObject } from "@/schema";
@@ -62,16 +68,16 @@ const FALLBACK_COLORS = [
 ];
 
 type DateRange = { from: string; to: string };
-function useStatsQuery(teamId?: number, range?: DateRange) {
+function useStatsQuery(wedgeId?: number, range?: DateRange) {
   interface TeamStatsResponse {
     data: {
       id: string;
-      type: "teamStats";
-      attributes: TeamStatsAttributes;
+      type: "wedgeStats";
+      attributes: WedgeStatsAttributes;
     };
   }
 
-  interface TeamStatsAttributes {
+  interface WedgeStatsAttributes {
     housesVisited: number;
     positiveContainers: number;
     coveragePercentage: number;
@@ -127,10 +133,12 @@ function useStatsQuery(teamId?: number, range?: DateRange) {
   }
 
   return useQuery({
-    enabled: !!teamId,
-    queryKey: ["teams", teamId, "stats", range],
+    enabled: !!wedgeId,
+    queryKey: ["wedges", wedgeId, "stats", range],
     queryFn: () =>
-      axios.get<TeamStatsResponse>(`/teams/${teamId}/stats`, { params: range }),
+      axios.get<TeamStatsResponse>(`/wedges/${wedgeId}/stats`, {
+        params: range,
+      }),
     select: ({ data }) => data.data.attributes,
   });
 }
@@ -160,7 +168,7 @@ function getDataRange(preset: Preset): DateRange {
 }
 
 export default function Data() {
-  const user = useStore((state) => state.user);
+  const userProfile = useStore((state) => state.userProfile);
   const { t, i18n } = useTranslation();
 
   const { width } = useWindowDimensions();
@@ -188,7 +196,9 @@ export default function Data() {
   const presetOptions = Object.values(presetToLabel);
 
   const dateRange = getDataRange(selectedPreset);
-  const stats = useStatsQuery((user?.team as BaseObject)?.id, dateRange);
+  // @ts-expect-error
+  const wedgeId = userProfile?.userProfile?.team?.wedge_id;
+  const stats = useStatsQuery(wedgeId, dateRange);
 
   type LocalizedItem = { name_es: string; name_en: string; name_pt: string };
   function getLocalizedName(item: LocalizedItem): string {
@@ -403,6 +413,9 @@ export default function Data() {
           <Card style={{ width: cardWidth }}>
             <CardHeader>
               <CardTitle>{t("data.kpi.housesVisited")}</CardTitle>
+              <CardDescription>
+                {t("data.kpi.housesVisitedDesc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Text className="text-3xl font-bold leading-none">
@@ -414,6 +427,9 @@ export default function Data() {
           <Card style={{ width: cardWidth }}>
             <CardHeader>
               <CardTitle>{t("data.kpi.positiveContainers")}</CardTitle>
+              <CardDescription>
+                {t("data.kpi.positiveContainersDesc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Text className="text-3xl font-bold leading-none">
@@ -425,6 +441,7 @@ export default function Data() {
           <Card style={{ width: cardWidth }}>
             <CardHeader>
               <CardTitle>{t("data.kpi.coverage")}</CardTitle>
+              <CardDescription>{t("data.kpi.coverageDesc")}</CardDescription>
             </CardHeader>
             <CardContent>
               <Text className="text-3xl font-bold leading-none">
@@ -436,6 +453,9 @@ export default function Data() {
           <Card style={{ width: cardWidth }}>
             <CardHeader>
               <CardTitle>{t("data.kpi.housesWithAedes")}</CardTitle>
+              <CardDescription>
+                {t("data.kpi.housesWithAedesDesc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Text className="text-3xl font-bold leading-none">
@@ -449,6 +469,9 @@ export default function Data() {
           <Card>
             <CardHeader>
               <CardTitle>{t("data.charts.houseAccessStatus")}</CardTitle>
+              <CardDescription>
+                {t("data.charts.houseAccessStatusDesc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <View className="items-center">
@@ -493,13 +516,15 @@ export default function Data() {
               <CardTitle>
                 {t("data.charts.containerTypesWithMostPositives")}
               </CardTitle>
+              <CardDescription>
+                {t("data.charts.containerTypesWithMostPositivesDesc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <View style={{ overflow: "hidden" }}>
                 <BarChart
                   data={positiveContainersChart.data}
                   adjustToWidth
-                  roundedTop
                   showValuesAsTopLabel
                   maxValue={containersMaxValue}
                   topLabelTextStyle={{
@@ -525,13 +550,15 @@ export default function Data() {
           <Card>
             <CardHeader>
               <CardTitle>{t("data.charts.containerTypesInspected")}</CardTitle>
+              <CardDescription>
+                {t("data.charts.containerTypesInspectedDesc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <View style={{ overflow: "hidden" }}>
                 <BarChart
                   data={containerTypesChart.data}
                   adjustToWidth
-                  roundedTop
                   showValuesAsTopLabel
                   maxValue={containerTypesMaxValue}
                   topLabelTextStyle={{
@@ -557,6 +584,9 @@ export default function Data() {
           <Card>
             <CardHeader>
               <CardTitle>{t("data.charts.riskChangeInCity")}</CardTitle>
+              <CardDescription>
+                {t("data.charts.riskChangeInCityDesc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <View style={{ overflow: "hidden" }}>

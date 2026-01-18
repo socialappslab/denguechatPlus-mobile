@@ -105,15 +105,23 @@
       },
       "kpi": {
         "housesVisited": "Casas visitadas",
+        "housesVisitedDesc": "Total de casas inspecionadas no período",
         "positiveContainers": "Recipientes positivos",
+        "positiveContainersDesc": "Recipientes com larvas de mosquito encontrados",
         "coverage": "Cobertura",
-        "housesWithAedes": "Casas com Aedes"
+        "coverageDesc": "Porcentagem de casas atribuídas visitadas",
+        "housesWithAedes": "Casas com Aedes",
+        "housesWithAedesDesc": "Casas onde mosquitos Aedes foram encontrados"
       },
       "charts": {
         "houseAccessStatus": "Status de acesso às casas",
+        "houseAccessStatusDesc": "Resultados das visitas por tipo de acesso",
         "containerTypesWithMostPositives": "Tipos de recipientes com mais positivos",
+        "containerTypesWithMostPositivesDesc": "Tipos de recipientes com maior atividade de criadouros",
         "containerTypesInspected": "Tipos de recipientes inspecionados",
+        "containerTypesInspectedDesc": "Total de cada tipo de recipiente verificado",
         "riskChangeInCity": "Mudança de risco na cidade",
+        "riskChangeInCityDesc": "Distribuição do nível de risco ao longo do tempo",
         "houseColorDistribution": "Distribuição de cor das casas",
         "tapSlice": "Toque em uma fatia"
       },
