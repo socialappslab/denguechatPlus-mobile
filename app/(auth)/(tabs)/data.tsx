@@ -83,7 +83,6 @@ function useStatsQuery(teamId?: number, range?: DateRange) {
     containerTypesInspected: ContainerItem[];
     containerTypesInspectedChart: ContainerChartItem[];
     riskChange: PeriodColorDistribution[];
-    houseColorDistribution: PeriodColorDistribution[];
   }
 
   interface HouseAccessStatusItem {
@@ -316,28 +315,6 @@ export default function Data() {
     return { labels, green, yellow, red };
   }
 
-  function getDistributionChart() {
-    const apiData = stats.data?.houseColorDistribution ?? [];
-
-    if (apiData.length === 0) {
-      return { labels: [], green: [], yellow: [], red: [] };
-    }
-
-    const labels = apiData.map((item) => formatPeriodLabel(item.period));
-    const green: lineDataItem[] = apiData.map((item, index) => ({
-      value: item.green,
-      label: labels[index],
-    }));
-    const yellow: lineDataItem[] = apiData.map((item) => ({
-      value: item.yellow,
-    }));
-    const red: lineDataItem[] = apiData.map((item) => ({
-      value: item.red,
-    }));
-
-    return { labels, green, yellow, red };
-  }
-
   const houseAccessChart = getHouseAccessChart();
   const positiveContainersChart = getPositiveContainersChart();
 
@@ -375,9 +352,6 @@ export default function Data() {
     Math.max(...containerTypesChart.data.map((d) => d.value ?? 0), 0) * 1.1;
 
   const riskChart = getRiskChart();
-  const distributionChart = getDistributionChart();
-
-  const riskLabels = riskChart.labels;
   const riskGreen = riskChart.green;
   const riskYellow = riskChart.yellow;
   const riskRed = riskChart.red;
@@ -386,18 +360,6 @@ export default function Data() {
     ...riskGreen.map((d) => d.value ?? 0),
     ...riskYellow.map((d) => d.value ?? 0),
     ...riskRed.map((d) => d.value ?? 0),
-    0,
-  );
-
-  const distLabels = distributionChart.labels;
-  const distGreen = distributionChart.green;
-  const distYellow = distributionChart.yellow;
-  const distRed = distributionChart.red;
-
-  const distMaxValue = Math.max(
-    ...distGreen.map((d) => d.value ?? 0),
-    ...distYellow.map((d) => d.value ?? 0),
-    ...distRed.map((d) => d.value ?? 0),
     0,
   );
 
@@ -633,44 +595,6 @@ export default function Data() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("data.charts.houseColorDistribution")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <View style={{ overflow: "hidden" }}>
-                <LineChart
-                  data={distGreen}
-                  data2={distYellow}
-                  data3={distRed}
-                  color1="#27AE60"
-                  color2="#F2C94C"
-                  color3="#EB5757"
-                  dataPointsColor1="#27AE60"
-                  dataPointsColor2="#F2C94C"
-                  dataPointsColor3="#EB5757"
-                  curved
-                  maxValue={distMaxValue}
-                  yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                  xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
-                  rulesColor="#E5E7EB"
-                />
-              </View>
-              <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
-                {[
-                  { label: t("data.legends.green"), color: "#27AE60" },
-                  { label: t("data.legends.yellow"), color: "#F2C94C" },
-                  { label: t("data.legends.red"), color: "#EB5757" },
-                ].map((item) => (
-                  <Legend
-                    key={item.label}
-                    color={item.color}
-                    label={item.label}
-                  />
-                ))}
-              </View>
-            </CardContent>
-          </Card>
         </View>
       </View>
     </ScrollView>
