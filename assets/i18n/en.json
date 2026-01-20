@@ -94,7 +94,42 @@
       "homes": "Homes",
       "myBrigade": "My Brigade",
       "visit": "Visits",
+      "data": "Data",
       "profile": "Profile"
+    },
+    "data": {
+      "presets": {
+        "today": "Today",
+        "last30Days": "30 days",
+        "last6Months": "6 months"
+      },
+      "kpi": {
+        "housesVisited": "Houses visited",
+        "housesVisitedDesc": "Total houses inspected in the selected period",
+        "positiveContainers": "Positive containers",
+        "positiveContainersDesc": "Containers found with mosquito larvae",
+        "coverage": "Coverage",
+        "coverageDesc": "Percentage of assigned houses visited",
+        "housesWithAedes": "Houses with Aedes",
+        "housesWithAedesDesc": "Houses where Aedes mosquitoes were found"
+      },
+      "charts": {
+        "houseAccessStatus": "House Access Status",
+        "houseAccessStatusDesc": "Breakdown of visit outcomes by access type",
+        "containerTypesWithMostPositives": "Container Types with Most Positives",
+        "containerTypesWithMostPositivesDesc": "Container types with highest breeding activity",
+        "containerTypesInspected": "Container Types Inspected",
+        "containerTypesInspectedDesc": "Total count of each container type checked",
+        "riskChangeInCity": "Risk Change Chart in the City",
+        "riskChangeInCityDesc": "Risk level distribution over time",
+        "houseColorDistribution": "House Color Distribution",
+        "tapSlice": "Tap a slice"
+      },
+      "legends": {
+        "green": "Green",
+        "yellow": "Yellow",
+        "red": "Red"
+      }
     },
     "drawer": {
       "myCity": "My City",
