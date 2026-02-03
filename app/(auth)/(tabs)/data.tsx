@@ -8,9 +8,8 @@ import {
 } from "@/components/ui/card";
 import { axios } from "@/config/axios";
 import { useStore } from "@/hooks/useStore";
-import { BaseObject } from "@/schema";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   useWindowDimensions,
   View,
@@ -306,6 +305,9 @@ export default function Data() {
   type RiskChartData = {
     stacks: { value: number; color: string }[];
     label: string;
+    green: number;
+    yellow: number;
+    red: number;
   };
   function getRiskChart(): RiskChartData[] {
     const apiData = stats.data?.riskChange ?? [];
@@ -321,11 +323,15 @@ export default function Data() {
         { value: item.red, color: COLORS_MAP.red },
       ],
       label: formatPeriodLabel(item.period),
+      green: item.green,
+      yellow: item.yellow,
+      red: item.red,
     }));
   }
 
   const houseAccessChart = getHouseAccessChart();
   const positiveContainersChart = getPositiveContainersChart();
+  const riskChartData = getRiskChart();
 
   type ContainerTypesChart = {
     data: barDataItem[];
@@ -356,19 +362,15 @@ export default function Data() {
   // NOTE: add 10% padding to max value to leave room for top labels
   const containersMaxValue =
     Math.max(...positiveContainersChart.data.map((d) => d.value ?? 0), 0) * 1.1;
-
   const containerTypesMaxValue =
     Math.max(...containerTypesChart.data.map((d) => d.value ?? 0), 0) * 1.1;
-
-  const riskChartData = getRiskChart();
-
   const riskMaxValue =
     Math.max(
       ...riskChartData.map((d) =>
         d.stacks.reduce((sum, s) => sum + s.value, 0),
       ),
       0,
-    ) * 1.1;
+    ) * 1.5;
 
   return (
     <ScrollView
@@ -381,33 +383,11 @@ export default function Data() {
     >
       <View style={{ padding }}>
         <View className="items-center">
-          {Platform.OS === "android" ? (
-            <AndroidPicker
-              options={presetOptions}
-              selectedIndex={selectedPreset}
-              onOptionSelected={({ nativeEvent: { index } }) => {
-                setSelectedPreset(index);
-              }}
-              variant="segmented"
-              elementColors={{
-                activeContentColor: "#FFFFFF",
-                activeContainerColor: COLORS_MAP.green,
-                inactiveContainerColor: "#F1FCF2",
-                inactiveContentColor: "#000000",
-              }}
-            />
-          ) : Platform.OS === "ios" ? (
-            <Host style={{ width: "100%", height: 32 }}>
-              <IOSPicker
-                options={presetOptions}
-                selectedIndex={selectedPreset}
-                onOptionSelected={({ nativeEvent: { index } }) => {
-                  setSelectedPreset(index);
-                }}
-                variant="segmented"
-              />
-            </Host>
-          ) : null}
+          <Picker
+            options={presetOptions}
+            value={selectedPreset}
+            setValue={setSelectedPreset}
+          />
         </View>
         <View className="flex-row flex-wrap w-full mt-6" style={{ gap }}>
           <Card style={{ width: cardWidth }}>
@@ -596,6 +576,37 @@ export default function Data() {
                   maxValue={riskMaxValue}
                   yAxisTextStyle={{ color: "#6B7280", fontSize: 11 }}
                   xAxisLabelTextStyle={{ color: "#6B7280", fontSize: 11 }}
+                  renderTooltip={(item: RiskChartData) => (
+                    <View className="bg-white rounded-lg p-2 shadow-md border border-gray-200">
+                      <View className="flex-row items-center mb-1">
+                        <View
+                          className="w-2 h-2 rounded-full mr-1"
+                          style={{ backgroundColor: COLORS_MAP.green }}
+                        />
+                        <Text className="text-xs">
+                          {t("visit.summary.statusColor.green")}: {item.green}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center mb-1">
+                        <View
+                          className="w-2 h-2 rounded-full mr-1"
+                          style={{ backgroundColor: COLORS_MAP.yellow }}
+                        />
+                        <Text className="text-xs">
+                          {t("visit.summary.statusColor.yellow")}: {item.yellow}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View
+                          className="w-2 h-2 rounded-full mr-1"
+                          style={{ backgroundColor: COLORS_MAP.red }}
+                        />
+                        <Text className="text-xs">
+                          {t("visit.summary.statusColor.red")}: {item.red}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
                 />
               </View>
               <View className="flex-row flex-wrap mt-4" style={{ gap: 12 }}>
@@ -617,6 +628,48 @@ export default function Data() {
       </View>
     </ScrollView>
   );
+}
+
+interface PickerProps {
+  options: string[];
+  value: number;
+  setValue: Dispatch<SetStateAction<Preset>>;
+}
+function Picker({ options, value, setValue }: PickerProps) {
+  switch (Platform.OS) {
+    case "android":
+      return (
+        <AndroidPicker
+          options={options}
+          selectedIndex={value}
+          onOptionSelected={({ nativeEvent: { index } }) => {
+            setValue(index);
+          }}
+          variant="segmented"
+          elementColors={{
+            activeContentColor: "#FFFFFF",
+            activeContainerColor: COLORS_MAP.green,
+            inactiveContainerColor: "#F1FCF2",
+            inactiveContentColor: "#000000",
+          }}
+        />
+      );
+    case "ios":
+      return (
+        <Host style={{ width: "100%", height: 32 }}>
+          <IOSPicker
+            options={options}
+            selectedIndex={value}
+            onOptionSelected={({ nativeEvent: { index } }) => {
+              setValue(index);
+            }}
+            variant="segmented"
+          />
+        </Host>
+      );
+    default:
+      return <Text>Unsupported Platform</Text>;
+  }
 }
 
 interface LegendProps {

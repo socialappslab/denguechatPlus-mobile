@@ -105,19 +105,19 @@
       },
       "kpi": {
         "housesVisited": "Casas visitadas",
-        "housesVisitedDesc": "Total de casas inspecionadas no período",
+        "housesVisitedDesc": "Total de casas visitadas no período",
         "positiveContainers": "Recipientes positivos",
         "positiveContainersDesc": "Recipientes com larvas de mosquito encontrados",
-        "coverage": "Cobertura",
+        "coverage": "Acesso às casas (Cobertura)",
         "coverageDesc": "Porcentagem de casas atribuídas visitadas",
         "housesWithAedes": "Casas com Aedes",
-        "housesWithAedesDesc": "Casas onde mosquitos Aedes foram encontrados"
+        "housesWithAedesDesc": "Porcentagem de casas com acesso onde Aedes foi encontrado"
       },
       "charts": {
         "houseAccessStatus": "Status de acesso às casas",
         "houseAccessStatusDesc": "Resultados das visitas por tipo de acesso",
-        "containerTypesWithMostPositives": "Tipos de recipientes com mais positivos",
-        "containerTypesWithMostPositivesDesc": "Tipos de recipientes com maior atividade de criadouros",
+        "containerTypesWithMostPositives": "Recipientes positivos com Aedes",
+        "containerTypesWithMostPositivesDesc": "Distribuição de recipientes onde Aedes foi encontrado",
         "containerTypesInspected": "Tipos de recipientes inspecionados",
         "containerTypesInspectedDesc": "Total de cada tipo de recipiente verificado",
         "riskChangeInCity": "Mudança de risco na cidade",
@@ -126,9 +126,9 @@
         "tapSlice": "Toque em uma fatia"
       },
       "legends": {
-        "green": "Verde",
-        "yellow": "Amarelo",
-        "red": "Vermelho"
+        "green": "Verde: Recipientes bem fechados ou sem recipientes",
+        "yellow": "Amarelo: Recipientes sem proteção",
+        "red": "Vermelho: Recipientes positivos"
       }
     },
     "drawer": {
