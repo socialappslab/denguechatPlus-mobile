@@ -72,6 +72,15 @@ export default function TabLayout({ lightColor, darkColor }: ThemeProps) {
         }}
       />
       <Tabs.Screen
+        name="data"
+        options={{
+          title: t("tabs.data"),
+          tabBarIcon: (props) => (
+            <MaterialIcons name="bar-chart" size={24} color={props.color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: t("tabs.profile"),
