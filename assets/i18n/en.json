@@ -105,19 +105,19 @@
       },
       "kpi": {
         "housesVisited": "Houses visited",
-        "housesVisitedDesc": "Total houses inspected in the selected period",
+        "housesVisitedDesc": "Total houses visited in the period",
         "positiveContainers": "Positive containers",
         "positiveContainersDesc": "Containers found with mosquito larvae",
-        "coverage": "Coverage",
+        "coverage": "House Access (Coverage)",
         "coverageDesc": "Percentage of assigned houses visited",
         "housesWithAedes": "Houses with Aedes",
-        "housesWithAedesDesc": "Houses where Aedes mosquitoes were found"
+        "housesWithAedesDesc": "Percentage of accessible houses where Aedes was found"
       },
       "charts": {
         "houseAccessStatus": "House Access Status",
         "houseAccessStatusDesc": "Breakdown of visit outcomes by access type",
-        "containerTypesWithMostPositives": "Container Types with Most Positives",
-        "containerTypesWithMostPositivesDesc": "Container types with highest breeding activity",
+        "containerTypesWithMostPositives": "Positive Containers with Aedes",
+        "containerTypesWithMostPositivesDesc": "Distribution of containers where Aedes was found",
         "containerTypesInspected": "Container Types Inspected",
         "containerTypesInspectedDesc": "Total count of each container type checked",
         "riskChangeInCity": "Risk Change Chart in the City",
@@ -126,9 +126,9 @@
         "tapSlice": "Tap a slice"
       },
       "legends": {
-        "green": "Green",
-        "yellow": "Yellow",
-        "red": "Red"
+        "green": "Green: Well-sealed or no containers",
+        "yellow": "Yellow: Unprotected containers",
+        "red": "Red: Positive containers"
       }
     },
     "drawer": {

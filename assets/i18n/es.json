@@ -106,19 +106,19 @@
       },
       "kpi": {
         "housesVisited": "Casas visitadas",
-        "housesVisitedDesc": "Total de casas inspeccionadas en el período",
+        "housesVisitedDesc": "Total de casas visitadas en el período",
         "positiveContainers": "Envases positivos",
         "positiveContainersDesc": "Envases con larvas de mosquito encontrados",
-        "coverage": "Cobertura",
+        "coverage": "Acceso a las casas (Cobertura)",
         "coverageDesc": "Porcentaje de casas asignadas visitadas",
         "housesWithAedes": "Casas con Aedes",
-        "housesWithAedesDesc": "Casas donde se encontró mosquito Aedes"
+        "housesWithAedesDesc": "Porcentaje de casas con acceso donde se encontró Aedes"
       },
       "charts": {
         "houseAccessStatus": "Estado de acceso a casas",
         "houseAccessStatusDesc": "Desglose de resultados de visita por tipo de acceso",
-        "containerTypesWithMostPositives": "Tipos de envases con más positivos",
-        "containerTypesWithMostPositivesDesc": "Tipos de envases con mayor actividad de criaderos",
+        "containerTypesWithMostPositives": "Envases positivos con Aedes",
+        "containerTypesWithMostPositivesDesc": "Distribución de envases donde se encontró Aedes",
         "containerTypesInspected": "Tipos de envases inspeccionados",
         "containerTypesInspectedDesc": "Total de cada tipo de envase revisado",
         "riskChangeInCity": "Cambio de riesgo en la ciudad",
@@ -127,9 +127,9 @@
         "tapSlice": "Toca una porción"
       },
       "legends": {
-        "green": "Verde",
-        "yellow": "Amarillo",
-        "red": "Rojo"
+        "green": "Verde: Envases bien cerrados o sin envases",
+        "yellow": "Amarillo: Envases sin protección",
+        "red": "Rojo: Envases positivos"
       }
     },
     "drawer": {
