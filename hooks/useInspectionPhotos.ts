@@ -1,6 +1,5 @@
 import { useCallback } from "react";
-import invariant from "tiny-invariant";
-import * as FileSystem from "expo-file-system/legacy";
+import { File, Paths } from "expo-file-system";
 import { getBasenameFromFilename, getFilenameFromURI } from "@/util";
 import {
   setInspectionPhoto,
@@ -8,6 +7,7 @@ import {
   useStore,
 } from "@/hooks/useStore";
 import { VisitId } from "@/types";
+import * as Sentry from "@sentry/react-native"
 
 export function useInspectionPhotos() {
   const visitId = useStore((state) => state.visitId),
@@ -18,22 +18,20 @@ export function useInspectionPhotos() {
 
   const attachPhotoToCurrentInspection = useCallback(
     async (photoUri: string) => {
-      invariant(
-        FileSystem.documentDirectory,
-        "Expected a document directory to copy the image to",
-      );
-
       const filename = getFilenameFromURI(photoUri);
-      const destination = `${FileSystem.documentDirectory}${filename}`;
+      const source = new File(photoUri);
+      const destination = new File(Paths.document, filename);
 
-      await FileSystem.copyAsync({
-        from: photoUri,
-        to: destination,
-      }).catch(console.error);
+      try {
+        source.copy(destination);
+      } catch (error) {
+        Sentry.captureException(error);
+        console.error(error);
+      }
 
       setInspectionPhoto({
         filename,
-        uri: destination,
+        uri: destination.uri,
         visitId,
         inspectionIdx: currentInspectionIndex,
         referenceCode: getBasenameFromFilename(filename),
@@ -52,7 +50,11 @@ export function useInspectionPhotos() {
       );
 
       for (const photo of photosToDelete) {
-        await FileSystem.deleteAsync(photo.uri, { idempotent: true });
+        const file = new File(photo.uri);
+
+        if (file.exists) {
+          file.delete();
+        }
       }
       setInspectionPhotos(newInspectionPhotos);
     },

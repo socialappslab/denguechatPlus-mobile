@@ -8261,10 +8261,10 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-react-native-logs@^5.3.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-5.5.0.tgz#0deb047ef337104eebbd5a32c40b8e079544dd37"
-  integrity sha512-H3Jc1pNTzNhYb9yHuk1drHdyGHwRvt4IERSz3EUul8vVTey6999fzGRFLK6ugrxYnmw7P+5fo/mRzDXeByhA8g==
+react-native-logs@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-5.6.0.tgz#4abb199a746c429e901290c5cdac1dcc38f1cd1c"
+  integrity sha512-+5A/AlepSGvaT2RE8YpoLOUNxfra8WBqUOM/GBjggCnfH5+RaCDThpKL6QnengAf+Limmoidm9YXPFzQ9cj3bQ==
 
 react-native-maps@1.26.18:
   version "1.26.18"
