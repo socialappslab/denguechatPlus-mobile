@@ -10,12 +10,11 @@ import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 
 import { View, Text } from "@/components/themed";
 import CloseCircle from "@/assets/images/icons/close-circle.svg";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type ClosableBottomSheetProps = ThemeProps &
   BottomSheetProps & {
-    bottomSheetModalRef: React.RefObject<BottomSheetModalMethods | null>;
+    bottomSheetModalRef: React.RefObject<BottomSheetModal | null>;
     title?: string;
     onClose?: () => void;
     onlyBackdrop?: boolean;

@@ -23,6 +23,7 @@ const config: ExpoConfig = {
     "expo-router",
     "expo-font",
     "expo-asset",
+    "expo-image",
     "expo-localization",
     "expo-secure-store",
     "expo-web-browser",

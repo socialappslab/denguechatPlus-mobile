@@ -12,7 +12,6 @@ import {
   BottomSheetBackdrop,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import useAxios from "axios-hooks";
 import { Image } from "expo-image";
 import { KeyboardAccessoryView } from "react-native-keyboard-accessory";
@@ -49,7 +48,7 @@ import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { Button } from "@/components/themed";
 
 export type CommentsSheetProps = ThemeProps & {
-  bottomSheetModalRef: React.RefObject<BottomSheetModalMethods | null>;
+  bottomSheetModalRef: React.RefObject<BottomSheetModal | null>;
   postId?: number;
   updateCommentCount: (diff: number) => void;
 };
@@ -184,7 +183,6 @@ export default function CommentsSheet(props: CommentsSheetProps) {
       setPost(null);
       setState({});
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   useEffect(() => {

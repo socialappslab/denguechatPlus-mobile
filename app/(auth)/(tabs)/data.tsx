@@ -23,8 +23,16 @@ import {
   pieDataItem,
 } from "react-native-gifted-charts";
 import { useTranslation } from "react-i18next";
-import { Picker as AndroidPicker } from "@expo/ui/jetpack-compose";
-import { Host, Picker as IOSPicker } from "@expo/ui/swift-ui";
+import {
+  SegmentedButton,
+  SingleChoiceSegmentedButtonRow,
+} from "@expo/ui/jetpack-compose";
+import {
+  Host,
+  Picker as IOSPicker,
+  Text as SwiftText,
+} from "@expo/ui/swift-ui";
+import { pickerStyle, tag } from "@expo/ui/swift-ui/modifiers";
 import moment from "moment";
 
 const COLORS_MAP = {
@@ -639,32 +647,38 @@ function Picker({ options, value, setValue }: PickerProps) {
   switch (Platform.OS) {
     case "android":
       return (
-        <AndroidPicker
-          options={options}
-          selectedIndex={value}
-          onOptionSelected={({ nativeEvent: { index } }) => {
-            setValue(index);
-          }}
-          variant="segmented"
-          elementColors={{
-            activeContentColor: "#FFFFFF",
-            activeContainerColor: COLORS_MAP.green,
-            inactiveContainerColor: "#F1FCF2",
-            inactiveContentColor: "#000000",
-          }}
-        />
+        <SingleChoiceSegmentedButtonRow>
+          {options.map((label, index) => (
+            <SegmentedButton
+              key={label}
+              selected={value === index}
+              onClick={() => setValue(index)}
+              colors={{
+                activeContentColor: "#FFFFFF",
+                activeContainerColor: COLORS_MAP.green,
+                inactiveContainerColor: "#F1FCF2",
+                inactiveContentColor: "#000000",
+              }}
+            >
+              <SegmentedButton.Label>{label}</SegmentedButton.Label>
+            </SegmentedButton>
+          ))}
+        </SingleChoiceSegmentedButtonRow>
       );
     case "ios":
       return (
         <Host style={{ width: "100%", height: 32 }}>
           <IOSPicker
-            options={options}
-            selectedIndex={value}
-            onOptionSelected={({ nativeEvent: { index } }) => {
-              setValue(index);
-            }}
-            variant="segmented"
-          />
+            selection={value}
+            onSelectionChange={(selection) => setValue(selection as number)}
+            modifiers={[pickerStyle("segmented")]}
+          >
+            {options.map((label, index) => (
+              <SwiftText key={label} modifiers={[tag(index)]}>
+                {label}
+              </SwiftText>
+            ))}
+          </IOSPicker>
         </Host>
       );
     default:

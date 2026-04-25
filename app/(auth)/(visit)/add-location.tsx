@@ -133,8 +133,9 @@ const AddLocation = () => {
             coordinate={markerCoords}
             draggable
             onDragEnd={handleDragEnd}
-            children={Platform.OS === "ios" ? <CustomMarker /> : null}
-          />
+          >
+            {Platform.OS === "ios" ? <CustomMarker /> : null}
+          </Marker>
         </MapView>
       )}
       {(!isInternetReachable || Boolean(error)) && (
