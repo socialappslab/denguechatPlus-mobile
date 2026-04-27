@@ -202,7 +202,7 @@ export const prepareFormData = (
 
 export const orderStatus = (statusColors: StatusColor[]) => {
   const colorOrder = Object.values(StatusColor);
-  const ordered = statusColors.sort(
+  const ordered = [...statusColors].sort(
     (a, b) => colorOrder.indexOf(a) - colorOrder.indexOf(b),
   );
   if (ordered[0]) return ordered[0];

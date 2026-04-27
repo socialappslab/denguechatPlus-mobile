@@ -62,7 +62,7 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 
   const colorOrder = Object.values(StatusColor);
   const worstStatusColorBetweenContainers =
-    highestWeightInEachContainer.sort(
+    [...highestWeightInEachContainer].sort(
       (a, b) =>
         colorOrder.indexOf(a.statusColor) - colorOrder.indexOf(b.statusColor),
     )[0]?.statusColor ?? StatusColor.NotInfected;

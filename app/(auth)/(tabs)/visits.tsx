@@ -287,7 +287,7 @@ export default function Visits() {
     [team],
   );
 
-  const orderedVisits = storedVisits.sort(
+  const orderedVisits = [...storedVisits].sort(
     // @ts-expect-error
     (a, b) => new Date(b.visitedAt) - new Date(a.visitedAt),
   );
