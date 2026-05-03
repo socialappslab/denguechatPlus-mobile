@@ -27,7 +27,6 @@ export function SimpleBottomSheet(props: SimpleBottomSheetProps) {
   };
 
   const handleSheetChanges = (index: number) => {
-    console.log("handleSheetChanges", index);
     if (index < 0) {
       bottomSheetRef.current?.snapToIndex(0);
     }

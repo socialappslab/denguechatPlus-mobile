@@ -12,11 +12,10 @@ import {
   BottomSheetBackdrop,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import useAxios from "axios-hooks";
 import { Image } from "expo-image";
 import { KeyboardAccessoryView } from "react-native-keyboard-accessory";
 import { BottomSheetScrollViewMethods } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types";
+import { useQuery } from "@tanstack/react-query";
 
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -36,7 +35,7 @@ import Toast from "react-native-toast-message";
 
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { Loading, SimpleTextInput, Text, View } from "@/components/themed";
-import { commentSchema, ErrorResponse, CommentInputType } from "@/schema";
+import { commentSchema, CommentInputType } from "@/schema";
 import { Post } from "@/types";
 import CloseCircle from "@/assets/images/icons/close-circle.svg";
 import CommentItem from "@/components/segments/CommentItem";
@@ -49,7 +48,7 @@ import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { Button } from "@/components/themed";
 
 export type CommentsSheetProps = ThemeProps & {
-  bottomSheetModalRef: React.RefObject<BottomSheetModalMethods | null>;
+  bottomSheetModalRef: React.RefObject<BottomSheetModal | null>;
   postId?: number;
   updateCommentCount: (diff: number) => void;
 };
@@ -92,16 +91,23 @@ export default function CommentsSheet(props: CommentsSheetProps) {
 
   const [state, setState] = useState<CommentsState>({});
 
-  const [{ data, loading }, refetchPost] = useAxios<
-    ExistingDocumentObject,
-    unknown,
-    ErrorResponse
-  >(
-    {
-      url: `posts/${postId}`,
+  const {
+    data,
+    isFetching: loading,
+    refetch: refetchPost,
+  } = useQuery({
+    queryKey: ["post", postId],
+    enabled: false,
+    queryFn: async () => {
+      if (!postId) throw new Error("Expected postId to be defined");
+
+      const { data } = await axios.get<ExistingDocumentObject>(
+        `posts/${postId}`,
+      );
+
+      return data;
     },
-    { manual: true },
-  );
+  });
 
   const methods = useForm<CommentInputType>({
     resolver: zodResolver(commentSchema),
@@ -184,7 +190,6 @@ export default function CommentsSheet(props: CommentsSheetProps) {
       setPost(null);
       setState({});
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   useEffect(() => {
