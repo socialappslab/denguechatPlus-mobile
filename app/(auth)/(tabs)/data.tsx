@@ -24,13 +24,14 @@ import {
 } from "react-native-gifted-charts";
 import { useTranslation } from "react-i18next";
 import {
+  Host as AndroidHost,
   SegmentedButton,
   SingleChoiceSegmentedButtonRow,
 } from "@expo/ui/jetpack-compose";
 import {
-  Host,
+  Host as IOSHost,
   Picker as IOSPicker,
-  Text as SwiftText,
+  Text as IOSText,
 } from "@expo/ui/swift-ui";
 import { pickerStyle, tag } from "@expo/ui/swift-ui/modifiers";
 import moment from "moment";
@@ -647,39 +648,43 @@ function Picker({ options, value, setValue }: PickerProps) {
   switch (Platform.OS) {
     case "android":
       return (
-        <SingleChoiceSegmentedButtonRow>
-          {options.map((label, index) => (
-            <SegmentedButton
-              key={label}
-              selected={value === index}
-              onClick={() => setValue(index)}
-              colors={{
-                activeContentColor: "#FFFFFF",
-                activeContainerColor: COLORS_MAP.green,
-                inactiveContainerColor: "#F1FCF2",
-                inactiveContentColor: "#000000",
-              }}
-            >
-              <SegmentedButton.Label>{label}</SegmentedButton.Label>
-            </SegmentedButton>
-          ))}
-        </SingleChoiceSegmentedButtonRow>
+        <AndroidHost matchContents>
+          <SingleChoiceSegmentedButtonRow>
+            {options.map((label, index) => (
+              <SegmentedButton
+                key={label}
+                selected={value === index}
+                onClick={() => setValue(index)}
+                colors={{
+                  activeContentColor: "#FFFFFF",
+                  activeContainerColor: COLORS_MAP.green,
+                  inactiveContainerColor: "#F1FCF2",
+                  inactiveContentColor: "#000000",
+                }}
+              >
+                <SegmentedButton.Label>
+                  <Text>{label}</Text>
+                </SegmentedButton.Label>
+              </SegmentedButton>
+            ))}
+          </SingleChoiceSegmentedButtonRow>
+        </AndroidHost>
       );
     case "ios":
       return (
-        <Host style={{ width: "100%", height: 32 }}>
+        <IOSHost style={{ width: "100%", height: 32 }}>
           <IOSPicker
             selection={value}
             onSelectionChange={(selection) => setValue(selection as number)}
             modifiers={[pickerStyle("segmented")]}
           >
             {options.map((label, index) => (
-              <SwiftText key={label} modifiers={[tag(index)]}>
+              <IOSText key={label} modifiers={[tag(index)]}>
                 {label}
-              </SwiftText>
+              </IOSText>
             ))}
           </IOSPicker>
-        </Host>
+        </IOSHost>
       );
     default:
       return <Text>Unsupported Platform</Text>;
