@@ -4,7 +4,7 @@ const config: ExpoConfig = {
   name: "DengueChatPlus",
   slug: "dengue-chat-plus",
   scheme: "org.denguechat.plus",
-  version: "1.12.0",
+  version: "1.12.1",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   ios: {
@@ -23,6 +23,7 @@ const config: ExpoConfig = {
     "expo-router",
     "expo-font",
     "expo-asset",
+    "expo-image",
     "expo-localization",
     "expo-secure-store",
     "expo-web-browser",

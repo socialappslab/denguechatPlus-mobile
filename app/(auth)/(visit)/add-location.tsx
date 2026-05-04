@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Platform } from "react-native";
-import useAxios from "axios-hooks";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, {
+  Marker,
+  MarkerDragStartEndEvent,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import { useTranslation } from "react-i18next";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
@@ -17,23 +20,42 @@ import CustomMarker from "@/components/icons/CustomMarker";
 import NoMap from "@/assets/images/no-internet-map.svg";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { useStore } from "@/hooks/useStore";
+import { useQuery } from "@tanstack/react-query";
+import { axios } from "@/config/axios";
 
-const AddLocation = () => {
+function useAddressQuery(coordinates: { latitude: number; longitude: number }) {
+  interface AddressResponse {
+    address: { address: string };
+  }
+
+  return useQuery({
+    queryKey: ["add-location", coordinates],
+    queryFn: async () => {
+      const { data } = await axios.get<AddressResponse>("/get_address", {
+        params: coordinates,
+      });
+
+      return data;
+    },
+  });
+}
+
+export default function AddLocation() {
   const { t } = useTranslation();
   const { isInternetReachable } = useNetInfo();
   const setVisitData = useStore((state) => state.setVisitData);
   const router = useRouter();
 
-  const [location, setLocation] = useState<Location.LocationObject>();
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null,
+  );
   const [address, setAddress] = useState<string>("");
   const [status, requestPermission] = Location.useForegroundPermissions();
   const mapRef = useRef<MapView>(null);
 
   useEffect(() => {
-    console.log("status location", status);
     if (status?.status === "granted") {
       Location.getCurrentPositionAsync({}).then((location) => {
-        console.log("location", location);
         setLocation(location);
       });
     } else if (status?.status === "undetermined") {
@@ -51,7 +73,6 @@ const AddLocation = () => {
   useEffect(() => {
     if (location?.coords) {
       const { latitude, longitude } = location.coords;
-      console.log("location", latitude, longitude);
 
       setMarkerCoords({ latitude, longitude });
       mapRef.current?.animateToRegion({
@@ -63,25 +84,21 @@ const AddLocation = () => {
     }
   }, [location]);
 
-  const [{ data, error }, refetch] = useAxios({
-    url: `/get_address?latitude=${markerCoords.latitude}&longitude=${markerCoords.longitude}`,
-  });
+  const { data, error, refetch } = useAddressQuery(markerCoords);
 
   useEffect(() => {
     if (data) {
       const { address } = data;
-      console.log("address>>", address);
       setAddress(address?.address);
     }
   }, [data]);
 
-  const handleDragEnd = (e: any) => {
-    const { latitude, longitude } = e.nativeEvent.coordinate;
-    console.log("handleDragEnd", latitude, longitude);
-    setMarkerCoords({ latitude, longitude });
-  };
+  function handleDragEnd(e: MarkerDragStartEndEvent) {
+    const coords = e.nativeEvent.coordinate;
+    setMarkerCoords(coords);
+  }
 
-  const handleConfirmAddress = () => {
+  function handleConfirmAddress() {
     if (status?.status === "granted" && location?.coords) {
       if (isInternetReachable) {
         setVisitData({
@@ -109,15 +126,11 @@ const AddLocation = () => {
     }
 
     router.back();
-  };
-
-  const handleRetry = () => {
-    refetch();
-  };
+  }
 
   return (
     <View className="flex flex-1">
-      {isInternetReachable && !Boolean(error) && (
+      {isInternetReachable && !error && (
         <MapView
           ref={mapRef}
           provider={PROVIDER_GOOGLE}
@@ -129,12 +142,9 @@ const AddLocation = () => {
             longitudeDelta: 0.0421,
           }}
         >
-          <Marker
-            coordinate={markerCoords}
-            draggable
-            onDragEnd={handleDragEnd}
-            children={Platform.OS === "ios" ? <CustomMarker /> : null}
-          />
+          <Marker coordinate={markerCoords} draggable onDragEnd={handleDragEnd}>
+            {Platform.OS === "ios" ? <CustomMarker /> : null}
+          </Marker>
         </MapView>
       )}
       {(!isInternetReachable || Boolean(error)) && (
@@ -147,7 +157,12 @@ const AddLocation = () => {
             {t("visit.newHouse.noMapConnection")}
           </Text>
           <View className="w-2/3">
-            <Button title={t("retry")} onPress={handleRetry} />
+            <Button
+              title={t("retry")}
+              onPress={() => {
+                refetch();
+              }}
+            />
           </View>
         </View>
       )}
@@ -178,6 +193,4 @@ const AddLocation = () => {
       </SimpleBottomSheet>
     </View>
   );
-};
-
-export default AddLocation;
+}

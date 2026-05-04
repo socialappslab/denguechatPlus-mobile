@@ -5,7 +5,6 @@ import { Alert, Linking, Platform } from "react-native";
 import i18n from "./i18n";
 import invariant from "tiny-invariant";
 import useSessionStore from "@/hooks/useSessionStore";
-import { configure } from "axios-hooks";
 import { logout } from "@/util";
 
 invariant(
@@ -91,9 +90,5 @@ axios.interceptors.response.use(undefined, (error) => {
 
   return Promise.reject(error);
 });
-
-// NOTE: Configure axios-hooks, remove this after migrating all requests to
-// TanStack Query
-configure({ axios, cache: false });
 
 export { axios };

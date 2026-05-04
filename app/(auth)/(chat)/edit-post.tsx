@@ -18,15 +18,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
-import useAxios from "axios-hooks";
+import { useQuery } from "@tanstack/react-query";
 
-import {
-  postSchema,
-  ErrorResponse,
-  PostInputType,
-  PostVisibility,
-  Team,
-} from "@/schema";
+import { postSchema, PostInputType, PostVisibility, Team } from "@/schema";
 
 import {
   Text,
@@ -37,9 +31,9 @@ import {
   Loading,
   SelectorButton,
   SelectableItem,
+  Button,
 } from "@/components/themed";
 import { getInitialsBase } from "@/util";
-import { Button } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import Media from "@/components/icons/Media";
 import { axios } from "@/config/axios";
@@ -65,16 +59,23 @@ export default function EditPost() {
 
   const params = useLocalSearchParams();
 
-  const [{ data, loading: loadingPost }, refetchPost] = useAxios<
-    ExistingDocumentObject,
-    unknown,
-    ErrorResponse
-  >(
-    {
-      url: `posts/${params?.id}`,
+  const {
+    data,
+    isFetching: loadingPost,
+    refetch: refetchPost,
+  } = useQuery({
+    queryKey: ["post", params.id],
+    enabled: false,
+    queryFn: async () => {
+      if (!params.id) throw new Error("Expected post id to be defined");
+
+      const { data } = await axios.get<ExistingDocumentObject>(
+        `posts/${params.id}`,
+      );
+
+      return data;
     },
-    { manual: true },
-  );
+  });
 
   useEffect(() => {
     if (!data) return;

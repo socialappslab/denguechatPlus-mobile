@@ -155,7 +155,6 @@ export default function SelectBrigade() {
     if (isFocused) {
       firstLoad();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, filters]);
 
   const renderItem: ListRenderItem<Team> = ({ item: team }) => {
