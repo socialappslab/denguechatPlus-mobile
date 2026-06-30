@@ -4,7 +4,6 @@ import moment from "moment";
 
 import { ErrorResponse } from "@/schema";
 import { FilterData } from "@/context/BrigadeContext";
-import { IUser } from "@/schema/auth";
 import useSessionStore from "@/hooks/useSessionStore";
 import { useStore } from "@/hooks/useStore";
 import { LOG } from "./logger";
