@@ -432,6 +432,8 @@ export interface TeamResponse {
       name: string;
       members: {
         id: number;
+        userAccountId?: number;
+        userProfileId?: number;
         fullName: string;
         rol: "admin" | "brigadista" | "facilitador";
       }[];

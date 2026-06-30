@@ -279,7 +279,7 @@ export default function Visits() {
       team.data?.data.attributes.members
         .map((member) => ({
           label: member.fullName,
-          value: member.id,
+          value: member.userAccountId ?? member.id,
           // https://github.com/lawnstarter/react-native-picker-select/issues/169#issuecomment-484954440
           color: "black",
         }))
@@ -311,10 +311,18 @@ export default function Visits() {
     // https://denguechat.atlassian.net/browse/DNG-1015
     // We can remove this after the release and forcing the version to whatever
     // the version of the app that includes this fix ends up being
-    if (ownerOfVisits === null) {
-      setOwnerOfVisits(userProfile!.id);
+    if (!teamMemberOptions.length || !userProfile?.id) {
+      return;
     }
-  }, [ownerOfVisits, setOwnerOfVisits, userProfile]);
+
+    const hasSelectedOwner = teamMemberOptions.some(
+      (member) => member.value === ownerOfVisits,
+    );
+
+    if (ownerOfVisits == null || !hasSelectedOwner) {
+      setOwnerOfVisits(userProfile.id);
+    }
+  }, [ownerOfVisits, setOwnerOfVisits, teamMemberOptions, userProfile]);
 
   async function onRefresh() {
     try {
