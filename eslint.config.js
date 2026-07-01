@@ -9,4 +9,10 @@ module.exports = defineConfig([
   {
     ignores: ["dist/*"],
   },
+  {
+    rules: {
+      "react-hooks/refs": "warn",
+      "react-hooks/set-state-in-effect": "warn",
+    },
+  },
 ]);

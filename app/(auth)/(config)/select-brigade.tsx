@@ -8,7 +8,7 @@ import {
   Platform,
   RefreshControl,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "expo-router/react-navigation";
 import * as Sentry from "@sentry/react-native";
 import { useDebounceCallback } from "usehooks-ts";
 

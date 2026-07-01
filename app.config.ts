@@ -26,6 +26,7 @@ const config: ExpoConfig = {
     "expo-image",
     "expo-localization",
     "expo-secure-store",
+    "expo-status-bar",
     "expo-web-browser",
     [
       "expo-splash-screen",

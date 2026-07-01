@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { DrawerToggleButton } from "@react-navigation/drawer";
+import { DrawerToggleButton } from "expo-router/drawer";
 
 import Colors from "@/constants/Colors";
 import BubbleIcon from "@/assets/images/icons/bubble.svg";

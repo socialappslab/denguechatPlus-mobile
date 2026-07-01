@@ -15,7 +15,7 @@ import {
   FormProvider,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "expo-router/react-navigation";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 import { postSchema, PostInputType, PostVisibility, Team } from "@/schema";
