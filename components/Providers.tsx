@@ -1,4 +1,4 @@
-import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { DefaultTheme, ThemeProvider } from "expo-router/react-navigation";
 import { PropsWithChildren } from "react";
 import { BrigadeProvider } from "@/context/BrigadeContext";
 import { FilterProvider } from "@/context/FilterContext";

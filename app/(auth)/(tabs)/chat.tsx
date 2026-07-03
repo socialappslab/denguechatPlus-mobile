@@ -9,7 +9,7 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "expo-router/react-navigation";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Toast from "react-native-toast-message";
 import * as Sentry from "@sentry/react-native";
@@ -71,12 +71,6 @@ export default function Chat() {
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const router = useRouter();
-
-  useEffect(() => {
-    if (isFocused) {
-      firstLoad();
-    }
-  }, [isFocused]);
 
   const fetchData = async (page: number, teamId?: number) => {
     setError("");
@@ -223,6 +217,12 @@ export default function Chat() {
     );
     setUnmountOptions(false);
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      firstLoad();
+    }
+  }, [isFocused]);
 
   const handlePressLike = async (id: number) => {
     try {

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { deserialize } from "jsonapi-fractal";
 import { Platform, StatusBar } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "expo-router/react-navigation";
 
 import { BaseObject, Team } from "@/schema";
 import {

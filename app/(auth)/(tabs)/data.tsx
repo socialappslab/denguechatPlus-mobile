@@ -11,10 +11,10 @@ import { useStore } from "@/hooks/useStore";
 import { useQuery } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useState } from "react";
 import {
-  useWindowDimensions,
-  View,
   Platform,
   RefreshControl,
+  useWindowDimensions,
+  View,
 } from "react-native";
 import {
   BarChart,
@@ -27,6 +27,7 @@ import {
   Host as AndroidHost,
   SegmentedButton,
   SingleChoiceSegmentedButtonRow,
+  Text as AndroidText,
 } from "@expo/ui/jetpack-compose";
 import {
   Host as IOSHost,
@@ -648,7 +649,10 @@ function Picker({ options, value, setValue }: PickerProps) {
   switch (Platform.OS) {
     case "android":
       return (
-        <AndroidHost matchContents>
+        <AndroidHost
+          matchContents={{ vertical: true }}
+          style={{ width: "100%" }}
+        >
           <SingleChoiceSegmentedButtonRow>
             {options.map((label, index) => (
               <SegmentedButton
@@ -663,7 +667,7 @@ function Picker({ options, value, setValue }: PickerProps) {
                 }}
               >
                 <SegmentedButton.Label>
-                  <Text>{label}</Text>
+                  <AndroidText>{label}</AndroidText>
                 </SegmentedButton.Label>
               </SegmentedButton>
             ))}
