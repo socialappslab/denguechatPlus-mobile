@@ -1,4 +1,4 @@
-import ax, { AxiosError, HttpStatusCode } from "axios";
+import ax, { HttpStatusCode } from "axios";
 import * as Application from "expo-application";
 
 import { Alert, Linking, Platform } from "react-native";
@@ -39,7 +39,7 @@ axios.interceptors.request.use(
 let isAlertAlreadyOpen = false;
 axios.interceptors.response.use(undefined, (error) => {
   if (
-    error instanceof AxiosError &&
+    ax.isAxiosError(error) &&
     error.status === HttpStatusCode.UpgradeRequired &&
     !isAlertAlreadyOpen
   ) {
@@ -81,7 +81,7 @@ axios.interceptors.response.use(undefined, (error) => {
 
 axios.interceptors.response.use(undefined, (error) => {
   if (
-    error instanceof AxiosError &&
+    ax.isAxiosError(error) &&
     (error.status === HttpStatusCode.Unauthorized ||
       error.status === HttpStatusCode.Forbidden)
   ) {

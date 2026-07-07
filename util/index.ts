@@ -4,7 +4,6 @@ import moment from "moment";
 
 import { ErrorResponse } from "@/schema";
 import { FilterData } from "@/context/BrigadeContext";
-import { IUser } from "@/schema/auth";
 import useSessionStore from "@/hooks/useSessionStore";
 import { useStore } from "@/hooks/useStore";
 import { LOG } from "./logger";
@@ -85,16 +84,16 @@ export function formatDatePosts(
   }
 }
 
-export const getInitialsBase = (firstName: string, lastName: string) => {
-  const firstInitial =
-    firstName.length > 1 ? firstName.charAt(0).toUpperCase() : "";
-  const lastInitial =
-    lastName.length > 1 ? lastName.charAt(0).toUpperCase() : "";
+export const getInitialsBase = (firstName = "", lastName = "") => {
+  const trimmedFirstName = firstName.trim();
+  const trimmedLastName = lastName.trim();
+  const firstInitial = trimmedFirstName.charAt(0).toUpperCase();
+  const lastInitial = trimmedLastName.charAt(0).toUpperCase();
   return `${firstInitial}${lastInitial}`;
 };
 
 export const getInitials = (fullName: string) => {
-  const [firstName = "", lastName = ""] = fullName.split(" ");
+  const [firstName = "", lastName = ""] = fullName.trim().split(/\s+/);
   return getInitialsBase(firstName, lastName);
 };
 

@@ -239,7 +239,7 @@ interface VisitAttributes {
   familyEducationTopics: string[];
   otherFamilyEducationTopic?: string;
   /**
-   * Can be `null`, because when we added this feature, we didn't knew the
+   * Can be `null`, because when we added this feature, we didn't know the
    * correct value for existing records and defaulting to `false` was going to
    * mess up the data.
    */
@@ -432,6 +432,8 @@ export interface TeamResponse {
       name: string;
       members: {
         id: number;
+        userAccountId?: number;
+        userProfileId?: number;
         fullName: string;
         rol: "admin" | "brigadista" | "facilitador";
       }[];

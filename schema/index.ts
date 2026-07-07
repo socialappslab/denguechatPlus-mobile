@@ -39,6 +39,8 @@ export interface Organization extends BaseWithStatus {}
 
 export interface Member {
   id: number;
+  userAccountId?: number;
+  userProfileId?: number;
   first_name: string;
   last_name: string;
   firstName: string;

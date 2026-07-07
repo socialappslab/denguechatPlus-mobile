@@ -1,13 +1,15 @@
 # AGENTS.md - DengueChat Plus Mobile
 
 ## Commands
+
 - **Start**: `yarn start` (Expo dev server)
 - **Lint**: `yarn lint` / `yarn lint:fix`
 - **TypeCheck**: `npx tsc --noEmit`
 - **Build iOS/Android**: `yarn ios` / `yarn android`
 
 ## Architecture
-- **Framework**: Expo SDK 54 with Expo Router (file-based routing in `app/`)
+
+- **Framework**: Expo SDK 55 with Expo Router (file-based routing in `app/`)
 - **State**: Zustand with immer middleware (`hooks/useStore.ts`), React Query for server state
 - **API**: Axios configured in `config/axios.ts`, base URL from `EXPO_PUBLIC_API_URL`
 - **Styling**: NativeWind (TailwindCSS for React Native)
@@ -15,6 +17,7 @@
 - **Forms**: react-hook-form with zod validation (`schema/`)
 
 ## Code Style
+
 - TypeScript with strict mode, use `@/*` path alias for imports
 - Prettier: double quotes, trailing commas, 2-space indent, semicolons
 - Components in `components/`, hooks in `hooks/`, types in `types/`

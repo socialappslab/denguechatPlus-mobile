@@ -119,7 +119,10 @@ export default function Login() {
 
       const response = await logIn.mutateAsync(payload);
       setSession(response.meta.jwt.res);
-      const user = response.data.attributes;
+      const user = {
+        ...response.data.attributes,
+        id: Number(response.data.id),
+      };
       setUser(user);
       setOwnerOfVisits(user.id);
       LOG.info(`Logged in with user: ${payload.username}`);

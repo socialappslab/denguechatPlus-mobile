@@ -23,7 +23,7 @@ import * as Sentry from "@sentry/react-native";
 
 import { deserialize, ExistingDocumentObject } from "jsonapi-fractal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "expo-router/react-navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   useForm,
