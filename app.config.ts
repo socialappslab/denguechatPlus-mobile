@@ -28,6 +28,7 @@ const config: ExpoConfig = {
     "expo-secure-store",
     "expo-status-bar",
     "expo-web-browser",
+    "@rnrepo/expo-config-plugin",
     [
       "expo-splash-screen",
       {
