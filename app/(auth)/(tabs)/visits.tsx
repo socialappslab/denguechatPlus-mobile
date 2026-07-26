@@ -20,7 +20,7 @@ import { axios } from "@/config/axios";
 import Colors from "@/constants/Colors";
 import { QuestionnaireState, useStore } from "@/hooks/useStore";
 import { BaseObject, Team } from "@/schema";
-import { TeamResponse, VisitData } from "@/types";
+import { TeamResponse, VisitResponse } from "@/types";
 import { calculatePercentage, countSetFilters, formatDate } from "@/util";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -229,7 +229,7 @@ function useReportsQuery(
 function useCreateVisitMutation() {
   return useMutation({
     mutationFn: (data: FormData) => {
-      return axios.post<VisitData>("/visits", data, {
+      return axios.post<VisitResponse>("/visits", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

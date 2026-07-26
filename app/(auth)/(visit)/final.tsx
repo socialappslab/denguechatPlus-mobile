@@ -6,45 +6,35 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { useStore } from "@/hooks/useStore";
-import { ResourceName, StatusColor } from "@/types";
-import { useResourceData } from "@/hooks/useResourceData";
 import ConfettiImage from "@/assets/images/confetti.svg";
+import { PointAward } from "@/types";
 
-function useTarikiStatusModal() {
-  const storedHouseList = useStore((state) => state.storedHouseList);
-  const visitId = useStore((state) => state.visitId);
-  const resourceData = useResourceData(ResourceName.AppConfigParam);
+function parsePointAwards(value: string | string[] | undefined): PointAward[] {
+  const serializedAwards = Array.isArray(value) ? value[0] : value;
+  if (!serializedAwards) return [];
 
-  const consecutiveGreenVisitsForTarikiStatus = useMemo(
-    () =>
-      resourceData.find(
-        (item) => item.name === "consecutive_green_statuses_for_tariki_house",
-      ),
-    [resourceData],
-  )!;
+  try {
+    const awards: unknown = JSON.parse(serializedAwards);
+    if (!Array.isArray(awards)) return [];
 
-  // NOTE: `n - 1` here, the current visit is the `n`th.
-  const consecutiveGreenVisitsForTarikiStatusValue =
-    Number(consecutiveGreenVisitsForTarikiStatus.value) - 1;
+    return awards.filter((award): award is PointAward => {
+      if (!award || typeof award !== "object") return false;
 
-  const { houseColor } = useLocalSearchParams();
+      const candidate = award as Partial<PointAward>;
+      return (
+        (candidate.recipient === "brigadist" ||
+          candidate.recipient === "brigade") &&
+        typeof candidate.amount === "number" &&
+        candidate.reason === "tariki_reached"
+      );
+    });
+  } catch {
+    return [];
+  }
+}
 
+function useTarikiStatusModal(shouldShowModal: boolean) {
   const modalRef = useRef<BottomSheetModal>(null);
-
-  const houseId = Number(visitId.split("-")[1]);
-  /**
-   * TODO: Get rid of this global state, and get the data needed from TanStack
-   * Query's cache or something like that.
-   */
-  const currentHouse = storedHouseList.find((house) => house.id === houseId);
-
-  if (!currentHouse) throw new Error("House not found");
-
-  const shouldShowModal =
-    currentHouse.consecutiveGreenStatus >=
-      consecutiveGreenVisitsForTarikiStatusValue &&
-    houseColor === StatusColor.NotInfected;
 
   useEffect(() => {
     if (shouldShowModal) {
@@ -60,23 +50,15 @@ export default function Final() {
 
   const { t } = useTranslation();
   const { isInternetReachable } = useNetInfo();
-  const tarikiStatusModalRef = useTarikiStatusModal();
+  const params = useLocalSearchParams();
+  const pointAwards = parsePointAwards(params.pointAwards);
+  const tarikiStatusModalRef = useTarikiStatusModal(pointAwards.length > 0);
 
   const prefix = isInternetReachable ? "online" : "offline";
-
-  const resourceData = useResourceData(ResourceName.AppConfigParam);
-
-  const brigadistPoints = useMemo(
-    () =>
-      resourceData.find(
-        (item) => item.name === "green_house_points_user_account",
-      )!,
-    [resourceData],
-  );
-  const brigadePoints = useMemo(
-    () => resourceData.find((item) => item.name === "green_house_points_team")!,
-    [resourceData],
-  );
+  const brigadistPoints =
+    pointAwards.find((award) => award.recipient === "brigadist")?.amount ?? 0;
+  const brigadePoints =
+    pointAwards.find((award) => award.recipient === "brigade")?.amount ?? 0;
 
   const snapPoints = useMemo(() => [460], []);
 
@@ -120,9 +102,7 @@ export default function Final() {
               <ConfettiImage className="absolute inset-0 opacity-80" />
 
               <View className="rounded-full border-[16px] border-primary aspect-square p-6 items-center justify-center">
-                <Text className="text-3xl font-bold">
-                  {brigadistPoints.value}
-                </Text>
+                <Text className="text-3xl font-bold">{brigadistPoints}</Text>
                 <Text className="">
                   {t("visit.final.tarikiStatusModal.points")}
                 </Text>
@@ -133,8 +113,8 @@ export default function Final() {
               </Text>
               <Text className="text-center mt-2 text-gray-800">
                 {t("visit.final.tarikiStatusModal.description", {
-                  brigadistPoints: brigadistPoints.value,
-                  brigadePoints: brigadePoints.value,
+                  brigadistPoints,
+                  brigadePoints,
                 })}
               </Text>
             </View>
