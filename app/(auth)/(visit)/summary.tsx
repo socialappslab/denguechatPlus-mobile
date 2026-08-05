@@ -1,7 +1,7 @@
 import { Button, SafeAreaView, ScrollView, View } from "@/components/themed";
 import VisitSummary from "@/components/VisitSummary";
 import { useStore } from "@/hooks/useStore";
-import { VisitData } from "@/types";
+import { PointAward, VisitResponse } from "@/types";
 import { Inspection, StatusColor } from "@/types/prepareFormData";
 import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
 import { useRouter } from "expo-router";
@@ -76,7 +76,7 @@ const getColorsAndQuantities = (inspections: Inspection[]) => {
 function useCreateVisitMutation() {
   return useMutation({
     mutationFn: (data: FormData) => {
-      return axios.post<VisitData>("/visits", data, {
+      return axios.post<VisitResponse>("/visits", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -149,6 +149,7 @@ export default function Summary() {
     VISITS_LOG.debug("Payload prepared for the server", sanitizedVisitData);
 
     try {
+      let pointAwards: PointAward[] = [];
       // We only make the request if it's connected
       if (isInternetReachable) {
         const form = new FormData();
@@ -161,7 +162,8 @@ export default function Summary() {
             type: "image/jpeg",
           });
         }
-        await createVisit.mutateAsync(form);
+        const response = await createVisit.mutateAsync(form);
+        pointAwards = response.data.data.attributes.pointAwards ?? [];
         await deleteInspectionPhotosFromVisit(visitId);
         VISITS_LOG.info("Visit sent to the server successfully");
       }
@@ -172,7 +174,7 @@ export default function Summary() {
       router.push({
         pathname: "/final",
         params: {
-          houseColor: mainStatusColor,
+          pointAwards: JSON.stringify(pointAwards),
         },
       });
       // Cleanup, if it's not connected we send house details

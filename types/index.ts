@@ -250,6 +250,21 @@ export interface VisitData extends VisitAttributes {
   answers: FormState;
 }
 
+export interface PointAward {
+  recipient: "brigadist" | "brigade";
+  amount: number;
+  reason: "tariki_reached";
+}
+
+export interface VisitResponse {
+  data: {
+    attributes: {
+      /** Optional while the mobile release rolls out ahead of the backend. */
+      pointAwards?: PointAward[];
+    };
+  };
+}
+
 /*
   A HashMap to access a given house's Visit Data
 */
@@ -294,7 +309,6 @@ export enum ResourceName {
   EliminationMethodTypes = "elimination_method_types",
   WaterSourceTypes = "water_source_types",
   SpecialPlaces = "special_places",
-  AppConfigParam = "AppConfigParam",
 }
 
 export enum HouseBlockType {
@@ -322,39 +336,11 @@ interface ResourceSpecialPlaces extends ResourceCommon {
   resourceData: ResourceDataSpecialPlace[];
 }
 
-interface ResourceAppConfigParam extends ResourceCommon {
-  resourceName: ResourceName.AppConfigParam;
-  resourceData: [
-    {
-      name: "green_house_points_user_account";
-      description: string;
-      param_source: "TarikiPoint";
-      param_type: "integer";
-      value: string;
-    },
-    {
-      name: "green_house_points_team";
-      description: string;
-      param_source: "TarikiPoint";
-      param_type: "integer";
-      value: string;
-    },
-    {
-      name: "consecutive_green_statuses_for_tariki_house";
-      description: string;
-      param_source: "TarikiPoint";
-      param_type: "integer";
-      value: string;
-    },
-  ];
-}
-
 export type Resources = [
   ResourceBreedingSiteTypes,
   ResourceEliminationMethodTypes,
   ResourceWaterSourceTypes,
   ResourceSpecialPlaces,
-  ResourceAppConfigParam,
 ];
 
 export interface Comment {
