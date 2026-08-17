@@ -6,8 +6,8 @@ import Separator from "@/components/Separator";
 import { StatusColor } from "@/types";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
-import CircularProgress from "react-native-circular-progress-indicator";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { CircularCounter, CircularCounterValue } from "./ui/circular-counter";
 
 const statusToAssets = {
   RED: {
@@ -24,6 +24,12 @@ const statusToAssets = {
   },
 };
 
+const statusToCounterClasses = {
+  RED: { border: "border-red-600", value: "text-red-600" },
+  GREEN: { border: "border-verde-700", value: "text-verde-700" },
+  YELLOW: { border: "border-yellow-400", value: "text-yellow-400" },
+};
+
 export interface VisitSummaryProps {
   date: string;
   color?: StatusColor;
@@ -35,7 +41,7 @@ export interface VisitSummaryProps {
   permissionToVisitGranted: boolean;
 }
 
-const IconStatus = ({ color }: { color: keyof typeof statusToAssets }) => {
+function IconStatus({ color }: { color: keyof typeof statusToAssets }) {
   const styles = StyleSheet.create({
     circle: { backgroundColor: statusToAssets[color].color },
   });
@@ -48,9 +54,34 @@ const IconStatus = ({ color }: { color: keyof typeof statusToAssets }) => {
       {statusToAssets[color].image}
     </View>
   );
-};
+}
 
-function VisitSummary({
+function ContainerCounter({
+  count,
+  status,
+}: {
+  count: number;
+  status: keyof typeof statusToCounterClasses;
+}) {
+  const { t } = useTranslation();
+  // A count of zero is a result, not an alert, so it keeps the neutral default
+  const classes = count > 0 ? statusToCounterClasses[status] : undefined;
+
+  return (
+    <View className="flex flex-1 items-center justify-center">
+      <CircularCounter className={classes?.border}>
+        <CircularCounterValue className={classes?.value}>
+          {count}
+        </CircularCounterValue>
+      </CircularCounter>
+      <Text className="mt-2 text-center" type="small">
+        {t(`visit.summary.statusColor.${status.toLocaleLowerCase()}`)}
+      </Text>
+    </View>
+  );
+}
+
+export default function VisitSummary({
   date,
   sector,
   house,
@@ -135,52 +166,11 @@ function VisitSummary({
         </Text>
 
         <View className="flex align-center flex-row justify-between">
-          <View className="flex flex-1 items-center justify-center ">
-            <CircularProgress
-              value={greens}
-              maxValue={1}
-              radius={35}
-              duration={0}
-              activeStrokeColor="#00A300"
-              activeStrokeWidth={8}
-              inActiveStrokeWidth={8}
-            />
-            <Text className="mt-2 text-center" type="small">
-              {t("visit.summary.statusColor.green")}
-            </Text>
-          </View>
-          <View className="flex flex-1 items-center justify-center">
-            <CircularProgress
-              value={yellows}
-              maxValue={1}
-              radius={35}
-              duration={0}
-              activeStrokeColor="#FCC914"
-              activeStrokeWidth={8}
-              inActiveStrokeWidth={8}
-            />
-            <Text className="mt-2 text-center" type="small">
-              {t("visit.summary.statusColor.yellow")}
-            </Text>
-          </View>
-          <View className="flex flex-1 items-center justify-center">
-            <CircularProgress
-              duration={0}
-              value={reds}
-              maxValue={1}
-              radius={35}
-              activeStrokeWidth={8}
-              inActiveStrokeWidth={8}
-              activeStrokeColor="#FC0606"
-            />
-            <Text className="mt-2 text-center" type="small">
-              {t("visit.summary.statusColor.red")}
-            </Text>
-          </View>
+          <ContainerCounter count={greens} status="GREEN" />
+          <ContainerCounter count={yellows} status="YELLOW" />
+          <ContainerCounter count={reds} status="RED" />
         </View>
       </View>
     </View>
   );
 }
-
-export default VisitSummary;
