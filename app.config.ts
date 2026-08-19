@@ -1,23 +1,23 @@
 import { ExpoConfig } from "expo/config";
 
+import { version } from "./package.json";
+
 const config: ExpoConfig = {
   name: "DengueChatPlus",
   slug: "dengue-chat-plus",
   scheme: "org.denguechat.plus",
-  version: "1.13.0",
+  version,
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   ios: {
     supportsTablet: true,
     bundleIdentifier: "org.denguechatplus",
-    buildNumber: "1",
     config: {
       usesNonExemptEncryption: false,
     },
   },
   android: {
     package: "org.denguechatplus",
-    versionCode: 1,
   },
   plugins: [
     "expo-router",
