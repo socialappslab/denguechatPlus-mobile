@@ -1716,7 +1716,7 @@
     slash "^3.0.0"
     strip-ansi "^6.0.0"
 
-"@jest/create-cache-key-function@^29.2.1":
+"@jest/create-cache-key-function@^29.2.1", "@jest/create-cache-key-function@^29.7.0":
   version "29.7.0"
   resolved "https://registry.yarnpkg.com/@jest/create-cache-key-function/-/create-cache-key-function-29.7.0.tgz#793be38148fab78e65f40ae30c36785f4ad859f0"
   integrity sha512-4QqS3LY5PBmTRHj9sAg1HLoPzqAI0uOX6wI/TRqHIcOxlFidy6YEmCQJk6FSZjNLGCeubDMfmkWL+qaLKhSGQA==
@@ -2698,10 +2698,26 @@
   resolved "https://registry.yarnpkg.com/@react-native/gradle-plugin/-/gradle-plugin-0.86.0.tgz#a712a39ac1514e72740764440ecd763a17ef500f"
   integrity sha512-a1RcfaEDqWExCGfCwadIxt4l8FvKYgFqeMf2uzeKyAOnb+vTGNIeCvifFL2MqvgaeYxlER437HbMIajGcuJ1pQ==
 
+"@react-native/jest-preset@^0.86.0":
+  version "0.86.2"
+  resolved "https://registry.yarnpkg.com/@react-native/jest-preset/-/jest-preset-0.86.2.tgz#11857e29d578a4f32bcf6a28fa3df32a25c3300d"
+  integrity sha512-wneoqwKWdv6wIcWotVgp6NMlMWcJDjxDnp7fVYym2Pn6JLgAKgkbmuHGmxW0cLCGoa9wtcO680uciv+Kzx0G7w==
+  dependencies:
+    "@jest/create-cache-key-function" "^29.7.0"
+    "@react-native/js-polyfills" "0.86.2"
+    babel-jest "^29.7.0"
+    jest-environment-node "^29.7.0"
+    regenerator-runtime "^0.13.2"
+
 "@react-native/js-polyfills@0.86.0":
   version "0.86.0"
   resolved "https://registry.yarnpkg.com/@react-native/js-polyfills/-/js-polyfills-0.86.0.tgz#d289e1720f79c31291b1e27c39e9fa153309692a"
   integrity sha512-zYy/Cjd1VTnZ2iCNaG9bDF9C3l2ntESiPRscjIlI5FKugu6aeTwsDSv1aI8Bc4Kp3vEdoVg+UQhLAhE4svREaQ==
+
+"@react-native/js-polyfills@0.86.2":
+  version "0.86.2"
+  resolved "https://registry.yarnpkg.com/@react-native/js-polyfills/-/js-polyfills-0.86.2.tgz#f30a340cdc825032f92f5bd1afe7a7723bbed949"
+  integrity sha512-bIwNcGBaQ74shB5z1mRkxOpjikimuwsnOCEkZSzL67Z1FTyK1ObpENfyd2QvcvVW9Cjl+tHuw9ynpBnb2jPoJQ==
 
 "@react-native/normalize-colors@0.86.0":
   version "0.86.0"
