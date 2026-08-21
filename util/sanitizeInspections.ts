@@ -5,6 +5,11 @@ export const sanitizeInspections = (
 ): Inspection[] => {
   return (
     inspections
+      // NOTE: questions that aren't about a container (e.g. picking where the
+      // visit starts) still land on an inspection object because they carry a
+      // `location`. Without a breeding site type there's no container to
+      // report, and the backend rejects the whole visit, so we drop them.
+      .filter((i) => !!i?.breeding_site_type_id)
       .map((i) => {
         const sanitizedInspection: Inspection = {
           // @ts-expect-error
@@ -39,7 +44,6 @@ export const sanitizeInspections = (
         );
         return sanitizedInspection;
       })
-      .filter((i) => Object.keys(i).length > 0)
       // NOTE: since https://denguechat.atlassian.net/browse/DNG-850 we're now
       // assuming that all registered containers have water
       .map((inspection) => ({
