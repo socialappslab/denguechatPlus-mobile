@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Stack, useRouter } from "expo-router";
+import { Pressable } from "react-native";
 
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,12 +29,20 @@ export default function VisitLayout(props: ThemeProps) {
         headerTintColor: color,
         title: t("visit.stackTitle"),
         headerLeft: () => (
-          <Ionicons
+          <Pressable
             onPress={() => router.back()}
-            name="arrow-back"
-            size={24}
-            color={color}
-          />
+            accessibilityRole="button"
+            accessibilityLabel={t("back")}
+            style={({ pressed }) => ({
+              width: 44,
+              height: 44,
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: pressed ? 0.5 : 1,
+            })}
+          >
+            <Ionicons name="arrow-back" size={24} color={color} />
+          </Pressable>
         ),
       }}
     >
