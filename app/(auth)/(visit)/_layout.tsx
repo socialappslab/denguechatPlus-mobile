@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Stack, useRouter } from "expo-router";
-import { Pressable } from "react-native";
+import { Platform, Pressable } from "react-native";
 
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,6 +11,8 @@ export default function VisitLayout(props: ThemeProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const { lightColor, darkColor } = props;
+  const isAndroid = Platform.OS === "android";
+  const backButtonSize = isAndroid ? 48 : 44;
 
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
@@ -33,12 +35,18 @@ export default function VisitLayout(props: ThemeProps) {
             onPress={() => router.back()}
             accessibilityRole="button"
             accessibilityLabel={t("back")}
+            android_ripple={{
+              color,
+              alpha: 0.12,
+              borderless: true,
+              radius: backButtonSize / 2,
+            }}
             style={({ pressed }) => ({
-              width: 44,
-              height: 44,
+              width: backButtonSize,
+              height: backButtonSize,
               alignItems: "center",
               justifyContent: "center",
-              opacity: pressed ? 0.5 : 1,
+              opacity: !isAndroid && pressed ? 0.5 : 1,
             })}
           >
             <Ionicons name="arrow-back" size={24} color={color} />
