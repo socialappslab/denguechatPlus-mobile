@@ -1,18 +1,48 @@
 import CheckboxIcon from "@/assets/images/checkbox.svg";
 import { Text } from "./Text";
 import { View } from "./View";
-import { SelectableItemProps } from "@/types/SelectableItemProps";
-import React, { useState } from "react";
+import { OptionType } from "@/types";
+import React, { ReactNode, SyntheticEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  ColorValue,
+  NativeSyntheticEvent,
   Platform,
   Pressable,
   StyleSheet,
   TouchableOpacity,
+  ViewProps,
 } from "react-native";
 import { Image } from "expo-image";
 import { SimpleChip } from "./SimpleChip";
 import { TextInput } from "./TextInput";
+
+type CheckboxEvent = {
+  target: any;
+  value: boolean;
+};
+
+type SelectableItemProps = ViewProps & {
+  value?: string;
+  disabled?: boolean;
+  color?: ColorValue;
+  onChange?: (
+    event:
+      | NativeSyntheticEvent<CheckboxEvent>
+      | SyntheticEvent<HTMLInputElement, CheckboxEvent>,
+  ) => void;
+  onValueChange?: (value: any, isText?: boolean) => void;
+  label?: string;
+  descriptionContent?: ReactNode;
+  required?: boolean;
+  chip?: string | string[] | null;
+  image?: string;
+  optionType?: OptionType;
+  checked?: boolean;
+  type?: "radio" | "checkbox";
+  defaultText?: string;
+  disableOtherOptions?: boolean;
+};
 
 export function SelectableItem({
   color,
