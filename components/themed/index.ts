@@ -10,6 +10,7 @@ export * from "./Loading";
 export * from "./SimpleChip";
 export * from "./ProgressBar";
 export * from "./FilterButton";
+export * from "./HeaderIconButton";
 export * from "./ListItem";
 export * from "./IconMaterial";
 export * from "./SimpleSelectableItem";

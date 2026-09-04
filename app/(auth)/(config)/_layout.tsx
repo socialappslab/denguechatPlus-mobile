@@ -2,9 +2,9 @@ import React from "react";
 
 import { Stack, useRouter } from "expo-router";
 
-import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
+import { HeaderIconButton } from "@/components/themed";
 
 export default function VisitLayout(props: ThemeProps) {
   const { t } = useTranslation();
@@ -18,6 +18,42 @@ export default function VisitLayout(props: ThemeProps) {
 
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
+  const renderDismissBackButton = () => (
+    <HeaderIconButton
+      onPress={() => router.dismiss()}
+      accessibilityLabel={t("back")}
+      name="arrow-back"
+      color={color}
+    />
+  );
+
+  const renderBackButton = () => (
+    <HeaderIconButton
+      onPress={() => router.back()}
+      accessibilityLabel={t("back")}
+      name="arrow-back"
+      color={color}
+    />
+  );
+
+  const renderDismissButton = () => (
+    <HeaderIconButton
+      onPress={() => router.dismiss()}
+      accessibilityLabel={t("close")}
+      name="close-sharp"
+      color={color}
+    />
+  );
+
+  const renderVisitFiltersCloseButton = () => (
+    <HeaderIconButton
+      onPress={() => router.push("/(auth)/(tabs)/visits")}
+      accessibilityLabel={t("close")}
+      name="close-sharp"
+      color={color}
+    />
+  );
+
   return (
     <Stack
       screenOptions={{
@@ -26,14 +62,7 @@ export default function VisitLayout(props: ThemeProps) {
         },
         headerTitleAlign: "center",
         headerTintColor: color,
-        headerLeft: () => (
-          <Ionicons
-            onPress={() => router.dismiss()}
-            name="arrow-back"
-            size={24}
-            color={color}
-          />
-        ),
+        headerLeft: renderDismissBackButton,
       }}
     >
       <Stack.Screen
@@ -42,14 +71,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.brigaderList"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.back()}
-              name="arrow-back"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderBackButton,
         }}
       />
       <Stack.Screen
@@ -67,14 +89,7 @@ export default function VisitLayout(props: ThemeProps) {
         options={{
           title: t("drawer.changeHouseBlock"),
           headerShadowVisible: false,
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.back()}
-              name="arrow-back"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderBackButton,
         }}
       />
       <Stack.Screen
@@ -100,14 +115,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.filters"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.dismiss()}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderDismissButton,
         }}
       />
       <Stack.Screen
@@ -117,14 +125,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.filters"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.dismiss()}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderDismissButton,
         }}
       />
       <Stack.Screen
@@ -134,14 +135,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.brigades"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.dismiss()}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderDismissButton,
         }}
       />
       <Stack.Screen
@@ -151,14 +145,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.brigades"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.dismiss()}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderDismissButton,
         }}
       />
       <Stack.Screen
@@ -168,14 +155,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.brigades"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.dismiss()}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderDismissButton,
         }}
       />
       <Stack.Screen
@@ -185,14 +165,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.brigades"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.dismiss()}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderDismissButton,
         }}
       />
       <Stack.Screen
@@ -202,14 +175,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.wedges"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.dismiss()}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderDismissButton,
         }}
       />
       <Stack.Screen
@@ -219,14 +185,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.wedges"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.dismiss()}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderDismissButton,
         }}
       />
       <Stack.Screen
@@ -235,14 +194,7 @@ export default function VisitLayout(props: ThemeProps) {
           headerShown: true,
           headerShadowVisible: false,
           title: t("config.wedges"),
-          headerLeft: () => (
-            <Ionicons
-              onPress={() => router.push("/(auth)/(tabs)/visits")}
-              name="close-sharp"
-              size={24}
-              color={color}
-            />
-          ),
+          headerLeft: renderVisitFiltersCloseButton,
         }}
       />
     </Stack>

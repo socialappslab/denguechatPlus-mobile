@@ -2,9 +2,9 @@ import React from "react";
 
 import { Stack, useNavigation } from "expo-router";
 
-import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
+import { HeaderIconButton } from "@/components/themed";
 
 export default function ChatLayout(props: ThemeProps) {
   const { t } = useTranslation();
@@ -28,10 +28,10 @@ export default function ChatLayout(props: ThemeProps) {
         headerTintColor: color,
         headerLeft: () => {
           return (
-            <Ionicons
+            <HeaderIconButton
               onPress={() => navigation.goBack()}
+              accessibilityLabel={t("back")}
               name="arrow-back"
-              size={24}
               color={color}
             />
           );
