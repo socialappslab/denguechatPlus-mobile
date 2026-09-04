@@ -1,4 +1,4 @@
-import type { SyntheticEvent } from "react";
+import type { ReactNode, SyntheticEvent } from "react";
 import type { ColorValue, NativeSyntheticEvent, ViewProps } from "react-native";
 import { OptionType } from ".";
 
@@ -47,6 +47,10 @@ export type SelectableItemProps = ViewProps & {
    * The label of the checkbox.
    */
   label?: string;
+  /**
+   * Rich content rendered below the label.
+   */
+  descriptionContent?: ReactNode;
   /**
    * If `true`, the checkbox is required.
    */

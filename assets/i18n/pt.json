@@ -242,7 +242,8 @@
         "optionsTitle": "Escolha um local",
         "noHouses": "Não encontra o local?",
         "noHousesMessage": "Registre um novo local aqui.",
-        "lastVisit": "Última visita"
+        "lastVisit": "Última visita",
+        "notVisitedYet": "Ainda não visitado"
       },
       "newHouse": {
         "title": "Registrar novo site",

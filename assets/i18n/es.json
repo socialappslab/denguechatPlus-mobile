@@ -245,7 +245,8 @@
         "optionsTitle": "Elige un sitio",
         "noHouses": "¿No encuentras el sitio?",
         "noHousesMessage": "Registra un nuevo sitio aquí.",
-        "lastVisit": "Última visita"
+        "lastVisit": "Última visita",
+        "notVisitedYet": "Aún no se ha visitado"
       },
       "newHouse": {
         "title": "Registrar sitio nuevo",

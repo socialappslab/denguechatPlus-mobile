@@ -17,6 +17,7 @@ import { TextInput } from "./TextInput";
 export function SelectableItem({
   color,
   description,
+  descriptionContent,
   disabled,
   onChange,
   onValueChange,
@@ -102,7 +103,7 @@ export function SelectableItem({
           >
             {checked && checkedView}
           </Pressable>
-          <View className="bg-transparent">
+          <View className="flex-1 bg-transparent">
             {label && (
               <Text className="text-sky-400 font-medium text-sm flex-grow pr-6">
                 {label}
@@ -112,6 +113,7 @@ export function SelectableItem({
             {description && (
               <Text className="text-sky-400 text-xs">{description}</Text>
             )}
+            {descriptionContent}
             {chip && (
               <>
                 {Array.isArray(chip) ? (
