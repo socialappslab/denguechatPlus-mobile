@@ -2,7 +2,6 @@ import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { SelectableItem } from "@/components/themed";
 import { House, VisitId } from "@/types";
 
 import {
@@ -10,17 +9,62 @@ import {
   Loading,
   SafeAreaView,
   ScrollView,
+  SelectableItem,
   Text,
   TextInput,
   View,
 } from "@/components/themed";
 import { useStore } from "@/hooks/useStore";
-import moment from "moment";
 import invariant from "tiny-invariant";
 import { VISITS_LOG } from "@/util/logger";
 import { useHouseBlockLabel } from "@/hooks/useHouseBlockLabel";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
+
+const statusClasses = {
+  red: "bg-red-600",
+  yellow: "bg-yellow-400",
+  green: "bg-verde-700",
+} satisfies Record<NonNullable<House["status"]>, string>;
+
+function HouseVisitDescription({
+  house,
+}: {
+  house: Pick<House, "lastVisit" | "status">;
+}) {
+  const { t } = useTranslation();
+  const status = house.status;
+  const lastVisit = house.lastVisit != null ? moment(house.lastVisit) : null;
+  const dateLabel = lastVisit?.isValid()
+    ? `${t("visit.houses.lastVisit")}: ${lastVisit.fromNow()}`
+    : undefined;
+
+  if (!dateLabel && !status) {
+    return (
+      <Text className="text-sky-400 text-xs">
+        {t("visit.houses.notVisitedYet")}
+      </Text>
+    );
+  }
+
+  return (
+    <View className="flex-row flex-wrap items-center gap-x-2 gap-y-1 bg-transparent">
+      {dateLabel && <Text className="text-sky-400 text-xs">{dateLabel}</Text>}
+      {status && (
+        <View className="flex-row items-center gap-1 bg-transparent">
+          <View
+            accessible={false}
+            className={`h-2.5 w-2.5 rounded-full ${statusClasses[status]}`}
+          />
+          <Text className="text-sky-400 text-xs">
+            {t(`visit.summary.statusColor.${status}`)}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+}
 
 export default function SelectHouseScreen() {
   const { t } = useTranslation();
@@ -105,13 +149,6 @@ export default function SelectHouseScreen() {
     );
   }
 
-  const renderHouseDescription = (house: House) => {
-    const date = moment(house.lastVisit).fromNow();
-    return house.lastVisit
-      ? `${t("visit.houses.lastVisit")}: ${date}`
-      : undefined;
-  };
-
   const renderTitle = (houses: House[]) => {
     if (houses.length === 0) return "";
     const house = houses[0];
@@ -177,7 +214,7 @@ export default function SelectHouseScreen() {
                     setHouseSelected(house);
                   }}
                   label={renderHouseLabel(house)}
-                  description={renderHouseDescription(house)}
+                  descriptionContent={<HouseVisitDescription house={house} />}
                   chip={house.specialPlace && t("visit.houses.specialPlace")}
                 />
               ))}
