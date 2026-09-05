@@ -12,7 +12,7 @@ export function ScrollView(props: ScrollViewProps) {
 
   return (
     <DefaultScrollView
-      contentContainerStyle={[otherProps.contentContainerStyle]}
+      contentContainerStyle={otherProps.contentContainerStyle}
       style={[{ backgroundColor }, style]}
       {...otherProps}
     />

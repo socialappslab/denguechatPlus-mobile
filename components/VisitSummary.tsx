@@ -49,7 +49,7 @@ function IconStatus({ color }: { color: keyof typeof statusToAssets }) {
   return (
     <View
       className="rounded-full w-20 h-20 flex items-center justify-center"
-      style={[styles.circle]}
+      style={styles.circle}
     >
       {statusToAssets[color].image}
     </View>
