@@ -30,6 +30,7 @@ import {
   SubmitHandler,
   FormProvider,
   Controller,
+  useWatch,
 } from "react-hook-form";
 import Toast from "react-native-toast-message";
 
@@ -118,12 +119,15 @@ export default function CommentsSheet(props: CommentsSheetProps) {
   const {
     control,
     handleSubmit,
-    watch,
     reset,
     formState: { errors, isValid },
   } = methods;
 
-  const watchContent = watch("content", "");
+  const watchContent = useWatch({
+    control,
+    name: "content",
+    defaultValue: "",
+  });
 
   useEffect(() => {
     setSelectedPhoto(undefined);
