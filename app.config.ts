@@ -2,8 +2,43 @@ import { ExpoConfig } from "expo/config";
 
 import { version } from "./package.json";
 
+const appVariants = ["development", "preview", "production"] as const;
+type AppVariant = (typeof appVariants)[number];
+
+const appVariantSettings = {
+  development: {
+    name: "DengueChatPlus (Dev)",
+    appId: "org.denguechatplus.dev",
+  },
+  preview: {
+    name: "DengueChatPlus (Preview)",
+    appId: "org.denguechatplus.preview",
+  },
+  production: {
+    name: "DengueChatPlus",
+    appId: "org.denguechatplus",
+  },
+} satisfies Record<AppVariant, { name: string; appId: string }>;
+
+function isAppVariant(value: string): value is AppVariant {
+  return appVariants.some((variant) => variant === value);
+}
+
+function getAppVariant(): AppVariant {
+  const appVariant = process.env.APP_VARIANT ?? "development";
+
+  if (!isAppVariant(appVariant)) {
+    throw new Error(`Unsupported APP_VARIANT: ${appVariant}`);
+  }
+
+  return appVariant;
+}
+
+const appVariant = getAppVariant();
+const { name, appId } = appVariantSettings[appVariant];
+
 const config: ExpoConfig = {
-  name: "DengueChatPlus",
+  name,
   slug: "dengue-chat-plus",
   scheme: "org.denguechat.plus",
   version,
@@ -11,16 +46,22 @@ const config: ExpoConfig = {
   icon: "./assets/images/icon.png",
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "org.denguechatplus",
+    bundleIdentifier: appId,
     config: {
       usesNonExemptEncryption: false,
     },
   },
   android: {
-    package: "org.denguechatplus",
+    package: appId,
   },
   plugins: [
     "expo-router",
+    [
+      "expo-dev-client",
+      {
+        addGeneratedScheme: appVariant === "development",
+      },
+    ],
     "expo-font",
     "expo-asset",
     "expo-image",
@@ -82,6 +123,7 @@ const config: ExpoConfig = {
     reactCompiler: true,
   },
   extra: {
+    appVariant,
     router: {
       origin: false,
     },

@@ -6,28 +6,38 @@
   "build": {
     "development": {
       "autoIncrement": true,
+      "developmentClient": true,
       "distribution": "internal",
       "environment": "development",
+      "env": {
+        "APP_VARIANT": "development"
+      },
       "android": {
         "image": "latest"
       },
       "channel": "development"
     },
-    "test_flight": {
-      "distribution": "store",
+    "preview": {
       "autoIncrement": true,
-      "environment": "production",
-      "channel": "test_flight"
+      "distribution": "internal",
+      "environment": "preview",
+      "env": {
+        "APP_VARIANT": "preview"
+      },
+      "channel": "preview"
     },
     "production": {
       "autoIncrement": true,
-      "distribution": "internal",
+      "distribution": "store",
+      "environment": "production",
+      "env": {
+        "APP_VARIANT": "production"
+      },
       "channel": "production"
     }
   },
   "submit": {
-    "production": {},
-    "test_flight": {
+    "production": {
       "ios": {
         "ascAppId": "6741427309",
         "appleTeamId": "7373WBN493"
