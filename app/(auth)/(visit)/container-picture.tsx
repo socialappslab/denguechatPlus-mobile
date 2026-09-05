@@ -8,11 +8,12 @@ import {
   CameraView,
   useCameraPermissions,
 } from "expo-camera";
+import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Image, View } from "react-native";
+import { View } from "react-native";
 import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
 
 export default function ContainerPicture() {
