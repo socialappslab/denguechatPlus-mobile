@@ -38,9 +38,9 @@ const isValid = (
   if (Array.isArray(currentValue)) {
     // Check if all requierd fields are present
     if (required.length > 0) {
-      const currentIds = currentValue?.map((item: any) => item.value) || [];
+      const currentIds = new Set(currentValue.map((item) => item.value));
       const requiredIds = required.map((item) => item.id);
-      return requiredIds.every((req) => currentIds?.includes(req));
+      return requiredIds.every((req) => currentIds.has(req));
     }
 
     // Check if at least one is marked
