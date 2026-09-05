@@ -9,16 +9,19 @@ const appVariantSettings = {
   development: {
     name: "DengueChatPlus (Dev)",
     appId: "org.denguechatplus.dev",
+    icon: "./assets/images/icon-development.png",
   },
   preview: {
     name: "DengueChatPlus (Preview)",
     appId: "org.denguechatplus.preview",
+    icon: "./assets/images/icon.png",
   },
   production: {
     name: "DengueChatPlus",
     appId: "org.denguechatplus",
+    icon: "./assets/images/icon.png",
   },
-} satisfies Record<AppVariant, { name: string; appId: string }>;
+} satisfies Record<AppVariant, { name: string; appId: string; icon: string }>;
 
 function isAppVariant(value: string): value is AppVariant {
   return appVariants.some((variant) => variant === value);
@@ -35,7 +38,7 @@ function getAppVariant(): AppVariant {
 }
 
 const appVariant = getAppVariant();
-const { name, appId } = appVariantSettings[appVariant];
+const { name, appId, icon } = appVariantSettings[appVariant];
 
 const config: ExpoConfig = {
   name,
@@ -43,16 +46,18 @@ const config: ExpoConfig = {
   scheme: "org.denguechat.plus",
   version,
   orientation: "portrait",
-  icon: "./assets/images/icon.png",
+  icon,
   ios: {
     supportsTablet: true,
     bundleIdentifier: appId,
+    icon,
     config: {
       usesNonExemptEncryption: false,
     },
   },
   android: {
     package: appId,
+    icon,
   },
   plugins: [
     "expo-router",
