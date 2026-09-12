@@ -68,6 +68,7 @@ const config: ExpoConfig = {
       },
     ],
     "expo-font",
+    "@react-native-vector-icons/material-design-icons",
     "expo-asset",
     "expo-image",
     "expo-localization",

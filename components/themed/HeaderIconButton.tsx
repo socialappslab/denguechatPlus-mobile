@@ -2,12 +2,12 @@ import type { ComponentProps } from "react";
 import type { ColorValue, PressableProps } from "react-native";
 import { Platform, Pressable } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 
 interface HeaderIconButtonProps {
   accessibilityLabel: string;
   color: ColorValue;
-  name: ComponentProps<typeof Ionicons>["name"];
+  name: ComponentProps<typeof MaterialDesignIcons>["name"];
   onPress: NonNullable<PressableProps["onPress"]>;
 }
 
@@ -39,7 +39,7 @@ export function HeaderIconButton({
         opacity: !isAndroid && pressed ? 0.5 : 1,
       })}
     >
-      <Ionicons name={name} size={24} color={color} />
+      <MaterialDesignIcons name={name} size={24} color={color} />
     </Pressable>
   );
 }

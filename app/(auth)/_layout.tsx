@@ -18,7 +18,7 @@ import { extractAxiosErrorData, getInitialsBase, logout } from "@/util";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { axios } from "@/config/axios";
 import Toast from "react-native-toast-message";
-import { MaterialIcons } from "@expo/vector-icons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 import * as Linking from "expo-linking";
 import { useUserHasBrigade } from "@/hooks/useUserHasBrigade";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -100,7 +100,11 @@ function CustomDrawerContent() {
             }}
             disabled={isChangeAssignmentButtonDisabled}
           >
-            <MaterialIcons name="swap-horiz" size={24} color="#56534E" />
+            <MaterialDesignIcons
+              name="swap-horizontal"
+              size={24}
+              color="#56534E"
+            />
             <Text className="font-semibold ml-3">
               {t("drawer.changeHouseBlock")}
             </Text>
@@ -114,7 +118,7 @@ function CustomDrawerContent() {
               );
             }}
           >
-            <MaterialIcons name="help" size={24} color="#56534E" />
+            <MaterialDesignIcons name="help-circle" size={24} color="#56534E" />
             <Text className="font-semibold ml-3">{t("drawer.userGuide")}</Text>
           </Pressable>
         </View>

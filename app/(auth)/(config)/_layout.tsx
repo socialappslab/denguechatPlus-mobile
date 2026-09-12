@@ -22,7 +22,7 @@ export default function VisitLayout(props: ThemeProps) {
     <HeaderIconButton
       onPress={() => router.dismiss()}
       accessibilityLabel={t("back")}
-      name="arrow-back"
+      name="arrow-left"
       color={color}
     />
   );
@@ -31,7 +31,7 @@ export default function VisitLayout(props: ThemeProps) {
     <HeaderIconButton
       onPress={() => router.back()}
       accessibilityLabel={t("back")}
-      name="arrow-back"
+      name="arrow-left"
       color={color}
     />
   );
@@ -40,7 +40,7 @@ export default function VisitLayout(props: ThemeProps) {
     <HeaderIconButton
       onPress={() => router.dismiss()}
       accessibilityLabel={t("close")}
-      name="close-sharp"
+      name="close"
       color={color}
     />
   );
@@ -49,7 +49,7 @@ export default function VisitLayout(props: ThemeProps) {
     <HeaderIconButton
       onPress={() => router.push("/(auth)/(tabs)/visits")}
       accessibilityLabel={t("close")}
-      name="close-sharp"
+      name="close"
       color={color}
     />
   );

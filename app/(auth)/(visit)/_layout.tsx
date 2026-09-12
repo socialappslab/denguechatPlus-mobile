@@ -31,7 +31,7 @@ export default function VisitLayout(props: ThemeProps) {
           <HeaderIconButton
             onPress={() => router.back()}
             accessibilityLabel={t("back")}
-            name="arrow-back"
+            name="arrow-left"
             color={color}
           />
         ),

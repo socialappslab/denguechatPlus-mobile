@@ -6,7 +6,7 @@ import Colors from "@/constants/Colors";
 import BubbleIcon from "@/assets/images/icons/bubble.svg";
 import HouseIcon from "@/assets/images/icons/house.svg";
 import BrigadeIcon from "@/assets/images/icons/brigade.svg";
-import { MaterialIcons } from "@expo/vector-icons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 import { useTranslation } from "react-i18next";
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
 import { useQuery } from "@tanstack/react-query";
@@ -76,7 +76,11 @@ export default function TabLayout({ lightColor, darkColor }: ThemeProps) {
         options={{
           title: t("tabs.data"),
           tabBarIcon: (props) => (
-            <MaterialIcons name="bar-chart" size={24} color={props.color} />
+            <MaterialDesignIcons
+              name="chart-bar"
+              size={24}
+              color={props.color}
+            />
           ),
         }}
       />
@@ -85,8 +89,8 @@ export default function TabLayout({ lightColor, darkColor }: ThemeProps) {
         options={{
           title: t("tabs.profile"),
           tabBarIcon: (props) => (
-            <MaterialIcons
-              name="person-outline"
+            <MaterialDesignIcons
+              name="account-outline"
               size={24}
               color={props.color}
             />

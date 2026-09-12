@@ -1,8 +1,8 @@
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 
 type IconProps = {
-  name: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
+  name: React.ComponentProps<typeof MaterialDesignIcons>["name"];
   size?: number;
   color?: string;
   className?: string;
@@ -15,7 +15,7 @@ export function IconMaterial(props: IconMaterialProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
   return (
-    <MaterialCommunityIcons
+    <MaterialDesignIcons
       name={name}
       size={size}
       color={color}

@@ -31,7 +31,7 @@ export default function ChatLayout(props: ThemeProps) {
             <HeaderIconButton
               onPress={() => navigation.goBack()}
               accessibilityLabel={t("back")}
-              name="arrow-back"
+              name="arrow-left"
               color={color}
             />
           );

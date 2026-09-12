@@ -5,7 +5,7 @@ import {
   UseControllerProps,
 } from "react-hook-form";
 import { Text, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 import { useTranslation } from "react-i18next";
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
@@ -93,11 +93,7 @@ export function PickerInput<T extends FieldValues>({
         // https://github.com/lawnstarter/react-native-picker-select/pull/377
         fixAndroidTouchableBug={true}
         Icon={() => (
-          <MaterialCommunityIcons
-            name="chevron-down"
-            size={24}
-            color="#e7e5e4"
-          />
+          <MaterialDesignIcons name="chevron-down" size={24} color="#e7e5e4" />
         )}
         doneText={t("done")}
       />
