@@ -27,6 +27,7 @@ import { LOG } from "@/util/logger";
 import * as Sentry from "@sentry/react-native";
 import { useStore } from "@/hooks/useStore";
 import { useBrigades } from "@/hooks/useBrigades";
+import { useQuestionnaireImagePrefetch } from "@/hooks/useQuestionnaireImagePrefetch";
 
 function CustomDrawerContent() {
   const router = useRouter();
@@ -222,6 +223,9 @@ export default function AuthLayout() {
   const fetchQuestionnaire = useStore((state) => state.fetchQuestionnaire);
   const fetchAppConfig = useStore((state) => state.fetchAppConfig);
   const fetchUserProfile = useStore((state) => state.fetchUserProfile);
+  const questionnaire = useStore((state) => state.questionnaire);
+
+  useQuestionnaireImagePrefetch(questionnaire);
 
   /*
    * These are requests that should be made whenever the user navigates to

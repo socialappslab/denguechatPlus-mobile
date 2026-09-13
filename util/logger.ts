@@ -16,9 +16,10 @@ const LOG = logger.createLogger({
     },
     FS: FileSystem,
   },
-  enabledExtensions: ["VISITS"],
+  enabledExtensions: ["CACHE", "VISITS"],
 });
 
+const CACHE_LOG = LOG.extend("CACHE");
 const VISITS_LOG = LOG.extend("VISITS");
 
-export { LOG, VISITS_LOG };
+export { CACHE_LOG, LOG, VISITS_LOG };
