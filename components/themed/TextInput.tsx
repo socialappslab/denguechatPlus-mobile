@@ -4,10 +4,9 @@ import {
   TextStyle,
   TouchableOpacity,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { useRef } from "react";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 
 import { ThemeProps, useThemeColor } from "./useThemeColor";
 import { FontFamily } from "@/constants/Styles";
@@ -21,7 +20,7 @@ export type TextInputProps = ThemeProps &
     search?: boolean;
     onClear?: () => void;
     isSheet?: boolean;
-    iconMaterial?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
+    iconMaterial?: React.ComponentProps<typeof MaterialDesignIcons>["name"];
   };
 
 export function TextInput({
@@ -98,7 +97,7 @@ export function TextInput({
   } else {
     return (
       <View className={`flex flex-row items-center ${classNameBorder}`}>
-        {search && <Feather name="search" size={20} color="#A9A29D" />}
+        {search && <IconMaterial name="magnify" size={20} color="#A9A29D" />}
         {iconMaterial && <IconMaterial size={24} name={iconMaterial} />}
         {!isSheet && (
           <DefaultTextInput

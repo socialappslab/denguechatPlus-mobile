@@ -8,7 +8,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { AnswerId, AnswerState, useStore, VisitCase } from "@/hooks/useStore";
 import { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import invariant from "tiny-invariant";
 
@@ -38,9 +38,9 @@ const isValid = (
   if (Array.isArray(currentValue)) {
     // Check if all requierd fields are present
     if (required.length > 0) {
-      const currentIds = currentValue?.map((item: any) => item.value) || [];
+      const currentIds = new Set(currentValue.map((item) => item.value));
       const requiredIds = required.map((item) => item.id);
-      return requiredIds.every((req) => currentIds?.includes(req));
+      return requiredIds.every((req) => currentIds.has(req));
     }
 
     // Check if at least one is marked
@@ -127,7 +127,10 @@ export default function Visit() {
 
   const answerId: AnswerId = `${currentQuestion.id}-${visitMetadata[visitId].inspectionIdx}`;
 
-  const currentValues = methods.watch(answerId) as AnswerState;
+  const currentValues = useWatch({
+    control: methods.control,
+    name: answerId,
+  }) as AnswerState;
 
   function findNext() {
     if (currentQuestion.next) return currentQuestion.next;

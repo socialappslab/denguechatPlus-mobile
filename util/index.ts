@@ -101,8 +101,10 @@ export const countSetFilters = (
   filters: FilterData,
   keys?: (keyof FilterData)[],
 ): number => {
+  const keySet = keys ? new Set(keys) : undefined;
+
   return (Object.keys(filters) as (keyof FilterData)[]).reduce((count, key) => {
-    if (filters[key] && (!keys || keys.includes(key))) {
+    if (filters[key] && (!keySet || keySet.has(key))) {
       count += 1;
     }
     return count;

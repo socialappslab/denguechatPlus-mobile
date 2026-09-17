@@ -3,8 +3,8 @@ import React from "react";
 import { Stack, useRouter } from "expo-router";
 
 import { ThemeProps, useThemeColor } from "@/components/themed/useThemeColor";
-import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { HeaderIconButton } from "@/components/themed";
 
 export default function VisitLayout(props: ThemeProps) {
   const { t } = useTranslation();
@@ -28,10 +28,10 @@ export default function VisitLayout(props: ThemeProps) {
         headerTintColor: color,
         title: t("visit.stackTitle"),
         headerLeft: () => (
-          <Ionicons
+          <HeaderIconButton
             onPress={() => router.back()}
-            name="arrow-back"
-            size={24}
+            accessibilityLabel={t("back")}
+            name="arrow-left"
             color={color}
           />
         ),

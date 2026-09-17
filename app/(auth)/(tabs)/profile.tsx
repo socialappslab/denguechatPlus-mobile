@@ -156,7 +156,7 @@ const Profile = () => {
                 padding="small"
                 textColor="neutral-500"
                 borderColor="neutral-500"
-                ionIcon={
+                iconMaterial={
                   report.data?.visitVariationPercentage > 0
                     ? "arrow-up"
                     : "arrow-down"

@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 
 import { ThemeProps } from "@/components/themed/useThemeColor";
@@ -6,7 +6,7 @@ import { Text } from "@/components/themed/Text";
 import { IconMaterial } from "@/components/themed/IconMaterial";
 
 interface SelectorButtonProps extends ThemeProps, TouchableOpacityProps {
-  iconMaterial?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
+  iconMaterial?: React.ComponentProps<typeof MaterialDesignIcons>["name"];
   label?: string;
   onPressElement?: () => void;
 }

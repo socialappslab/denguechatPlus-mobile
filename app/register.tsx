@@ -1,6 +1,6 @@
 import { TextInput as RNTextInput } from "react-native";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import CountryPicker, {
@@ -207,7 +207,6 @@ export default function Register() {
     handleSubmit,
     setError,
     setValue,
-    watch,
   } = useForm<SchemaInput, unknown, SchemaOutput>({
     mode: "onBlur",
     resolver: zodResolver<SchemaInput>(schema),
@@ -218,7 +217,7 @@ export default function Register() {
     },
   });
 
-  const city = watch("city");
+  const city = useWatch({ control, name: "city" });
 
   const cities = useCitiesQuery();
   const neighborhoods = useNeighborhoodsQuery(city);

@@ -155,9 +155,11 @@ const groupOptions = (
     const groupKey = curr.group as string;
     if (!groupKey) return acc;
     if (groupKey in acc) {
-      return { ...acc, [groupKey]: [...acc[groupKey], curr] };
+      acc[groupKey].push(curr);
+      return acc;
     }
-    return { ...acc, [groupKey]: [curr] };
+    acc[groupKey] = [curr];
+    return acc;
   }, {});
 
 const QuestionnaireRenderer = ({

@@ -4,6 +4,7 @@
     "done": "Done",
     "no": "No",
     "back": "Back",
+    "close": "Close",
     "next": "Next",
     "error": "Error",
     "success": "Success",
@@ -244,7 +245,8 @@
         "optionsTitle": "Choose a site",
         "noHouses": "Can't find the site?",
         "noHousesMessage": "Register a new site here.",
-        "lastVisit": "Last visit"
+        "lastVisit": "Last visit",
+        "notVisitedYet": "Not visited yet"
       },
       "newHouse": {
         "title": "Register new site",

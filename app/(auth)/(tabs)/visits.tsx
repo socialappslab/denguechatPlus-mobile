@@ -28,7 +28,7 @@ import { RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
 import { useFilters } from "@/hooks/useFilters";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useInspectionPhotos } from "@/hooks/useInspectionPhotos";
@@ -118,7 +118,7 @@ function VisitsReport({
                 padding="small"
                 textColor="neutral-500"
                 borderColor="neutral-500"
-                ionIcon={
+                iconMaterial={
                   data.visitVariationPercentage > 0 ? "arrow-up" : "arrow-down"
                 }
                 iconColor={Colors.light.neutral}
@@ -140,7 +140,7 @@ function VisitsReport({
                   padding="small"
                   textColor="neutral-500"
                   borderColor="neutral-500"
-                  ionIcon={
+                  iconMaterial={
                     data.siteVariationPercentage > 0 ? "arrow-up" : "arrow-down"
                   }
                   iconColor={Colors.light.neutral}
@@ -440,7 +440,7 @@ export default function Visits() {
                 // https://github.com/lawnstarter/react-native-picker-select/pull/377
                 fixAndroidTouchableBug={true}
                 Icon={() => (
-                  <MaterialCommunityIcons
+                  <MaterialDesignIcons
                     name="chevron-down"
                     size={24}
                     color="#e7e5e4"
@@ -523,7 +523,9 @@ export default function Visits() {
                       // @ts-expect-error
                       reds={selectedVisit?.colorsAndQuantities?.RED}
                       // @ts-expect-error
-                      permissionToVisitGranted={selectedVisit?.visitPermissionGranted}
+                      permissionToVisitGranted={
+                        selectedVisit?.visitPermissionGranted
+                      }
                     />
                   )}
                 </>

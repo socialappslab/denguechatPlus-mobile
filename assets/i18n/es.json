@@ -4,6 +4,7 @@
     "done": "Hecho",
     "no": "No",
     "back": "Atrás",
+    "close": "Cerrar",
     "next": "Siguiente",
     "error": "Error",
     "success": "Éxito",
@@ -245,7 +246,8 @@
         "optionsTitle": "Elige un sitio",
         "noHouses": "¿No encuentras el sitio?",
         "noHousesMessage": "Registra un nuevo sitio aquí.",
-        "lastVisit": "Última visita"
+        "lastVisit": "Última visita",
+        "notVisitedYet": "Aún no se ha visitado"
       },
       "newHouse": {
         "title": "Registrar sitio nuevo",

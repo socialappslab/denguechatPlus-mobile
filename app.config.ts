@@ -2,26 +2,73 @@ import { ExpoConfig } from "expo/config";
 
 import { version } from "./package.json";
 
+const appVariants = ["development", "preview", "production"] as const;
+type AppVariant = (typeof appVariants)[number];
+
+const appVariantSettings = {
+  development: {
+    name: "DengueChatPlus (Dev)",
+    appId: "org.denguechatplus.dev",
+    icon: "./assets/images/icon-development.png",
+  },
+  preview: {
+    name: "DengueChatPlus (Preview)",
+    appId: "org.denguechatplus.preview",
+    icon: "./assets/images/icon.png",
+  },
+  production: {
+    name: "DengueChatPlus",
+    appId: "org.denguechatplus",
+    icon: "./assets/images/icon.png",
+  },
+} satisfies Record<AppVariant, { name: string; appId: string; icon: string }>;
+
+function isAppVariant(value: string): value is AppVariant {
+  return appVariants.some((variant) => variant === value);
+}
+
+function getAppVariant(): AppVariant {
+  const appVariant = process.env.APP_VARIANT ?? "development";
+
+  if (!isAppVariant(appVariant)) {
+    throw new Error(`Unsupported APP_VARIANT: ${appVariant}`);
+  }
+
+  return appVariant;
+}
+
+const appVariant = getAppVariant();
+const { name, appId, icon } = appVariantSettings[appVariant];
+
 const config: ExpoConfig = {
-  name: "DengueChatPlus",
+  name,
   slug: "dengue-chat-plus",
   scheme: "org.denguechat.plus",
   version,
   orientation: "portrait",
-  icon: "./assets/images/icon.png",
+  icon,
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "org.denguechatplus",
+    bundleIdentifier: appId,
+    icon,
     config: {
       usesNonExemptEncryption: false,
     },
   },
   android: {
-    package: "org.denguechatplus",
+    package: appId,
+    icon,
   },
   plugins: [
     "expo-router",
+    [
+      "expo-dev-client",
+      {
+        addGeneratedScheme: appVariant === "development",
+      },
+    ],
     "expo-font",
+    "@react-native-vector-icons/material-design-icons",
     "expo-asset",
     "expo-image",
     "expo-localization",
@@ -82,6 +129,7 @@ const config: ExpoConfig = {
     reactCompiler: true,
   },
   extra: {
+    appVariant,
     router: {
       origin: false,
     },

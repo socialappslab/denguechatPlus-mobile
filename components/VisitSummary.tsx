@@ -6,7 +6,7 @@ import Separator from "@/components/Separator";
 import { StatusColor } from "@/types";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 import { CircularCounter, CircularCounterValue } from "./ui/circular-counter";
 
 const statusToAssets = {
@@ -49,7 +49,7 @@ function IconStatus({ color }: { color: keyof typeof statusToAssets }) {
   return (
     <View
       className="rounded-full w-20 h-20 flex items-center justify-center"
-      style={[styles.circle]}
+      style={styles.circle}
     >
       {statusToAssets[color].image}
     </View>
@@ -122,13 +122,9 @@ export default function VisitSummary({
       <View className="space-y-6">
         <View className="flex-row justify-center items-center">
           {permissionToVisitGranted ? (
-            <MaterialCommunityIcons
-              name="check-circle"
-              size={24}
-              color="green"
-            />
+            <MaterialDesignIcons name="check-circle" size={24} color="green" />
           ) : (
-            <MaterialCommunityIcons name="close-circle" size={24} color="red" />
+            <MaterialDesignIcons name="close-circle" size={24} color="red" />
           )}
           <Text className="ml-1 text-base">
             {permissionToVisitGranted

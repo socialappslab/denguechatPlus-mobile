@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
 
 import { ThemeProps } from "./useThemeColor";
 import { View } from "./View";
@@ -6,7 +6,7 @@ import { Text } from "./Text";
 import Colors from "@/constants/Colors";
 
 export type SimpleChipProps = ThemeProps & {
-  ionIcon?: React.ComponentProps<typeof Ionicons>["name"];
+  iconMaterial?: React.ComponentProps<typeof MaterialDesignIcons>["name"];
   textColor?: string;
   borderColor?: string;
   iconColor?: string;
@@ -29,7 +29,7 @@ const getPaddingSize = (padding: string) => {
 
 export function SimpleChip(props: SimpleChipProps) {
   const {
-    ionIcon,
+    iconMaterial,
     borderColor = "primary",
     textColor = "primary",
     border = "2",
@@ -48,10 +48,10 @@ export function SimpleChip(props: SimpleChipProps) {
 
   return (
     <View className={viewClasName}>
-      {ionIcon && (
+      {iconMaterial && (
         <View className="w-4 h-4 mr-2">
-          <Ionicons
-            name={ionIcon}
+          <MaterialDesignIcons
+            name={iconMaterial}
             size={16}
             color={iconColor ?? Colors.light.primary}
           />

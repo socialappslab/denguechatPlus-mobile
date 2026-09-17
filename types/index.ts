@@ -198,10 +198,10 @@ export interface House {
   longitude: number;
   consecutiveGreenStatus: number;
   notes?: string | null;
-  status?: string | null;
+  status?: "green" | "yellow" | "red" | null;
   containerCount?: number | null;
   createdAt: string;
-  lastVisit?: string | null;
+  lastVisit?: number | null;
   updatedAt: string;
   country?: Country;
   state?: State;
