@@ -80,6 +80,7 @@ function useTeamQuery(teamId: number | null) {
 export default function Profile() {
   const { t } = useTranslation();
   const userProfile = useStore((state) => state.userProfile);
+  const fetchUserProfile = useStore((state) => state.fetchUserProfile);
 
   const houseBlockLabel = useHouseBlockLabel(
     // @ts-expect-error type of userProfile is wrong
@@ -100,10 +101,21 @@ export default function Profile() {
   useRefreshOnFocus(brigadePoints.refetch);
 
   const refetchAll = useCallback(async () => {
+    // The brigade can change from the web, and offline we keep the cached one.
+    await fetchUserProfile().catch(() => {});
     if (teamId && wedgeId && sectorId) await report.refetch();
     if (userProfile) await team.refetch();
     if (teamId) await brigadePoints.refetch();
-  }, [teamId, wedgeId, sectorId, report, userProfile, team, brigadePoints]);
+  }, [
+    fetchUserProfile,
+    teamId,
+    wedgeId,
+    sectorId,
+    report,
+    userProfile,
+    team,
+    brigadePoints,
+  ]);
 
   // NOTE: maybe we can generalize this in the future, we have the same thing at `(tabs)/visits.tsx`
   const colorPercentages = useMemo(() => {

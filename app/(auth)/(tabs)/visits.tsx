@@ -246,6 +246,7 @@ export default function Visits() {
   const { deleteInspectionPhotosFromVisit } = useInspectionPhotos();
 
   const userProfile = useStore((state) => state.userProfile);
+  const fetchUserProfile = useStore((state) => state.fetchUserProfile);
   const storedVisits = useStore((state) => state.storedVisits);
   const cleanUpStoredVisit = useStore((state) => state.cleanUpStoredVisit);
   const visitId = useStore((state) => state.visitId);
@@ -327,6 +328,8 @@ export default function Visits() {
   async function onRefresh() {
     try {
       setRefreshing(true);
+      // The brigade can change from the web, and offline we keep the cached one.
+      await fetchUserProfile().catch(() => {});
       await Promise.all([team.refetch(), reports.refetch()]);
     } catch (error) {
       console.error(error);
