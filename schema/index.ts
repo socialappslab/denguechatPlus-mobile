@@ -64,7 +64,6 @@ export interface Team extends BaseObject {
   sector?: BaseObject;
   wedge?: BaseObject;
   members: Member[];
-  memberCount: number;
   visits: number;
   sitesStatuses:
     | {

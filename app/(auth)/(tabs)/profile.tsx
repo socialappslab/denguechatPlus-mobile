@@ -67,6 +67,7 @@ function useBrigadePointsQuery(teamId: number | null) {
 const Profile = () => {
   const { t } = useTranslation();
   const userProfile = useStore((state) => state.userProfile);
+  const fetchUserProfile = useStore((state) => state.fetchUserProfile);
 
   // @ts-expect-error type of userProfile is not correct
   const teamId = userProfile?.userProfile?.team?.id;
@@ -98,6 +99,8 @@ const Profile = () => {
     brigadePoints.isLoading;
 
   async function handleRefresh() {
+    // The brigade can change from the web, and offline we keep the cached one.
+    await fetchUserProfile().catch(() => {});
     return await Promise.all([
       report.refetch(),
       brigadistPoints.refetch(),
