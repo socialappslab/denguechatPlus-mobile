@@ -371,6 +371,23 @@
         "offline": "Conéctate a internet para cambiar tu avatar",
         "error": "No pudimos guardar tu avatar. Inténtalo de nuevo.",
         "loadError": "No pudimos cargar los avatares."
+      },
+      "lastMonthVisits": "Visitas del último mes",
+      "vsPreviousMonth": "{{value}}% vs. mes anterior",
+      "recentActivity": {
+        "title": "Actividad reciente",
+        "empty": "Aún no tienes visitas registradas",
+        "error": "No pudimos cargar tu actividad reciente",
+        "complete": "Visita completa",
+        "incomplete": "Visita sin permiso",
+        "today": "Hoy",
+        "yesterday": "Ayer",
+        "unsynced": "Sin sincronizar",
+        "house": {
+          "green": "Casa verde",
+          "yellow": "Casa amarilla",
+          "red": "Casa roja"
+        }
       }
     },
     "errorCodes": {
