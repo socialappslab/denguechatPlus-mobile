@@ -49,7 +49,12 @@ export interface Member {
   rol: string;
 }
 
-export const TEAM_LEADER_ROLE = "facilitador";
+export const ADMIN_ROLE = "admin";
+export const FACILITATOR_ROLE = "facilitador";
+
+// Admins hold every facilitator permission.
+export const isFacilitatorOrAbove = (role?: string) =>
+  role === FACILITATOR_ROLE || role === ADMIN_ROLE;
 
 export interface Team extends BaseObject {
   organization: Organization;

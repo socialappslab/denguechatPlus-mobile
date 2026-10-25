@@ -28,12 +28,13 @@ import * as Sentry from "@sentry/react-native";
 import { useStore } from "@/hooks/useStore";
 import { useBrigades } from "@/hooks/useBrigades";
 import { useQuestionnaireImagePrefetch } from "@/hooks/useQuestionnaireImagePrefetch";
+import { isFacilitatorOrAbove } from "@/schema";
 
 function CustomDrawerContent() {
   const router = useRouter();
   const userProfile = useStore((state) => state.userProfile);
-  // TODO: fix the type for the user
-  const userRole = userProfile?.roles?.[0] as unknown as string | undefined;
+  // Profiles saved before the API returned `role` only have `roles`.
+  const userRole = userProfile?.role ?? userProfile?.roles?.[0];
 
   const { setSelection, clearState } = useBrigades();
   const { t } = useTranslation();
@@ -89,7 +90,7 @@ function CustomDrawerContent() {
               isChangeAssignmentButtonDisabled ? "opacity-50" : ""
             }`}
             onPress={() => {
-              if (userRole === "team_leader" || userRole === "admin") {
+              if (isFacilitatorOrAbove(userRole)) {
                 router.navigate("/select-user");
                 return;
               }
