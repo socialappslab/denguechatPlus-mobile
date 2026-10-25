@@ -347,7 +347,29 @@
     },
     "brigadistProfile": {
       "pointsOf": "Points of",
-      "myPoints": "My points"
+      "roles": {
+        "brigadista": "Brigade member",
+        "facilitador": "Facilitator",
+        "admin": "Administrator"
+      },
+      "currentBrigade": "Current brigade",
+      "avatar": {
+        "title": "Customize avatar",
+        "avatar": "Avatar",
+        "avatarN": "Avatar {{number}}",
+        "chosen": "Chosen",
+        "choose": "Choose",
+        "prize": "Prize",
+        "prizeHint": "Pick an unlocked prize for your avatar to wear.",
+        "noPrize": "No prize",
+        "wear": "Wear",
+        "worn": "Wearing",
+        "housesLeft_one": "{{count}} more house",
+        "housesLeft_other": "{{count}} more houses",
+        "offline": "Connect to the internet to change your avatar",
+        "error": "We couldn't save your avatar. Please try again.",
+        "loadError": "We couldn't load the avatars."
+      }
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",
