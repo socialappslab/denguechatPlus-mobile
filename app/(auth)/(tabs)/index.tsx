@@ -13,7 +13,8 @@ import {
 import Colors from "@/constants/Colors";
 import { Team, TEAM_LEADER_ROLE } from "@/schema";
 import { AccumulatedPoints, ReportData } from "@/types";
-import { calculatePercentage, getInitials } from "@/util";
+import { calculatePercentage } from "@/util";
+import { UserAvatar } from "@/components/segments/UserAvatar";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { axios } from "@/config/axios";
@@ -257,10 +258,11 @@ export default function Profile() {
                     key={member.id}
                     className={`flex-row items-center p-4 border-neutral-200 ${index === team.data?.members?.length - 1 ? "border-b-0 rounded-b-xl" : "border-b"}`}
                   >
-                    <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-300 mr-3">
-                      <Text className="font-bold text-sm text-green-700">
-                        {getInitials(member.fullName)}
-                      </Text>
+                    <View className="mr-3">
+                      <UserAvatar
+                        uri={member.avatarUrl}
+                        name={member.fullName}
+                      />
                     </View>
                     <View className="flex-1">
                       <Text>{member.fullName}</Text>

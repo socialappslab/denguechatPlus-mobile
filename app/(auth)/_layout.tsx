@@ -14,7 +14,8 @@ import Logout from "@/assets/images/icons/logout.svg";
 import Logo from "@/assets/images/logo-small.svg";
 import Cog from "@/assets/images/icons/cog.svg";
 
-import { extractAxiosErrorData, getInitialsBase, logout } from "@/util";
+import { extractAxiosErrorData, logout } from "@/util";
+import { UserAvatar } from "@/components/segments/UserAvatar";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { axios } from "@/config/axios";
 import Toast from "react-native-toast-message";
@@ -183,15 +184,11 @@ function CustomDrawerContent() {
             darkColor="rgba(255,255,255,0.1)"
           />
           <View className="flex-row items-center px-2">
-            <View className="flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3">
-              <Text className="font-bold text-sm text-green-700">
-                {userProfile
-                  ? getInitialsBase(
-                      String(userProfile.userProfile?.firstName),
-                      String(userProfile.userProfile?.lastName),
-                    )
-                  : "U"}
-              </Text>
+            <View className="mr-3">
+              <UserAvatar
+                uri={userProfile?.userProfile?.avatarUrl}
+                name={`${userProfile?.userProfile?.firstName ?? "U"} ${userProfile?.userProfile?.lastName ?? ""}`}
+              />
             </View>
             <View className="flex flex-1 flex-row items-center">
               <View className="flex flex-1 flex-col">

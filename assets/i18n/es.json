@@ -349,7 +349,29 @@
     },
     "brigadistProfile": {
       "pointsOf": "Puntos de",
-      "myPoints": "Mis puntos"
+      "roles": {
+        "brigadista": "Brigadista",
+        "facilitador": "Facilitador",
+        "admin": "Administrador"
+      },
+      "currentBrigade": "Brigada actual",
+      "avatar": {
+        "title": "Personalizar avatar",
+        "avatar": "Avatar",
+        "avatarN": "Avatar {{number}}",
+        "chosen": "Elegido",
+        "choose": "Elegir",
+        "prize": "Premio",
+        "prizeHint": "Elige un premio desbloqueado para ponérselo a tu avatar.",
+        "noPrize": "Sin premio",
+        "wear": "Poner",
+        "worn": "Puesto",
+        "housesLeft_one": "{{count}} casa más",
+        "housesLeft_other": "{{count}} casas más",
+        "offline": "Conéctate a internet para cambiar tu avatar",
+        "error": "No pudimos guardar tu avatar. Inténtalo de nuevo.",
+        "loadError": "No pudimos cargar los avatares."
+      }
     },
     "errorCodes": {
       "46": "Credenciales inválidas",

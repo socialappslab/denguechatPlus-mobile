@@ -46,6 +46,7 @@ export interface Member {
   firstName: string;
   lastName: string;
   fullName: string;
+  avatarUrl?: string | null;
   rol: string;
 }
 
