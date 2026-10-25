@@ -403,6 +403,17 @@
         "unlocked": "Unlocked",
         "housesLeft_one": "{{count}} more house",
         "housesLeft_other": "{{count}} more houses"
+      },
+      "stars": {
+        "title": "My Medals",
+        "subtitle": "By positive containers found in houses",
+        "unit_one": "positive container",
+        "unit_other": "positive containers",
+        "toNext_one": "{{count}} more positive container for “{{name}}”",
+        "toNext_other": "{{count}} more positive containers for “{{name}}”",
+        "allEarned": "All stars earned!",
+        "earned": "Earned",
+        "missing": "{{count}} to go"
       }
     }
   }
