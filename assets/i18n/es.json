@@ -405,6 +405,17 @@
         "unlocked": "Desbloqueada",
         "housesLeft_one": "{{count}} casa más",
         "housesLeft_other": "{{count}} casas más"
+      },
+      "stars": {
+        "title": "Mis Medallas",
+        "subtitle": "Por contenedores positivos encontrados en las casas",
+        "unit_one": "contenedor positivo",
+        "unit_other": "contenedores positivos",
+        "toNext_one": "{{count}} contenedor positivo más para «{{name}}»",
+        "toNext_other": "{{count}} contenedores positivos más para «{{name}}»",
+        "allEarned": "¡Todas las estrellas conseguidas!",
+        "earned": "Conseguida",
+        "missing": "Faltan {{count}}"
       }
     }
   }

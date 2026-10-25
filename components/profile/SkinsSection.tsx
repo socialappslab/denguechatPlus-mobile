@@ -2,6 +2,7 @@ import MaterialDesignIcons from "@react-native-vector-icons/material-design-icon
 import { useTranslation } from "react-i18next";
 import { View as RNView } from "react-native";
 
+import { REWARD_TILE_WIDTH, RewardGrid } from "@/components/rewards/RewardGrid";
 import { RewardMedal } from "@/components/rewards/RewardMedal";
 import { RewardProgress } from "@/components/rewards/RewardProgress";
 import { Text, View } from "@/components/themed";
@@ -90,10 +91,7 @@ export function SkinsSection({ track, wornSkinId }: SkinsSectionProps) {
         />
       </View>
 
-      <View
-        className="flex-row flex-wrap justify-between"
-        style={{ marginTop: 16, rowGap: 8 }}
-      >
+      <RewardGrid>
         {levels.map((level) => (
           <SkinTile
             key={level.id}
@@ -102,7 +100,7 @@ export function SkinsSection({ track, wornSkinId }: SkinsSectionProps) {
             remaining={Math.max(level.threshold - track.currentValue, 0)}
           />
         ))}
-      </View>
+      </RewardGrid>
     </View>
   );
 }
@@ -121,7 +119,7 @@ function SkinTile({ level, worn, remaining }: SkinTileProps) {
     <View
       className="items-center rounded-xl px-1 py-3"
       style={{
-        width: "31.5%",
+        width: REWARD_TILE_WIDTH,
         borderWidth: worn ? 2 : 1,
         borderColor: worn ? (level.colorSecondary ?? PRIMARY) : "#E5E5E5",
       }}
