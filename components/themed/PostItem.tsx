@@ -10,7 +10,8 @@ import { Image } from "expo-image";
 import { useTranslation } from "react-i18next";
 
 import { Post } from "@/types";
-import { getInitialsBase, formatDatePosts } from "@/util";
+import { formatDatePosts } from "@/util";
+import { UserAvatar } from "@/components/segments/UserAvatar";
 import Like from "@/components/icons/Like";
 import Comment from "@/components/icons/Comment";
 import MoreHorizontal from "@/components/icons/MoreHorizontal";
@@ -42,19 +43,14 @@ export function PostItem(props: PostItemProps) {
   const { i18n } = useTranslation();
   const { t } = useTranslation();
 
-  const initials = getInitialsBase(
-    String(post.createByUser.userName),
-    String(post.createByUser.lastName),
-  );
-
   return (
     <View className="flex flex-col px-5  py-4 border-b border-neutral-200">
       <View className="flex flex-row items-center mb-4">
-        <Pressable
-          className={`flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3`}
-          onPress={onPressElement}
-        >
-          <Text className="font-bold text-sm text-green-700">{initials}</Text>
+        <Pressable className="mr-3" onPress={onPressElement}>
+          <UserAvatar
+            uri={post.createByUser.avatarUrl}
+            name={`${post.createByUser.userName} ${post.createByUser.lastName}`}
+          />
         </Pressable>
         <Pressable
           className="flex flex-1 flex-col mr-1"

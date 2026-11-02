@@ -356,6 +356,7 @@ export interface Comment {
     accountId: number;
     userName: string;
     lastName: string;
+    avatarUrl?: string | null;
   };
   photos?: {
     photo_url: string;
@@ -372,6 +373,7 @@ export interface Post {
     accountId: number;
     userName: string;
     lastName: string;
+    avatarUrl?: string | null;
   };
   location: string;
   postText: string;
@@ -421,6 +423,7 @@ export interface TeamResponse {
         userAccountId?: number;
         userProfileId?: number;
         fullName: string;
+        avatarUrl?: string | null;
         rol: "admin" | "brigadista" | "facilitador";
       }[];
       organizations: {
@@ -439,4 +442,47 @@ export interface TeamResponse {
       sitesStatuses: object;
     };
   };
+}
+
+export interface RewardLevel {
+  id: number;
+  code: string;
+  name: string;
+  description: string | null;
+  threshold: number;
+  position: number;
+  earned: boolean;
+  earnedAt: string | null;
+  new: boolean;
+  imageUrl: string | null;
+  lockedImageUrl: string | null;
+  colorPrimary: string | null;
+  colorSecondary: string | null;
+  colorBackground: string | null;
+  ringGradient: string[];
+}
+
+export type RewardMetric = "worked_houses" | "positive_containers";
+
+export interface RewardTrack {
+  code: string;
+  name: string;
+  metric: RewardMetric;
+  currentValue: number;
+  nextLevel: {
+    id: number;
+    code: string;
+    name: string;
+    threshold: number;
+    remaining: number;
+  } | null;
+  levels: RewardLevel[];
+}
+
+export interface AvatarOption {
+  id: number;
+  baseCode: string;
+  position: number;
+  imageUrl: string | null;
+  variants: { rewardLevelId: number; imageUrl: string | null }[];
 }
