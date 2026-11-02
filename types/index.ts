@@ -486,3 +486,13 @@ export interface AvatarOption {
   imageUrl: string | null;
   variants: { rewardLevelId: number; imageUrl: string | null }[];
 }
+
+export interface MyVisit {
+  id: number | string;
+  visitedAt: string;
+  status: "green" | "yellow" | "red" | null;
+  houseReferenceCode: string;
+  permissionGranted: boolean;
+  permissionLabel: string | null;
+  offline?: boolean;
+}
