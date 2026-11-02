@@ -385,6 +385,27 @@
       "mustUpdateAppTitle": "Nueva actualización",
       "mustUpdateAppDescription": "Debe actualizar la aplicación para continuar usando DengueChatPlus"
     },
-    "internetRequired": "Se requiere conexión a Internet para realizar esta acción"
+    "internetRequired": "Se requiere conexión a Internet para realizar esta acción",
+    "rewards": {
+      "skins": {
+        "title": "Mis Premios",
+        "subtitle": "Por casas trabajadas",
+        "unit_one": "casa trabajada",
+        "unit_other": "casas trabajadas",
+        "current": "Premio actual",
+        "unlockedWith_one": "Desbloqueada con {{count}} casa trabajada",
+        "unlockedWith_other": "Desbloqueada con {{count}} casas trabajadas",
+        "firstTitle": "Consigue tu primera skin",
+        "firstHint_one": "Llega a {{count}} casa trabajada para desbloquear {{name}}",
+        "firstHint_other": "Llega a {{count}} casas trabajadas para desbloquear {{name}}",
+        "toNext_one": "{{count}} casa trabajada más para desbloquear {{name}}",
+        "toNext_other": "{{count}} casas trabajadas más para desbloquear {{name}}",
+        "allUnlocked": "Todas las skins desbloqueadas",
+        "inUse": "En uso",
+        "unlocked": "Desbloqueada",
+        "housesLeft_one": "{{count}} casa más",
+        "housesLeft_other": "{{count}} casas más"
+      }
+    }
   }
 }
