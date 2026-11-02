@@ -409,12 +409,12 @@
         "current": "Prêmio atual",
         "unlockedWith_one": "Desbloqueada com {{count}} casa trabalhada",
         "unlockedWith_other": "Desbloqueada com {{count}} casas trabalhadas",
-        "firstTitle": "Ganhe sua primeira skin",
+        "firstTitle": "Ganhe seu primeiro prêmio",
         "firstHint_one": "Chegue a {{count}} casa trabalhada para desbloquear {{name}}",
         "firstHint_other": "Chegue a {{count}} casas trabalhadas para desbloquear {{name}}",
         "toNext_one": "Mais {{count}} casa trabalhada para desbloquear {{name}}",
         "toNext_other": "Mais {{count}} casas trabalhadas para desbloquear {{name}}",
-        "allUnlocked": "Todas as skins desbloqueadas",
+        "allUnlocked": "Todos os prêmios desbloqueados",
         "inUse": "Em uso",
         "unlocked": "Desbloqueada",
         "housesLeft_one": "Mais {{count}} casa",
@@ -427,7 +427,7 @@
         "unit_other": "recipientes positivos",
         "toNext_one": "Mais {{count}} recipiente positivo para «{{name}}»",
         "toNext_other": "Mais {{count}} recipientes positivos para «{{name}}»",
-        "allEarned": "Todas as estrelas conquistadas!",
+        "allEarned": "Todas as medalhas conquistadas!",
         "earned": "Conquistada",
         "missing": "Faltam {{count}}"
       }
