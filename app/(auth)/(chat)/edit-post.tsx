@@ -33,7 +33,7 @@ import {
   SelectableItem,
   Button,
 } from "@/components/themed";
-import { getInitialsBase } from "@/util";
+import { UserAvatar } from "@/components/segments/UserAvatar";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import Media from "@/components/icons/Media";
 import { axios } from "@/config/axios";
@@ -227,11 +227,6 @@ export default function EditPost() {
     }
   };
 
-  const initials = getInitialsBase(
-    String(userProfile?.userProfile?.firstName),
-    String(userProfile?.userProfile?.lastName),
-  );
-
   return (
     <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="flex flex-1 py-5 px-5 h-full">
@@ -243,12 +238,11 @@ export default function EditPost() {
               contentContainerStyle={{ flexGrow: 1 }}
             >
               <View className="flex flex-row items-center mb-4">
-                <View
-                  className={`flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3`}
-                >
-                  <Text className="font-bold text-sm text-green-700">
-                    {initials}
-                  </Text>
+                <View className="mr-3">
+                  <UserAvatar
+                    uri={userProfile?.userProfile?.avatarUrl}
+                    name={`${userProfile?.userProfile?.firstName ?? ""} ${userProfile?.userProfile?.lastName ?? ""}`}
+                  />
                 </View>
                 <View className="flex flex-1 flex-col">
                   <Text className="font-semibold">{`${userProfile?.userProfile?.firstName} ${userProfile?.userProfile?.lastName}`}</Text>

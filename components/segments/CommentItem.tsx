@@ -5,7 +5,8 @@ import { Image } from "expo-image";
 import { useTranslation } from "react-i18next";
 
 import { Comment } from "@/types";
-import { getInitialsBase, formatDatePosts } from "@/util";
+import { formatDatePosts } from "@/util";
+import { UserAvatar } from "@/components/segments/UserAvatar";
 import Like from "@/components/icons/Like";
 import Delete from "@/components/icons/Delete";
 
@@ -33,18 +34,14 @@ export default function CommentItem(props: CommentItemProps) {
 
   // console.log("comment>>>>>>>>>>", comment);
 
-  const initials = getInitialsBase(
-    comment.createdBy.userName,
-    comment.createdBy.lastName,
-  );
-
   return (
     <View className="flex flex-col px-5 py-2 mb-3">
       <View className="flex flex-row items-start">
-        <View
-          className={`flex items-center justify-center w-10 h-10 rounded-full bg-green-400 mr-3`}
-        >
-          <Text className="font-bold text-sm text-green-700">{initials}</Text>
+        <View className="mr-3">
+          <UserAvatar
+            uri={comment.createdBy.avatarUrl}
+            name={`${comment.createdBy.userName} ${comment.createdBy.lastName}`}
+          />
         </View>
         <View className="flex flex-1">
           <View className="flex flex-1 flex-row items-center mb-1">
