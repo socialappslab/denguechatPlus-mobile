@@ -146,10 +146,13 @@ export function AvatarSheet({ sheetRef }: AvatarSheetProps) {
                 )}
               </View>
 
-              <Text className="font-semibold text-base mb-2">
+              <Text
+                className="font-semibold text-base"
+                style={{ marginBottom: 12 }}
+              >
                 {t("brigadistProfile.avatar.avatar")}
               </Text>
-              <View className="flex-row gap-2 mb-5">
+              <View className="flex-row" style={{ gap: 8, marginBottom: 24 }}>
                 {catalog.map((avatar, index) => (
                   <OptionTile
                     key={avatar.id}
@@ -169,13 +172,19 @@ export function AvatarSheet({ sheetRef }: AvatarSheetProps) {
                 ))}
               </View>
 
-              <Text className="font-semibold text-base">
+              <Text
+                className="font-semibold text-base"
+                style={{ marginBottom: 4 }}
+              >
                 {t("brigadistProfile.avatar.prize")}
               </Text>
-              <Text className="text-sm text-neutral-500 mb-2">
+              <Text
+                className="text-sm text-neutral-500"
+                style={{ marginBottom: 12 }}
+              >
                 {t("brigadistProfile.avatar.prizeHint")}
               </Text>
-              <View className="flex-row gap-2">
+              <View className="flex-row" style={{ gap: 8 }}>
                 <OptionTile
                   imageUrl={imageFor(selected, null)}
                   label={t("brigadistProfile.avatar.noPrize")}
@@ -264,8 +273,8 @@ function OptionTile({
       </Text>
       <Text
         className="text-[10px]"
-        style={{ color: selected ? PRIMARY : "#737373" }}
-        numberOfLines={1}
+        style={{ color: selected ? PRIMARY : "#737373", textAlign: "center" }}
+        numberOfLines={2}
       >
         {state}
       </Text>

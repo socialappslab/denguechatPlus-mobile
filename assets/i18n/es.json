@@ -371,6 +371,23 @@
         "offline": "Conéctate a internet para cambiar tu avatar",
         "error": "No pudimos guardar tu avatar. Inténtalo de nuevo.",
         "loadError": "No pudimos cargar los avatares."
+      },
+      "lastMonthVisits": "Visitas del último mes",
+      "vsPreviousMonth": "{{value}}% vs. mes anterior",
+      "recentActivity": {
+        "title": "Actividad reciente",
+        "empty": "Aún no tienes visitas registradas",
+        "error": "No pudimos cargar tu actividad reciente",
+        "complete": "Visita completa",
+        "incomplete": "Visita sin permiso",
+        "today": "Hoy",
+        "yesterday": "Ayer",
+        "unsynced": "Sin sincronizar",
+        "house": {
+          "green": "Casa verde",
+          "yellow": "Casa amarilla",
+          "red": "Casa roja"
+        }
       }
     },
     "errorCodes": {
@@ -395,12 +412,12 @@
         "current": "Premio actual",
         "unlockedWith_one": "Desbloqueada con {{count}} casa trabajada",
         "unlockedWith_other": "Desbloqueada con {{count}} casas trabajadas",
-        "firstTitle": "Consigue tu primera skin",
+        "firstTitle": "Consigue tu primer premio",
         "firstHint_one": "Llega a {{count}} casa trabajada para desbloquear {{name}}",
         "firstHint_other": "Llega a {{count}} casas trabajadas para desbloquear {{name}}",
         "toNext_one": "{{count}} casa trabajada más para desbloquear {{name}}",
         "toNext_other": "{{count}} casas trabajadas más para desbloquear {{name}}",
-        "allUnlocked": "Todas las skins desbloqueadas",
+        "allUnlocked": "Todos los premios desbloqueados",
         "inUse": "En uso",
         "unlocked": "Desbloqueada",
         "housesLeft_one": "{{count}} casa más",
@@ -413,7 +430,7 @@
         "unit_other": "contenedores positivos",
         "toNext_one": "{{count}} contenedor positivo más para «{{name}}»",
         "toNext_other": "{{count}} contenedores positivos más para «{{name}}»",
-        "allEarned": "¡Todas las estrellas conseguidas!",
+        "allEarned": "¡Todas las medallas conseguidas!",
         "earned": "Conseguida",
         "missing": "Faltan {{count}}"
       }
