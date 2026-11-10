@@ -7,6 +7,7 @@ import Toast from "react-native-toast-message";
 
 import { AvatarSheet } from "@/components/profile/AvatarSheet";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { SkinsSection } from "@/components/profile/SkinsSection";
 import { CheckTeam } from "@/components/segments/CheckTeam";
 import { ScrollView, View } from "@/components/themed";
 import { useStore } from "@/hooks/useStore";
@@ -39,6 +40,9 @@ const Profile = () => {
 
   if (!userProfile) return <View />;
 
+  const tracks = userProfile.rewards ?? [];
+  const skins = tracks.find((track) => track.metric === "worked_houses");
+
   return (
     <CheckTeam view="profile">
       <ScrollView
@@ -52,6 +56,12 @@ const Profile = () => {
           canEdit={canEditAvatar}
           onEditPress={handleEditAvatar}
         />
+        {skins && (
+          <SkinsSection
+            track={skins}
+            wornSkinId={userProfile.userProfile?.wornSkinId ?? null}
+          />
+        )}
         <View className="h-10" />
       </ScrollView>
       <AvatarSheet sheetRef={avatarSheetRef} />
