@@ -402,6 +402,17 @@
         "unlocked": "Desbloqueada",
         "housesLeft_one": "Mais {{count}} casa",
         "housesLeft_other": "Mais {{count}} casas"
+      },
+      "stars": {
+        "title": "Minhas Medalhas",
+        "subtitle": "Por recipientes positivos encontrados nas casas",
+        "unit_one": "recipiente positivo",
+        "unit_other": "recipientes positivos",
+        "toNext_one": "Mais {{count}} recipiente positivo para «{{name}}»",
+        "toNext_other": "Mais {{count}} recipientes positivos para «{{name}}»",
+        "allEarned": "Todas as estrelas conquistadas!",
+        "earned": "Conquistada",
+        "missing": "Faltam {{count}}"
       }
     }
   }
