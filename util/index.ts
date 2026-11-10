@@ -6,6 +6,7 @@ import { ErrorResponse } from "@/schema";
 import { FilterData } from "@/context/BrigadeContext";
 import useSessionStore from "@/hooks/useSessionStore";
 import { useStore } from "@/hooks/useStore";
+import { queryClient } from "@/config/queryClient";
 import { LOG } from "./logger";
 import * as Sentry from "@sentry/react";
 
@@ -136,6 +137,7 @@ export function logout() {
   const { reset: resetStore, userProfile } = useStore.getState();
   resetSessionStore();
   resetStore();
+  queryClient.clear();
   Sentry.setUser(null);
   LOG.info(`Logged out from user: ${userProfile?.username}`);
 }
