@@ -1,3 +1,4 @@
+import type { RewardTrack } from "@/types";
 import { z } from "zod";
 import { BaseObject, t, Team } from "@/schema";
 
@@ -67,6 +68,11 @@ export interface UserProfile {
   timezone?: string;
   language?: string;
   createdAt?: string;
+
+  avatarId?: number | null;
+  avatarUrl?: string | null;
+  skinManuallyChosen?: boolean;
+  wornSkinId?: number | null;
 }
 
 export type UserStatusType = "active" | "pending" | "inactive" | "locked";
@@ -80,6 +86,7 @@ export interface IUser extends UserProfile {
   neighborhoodName?: string;
   organizationName?: string;
   userProfile?: UserProfile;
+  rewards?: RewardTrack[];
 }
 
 export interface ILoginResponse {

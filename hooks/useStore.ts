@@ -1,5 +1,6 @@
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import { axios } from "@/config/axios";
+import i18n from "@/config/i18n";
 import { IUser } from "@/schema/auth";
 import {
   House,
@@ -97,7 +98,9 @@ export const useStore = create<Store>()(
         userProfile: null,
         fetchUserProfile: async () => {
           // TODO: annotate the response
-          const { data: userProfile } = await axios.get("users/me");
+          const { data: userProfile } = await axios.get("users/me", {
+            params: { language: i18n.language },
+          });
           const deserializedData = deserialize(userProfile, {
             changeCase: CaseType.camelCase,
           }) as IUser;

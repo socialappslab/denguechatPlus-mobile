@@ -347,7 +347,46 @@
     },
     "brigadistProfile": {
       "pointsOf": "Points of",
-      "myPoints": "My points"
+      "roles": {
+        "brigadista": "Brigade member",
+        "facilitador": "Facilitator",
+        "admin": "Administrator"
+      },
+      "currentBrigade": "Current brigade",
+      "avatar": {
+        "title": "Customize avatar",
+        "avatar": "Avatar",
+        "avatarN": "Avatar {{number}}",
+        "chosen": "Chosen",
+        "choose": "Choose",
+        "prize": "Prize",
+        "prizeHint": "Pick an unlocked prize for your avatar to wear.",
+        "noPrize": "No prize",
+        "wear": "Wear",
+        "worn": "Wearing",
+        "housesLeft_one": "{{count}} more house",
+        "housesLeft_other": "{{count}} more houses",
+        "offline": "Connect to the internet to change your avatar",
+        "error": "We couldn't save your avatar. Please try again.",
+        "loadError": "We couldn't load the avatars."
+      },
+      "lastMonthVisits": "Visits in the last month",
+      "vsPreviousMonth": "{{value}}% vs. previous month",
+      "recentActivity": {
+        "title": "Recent activity",
+        "empty": "You don't have any visits yet",
+        "error": "We couldn't load your recent activity",
+        "complete": "Complete visit",
+        "incomplete": "Visit without permission",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "unsynced": "Not synced",
+        "house": {
+          "green": "Green house",
+          "yellow": "Yellow house",
+          "red": "Red house"
+        }
+      }
     },
     "errorCodes": {
       "generic": "Something went wrong. Please try again.",
@@ -361,6 +400,38 @@
       "mustUpdateAppTitle": "New update",
       "mustUpdateAppDescription": "You must update the application to continue using DengueChatPlus."
     },
-    "internetRequired": "Internet connection is required to perform this action"
+    "internetRequired": "Internet connection is required to perform this action",
+    "rewards": {
+      "skins": {
+        "title": "My Prizes",
+        "subtitle": "By worked houses",
+        "unit_one": "worked house",
+        "unit_other": "worked houses",
+        "current": "Current prize",
+        "unlockedWith_one": "Unlocked with {{count}} worked house",
+        "unlockedWith_other": "Unlocked with {{count}} worked houses",
+        "firstTitle": "Get your first prize",
+        "firstHint_one": "Reach {{count}} worked house to unlock {{name}}",
+        "firstHint_other": "Reach {{count}} worked houses to unlock {{name}}",
+        "toNext_one": "{{count}} more worked house to unlock {{name}}",
+        "toNext_other": "{{count}} more worked houses to unlock {{name}}",
+        "allUnlocked": "All prizes unlocked",
+        "inUse": "In use",
+        "unlocked": "Unlocked",
+        "housesLeft_one": "{{count}} more house",
+        "housesLeft_other": "{{count}} more houses"
+      },
+      "stars": {
+        "title": "My Medals",
+        "subtitle": "By positive containers found in houses",
+        "unit_one": "positive container",
+        "unit_other": "positive containers",
+        "toNext_one": "{{count}} more positive container for “{{name}}”",
+        "toNext_other": "{{count}} more positive containers for “{{name}}”",
+        "allEarned": "All medals earned!",
+        "earned": "Earned",
+        "missing": "{{count}} to go"
+      }
+    }
   }
 }

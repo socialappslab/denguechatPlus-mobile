@@ -2,23 +2,12 @@ import { DefaultTheme, ThemeProvider } from "expo-router/react-navigation";
 import { PropsWithChildren } from "react";
 import { BrigadeProvider } from "@/context/BrigadeContext";
 import { FilterProvider } from "@/context/FilterContext";
-import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
-const DAY_IN_MS = 1000 * 60 * 60 * 24;
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // https://tanstack.com/query/latest/docs/framework/react/plugins/persistQueryClient#how-it-works
-      gcTime: 24 * DAY_IN_MS,
-    },
-  },
-});
+import { DAY_IN_MS, queryClient } from "@/config/queryClient";
 
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,

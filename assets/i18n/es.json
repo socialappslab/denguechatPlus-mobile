@@ -349,7 +349,46 @@
     },
     "brigadistProfile": {
       "pointsOf": "Puntos de",
-      "myPoints": "Mis puntos"
+      "roles": {
+        "brigadista": "Brigadista",
+        "facilitador": "Facilitador",
+        "admin": "Administrador"
+      },
+      "currentBrigade": "Brigada actual",
+      "avatar": {
+        "title": "Personalizar avatar",
+        "avatar": "Avatar",
+        "avatarN": "Avatar {{number}}",
+        "chosen": "Elegido",
+        "choose": "Elegir",
+        "prize": "Premio",
+        "prizeHint": "Elige un premio desbloqueado para ponérselo a tu avatar.",
+        "noPrize": "Sin premio",
+        "wear": "Poner",
+        "worn": "Puesto",
+        "housesLeft_one": "{{count}} casa más",
+        "housesLeft_other": "{{count}} casas más",
+        "offline": "Conéctate a internet para cambiar tu avatar",
+        "error": "No pudimos guardar tu avatar. Inténtalo de nuevo.",
+        "loadError": "No pudimos cargar los avatares."
+      },
+      "lastMonthVisits": "Visitas del último mes",
+      "vsPreviousMonth": "{{value}}% vs. mes anterior",
+      "recentActivity": {
+        "title": "Actividad reciente",
+        "empty": "Aún no tienes visitas registradas",
+        "error": "No pudimos cargar tu actividad reciente",
+        "complete": "Visita completa",
+        "incomplete": "Visita sin permiso",
+        "today": "Hoy",
+        "yesterday": "Ayer",
+        "unsynced": "Sin sincronizar",
+        "house": {
+          "green": "Casa verde",
+          "yellow": "Casa amarilla",
+          "red": "Casa roja"
+        }
+      }
     },
     "errorCodes": {
       "46": "Credenciales inválidas",
@@ -363,6 +402,38 @@
       "mustUpdateAppTitle": "Nueva actualización",
       "mustUpdateAppDescription": "Debe actualizar la aplicación para continuar usando DengueChatPlus"
     },
-    "internetRequired": "Se requiere conexión a Internet para realizar esta acción"
+    "internetRequired": "Se requiere conexión a Internet para realizar esta acción",
+    "rewards": {
+      "skins": {
+        "title": "Mis Premios",
+        "subtitle": "Por casas trabajadas",
+        "unit_one": "casa trabajada",
+        "unit_other": "casas trabajadas",
+        "current": "Premio actual",
+        "unlockedWith_one": "Desbloqueada con {{count}} casa trabajada",
+        "unlockedWith_other": "Desbloqueada con {{count}} casas trabajadas",
+        "firstTitle": "Consigue tu primer premio",
+        "firstHint_one": "Llega a {{count}} casa trabajada para desbloquear {{name}}",
+        "firstHint_other": "Llega a {{count}} casas trabajadas para desbloquear {{name}}",
+        "toNext_one": "{{count}} casa trabajada más para desbloquear {{name}}",
+        "toNext_other": "{{count}} casas trabajadas más para desbloquear {{name}}",
+        "allUnlocked": "Todos los premios desbloqueados",
+        "inUse": "En uso",
+        "unlocked": "Desbloqueada",
+        "housesLeft_one": "{{count}} casa más",
+        "housesLeft_other": "{{count}} casas más"
+      },
+      "stars": {
+        "title": "Mis Medallas",
+        "subtitle": "Por contenedores positivos encontrados en las casas",
+        "unit_one": "contenedor positivo",
+        "unit_other": "contenedores positivos",
+        "toNext_one": "{{count}} contenedor positivo más para «{{name}}»",
+        "toNext_other": "{{count}} contenedores positivos más para «{{name}}»",
+        "allEarned": "¡Todas las medallas conseguidas!",
+        "earned": "Conseguida",
+        "missing": "Faltan {{count}}"
+      }
+    }
   }
 }
