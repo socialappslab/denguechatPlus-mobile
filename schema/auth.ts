@@ -56,7 +56,8 @@ export interface UserProfile {
   organization?: string | BaseObject;
   team?: string | BaseObject | Team;
   houseBlock?: string | BaseObject;
-  roles?: BaseObject[];
+  role?: string;
+  roles?: string[];
 
   countryId?: number;
   cityId?: number;

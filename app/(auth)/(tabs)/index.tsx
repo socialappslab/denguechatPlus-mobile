@@ -11,7 +11,7 @@ import {
   View,
 } from "@/components/themed";
 import Colors from "@/constants/Colors";
-import { Team, TEAM_LEADER_ROLE } from "@/schema";
+import { isFacilitatorOrAbove, Team } from "@/schema";
 import { AccumulatedPoints, ReportData } from "@/types";
 import { calculatePercentage } from "@/util";
 import { UserAvatar } from "@/components/segments/UserAvatar";
@@ -267,7 +267,7 @@ export default function Profile() {
                     <View className="flex-1">
                       <Text>{member.fullName}</Text>
                     </View>
-                    {member.rol === TEAM_LEADER_ROLE && (
+                    {isFacilitatorOrAbove(member.rol) && (
                       <SimpleChip
                         padding="small"
                         textColor="blue-500"
