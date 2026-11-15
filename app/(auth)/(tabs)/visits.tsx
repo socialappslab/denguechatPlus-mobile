@@ -1,3 +1,4 @@
+import { useRewardNotifications } from "@/hooks/useRewardNotifications";
 import Button from "@/components/themed/Button";
 import { Link, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -360,7 +361,11 @@ export default function Visits() {
           type: "image/jpeg",
         });
       }
-      await createVisit.mutateAsync(form);
+      const account = String(newVisit.userAccountId);
+      const response = await createVisit.mutateAsync(form);
+      useRewardNotifications
+        .getState()
+        .receive(account, response.data.data.attributes.earnedRewards ?? []);
       await deleteInspectionPhotosFromVisit(visitId);
       cleanUpStoredVisit(newVisit);
       setSuccess(true);

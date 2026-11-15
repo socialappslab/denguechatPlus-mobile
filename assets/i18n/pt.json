@@ -317,6 +317,14 @@
           "subtitle": "Este lugar agora é Tariki",
           "description": "{{brigadistPoints}} pontos foram atribuídos a você e {{brigadePoints}} pontos à sua brigada. Ótimo trabalho!",
           "button": "Aceitar pontos"
+        },
+        "rewards": {
+          "title": "Seu esforço merece um prêmio!",
+          "viewProfile": "Ver no meu perfil",
+          "houses": "{{count}} casas trabalhadas",
+          "containers": "{{count}} recipientes positivos identificados",
+          "pendingTitle": "Sincronização pendente",
+          "pendingDescription": "Ao sincronizar sua visita, verificaremos se você ganhou novos prêmios ou medalhas."
         }
       },
       "synchronizedVisit": "Visita sincronizada"

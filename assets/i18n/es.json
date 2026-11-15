@@ -320,6 +320,14 @@
           "subtitle": "Este sitio ahora es Tariki",
           "description": "{{brigadistPoints}} puntos fueron asignados a ti y {{brigadePoints}} puntos a tu brigada. ¡Excelente trabajo!",
           "button": "Aceptar puntos"
+        },
+        "rewards": {
+          "title": "¡Tu esfuerzo tiene premio!",
+          "viewProfile": "Ver en mi perfil",
+          "houses": "{{count}} casas trabajadas",
+          "containers": "{{count}} recipientes positivos identificados",
+          "pendingTitle": "Pendiente de sincronización",
+          "pendingDescription": "Al sincronizar tu visita, comprobaremos si ganaste nuevos premios o medallas."
         }
       },
       "synchronizedVisit": "Visita sincronizada"

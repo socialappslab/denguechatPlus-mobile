@@ -1,3 +1,4 @@
+import { Image, ScrollView } from "react-native";
 import FinalIllustration from "@/assets/images/final.svg";
 import { Button, SafeAreaView, Text, View } from "@/components/themed";
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
@@ -5,9 +6,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useNetInfo } from "@react-native-community/netinfo";
 import ConfettiImage from "@/assets/images/confetti.svg";
-import { PointAward } from "@/types";
+import { RewardLevel, PointAward } from "@/types";
 
 function parsePointAwards(value: string | string[] | undefined): PointAward[] {
   const serializedAwards = Array.isArray(value) ? value[0] : value;
@@ -49,12 +49,20 @@ export default function Final() {
   const router = useRouter();
 
   const { t } = useTranslation();
-  const { isInternetReachable } = useNetInfo();
   const params = useLocalSearchParams();
   const pointAwards = parsePointAwards(params.pointAwards);
   const tarikiStatusModalRef = useTarikiStatusModal(pointAwards.length > 0);
 
-  const prefix = isInternetReachable ? "online" : "offline";
+  const offline = params.offline === "true";
+  let rewards: RewardLevel[] = [];
+  try {
+    const parsed = JSON.parse(String(params.earnedRewards ?? "[]"));
+    if (!offline && Array.isArray(parsed))
+      rewards = parsed.filter((reward) => reward?.userRewardId && reward?.name);
+  } catch {
+    /* Invalid navigation payload contains no rewards. */
+  }
+  const prefix = offline ? "offline" : "online";
   const brigadistPoints =
     pointAwards.find((award) => award.recipient === "brigadist")?.amount ?? 0;
   const brigadePoints =
@@ -67,19 +75,71 @@ export default function Final() {
       <View className="h-full p-6 justify-between items-center">
         {/* This View is used for space between */}
         <View />
-        <View className="justify-center items-center">
-          <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
-            <FinalIllustration width="100%" height="100%" />
+        <ScrollView
+          style={{ flex: 1, alignSelf: "stretch" }}
+          contentContainerStyle={{ alignItems: "center", paddingVertical: 24 }}
+        >
+          <View className="justify-center items-center">
+            <View className="h-52 w-52 mb-8 rounded-xl border-green-300 flex items-center justify-center overflow-hidden">
+              <FinalIllustration width="100%" height="100%" />
+            </View>
+            <View>
+              <Text type="title" className="text-center mb-4">
+                {t(`visit.final.title`)}
+              </Text>
+              <Text type="text" className="text-center px-10">
+                {t(`visit.final.${prefix}.greetings`)}
+              </Text>
+            </View>
           </View>
-          <View>
-            <Text type="title" className="text-center mb-4">
-              {t(`visit.final.title`)}
-            </Text>
-            <Text type="text" className="text-center px-10">
-              {t(`visit.final.${prefix}.greetings`)}
-            </Text>
-          </View>
-        </View>
+          {offline && (
+            <View className="p-4 my-4 rounded-xl bg-green-50">
+              <Text className="font-bold">
+                {t("visit.final.rewards.pendingTitle")}
+              </Text>
+              <Text>{t("visit.final.rewards.pendingDescription")}</Text>
+            </View>
+          )}
+          {rewards.length > 0 && (
+            <View
+              className="p-4 my-4 rounded-xl border border-gray-200 w-full"
+              style={{ flexShrink: 0 }}
+            >
+              <View style={{ paddingBottom: 16, flexShrink: 0 }}>
+                <Text type="subtitle" style={{ lineHeight: 28 }}>
+                  {t("visit.final.rewards.title")}
+                </Text>
+              </View>
+              {rewards.map((reward) => (
+                <View
+                  key={reward.userRewardId}
+                  className="flex-row items-center gap-3 py-3"
+                >
+                  {reward.imageUrl && (
+                    <Image
+                      source={{ uri: reward.imageUrl }}
+                      style={{ width: 60, height: 60 }}
+                      resizeMode="contain"
+                    />
+                  )}
+                  <View className="flex-1">
+                    <Text className="font-bold">{reward.name}</Text>
+                    <Text>
+                      {t(
+                        `visit.final.rewards.${reward.metric === "worked_houses" ? "houses" : "containers"}`,
+                        { count: reward.threshold },
+                      )}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+              <Button
+                title={t("visit.final.rewards.viewProfile")}
+                onPress={() => router.dismissTo("/(auth)/(tabs)/profile")}
+              />
+            </View>
+          )}
+        </ScrollView>
         <View className="flex-row gap-2 self-end justify-self-end">
           <View className="flex-1">
             <Button

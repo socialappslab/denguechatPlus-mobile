@@ -1,6 +1,8 @@
+import { useFocusEffect } from "expo-router";
+import { useRewardNotifications } from "@/hooks/useRewardNotifications";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { RefreshControl } from "react-native";
 import Toast from "react-native-toast-message";
@@ -19,6 +21,12 @@ import { useStore } from "@/hooks/useStore";
 
 const Profile = () => {
   const { t } = useTranslation();
+  const account = useStore((state) => String(state.user?.id));
+  useFocusEffect(
+    useCallback(() => {
+      useRewardNotifications.getState().open(account);
+    }, [account]),
+  );
   const userProfile = useStore((state) => state.userProfile);
   const fetchUserProfile = useStore((state) => state.fetchUserProfile);
   const { isInternetReachable } = useNetInfo();

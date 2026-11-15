@@ -319,6 +319,14 @@
           "subtitle": "This is now a Tariki site",
           "description": "{{brigadistPoints}} points were assigned to you and {{brigadePoints}} points to your brigade. Excelent work!",
           "button": "Accept points"
+        },
+        "rewards": {
+          "title": "Your effort has earned a reward!",
+          "viewProfile": "View in my profile",
+          "houses": "{{count}} houses worked",
+          "containers": "{{count}} positive containers identified",
+          "pendingTitle": "Pending synchronization",
+          "pendingDescription": "When your visit syncs, we will check whether you earned new rewards or medals."
         }
       }
     },
