@@ -1,7 +1,8 @@
+import { useRewardNotifications } from "@/hooks/useRewardNotifications";
 import { Button, SafeAreaView, ScrollView, View } from "@/components/themed";
 import VisitSummary from "@/components/VisitSummary";
 import { useStore } from "@/hooks/useStore";
-import { PointAward, VisitResponse } from "@/types";
+import { RewardLevel, PointAward, VisitResponse } from "@/types";
 import { Inspection, StatusColor } from "@/types/prepareFormData";
 import { extractAxiosErrorData, formatDate, prepareFormData } from "@/util";
 import { useRouter } from "expo-router";
@@ -149,6 +150,8 @@ export default function Summary() {
     VISITS_LOG.debug("Payload prepared for the server", sanitizedVisitData);
 
     try {
+      let earnedRewards: RewardLevel[] = [];
+      const rewardAccount = String(sanitizedVisitData.userAccountId);
       let pointAwards: PointAward[] = [];
       // We only make the request if it's connected
       if (isInternetReachable) {
@@ -163,6 +166,8 @@ export default function Summary() {
           });
         }
         const response = await createVisit.mutateAsync(form);
+        earnedRewards = response.data.data.attributes.earnedRewards ?? [];
+        useRewardNotifications.getState().receive(rewardAccount, earnedRewards);
         pointAwards = response.data.data.attributes.pointAwards ?? [];
         await deleteInspectionPhotosFromVisit(visitId);
         VISITS_LOG.info("Visit sent to the server successfully");
@@ -175,6 +180,12 @@ export default function Summary() {
         pathname: "/final",
         params: {
           pointAwards: JSON.stringify(pointAwards),
+          earnedRewards: JSON.stringify(
+            rewardAccount === String(useStore.getState().user?.id)
+              ? earnedRewards
+              : [],
+          ),
+          offline: String(!isInternetReachable),
         },
       });
       // Cleanup, if it's not connected we send house details

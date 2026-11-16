@@ -261,6 +261,7 @@ export interface VisitResponse {
     attributes: {
       /** Optional while the mobile release rolls out ahead of the backend. */
       pointAwards?: PointAward[];
+      earnedRewards?: RewardLevel[];
     };
   };
 }
@@ -445,6 +446,8 @@ export interface TeamResponse {
 }
 
 export interface RewardLevel {
+  userRewardId?: number;
+  metric?: RewardMetric;
   id: number;
   code: string;
   name: string;

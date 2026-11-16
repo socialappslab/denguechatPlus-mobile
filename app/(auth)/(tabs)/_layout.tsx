@@ -1,3 +1,6 @@
+import { useNetInfo } from "@react-native-community/netinfo";
+import { View } from "react-native";
+import { useRewardNotifications } from "@/hooks/useRewardNotifications";
 import React from "react";
 import { Tabs } from "expo-router";
 import { DrawerToggleButton } from "expo-router/drawer";
@@ -15,6 +18,15 @@ import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
 export default function TabLayout({ lightColor, darkColor }: ThemeProps) {
   const { t } = useTranslation();
+  const account = useStore((state) => String(state.user?.id));
+  const { isInternetReachable } = useNetInfo();
+  React.useEffect(() => {
+    if (isInternetReachable)
+      void useRewardNotifications.getState().flush(account);
+  }, [account, isInternetReachable]);
+  const hasRewards = useRewardNotifications(
+    (state) => !!state.accounts[account]?.rewards.length,
+  );
 
   const storedHouseList = useStore((state) => state.storedHouseList);
   const fetchHouses = useStore((state) => state.fetchHouses);
@@ -89,11 +101,27 @@ export default function TabLayout({ lightColor, darkColor }: ThemeProps) {
         options={{
           title: t("tabs.profile"),
           tabBarIcon: (props) => (
-            <MaterialDesignIcons
-              name="account-outline"
-              size={24}
-              color={props.color}
-            />
+            <View>
+              <MaterialDesignIcons
+                name="account-outline"
+                size={24}
+                color={props.color}
+              />
+              {hasRewards && (
+                <View
+                  accessibilityLabel="Nuevos logros"
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                    width: 7,
+                    height: 7,
+                    borderRadius: 4,
+                    backgroundColor: "#067507",
+                  }}
+                />
+              )}
+            </View>
           ),
         }}
       />

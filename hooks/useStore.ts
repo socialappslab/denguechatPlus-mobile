@@ -1,3 +1,4 @@
+import { useRewardNotifications } from "./useRewardNotifications";
 import { ISelectableItem } from "@/components/QuestionnaireRenderer";
 import { axios } from "@/config/axios";
 import i18n from "@/config/i18n";
@@ -97,6 +98,9 @@ export const useStore = create<Store>()(
 
         userProfile: null,
         fetchUserProfile: async () => {
+          const account = String(_get().user?.id);
+          // Retry acknowledgements without delaying profile loading.
+          void useRewardNotifications.getState().flush(account);
           // TODO: annotate the response
           const { data: userProfile } = await axios.get("users/me", {
             params: { language: i18n.language },
@@ -104,6 +108,11 @@ export const useStore = create<Store>()(
           const deserializedData = deserialize(userProfile, {
             changeCase: CaseType.camelCase,
           }) as IUser;
+          if (String(_get().user?.id) !== account) return;
+          useRewardNotifications.getState().receive(
+            account,
+            (deserializedData.rewards ?? []).flatMap((track) => track.levels),
+          );
           set({ userProfile: deserializedData });
         },
 
