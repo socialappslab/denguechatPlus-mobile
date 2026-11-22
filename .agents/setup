@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Prepares an Amp orb for this repository: https://ampcode.com/docs/orbs
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+step() {
+  local name="$1"
+  shift
+  local start=$SECONDS
+  echo "==> $name"
+  "$@"
+  echo "<== $name ($((SECONDS - start))s)"
+}
+
+if ! command -v yarn >/dev/null 2>&1; then
+  step "Install Yarn classic" npm install --global yarn@1
+fi
+
+# The lockfile is Yarn classic (v1). On a warm snapshot this only checks the
+# restored node_modules against yarn.lock and finishes in seconds.
+step "Install dependencies" yarn install --frozen-lockfile --non-interactive --prefer-offline
