@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-# Prepares an Amp orb for this repository: https://ampcode.com/docs/orbs
+# Prepares an Amp orb for this project: https://ampcode.com/docs/orbs
+# Amp runs only this repository's setup, so it also prepares the additional
+# repositories that Amp clones under ../repos/ (web and backend).
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+mobile_dir="$PWD"
+web_dir="$mobile_dir/../repos/denguechatPlus-web"
+backend_dir="$mobile_dir/../repos/denguechatPlus-backend"
 
 step() {
   local name="$1"
@@ -13,10 +18,131 @@ step() {
   echo "<== $name ($((SECONDS - start))s)"
 }
 
+# --- Mobile (Expo, Yarn classic) ---------------------------------------------
+
 if ! command -v yarn >/dev/null 2>&1; then
   step "Install Yarn classic" npm install --global yarn@1
 fi
 
-# The lockfile is Yarn classic (v1). On a warm snapshot this only checks the
-# restored node_modules against yarn.lock and finishes in seconds.
-step "Install dependencies" yarn install --frozen-lockfile --non-interactive --prefer-offline
+# On a warm snapshot this only checks the restored node_modules against
+# yarn.lock and finishes in seconds.
+step "Mobile: install dependencies" \
+  yarn install --frozen-lockfile --non-interactive --prefer-offline
+
+# --- Web (Vite, pnpm) --------------------------------------------------------
+
+setup_web() {
+  cd "$web_dir"
+  pnpm install --frozen-lockfile --prefer-offline
+  [ -f .env ] || cp -- .env.example .env
+}
+
+if [ -d "$web_dir" ]; then
+  step "Web: install dependencies" setup_web
+fi
+
+# --- Backend (Rails, Postgres, Redis) ----------------------------------------
+
+if [ ! -d "$backend_dir" ]; then
+  exit 0
+fi
+
+apt_packages=(postgresql redis-server cmake pkg-config libpq-dev libyaml-dev libvips42t64)
+missing_packages=()
+for package in "${apt_packages[@]}"; do
+  dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "install ok installed" ||
+    missing_packages+=("$package")
+done
+if [ ${#missing_packages[@]} -gt 0 ]; then
+  install_apt_packages() {
+    sudo apt-get update -qq
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends "${missing_packages[@]}"
+  }
+  step "Backend: install ${missing_packages[*]}" install_apt_packages
+fi
+
+configure_postgres() {
+  local pg_version pg_conf_dir
+  pg_version="$(ls /etc/postgresql | sort -n | tail -1)"
+  pg_conf_dir="/etc/postgresql/$pg_version/main"
+  # Orbs are disposable, so trade durability for speed.
+  sudo tee "$pg_conf_dir/conf.d/amp-orb.conf" >/dev/null <<'EOF'
+fsync = off
+synchronous_commit = off
+full_page_writes = off
+EOF
+  # Passwordless local access for the postgres user, matching the
+  # backend's .amp/settings.json (postgresql://postgres:@localhost:5432/...).
+  sudo tee "$pg_conf_dir/pg_hba.conf" >/dev/null <<'EOF'
+local all all trust
+host  all all 127.0.0.1/32 trust
+host  all all ::1/128 trust
+EOF
+  # systemd owns these, so they start again in every orb restored from the snapshot.
+  sudo systemctl enable --quiet postgresql redis-server
+  sudo systemctl restart postgresql
+  sudo systemctl start redis-server
+  local attempt
+  for attempt in $(seq 60); do
+    pg_isready -q -h 127.0.0.1 && return
+    sleep 0.5
+  done
+  echo "Postgres did not become ready" >&2
+  return 1
+}
+step "Backend: configure and start Postgres and Redis" configure_postgres
+
+mise_bin="$HOME/.local/bin/mise"
+if [ ! -x "$mise_bin" ]; then
+  install_mise() { curl -fsSL https://mise.run | MISE_QUIET=1 sh; }
+  step "Backend: install mise" install_mise
+fi
+
+# Make mise's Ruby available to Amp and to supervised services, which start in
+# non-interactive login shells.
+profile_marker="# denguechatplus: mise shims"
+if ! grep -Fqx "$profile_marker" "$HOME/.bash_profile" 2>/dev/null; then
+  cat >>"$HOME/.bash_profile" <<'EOF'
+
+# denguechatplus: mise shims
+export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
+EOF
+fi
+export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
+
+# The precompiled Ruby downloads in seconds instead of compiling.
+step "Backend: install Ruby $(cat "$backend_dir/.ruby-version")" \
+  "$mise_bin" use --global --yes "ruby@$(cat "$backend_dir/.ruby-version")"
+
+setup_backend() {
+  cd "$backend_dir"
+  if [ ! -f config/local_env.yml ]; then
+    cat >config/local_env.yml <<'EOF'
+# Written by the mobile repository's .agents/setup for Amp orbs.
+DATABASE_HOST: '127.0.0.1'
+DATABASE_USERNAME: postgres
+DATABASE_PASSWORD: ''
+DATABASE_NAME: denguechatplus
+JWT_SECRET_KEY: orb_development_jwt_secret
+REDIS_URL: redis://localhost:6379/
+CLIENT_URL: 'http://localhost:4000'
+PASSWORD_USER_DEFAULT: 'joeDoe2024*ASC'
+SIDEKIQ_WEBTOKEN: orb_development_sidekiq_session_secret_at_least_64_bytes_long_0123456789
+EOF
+  fi
+  bundle install --jobs "$(nproc)" --quiet
+  # Load the schema into new databases and migrate existing ones. This skips
+  # db/seeds.rb, which currently fails ("unknown attribute 'sector' for Wedge").
+  # Keep the annotate gem from rewriting model comments after migrations.
+  export ANNOTATE_SKIP_ON_DB_MIGRATE=1
+  local env db
+  for env in development test; do
+    db="$(RAILS_ENV=$env bin/rails runner 'print ActiveRecord::Base.connection_db_config.database' 2>/dev/null)"
+    if psql -h 127.0.0.1 -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname = '$db'" | grep -q 1; then
+      RAILS_ENV=$env bin/rails db:migrate
+    else
+      RAILS_ENV=$env bin/rails db:create db:schema:load
+    fi
+  done
+}
+step "Backend: install gems and prepare databases" setup_backend
