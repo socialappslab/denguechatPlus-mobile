@@ -179,6 +179,7 @@ export default function Summary() {
       router.push({
         pathname: "/final",
         params: {
+          houseCode: visitData.house?.referenceCode,
           pointAwards: JSON.stringify(pointAwards),
           earnedRewards: JSON.stringify(
             rewardAccount === String(useStore.getState().user?.id)

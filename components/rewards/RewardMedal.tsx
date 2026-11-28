@@ -11,17 +11,25 @@ const LOCKED = {
   icon: "#A3A3A3",
 } as const;
 
+const faceBorders: Record<number, number> = { 30: 1.5, 64: 2, 76: 2 };
+
 interface RewardMedalProps {
   level: RewardLevel;
-  size: 112 | 72 | 30;
+  size: number;
+  faceColor?: string;
   locked?: boolean;
 }
 
 // A reward drawn as a medal: gradient ring, inner face and the reward's icon.
 // Locked rewards fall back to the grey spec unless the backend sends a locked image.
-export function RewardMedal({ level, size, locked = false }: RewardMedalProps) {
+export function RewardMedal({
+  level,
+  size,
+  faceColor,
+  locked = false,
+}: RewardMedalProps) {
   const ring =
-    level.ringGradient.length >= 2
+    level.ringGradient?.length >= 2
       ? level.ringGradient
       : ["#EDEDED", "#BDBDBD"];
   const colors = (locked ? LOCKED.ring : ring) as [string, string];
@@ -48,13 +56,13 @@ export function RewardMedal({ level, size, locked = false }: RewardMedalProps) {
             width: face,
             height: face,
             borderRadius: face / 2,
-            borderWidth: size === 30 ? 1.5 : 3,
+            borderWidth: faceBorders[size] ?? 3,
             borderColor: locked
               ? LOCKED.edge
               : (level.colorSecondary ?? LOCKED.edge),
             backgroundColor: locked
               ? LOCKED.face
-              : (level.colorBackground ?? LOCKED.face),
+              : (faceColor ?? level.colorBackground ?? LOCKED.face),
             alignItems: "center",
             justifyContent: "center",
           }}

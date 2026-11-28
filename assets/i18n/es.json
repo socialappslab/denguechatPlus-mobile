@@ -323,11 +323,48 @@
         },
         "rewards": {
           "title": "¡Tu esfuerzo tiene premio!",
+          "summary": "¡Ganaste {{count}} recompensas!",
+          "equipped": "Equipado",
           "viewProfile": "Ver en mi perfil",
           "houses": "{{count}} casas trabajadas",
           "containers": "{{count}} recipientes positivos identificados",
           "pendingTitle": "Pendiente de sincronización",
-          "pendingDescription": "Al sincronizar tu visita, comprobaremos si ganaste nuevos premios o medallas."
+          "pendingDescription": "Al sincronizar tu visita, comprobaremos si ganaste nuevos premios o medallas.",
+          "heading": {
+            "multi": "¡Visita con recompensas!",
+            "tariki": "¡Nueva casa Tariki!",
+            "medal": "¡Nueva medalla!",
+            "skin": "¡Nuevo premio!"
+          },
+          "label": {
+            "tariki": "Casa Tariki",
+            "medal": "Nueva medalla",
+            "skin": "Nuevo premio"
+          },
+          "accept": {
+            "multi": "Continuar",
+            "tariki": "Aceptar puntos",
+            "medal": "Aceptar medalla",
+            "skin": "Aceptar"
+          },
+          "where": {
+            "medal": "Encuentra tu medalla en",
+            "skin": "Encuentra tu premio en",
+            "both": "Encuentra tu medalla y tu premio en"
+          },
+          "place": {
+            "medal": "Mi Perfil › Mis Medallas",
+            "skin": "Mi Perfil › Mis Premios",
+            "both": "Mi Perfil"
+          },
+          "pointsSplit": "+{{brigadistPoints}} puntos para ti y +{{brigadePoints}} para tu brigada",
+          "found_one": "Por encontrar {{count}} contenedor positivo",
+          "found_other": "Por encontrar {{count}} contenedores positivos",
+          "housePraise": "Casa {{code}} · ¡Excelente trabajo!",
+          "praise": "¡Excelente trabajo!",
+          "wearNow": "Ponérmelo ahora",
+          "wearPrize": "Ponerme el premio ahora",
+          "myMedals": "Ver mis medallas"
         }
       },
       "synchronizedVisit": "Visita sincronizada"

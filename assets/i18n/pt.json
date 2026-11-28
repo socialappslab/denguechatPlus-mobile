@@ -320,11 +320,48 @@
         },
         "rewards": {
           "title": "Seu esforço merece um prêmio!",
+          "summary": "Você ganhou {{count}} recompensas!",
+          "equipped": "Equipado",
           "viewProfile": "Ver no meu perfil",
           "houses": "{{count}} casas trabalhadas",
           "containers": "{{count}} recipientes positivos identificados",
           "pendingTitle": "Sincronização pendente",
-          "pendingDescription": "Ao sincronizar sua visita, verificaremos se você ganhou novos prêmios ou medalhas."
+          "pendingDescription": "Ao sincronizar sua visita, verificaremos se você ganhou novos prêmios ou medalhas.",
+          "heading": {
+            "multi": "Visita com recompensas!",
+            "tariki": "Nova casa Tariki!",
+            "medal": "Nova medalha!",
+            "skin": "Novo prêmio!"
+          },
+          "label": {
+            "tariki": "Casa Tariki",
+            "medal": "Nova medalha",
+            "skin": "Novo prêmio"
+          },
+          "accept": {
+            "multi": "Continuar",
+            "tariki": "Aceitar pontos",
+            "medal": "Aceitar medalha",
+            "skin": "Aceitar"
+          },
+          "where": {
+            "medal": "Encontre sua medalha em",
+            "skin": "Encontre seu prêmio em",
+            "both": "Encontre sua medalha e seu prêmio em"
+          },
+          "place": {
+            "medal": "Meu Perfil › Minhas Medalhas",
+            "skin": "Meu Perfil › Meus Prêmios",
+            "both": "Meu Perfil"
+          },
+          "pointsSplit": "+{{brigadistPoints}} pontos para você e +{{brigadePoints}} para sua brigada",
+          "found_one": "Por encontrar {{count}} recipiente positivo",
+          "found_other": "Por encontrar {{count}} recipientes positivos",
+          "housePraise": "Casa {{code}} · Ótimo trabalho!",
+          "praise": "Ótimo trabalho!",
+          "wearNow": "Equipar agora",
+          "wearPrize": "Equipar meu prêmio agora",
+          "myMedals": "Ver minhas medalhas"
         }
       },
       "synchronizedVisit": "Visita sincronizada"

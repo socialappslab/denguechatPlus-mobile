@@ -1,12 +1,9 @@
-import { Image, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import FinalIllustration from "@/assets/images/final.svg";
 import { Button, SafeAreaView, Text, View } from "@/components/themed";
-import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
+import { VisitRewardsSheet } from "@/components/VisitRewardsSheet";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { useEffect, useMemo, useRef } from "react";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import ConfettiImage from "@/assets/images/confetti.svg";
 import { RewardLevel, PointAward } from "@/types";
 
 function parsePointAwards(value: string | string[] | undefined): PointAward[] {
@@ -33,25 +30,12 @@ function parsePointAwards(value: string | string[] | undefined): PointAward[] {
   }
 }
 
-function useTarikiStatusModal(shouldShowModal: boolean) {
-  const modalRef = useRef<BottomSheetModal>(null);
-
-  useEffect(() => {
-    if (shouldShowModal) {
-      modalRef.current?.present();
-    }
-  }, [shouldShowModal]);
-
-  return modalRef;
-}
-
 export default function Final() {
   const router = useRouter();
 
   const { t } = useTranslation();
   const params = useLocalSearchParams();
   const pointAwards = parsePointAwards(params.pointAwards);
-  const tarikiStatusModalRef = useTarikiStatusModal(pointAwards.length > 0);
 
   const offline = params.offline === "true";
   let rewards: RewardLevel[] = [];
@@ -63,13 +47,6 @@ export default function Final() {
     /* Invalid navigation payload contains no rewards. */
   }
   const prefix = offline ? "offline" : "online";
-  const brigadistPoints =
-    pointAwards.find((award) => award.recipient === "brigadist")?.amount ?? 0;
-  const brigadePoints =
-    pointAwards.find((award) => award.recipient === "brigade")?.amount ?? 0;
-
-  const snapPoints = useMemo(() => [460], []);
-
   return (
     <SafeAreaView edges={["right", "bottom", "left"]}>
       <View className="h-full p-6 justify-between items-center">
@@ -100,45 +77,6 @@ export default function Final() {
               <Text>{t("visit.final.rewards.pendingDescription")}</Text>
             </View>
           )}
-          {rewards.length > 0 && (
-            <View
-              className="p-4 my-4 rounded-xl border border-gray-200 w-full"
-              style={{ flexShrink: 0 }}
-            >
-              <View style={{ paddingBottom: 16, flexShrink: 0 }}>
-                <Text type="subtitle" style={{ lineHeight: 28 }}>
-                  {t("visit.final.rewards.title")}
-                </Text>
-              </View>
-              {rewards.map((reward) => (
-                <View
-                  key={reward.userRewardId}
-                  className="flex-row items-center gap-3 py-3"
-                >
-                  {reward.imageUrl && (
-                    <Image
-                      source={{ uri: reward.imageUrl }}
-                      style={{ width: 60, height: 60 }}
-                      resizeMode="contain"
-                    />
-                  )}
-                  <View className="flex-1">
-                    <Text className="font-bold">{reward.name}</Text>
-                    <Text>
-                      {t(
-                        `visit.final.rewards.${reward.metric === "worked_houses" ? "houses" : "containers"}`,
-                        { count: reward.threshold },
-                      )}
-                    </Text>
-                  </View>
-                </View>
-              ))}
-              <Button
-                title={t("visit.final.rewards.viewProfile")}
-                onPress={() => router.dismissTo("/(auth)/(tabs)/profile")}
-              />
-            </View>
-          )}
         </ScrollView>
         <View className="flex-row gap-2 self-end justify-self-end">
           <View className="flex-1">
@@ -152,43 +90,17 @@ export default function Final() {
           </View>
         </View>
 
-        <ClosableBottomSheet
-          bottomSheetModalRef={tarikiStatusModalRef}
-          title={t("visit.final.tarikiStatusModal.title")}
-          snapPoints={snapPoints}
-        >
-          <View className="flex-1 p-4">
-            <View className="border border-gray-100 p-8 rounded-xl items-center relative overflow-hidden">
-              <ConfettiImage className="absolute inset-0 opacity-80" />
-
-              <View className="rounded-full border-[16px] border-primary aspect-square p-6 items-center justify-center">
-                <Text className="text-3xl font-bold">{brigadistPoints}</Text>
-                <Text className="">
-                  {t("visit.final.tarikiStatusModal.points")}
-                </Text>
-              </View>
-
-              <Text className="text-center font-bold text-2xl mt-4">
-                {t("visit.final.tarikiStatusModal.title")}
-              </Text>
-              <Text className="text-center mt-2 text-gray-800">
-                {t("visit.final.tarikiStatusModal.description", {
-                  brigadistPoints,
-                  brigadePoints,
-                })}
-              </Text>
-            </View>
-
-            <Button
-              primary
-              title={t("visit.final.tarikiStatusModal.button")}
-              onPress={() => {
-                tarikiStatusModalRef.current?.close();
-              }}
-              className="mt-4"
-            />
-          </View>
-        </ClosableBottomSheet>
+        {!offline && (pointAwards.length > 0 || rewards.length > 0) && (
+          <VisitRewardsSheet
+            houseCode={
+              typeof params.houseCode === "string"
+                ? params.houseCode
+                : undefined
+            }
+            pointAwards={pointAwards}
+            rewards={rewards}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

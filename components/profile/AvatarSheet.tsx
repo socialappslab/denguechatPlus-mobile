@@ -1,37 +1,16 @@
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons/static";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { CaseType, deserialize } from "jsonapi-fractal";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, View as RNView } from "react-native";
-import Toast from "react-native-toast-message";
 
 import { ClosableBottomSheet } from "@/components/themed/ClosableBottomSheet";
 import { Text, View } from "@/components/themed";
-import { axios } from "@/config/axios";
+import { useAvatarsQuery, useChangeAvatar } from "@/hooks/useAvatar";
 import { useStore } from "@/hooks/useStore";
 import { AvatarOption, RewardLevel, RewardTrack } from "@/types";
 
 const PRIMARY = "#067507";
-
-export function useAvatarsQuery() {
-  return useQuery({
-    queryKey: ["avatars"],
-    queryFn: async () => {
-      const response = await axios.get("/avatars");
-      return deserialize<AvatarOption[]>(response.data, {
-        changeCase: CaseType.camelCase,
-      }) as AvatarOption[];
-    },
-  });
-}
-
-interface ChangeAvatarPayload {
-  avatarId: number;
-  equippedRewardLevelId?: number | null;
-}
 
 interface Skin {
   level: RewardLevel;
@@ -71,26 +50,11 @@ interface AvatarSheetProps {
 export function AvatarSheet({ sheetRef }: AvatarSheetProps) {
   const { t } = useTranslation();
   const user = useStore((state) => state.userProfile);
-  const fetchUserProfile = useStore((state) => state.fetchUserProfile);
   const avatars = useAvatarsQuery();
-  const queryClient = useQueryClient();
+  const changeAvatar = useChangeAvatar();
 
   const profile = user?.userProfile;
-  const [pending, setPending] = useState<ChangeAvatarPayload | null>(null);
-
-  const changeAvatar = useMutation({
-    mutationFn: (payload: ChangeAvatarPayload) =>
-      axios.put("/users/change_avatar", payload),
-    onMutate: (payload) => setPending(payload),
-    onSuccess: async () => {
-      await fetchUserProfile();
-      // My Brigade lists members with their avatars.
-      await queryClient.invalidateQueries({ queryKey: ["teams"] });
-    },
-    onError: () =>
-      Toast.show({ type: "error", text1: t("brigadistProfile.avatar.error") }),
-    onSettled: () => setPending(null),
-  });
+  const pending = changeAvatar.isPending ? changeAvatar.variables : null;
 
   const catalog = avatars.data ?? [];
   const avatarId = pending?.avatarId ?? profile?.avatarId ?? catalog[0]?.id;

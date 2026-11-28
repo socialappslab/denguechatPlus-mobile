@@ -322,11 +322,48 @@
         },
         "rewards": {
           "title": "Your effort has earned a reward!",
+          "summary": "You earned {{count}} rewards!",
+          "equipped": "Equipped",
           "viewProfile": "View in my profile",
           "houses": "{{count}} houses worked",
           "containers": "{{count}} positive containers identified",
           "pendingTitle": "Pending synchronization",
-          "pendingDescription": "When your visit syncs, we will check whether you earned new rewards or medals."
+          "pendingDescription": "When your visit syncs, we will check whether you earned new rewards or medals.",
+          "heading": {
+            "multi": "Visit rewards!",
+            "tariki": "New Tariki house!",
+            "medal": "New medal!",
+            "skin": "New prize!"
+          },
+          "label": {
+            "tariki": "Tariki house",
+            "medal": "New medal",
+            "skin": "New prize"
+          },
+          "accept": {
+            "multi": "Continue",
+            "tariki": "Accept points",
+            "medal": "Accept medal",
+            "skin": "Accept"
+          },
+          "where": {
+            "medal": "Find your medal in",
+            "skin": "Find your prize in",
+            "both": "Find your medal and prize in"
+          },
+          "place": {
+            "medal": "My Profile › My Medals",
+            "skin": "My Profile › My Prizes",
+            "both": "My Profile"
+          },
+          "pointsSplit": "+{{brigadistPoints}} points for you and +{{brigadePoints}} for your brigade",
+          "found_one": "For finding {{count}} positive container",
+          "found_other": "For finding {{count}} positive containers",
+          "housePraise": "House {{code}} · Great work!",
+          "praise": "Great work!",
+          "wearNow": "Equip now",
+          "wearPrize": "Equip my prize now",
+          "myMedals": "View my medals"
         }
       }
     },
